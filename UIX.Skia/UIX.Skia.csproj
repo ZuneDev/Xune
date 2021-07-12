@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <ProjectGuid>{5681A1BD-B3EC-450B-BF6E-38187204B6BE}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AssemblyName>UIX.Skia</AssemblyName>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <LangVersion>9</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <UseWpf>true</UseWpf>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp" Version="2.80.3" />
+        <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
+        <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
+        <Reference Include="Accessibility">
+            <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\Accessibility.dll</HintPath>
+        </Reference>
+        
+        <ProjectReference Include="..\UIX.RenderApi.Skia\UIX.RenderApi.Skia.csproj" />
+    </ItemGroup>
+</Project>

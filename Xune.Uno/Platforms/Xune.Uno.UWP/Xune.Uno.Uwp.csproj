@@ -131,6 +131,14 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\..\..\UIX.RenderApi.Skia\UIX.RenderApi.Skia.csproj">
+      <Project>{cb2b7609-c7b8-4e2a-82d8-dd631b70b621}</Project>
+      <Name>UIX.RenderApi.Skia</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\UIX.Skia\UIX.Skia.csproj">
+      <Project>{5681a1bd-b3ec-450b-bf6e-38187204b6be}</Project>
+      <Name>UIX.Skia</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
