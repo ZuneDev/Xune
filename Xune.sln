@@ -22,14 +22,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uno", "Uno", "{10786613-309
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{3F9FAF85-78F0-4FD3-8E4A-D6D5E3098F56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIX.RenderApi.Skia", "UIX.RenderApi.Skia\UIX.RenderApi.Skia.csproj", "{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Xune.Uno\Xune.Uno.Shared\Xune.Uno.Shared.projitems*{4738ead6-88e1-4e4d-b10d-8c22eff64947}*SharedItemsImports = 4
 		Xune.Uno\Xune.Uno.Shared\Xune.Uno.Shared.projitems*{6279c845-92f8-4333-ab99-3d213163593c}*SharedItemsImports = 13
-		Xune.Uno\Xune.Uno.Shared\Xune.Uno.Shared.projitems*{761d821e-9905-4444-9adf-76c995fe5427}*SharedItemsImports = 5
 		Xune.Uno\Xune.Uno.Shared\Xune.Uno.Shared.projitems*{79aa8ccd-f181-4c91-ac02-6956db8f78eb}*SharedItemsImports = 5
-		Xune.Uno\Xune.Uno.Shared\Xune.Uno.Shared.projitems*{a5b8155a-118f-4794-b551-c6f3cf7e5411}*SharedItemsImports = 5
-		Xune.Uno\Xune.Uno.Shared\Xune.Uno.Shared.projitems*{ecddb312-bbce-42c6-9fd7-985dc9814541}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -234,6 +233,34 @@ Global
 		{761D821E-9905-4444-9ADF-76C995FE5427}.Release|x64.Build.0 = Release|Any CPU
 		{761D821E-9905-4444-9ADF-76C995FE5427}.Release|x86.ActiveCfg = Release|Any CPU
 		{761D821E-9905-4444-9ADF-76C995FE5427}.Release|x86.Build.0 = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|x64.Build.0 = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Debug|x86.Build.0 = Debug|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|ARM.Build.0 = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|ARM64.Build.0 = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|iPhone.Build.0 = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|x64.ActiveCfg = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|x64.Build.0 = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|x86.ActiveCfg = Release|Any CPU
+		{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
