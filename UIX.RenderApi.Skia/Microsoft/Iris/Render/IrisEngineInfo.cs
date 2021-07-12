@@ -9,34 +9,34 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public sealed class IrisEngineInfo : EngineInfo
-  {
-    private ConnectionInfo m_connectionInfo;
-
-    public static EngineInfo CreateLocal() => (EngineInfo) new IrisEngineInfo(true);
-
-    public static EngineInfo CreateRemote() => (EngineInfo) new IrisEngineInfo(true, TransportProtocol.TCP, "127.0.0.1", false);
-
-    internal IrisEngineInfo(bool isPrimary)
-      : base(EngineType.Iris)
+    public sealed class IrisEngineInfo : EngineInfo
     {
-      if (!isPrimary)
-        throw new NotImplementedException("Local connections to an existing engine are not supported yet");
-      this.m_connectionInfo = (ConnectionInfo) new LocalConnectionInfo();
-    }
+        private ConnectionInfo m_connectionInfo;
 
-    internal IrisEngineInfo(
-      bool isPrimary,
-      TransportProtocol protocol,
-      string sessionName,
-      bool swapByteOrder)
-      : base(EngineType.Iris)
-    {
-      if (!isPrimary)
-        throw new NotImplementedException("Local connections to an existing engine are not supported yet");
-      this.m_connectionInfo = (ConnectionInfo) new RemoteConnectionInfo(protocol, sessionName, swapByteOrder);
-    }
+        public static EngineInfo CreateLocal() => (EngineInfo)new IrisEngineInfo(true);
 
-    internal ConnectionInfo ConnectionInfo => this.m_connectionInfo;
-  }
+        public static EngineInfo CreateRemote() => (EngineInfo)new IrisEngineInfo(true, TransportProtocol.TCP, "127.0.0.1", false);
+
+        internal IrisEngineInfo(bool isPrimary)
+          : base(EngineType.Iris)
+        {
+            if (!isPrimary)
+                throw new NotImplementedException("Local connections to an existing engine are not supported yet");
+            this.m_connectionInfo = (ConnectionInfo)new LocalConnectionInfo();
+        }
+
+        internal IrisEngineInfo(
+          bool isPrimary,
+          TransportProtocol protocol,
+          string sessionName,
+          bool swapByteOrder)
+          : base(EngineType.Iris)
+        {
+            if (!isPrimary)
+                throw new NotImplementedException("Local connections to an existing engine are not supported yet");
+            this.m_connectionInfo = (ConnectionInfo)new RemoteConnectionInfo(protocol, sessionName, swapByteOrder);
+        }
+
+        internal ConnectionInfo ConnectionInfo => this.m_connectionInfo;
+    }
 }

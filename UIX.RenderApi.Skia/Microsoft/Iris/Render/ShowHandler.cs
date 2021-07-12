@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void ShowHandler(bool fShow, bool fFirstShow);
+    public delegate void ShowHandler(bool fShow, bool fFirstShow);
 }

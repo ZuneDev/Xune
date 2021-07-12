@@ -8,51 +8,51 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  [Serializable]
-  public struct HWND
-  {
-    public IntPtr h;
-
-    public HWND(IntPtr hwnd) => this.h = hwnd;
-
-    public static HWND NULL => new HWND()
+    [Serializable]
+    public struct HWND
     {
-      h = IntPtr.Zero
-    };
+        public IntPtr h;
 
-    public static HWND HWND_TOP => new HWND()
-    {
-      h = new IntPtr(0)
-    };
+        public HWND(IntPtr hwnd) => this.h = hwnd;
 
-    public static HWND HWND_BOTTOM => new HWND()
-    {
-      h = new IntPtr(1)
-    };
+        public static HWND NULL => new HWND()
+        {
+            h = IntPtr.Zero
+        };
 
-    public static HWND HWND_TOPMOST => new HWND()
-    {
-      h = new IntPtr(-1)
-    };
+        public static HWND HWND_TOP => new HWND()
+        {
+            h = new IntPtr(0)
+        };
 
-    public static HWND HWND_NOTOPMOST => new HWND()
-    {
-      h = new IntPtr(-2)
-    };
+        public static HWND HWND_BOTTOM => new HWND()
+        {
+            h = new IntPtr(1)
+        };
 
-    public static HWND HWND_MESSAGE => new HWND()
-    {
-      h = new IntPtr(-3)
-    };
+        public static HWND HWND_TOPMOST => new HWND()
+        {
+            h = new IntPtr(-1)
+        };
 
-    public static bool operator ==(HWND hl, HWND hr) => hl.h == hr.h;
+        public static HWND HWND_NOTOPMOST => new HWND()
+        {
+            h = new IntPtr(-2)
+        };
 
-    public static bool operator !=(HWND hl, HWND hr) => hl.h != hr.h;
+        public static HWND HWND_MESSAGE => new HWND()
+        {
+            h = new IntPtr(-3)
+        };
 
-    public override bool Equals(object oCompare) => this.h == (IntPtr) oCompare;
+        public static bool operator ==(HWND hl, HWND hr) => hl.h == hr.h;
 
-    public override int GetHashCode() => (int) this.h.ToInt64();
+        public static bool operator !=(HWND hl, HWND hr) => hl.h != hr.h;
 
-    public override string ToString() => base.ToString();
-  }
+        public override bool Equals(object oCompare) => this.h == (IntPtr)oCompare;
+
+        public override int GetHashCode() => (int)this.h.ToInt64();
+
+        public override string ToString() => base.ToString();
+    }
 }

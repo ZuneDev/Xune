@@ -9,42 +9,42 @@ using System.Threading;
 
 namespace Microsoft.Iris.Render.Animation
 {
-  internal class AnimationTarget : RenderObject
-  {
-    private static int s_targetIdSeed;
-    private int m_targetId;
-    private IAnimatableObject m_object;
-    private string m_property;
-
-    internal AnimationTarget(IAnimatableObject targetObject, string targetPropertyName)
+    internal class AnimationTarget : RenderObject
     {
-      int propertyType = (int) targetObject.GetPropertyType(targetPropertyName);
-      targetObject.RegisterUsage((object) this);
-      this.m_targetId = Interlocked.Increment(ref AnimationTarget.s_targetIdSeed);
-      this.m_object = targetObject;
-      this.m_property = targetPropertyName;
+        private static int s_targetIdSeed;
+        private int m_targetId;
+        private IAnimatableObject m_object;
+        private string m_property;
+
+        internal AnimationTarget(IAnimatableObject targetObject, string targetPropertyName)
+        {
+            int propertyType = (int)targetObject.GetPropertyType(targetPropertyName);
+            targetObject.RegisterUsage((object)this);
+            this.m_targetId = Interlocked.Increment(ref AnimationTarget.s_targetIdSeed);
+            this.m_object = targetObject;
+            this.m_property = targetPropertyName;
+        }
+
+        protected override void Dispose(bool fInDispose)
+        {
+            try
+            {
+                if (fInDispose)
+                    this.m_object.UnregisterUsage((object)this);
+                this.m_object = (IAnimatableObject)null;
+            }
+            finally
+            {
+                base.Dispose(fInDispose);
+            }
+        }
+
+        internal int TargetId => this.m_targetId;
+
+        internal IAnimatableObject TargetObject => this.m_object;
+
+        internal string TargetPropertyName => this.m_property;
+
+        internal AnimationInputType TargetPropertyType => this.m_object.GetPropertyType(this.m_property);
     }
-
-    protected override void Dispose(bool fInDispose)
-    {
-      try
-      {
-        if (fInDispose)
-          this.m_object.UnregisterUsage((object) this);
-        this.m_object = (IAnimatableObject) null;
-      }
-      finally
-      {
-        base.Dispose(fInDispose);
-      }
-    }
-
-    internal int TargetId => this.m_targetId;
-
-    internal IAnimatableObject TargetObject => this.m_object;
-
-    internal string TargetPropertyName => this.m_property;
-
-    internal AnimationInputType TargetPropertyType => this.m_object.GetPropertyType(this.m_property);
-  }
 }

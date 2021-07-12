@@ -10,52 +10,52 @@ using System;
 
 namespace Microsoft.Iris.Render.Animation
 {
-  public abstract class ObjectAnimationInput : AnimationInput
-  {
-    private IAnimatableObject m_object;
-    private string m_propertyName;
-
-    protected ObjectAnimationInput(
-      IAnimatable sourceObject,
-      string sourcePropertyName,
-      string sourceMaskSpec)
+    public abstract class ObjectAnimationInput : AnimationInput
     {
-      Debug2.Validate(sourceObject is IAnimatableObject, typeof (ArgumentException), nameof (sourceObject));
-      Debug2.Validate(sourcePropertyName != null, typeof (ArgumentException), nameof (sourcePropertyName));
-      AnimationTypeMask sourceMask = AnimationTypeMask.FromString(sourceMaskSpec);
-      this.m_object = (IAnimatableObject) sourceObject;
-      this.m_propertyName = sourcePropertyName;
-      this.CommonCreate(this.m_object.GetPropertyType(this.m_propertyName), sourceMask);
+        private IAnimatableObject m_object;
+        private string m_propertyName;
+
+        protected ObjectAnimationInput(
+          IAnimatable sourceObject,
+          string sourcePropertyName,
+          string sourceMaskSpec)
+        {
+            Debug2.Validate(sourceObject is IAnimatableObject, typeof(ArgumentException), nameof(sourceObject));
+            Debug2.Validate(sourcePropertyName != null, typeof(ArgumentException), nameof(sourcePropertyName));
+            AnimationTypeMask sourceMask = AnimationTypeMask.FromString(sourceMaskSpec);
+            this.m_object = (IAnimatableObject)sourceObject;
+            this.m_propertyName = sourcePropertyName;
+            this.CommonCreate(this.m_object.GetPropertyType(this.m_propertyName), sourceMask);
+        }
+
+        protected ObjectAnimationInput(IAnimation sourceAnimation, string sourceMaskSpec)
+        {
+            Debug2.Validate(sourceAnimation is IAnimatableObject, typeof(ArgumentException), nameof(sourceAnimation));
+            AnimationTypeMask sourceMask = AnimationTypeMask.FromString(sourceMaskSpec);
+            this.m_object = (IAnimatableObject)sourceAnimation;
+            this.m_propertyName = Microsoft.Iris.Render.Animation.Animation.OutputProperty;
+            this.CommonCreate(this.m_object.GetPropertyType(this.m_propertyName), sourceMask);
+        }
+
+        internal RENDERHANDLE ObjectId => this.m_object.GetObjectId();
+
+        internal uint PropertyId => this.m_object.GetPropertyId(this.m_propertyName);
+
+        internal override void RegisterUsage(object user)
+        {
+            Debug2.Validate(this.m_object != null, typeof(ObjectDisposedException), "Source object doesn't exist anymore");
+            this.m_object.RegisterUsage(user);
+            base.RegisterUsage(user);
+        }
+
+        internal override void UnregisterUsage(object user)
+        {
+            Debug2.Validate(this.m_object != null, typeof(ObjectDisposedException), "Source object doesn't exist anymore");
+            bool flag = this.m_object.UsageCount == 1;
+            this.m_object.UnregisterUsage(user);
+            if (flag)
+                this.m_object = (IAnimatableObject)null;
+            base.UnregisterUsage(user);
+        }
     }
-
-    protected ObjectAnimationInput(IAnimation sourceAnimation, string sourceMaskSpec)
-    {
-      Debug2.Validate(sourceAnimation is IAnimatableObject, typeof (ArgumentException), nameof (sourceAnimation));
-      AnimationTypeMask sourceMask = AnimationTypeMask.FromString(sourceMaskSpec);
-      this.m_object = (IAnimatableObject) sourceAnimation;
-      this.m_propertyName = Microsoft.Iris.Render.Animation.Animation.OutputProperty;
-      this.CommonCreate(this.m_object.GetPropertyType(this.m_propertyName), sourceMask);
-    }
-
-    internal RENDERHANDLE ObjectId => this.m_object.GetObjectId();
-
-    internal uint PropertyId => this.m_object.GetPropertyId(this.m_propertyName);
-
-    internal override void RegisterUsage(object user)
-    {
-      Debug2.Validate(this.m_object != null, typeof (ObjectDisposedException), "Source object doesn't exist anymore");
-      this.m_object.RegisterUsage(user);
-      base.RegisterUsage(user);
-    }
-
-    internal override void UnregisterUsage(object user)
-    {
-      Debug2.Validate(this.m_object != null, typeof (ObjectDisposedException), "Source object doesn't exist anymore");
-      bool flag = this.m_object.UsageCount == 1;
-      this.m_object.UnregisterUsage(user);
-      if (flag)
-        this.m_object = (IAnimatableObject) null;
-      base.UnregisterUsage(user);
-    }
-  }
 }

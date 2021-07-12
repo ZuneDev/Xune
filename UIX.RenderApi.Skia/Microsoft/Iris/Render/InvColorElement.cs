@@ -6,8 +6,8 @@
 
 namespace Microsoft.Iris.Render
 {
-  public class InvColorElement : EffectOperation
-  {
-    public InvColorElement() => this.m_typeOperation = EffectOperationType.InvColor;
-  }
+    public class InvColorElement : EffectOperation
+    {
+        public InvColorElement() => this.m_typeOperation = EffectOperationType.InvColor;
+    }
 }

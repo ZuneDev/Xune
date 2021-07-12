@@ -8,49 +8,49 @@ using Microsoft.Iris.Render.Internal;
 
 namespace Microsoft.Iris.Render.Common
 {
-  internal class SharedResourceArray : SharedResource
-  {
-    private SharedResource[] m_rgResources;
-
-    internal SharedResourceArray(SharedResource resource)
-      : base((RenderSession) null)
+    internal class SharedResourceArray : SharedResource
     {
-      this.m_rgResources = new SharedResource[1];
-      this.m_rgResources[0] = resource;
-    }
+        private SharedResource[] m_rgResources;
 
-    internal SharedResourceArray(SharedResource[] rgResources)
-      : base((RenderSession) null)
-      => this.m_rgResources = rgResources;
-
-    protected override void OnUsageChange(bool fUsed)
-    {
-      for (int index = 0; index < this.m_rgResources.Length; ++index)
-      {
-        if (this.m_rgResources[index] != null)
+        internal SharedResourceArray(SharedResource resource)
+          : base((RenderSession)null)
         {
-          if (fUsed)
-            this.m_rgResources[index].AddActiveUser((object) this);
-          else
-            this.m_rgResources[index].RemoveActiveUser((object) this);
+            this.m_rgResources = new SharedResource[1];
+            this.m_rgResources[0] = resource;
         }
-      }
-    }
 
-    internal override void RegisterUsage(object user)
-    {
-      base.RegisterUsage(user);
-      foreach (SharedRenderObject rgResource in this.m_rgResources)
-        rgResource.RegisterUsage(user);
-    }
+        internal SharedResourceArray(SharedResource[] rgResources)
+          : base((RenderSession)null)
+          => this.m_rgResources = rgResources;
 
-    internal override void UnregisterUsage(object user)
-    {
-      foreach (SharedRenderObject rgResource in this.m_rgResources)
-        rgResource.UnregisterUsage(user);
-      base.UnregisterUsage(user);
-    }
+        protected override void OnUsageChange(bool fUsed)
+        {
+            for (int index = 0; index < this.m_rgResources.Length; ++index)
+            {
+                if (this.m_rgResources[index] != null)
+                {
+                    if (fUsed)
+                        this.m_rgResources[index].AddActiveUser((object)this);
+                    else
+                        this.m_rgResources[index].RemoveActiveUser((object)this);
+                }
+            }
+        }
 
-    internal SharedResource[] Resources => this.m_rgResources;
-  }
+        internal override void RegisterUsage(object user)
+        {
+            base.RegisterUsage(user);
+            foreach (SharedRenderObject rgResource in this.m_rgResources)
+                rgResource.RegisterUsage(user);
+        }
+
+        internal override void UnregisterUsage(object user)
+        {
+            foreach (SharedRenderObject rgResource in this.m_rgResources)
+                rgResource.UnregisterUsage(user);
+            base.UnregisterUsage(user);
+        }
+
+        internal SharedResource[] Resources => this.m_rgResources;
+    }
 }

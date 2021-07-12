@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum VisualOrder
-  {
-    Any,
-    Before,
-    After,
-    First,
-    Last,
-  }
+    public enum VisualOrder
+    {
+        Any,
+        Before,
+        After,
+        First,
+        Last,
+    }
 }

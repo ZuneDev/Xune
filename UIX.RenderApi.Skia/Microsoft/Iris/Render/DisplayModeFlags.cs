@@ -8,12 +8,12 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  [Flags]
-  public enum DisplayModeFlags
-  {
-    Size = 1,
-    Format = 2,
-    RefreshRate = 4,
-    TvMode = 8,
-  }
+    [Flags]
+    public enum DisplayModeFlags
+    {
+        Size = 1,
+        Format = 2,
+        RefreshRate = 4,
+        TvMode = 8,
+    }
 }

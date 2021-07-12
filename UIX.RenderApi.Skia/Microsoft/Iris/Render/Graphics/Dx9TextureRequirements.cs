@@ -8,14 +8,14 @@ using System;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  [Flags]
-  internal enum Dx9TextureRequirements
-  {
-    TexelSize = 1,
-    SampleBackbuffer = 2,
-    TexUVSize = 4,
-    TexUVRefPoint = 8,
-    DisablePerspectiveCorrection = 16, // 0x00000010
-    ValidMask = DisablePerspectiveCorrection | TexUVRefPoint | TexUVSize | SampleBackbuffer | TexelSize, // 0x0000001F
-  }
+    [Flags]
+    internal enum Dx9TextureRequirements
+    {
+        TexelSize = 1,
+        SampleBackbuffer = 2,
+        TexUVSize = 4,
+        TexUVRefPoint = 8,
+        DisablePerspectiveCorrection = 16, // 0x00000010
+        ValidMask = DisablePerspectiveCorrection | TexUVRefPoint | TexUVSize | SampleBackbuffer | TexelSize, // 0x0000001F
+    }
 }

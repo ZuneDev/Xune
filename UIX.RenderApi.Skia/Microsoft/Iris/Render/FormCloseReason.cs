@@ -6,13 +6,13 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum FormCloseReason
-  {
-    Unknown = -1, // 0xFFFFFFFF
-    ForcedClose = 0,
-    UserRequest = 1,
-    AutoRestart = 2,
-    RendererRequest = 3,
-    GenericError = 4,
-  }
+    public enum FormCloseReason
+    {
+        Unknown = -1, // 0xFFFFFFFF
+        ForcedClose = 0,
+        UserRequest = 1,
+        AutoRestart = 2,
+        RendererRequest = 3,
+        GenericError = 4,
+    }
 }

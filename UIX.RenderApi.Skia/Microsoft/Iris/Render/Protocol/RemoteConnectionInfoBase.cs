@@ -9,29 +9,29 @@ using System;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [Serializable]
-  internal abstract class RemoteConnectionInfoBase : ConnectionInfo
-  {
-    private string m_sessionName;
-    private TransportProtocol m_protocol;
-    private bool m_swapByteOrder;
-
-    public RemoteConnectionInfoBase(
-      TransportProtocol protocol,
-      string sessionName,
-      bool swapByteOrder)
+    [Serializable]
+    internal abstract class RemoteConnectionInfoBase : ConnectionInfo
     {
-      Debug2.Validate(protocol >= TransportProtocol.Min && protocol <= TransportProtocol.PIPE, typeof (ArgumentException), nameof (protocol));
-      Debug2.Validate(sessionName != null, typeof (ArgumentNullException), nameof (sessionName));
-      this.m_protocol = protocol;
-      this.m_sessionName = sessionName;
-      this.m_swapByteOrder = swapByteOrder;
+        private string m_sessionName;
+        private TransportProtocol m_protocol;
+        private bool m_swapByteOrder;
+
+        public RemoteConnectionInfoBase(
+          TransportProtocol protocol,
+          string sessionName,
+          bool swapByteOrder)
+        {
+            Debug2.Validate(protocol >= TransportProtocol.Min && protocol <= TransportProtocol.PIPE, typeof(ArgumentException), nameof(protocol));
+            Debug2.Validate(sessionName != null, typeof(ArgumentNullException), nameof(sessionName));
+            this.m_protocol = protocol;
+            this.m_sessionName = sessionName;
+            this.m_swapByteOrder = swapByteOrder;
+        }
+
+        public string SessionName => this.m_sessionName;
+
+        public TransportProtocol TransportProtocol => this.m_protocol;
+
+        public bool SwapByteOrder => this.m_swapByteOrder;
     }
-
-    public string SessionName => this.m_sessionName;
-
-    public TransportProtocol TransportProtocol => this.m_protocol;
-
-    public bool SwapByteOrder => this.m_swapByteOrder;
-  }
 }

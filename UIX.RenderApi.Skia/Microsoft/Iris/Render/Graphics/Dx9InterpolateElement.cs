@@ -8,25 +8,25 @@ using Microsoft.Iris.Library;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class Dx9InterpolateElement
-  {
-    internal static void Generate(
-      InterpolateElement efiInterpolate,
-      string stSource1,
-      string stSource2,
-      ref Dx9EffectBuilder effectBuilder)
+    internal class Dx9InterpolateElement
     {
-      VariableInfo variableInfo = new VariableInfo()
-      {
-        ID = (int) efiInterpolate.ValueID,
-        Type = Dx9VariableType.Float,
-        IsDynamic = efiInterpolate.IsDynamicProperty("Value")
-      };
-      variableInfo.Name = variableInfo.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo.Type, efiInterpolate.Name) : effectBuilder.GenerateGlobalConstant(variableInfo.Type, efiInterpolate.Name);
-      variableInfo.DefaultValue = (object) efiInterpolate.Value;
-      effectBuilder.AddPropertyVariable(variableInfo);
-      effectBuilder.PixelShaderOutput = effectBuilder.GenerateLocalVariable(Dx9VariableType.Vector4, efiInterpolate.Name);
-      effectBuilder.EmitPixelFragment(InvariantString.Format("    // Interpolate the result\r\n    float4 {0} = lerp({1}, {2}, {3});\r\n\r\n", (object) effectBuilder.PixelShaderOutput, (object) stSource1, (object) stSource2, (object) variableInfo.Name));
+        internal static void Generate(
+          InterpolateElement efiInterpolate,
+          string stSource1,
+          string stSource2,
+          ref Dx9EffectBuilder effectBuilder)
+        {
+            VariableInfo variableInfo = new VariableInfo()
+            {
+                ID = (int)efiInterpolate.ValueID,
+                Type = Dx9VariableType.Float,
+                IsDynamic = efiInterpolate.IsDynamicProperty("Value")
+            };
+            variableInfo.Name = variableInfo.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo.Type, efiInterpolate.Name) : effectBuilder.GenerateGlobalConstant(variableInfo.Type, efiInterpolate.Name);
+            variableInfo.DefaultValue = (object)efiInterpolate.Value;
+            effectBuilder.AddPropertyVariable(variableInfo);
+            effectBuilder.PixelShaderOutput = effectBuilder.GenerateLocalVariable(Dx9VariableType.Vector4, efiInterpolate.Name);
+            effectBuilder.EmitPixelFragment(InvariantString.Format("    // Interpolate the result\r\n    float4 {0} = lerp({1}, {2}, {3});\r\n\r\n", (object)effectBuilder.PixelShaderOutput, (object)stSource1, (object)stSource2, (object)variableInfo.Name));
+        }
     }
-  }
 }

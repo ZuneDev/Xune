@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void CloseRequestHandler();
+    public delegate void CloseRequestHandler();
 }

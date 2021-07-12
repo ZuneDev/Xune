@@ -8,18 +8,18 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IHwndHostWindow : IDisposable
-  {
-    ColorF BackgroundColor { get; set; }
+    public interface IHwndHostWindow : IDisposable
+    {
+        ColorF BackgroundColor { get; set; }
 
-    Point ClientPosition { get; set; }
+        Point ClientPosition { get; set; }
 
-    IntPtr Hwnd { get; }
+        IntPtr Hwnd { get; }
 
-    bool Visible { get; set; }
+        bool Visible { get; set; }
 
-    Size WindowSize { get; set; }
+        Size WindowSize { get; set; }
 
-    event EventHandler OnHandleChanged;
-  }
+        event EventHandler OnHandleChanged;
+    }
 }

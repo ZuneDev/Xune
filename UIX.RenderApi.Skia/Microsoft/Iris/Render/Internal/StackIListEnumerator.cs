@@ -8,24 +8,24 @@ using System.Collections;
 
 namespace Microsoft.Iris.Render.Internal
 {
-  internal struct StackIListEnumerator : IEnumerator
-  {
-    private const int START_INVALID_INDEX = -1;
-    private IList m_list;
-    private int m_idxCurrent;
-
-    internal StackIListEnumerator(IList list)
+    internal struct StackIListEnumerator : IEnumerator
     {
-      this.m_list = list;
-      this.m_idxCurrent = -1;
+        private const int START_INVALID_INDEX = -1;
+        private IList m_list;
+        private int m_idxCurrent;
+
+        internal StackIListEnumerator(IList list)
+        {
+            this.m_list = list;
+            this.m_idxCurrent = -1;
+        }
+
+        public StackIListEnumerator GetEnumerator() => this;
+
+        public bool MoveNext() => ++this.m_idxCurrent < this.m_list.Count;
+
+        public object Current => this.m_list[this.m_idxCurrent];
+
+        public void Reset() => this.m_idxCurrent = -1;
     }
-
-    public StackIListEnumerator GetEnumerator() => this;
-
-    public bool MoveNext() => ++this.m_idxCurrent < this.m_list.Count;
-
-    public object Current => this.m_list[this.m_idxCurrent];
-
-    public void Reset() => this.m_idxCurrent = -1;
-  }
 }

@@ -8,10 +8,10 @@ using System;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  [Flags]
-  internal enum EffectRequirements
-  {
-    ViewPosition = 1,
-    ValidMask = ViewPosition, // 0x00000001
-  }
+    [Flags]
+    internal enum EffectRequirements
+    {
+        ViewPosition = 1,
+        ValidMask = ViewPosition, // 0x00000001
+    }
 }

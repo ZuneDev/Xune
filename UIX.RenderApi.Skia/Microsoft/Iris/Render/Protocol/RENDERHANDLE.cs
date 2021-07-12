@@ -9,25 +9,25 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [ComVisible(false)]
-  [Serializable]
-  internal struct RENDERHANDLE
-  {
-    public static readonly RENDERHANDLE NULL = new RENDERHANDLE();
-    private uint value;
+    [ComVisible(false)]
+    [Serializable]
+    internal struct RENDERHANDLE
+    {
+        public static readonly RENDERHANDLE NULL = new RENDERHANDLE();
+        private uint value;
 
-    private RENDERHANDLE(uint value) => this.value = value;
+        private RENDERHANDLE(uint value) => this.value = value;
 
-    public static bool operator ==(RENDERHANDLE hl, RENDERHANDLE hr) => (int) hl.value == (int) hr.value;
+        public static bool operator ==(RENDERHANDLE hl, RENDERHANDLE hr) => (int)hl.value == (int)hr.value;
 
-    public static bool operator !=(RENDERHANDLE hl, RENDERHANDLE hr) => (int) hl.value != (int) hr.value;
+        public static bool operator !=(RENDERHANDLE hl, RENDERHANDLE hr) => (int)hl.value != (int)hr.value;
 
-    public override bool Equals(object oCompare) => oCompare is RENDERHANDLE renderhandle && (int) this.value == (int) renderhandle.value;
+        public override bool Equals(object oCompare) => oCompare is RENDERHANDLE renderhandle && (int)this.value == (int)renderhandle.value;
 
-    public override int GetHashCode() => (int) this.value;
+        public override int GetHashCode() => (int)this.value;
 
-    public static RENDERHANDLE FromUInt32(uint value) => new RENDERHANDLE(value);
+        public static RENDERHANDLE FromUInt32(uint value) => new RENDERHANDLE(value);
 
-    public static uint ToUInt32(RENDERHANDLE handle) => handle.value;
-  }
+        public static uint ToUInt32(RENDERHANDLE handle) => handle.value;
+    }
 }

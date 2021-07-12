@@ -6,8 +6,8 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface ISoundBuffer : ISharedRenderObject
-  {
-    ISound CreateSound(object objUser);
-  }
+    public interface ISoundBuffer : ISharedRenderObject
+    {
+        ISound CreateSound(object objUser);
+    }
 }

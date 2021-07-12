@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [ComVisible(false)]
-  internal struct MessageBatchHeader
-  {
-    public RENDERHANDLE idPredicateBuffer;
-    public uint uOffsetFirstEntry;
-  }
+    [ComVisible(false)]
+    internal struct MessageBatchHeader
+    {
+        public RENDERHANDLE idPredicateBuffer;
+        public uint uOffsetFirstEntry;
+    }
 }

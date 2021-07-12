@@ -8,14 +8,14 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  [Flags]
-  public enum MouseOptions
-  {
-    Traversable = 1,
-    Hittable = 2,
-    Returnable = 4,
-    ClipChildren = 8,
-    None = 0,
-    ValidMask = ClipChildren | Returnable | Hittable | Traversable, // 0x0000000F
-  }
+    [Flags]
+    public enum MouseOptions
+    {
+        Traversable = 1,
+        Hittable = 2,
+        Returnable = 4,
+        ClipChildren = 8,
+        None = 0,
+        ValidMask = ClipChildren | Returnable | Hittable | Traversable, // 0x0000000F
+    }
 }

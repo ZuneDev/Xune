@@ -8,10 +8,10 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 {
-  internal interface ISoundBufferCallback
-  {
-    void OnSoundBufferReady(RENDERHANDLE idTarget);
+    internal interface ISoundBufferCallback
+    {
+        void OnSoundBufferReady(RENDERHANDLE idTarget);
 
-    void OnSoundBufferLost(RENDERHANDLE idTarget);
-  }
+        void OnSoundBufferLost(RENDERHANDLE idTarget);
+    }
 }

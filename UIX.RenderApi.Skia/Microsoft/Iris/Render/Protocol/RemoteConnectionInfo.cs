@@ -8,12 +8,12 @@ using System;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [Serializable]
-  internal sealed class RemoteConnectionInfo : RemoteConnectionInfoBase
-  {
-    public RemoteConnectionInfo(TransportProtocol protocol, string sessionName, bool swapByteOrder)
-      : base(protocol, sessionName, swapByteOrder)
+    [Serializable]
+    internal sealed class RemoteConnectionInfo : RemoteConnectionInfoBase
     {
+        public RemoteConnectionInfo(TransportProtocol protocol, string sessionName, bool swapByteOrder)
+          : base(protocol, sessionName, swapByteOrder)
+        {
+        }
     }
-  }
 }

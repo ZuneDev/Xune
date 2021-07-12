@@ -8,34 +8,34 @@ using Microsoft.Iris.Input;
 
 namespace Microsoft.Iris.Render
 {
-  public interface ISprite : IVisual, IRawInputSite, IAnimatable, ISharedRenderObject
-  {
-    Vector3 Position { get; set; }
+    public interface ISprite : IVisual, IRawInputSite, IAnimatable, ISharedRenderObject
+    {
+        Vector3 Position { get; set; }
 
-    Vector2 Size { get; set; }
+        Vector2 Size { get; set; }
 
-    bool Visible { get; set; }
+        bool Visible { get; set; }
 
-    Vector3 Scale { get; set; }
+        Vector3 Scale { get; set; }
 
-    AxisAngle Rotation { get; set; }
+        AxisAngle Rotation { get; set; }
 
-    float Alpha { get; set; }
+        float Alpha { get; set; }
 
-    Vector3 CenterPoint { get; set; }
+        Vector3 CenterPoint { get; set; }
 
-    uint Layer { get; set; }
+        uint Layer { get; set; }
 
-    IEffect Effect { get; set; }
+        IEffect Effect { get; set; }
 
-    bool RelativeSize { get; set; }
+        bool RelativeSize { get; set; }
 
-    void AddGradient(IGradient gradient);
+        void AddGradient(IGradient gradient);
 
-    void RemoveAllGradients();
+        void RemoveAllGradients();
 
-    void SetCoordMap(int idxLayer, CoordMap coordMap);
+        void SetCoordMap(int idxLayer, CoordMap coordMap);
 
-    void SetNineGrid(int left, int top, int right, int bottom);
-  }
+        void SetNineGrid(int left, int top, int right, int bottom);
+    }
 }

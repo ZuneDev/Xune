@@ -8,7 +8,7 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IRenderObject : IDisposable
-  {
-  }
+    public interface IRenderObject : IDisposable
+    {
+    }
 }

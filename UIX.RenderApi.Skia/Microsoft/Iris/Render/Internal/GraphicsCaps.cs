@@ -9,19 +9,19 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Internal
 {
-  [ComVisible(false)]
-  [Serializable]
-  internal struct GraphicsCaps
-  {
-    internal uint DeviceType;
-    internal int MaxSimultaneousTextures;
-    internal int MaxTextureWidth;
-    internal int MaxTextureHeight;
-    internal ulong DedicatedVideoMemory;
-    internal ulong TotalVideoMemory;
-    internal uint PixelShaderProfile;
-    internal uint VertexShaderProfile;
-    internal int DriverWarning;
-    internal int AvailableRenderTargets;
-  }
+    [ComVisible(false)]
+    [Serializable]
+    internal struct GraphicsCaps
+    {
+        internal uint DeviceType;
+        internal int MaxSimultaneousTextures;
+        internal int MaxTextureWidth;
+        internal int MaxTextureHeight;
+        internal ulong DedicatedVideoMemory;
+        internal ulong TotalVideoMemory;
+        internal uint PixelShaderProfile;
+        internal uint VertexShaderProfile;
+        internal int DriverWarning;
+        internal int AvailableRenderTargets;
+    }
 }

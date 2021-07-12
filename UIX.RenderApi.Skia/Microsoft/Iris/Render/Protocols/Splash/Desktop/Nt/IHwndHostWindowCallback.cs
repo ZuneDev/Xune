@@ -8,8 +8,8 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
 {
-  internal interface IHwndHostWindowCallback
-  {
-    void OnHandleChanged(RENDERHANDLE target, HWND m_hWnd);
-  }
+    internal interface IHwndHostWindowCallback
+    {
+        void OnHandleChanged(RENDERHANDLE target, HWND m_hWnd);
+    }
 }

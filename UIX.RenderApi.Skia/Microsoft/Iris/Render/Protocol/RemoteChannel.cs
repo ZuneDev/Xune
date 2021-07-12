@@ -9,50 +9,50 @@ using System;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal class RemoteChannel : RenderObject, IChannel
-  {
-    private string m_sessionName;
-    private TransportProtocol m_protocol;
-    private IntPtr m_pSendStream;
-    private IntPtr m_pReceiveStream;
-    private IntPtr m_pSession;
-
-    public RemoteChannel(RemoteConnectionInfo connectionInfo)
+    internal class RemoteChannel : RenderObject, IChannel
     {
-      this.m_sessionName = connectionInfo.SessionName;
-      this.m_protocol = connectionInfo.TransportProtocol;
-      EngineApi.IFC(EngineApi.SpRemoteCreateServerStreams(this.m_sessionName, this.m_protocol, out this.m_pSendStream, out this.m_pReceiveStream));
-    }
+        private string m_sessionName;
+        private TransportProtocol m_protocol;
+        private IntPtr m_pSendStream;
+        private IntPtr m_pReceiveStream;
+        private IntPtr m_pSession;
 
-    protected override void Dispose(bool inDispose)
-    {
-      try
-      {
-        if (!(this.m_pSession != IntPtr.Zero))
-          return;
-        EngineApi.IFC(EngineApi.SpRemoteServerUninit(this.m_pSession, true, out ShutdownReason _));
-        this.m_pSession = IntPtr.Zero;
-      }
-      finally
-      {
-        base.Dispose(inDispose);
-      }
-    }
+        public RemoteChannel(RemoteConnectionInfo connectionInfo)
+        {
+            this.m_sessionName = connectionInfo.SessionName;
+            this.m_protocol = connectionInfo.TransportProtocol;
+            EngineApi.IFC(EngineApi.SpRemoteCreateServerStreams(this.m_sessionName, this.m_protocol, out this.m_pSendStream, out this.m_pReceiveStream));
+        }
 
-    public bool IsConnected => this.m_pSession != IntPtr.Zero;
+        protected override void Dispose(bool inDispose)
+        {
+            try
+            {
+                if (!(this.m_pSession != IntPtr.Zero))
+                    return;
+                EngineApi.IFC(EngineApi.SpRemoteServerUninit(this.m_pSession, true, out ShutdownReason _));
+                this.m_pSession = IntPtr.Zero;
+            }
+            finally
+            {
+                base.Dispose(inDispose);
+            }
+        }
 
-    public void Connect(
-      ContextID idRemoteContext,
-      RENDERHANDLE hBrokerClass,
-      MessageCookieLayout layout)
-    {
-      EngineApi.IFC(EngineApi.SpRemoteWaitServerStreamsConnected(this.m_protocol, this.m_pSendStream, this.m_pReceiveStream));
-      EngineApi.IFC(EngineApi.SpRemoteServerInit(this.m_pSendStream, this.m_pReceiveStream, new EngineApi.InitArgs(layout, idRemoteContext)
-      {
-        idObjectBrokerClass = hBrokerClass
-      }, out this.m_pSession));
-      EngineApi.SpObjectRelease(this.m_pSendStream);
-      EngineApi.SpObjectRelease(this.m_pReceiveStream);
+        public bool IsConnected => this.m_pSession != IntPtr.Zero;
+
+        public void Connect(
+          ContextID idRemoteContext,
+          RENDERHANDLE hBrokerClass,
+          MessageCookieLayout layout)
+        {
+            EngineApi.IFC(EngineApi.SpRemoteWaitServerStreamsConnected(this.m_protocol, this.m_pSendStream, this.m_pReceiveStream));
+            EngineApi.IFC(EngineApi.SpRemoteServerInit(this.m_pSendStream, this.m_pReceiveStream, new EngineApi.InitArgs(layout, idRemoteContext)
+            {
+                idObjectBrokerClass = hBrokerClass
+            }, out this.m_pSession));
+            EngineApi.SpObjectRelease(this.m_pSendStream);
+            EngineApi.SpObjectRelease(this.m_pReceiveStream);
+        }
     }
-  }
 }

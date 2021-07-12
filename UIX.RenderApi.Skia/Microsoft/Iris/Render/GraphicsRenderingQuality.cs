@@ -6,9 +6,9 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum GraphicsRenderingQuality
-  {
-    MinQuality,
-    MaxQuality,
-  }
+    public enum GraphicsRenderingQuality
+    {
+        MinQuality,
+        MaxQuality,
+    }
 }

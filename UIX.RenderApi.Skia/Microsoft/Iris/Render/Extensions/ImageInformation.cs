@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  [ComVisible(false)]
-  public struct ImageInformation
-  {
-    public ImageHeader Header;
-    public ImageData Data;
-  }
+    [ComVisible(false)]
+    public struct ImageInformation
+    {
+        public ImageHeader Header;
+        public ImageData Data;
+    }
 }

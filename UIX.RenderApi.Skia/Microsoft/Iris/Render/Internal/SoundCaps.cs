@@ -9,10 +9,10 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Internal
 {
-  [ComVisible(false)]
-  [Serializable]
-  internal struct SoundCaps
-  {
-    internal uint DeviceType;
-  }
+    [ComVisible(false)]
+    [Serializable]
+    internal struct SoundCaps
+    {
+        internal uint DeviceType;
+    }
 }

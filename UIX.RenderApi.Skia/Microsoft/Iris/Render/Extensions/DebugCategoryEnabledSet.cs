@@ -8,95 +8,95 @@ using System.Security;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  [SuppressUnmanagedCodeSecurity]
-  internal class DebugCategoryEnabledSet
-  {
-    private byte[] m_arbCache;
-    private TraceRegistryHelper m_registryHelper;
-    private bool m_invalidCache;
-
-    internal DebugCategoryEnabledSet(TraceRegistryHelper registryHelper)
+    [SuppressUnmanagedCodeSecurity]
+    internal class DebugCategoryEnabledSet
     {
-      this.m_arbCache = new byte[38];
-      for (int index = 0; index < this.m_arbCache.Length; ++index)
-        this.m_arbCache[index] = (byte) 0;
-      this.m_registryHelper = registryHelper;
-      this.m_invalidCache = true;
-    }
+        private byte[] m_arbCache;
+        private TraceRegistryHelper m_registryHelper;
+        private bool m_invalidCache;
 
-    public byte this[DebugCategory cat]
-    {
-      get => this.GetLevel(cat);
-      set => this.SetLevel(cat, value);
-    }
-
-    public byte GetLevel(DebugCategory cat)
-    {
-      if (this.m_invalidCache)
-        this.Refresh();
-      return this.m_arbCache[(int) cat];
-    }
-
-    public void SetLevel(DebugCategory cat, byte bValue)
-    {
-      if ((int) this.m_arbCache[(int) cat] == (int) bValue)
-        return;
-      DebugCategoryEnabledSet.SetExternalDebugLevel(cat, bValue);
-      this.m_arbCache[(int) cat] = bValue;
-    }
-
-    public void SetLevel(DebugCategory cat, bool fValue)
-    {
-      byte bValue = fValue ? (byte) 1 : (byte) 0;
-      if (bValue != (byte) 0 && (int) bValue <= (int) this.GetLevel(cat))
-        return;
-      this.SetLevel(cat, bValue);
-    }
-
-    private void Refresh()
-    {
-      lock (this)
-      {
-        for (int index = 0; index < this.m_arbCache.Length; ++index)
+        internal DebugCategoryEnabledSet(TraceRegistryHelper registryHelper)
         {
-          DebugCategory cat = (DebugCategory) index;
-          byte externalDebugLevel = DebugCategoryEnabledSet.GetExternalDebugLevel(cat);
-          byte level = externalDebugLevel;
-          byte bValue;
-          if (this.m_registryHelper.ReadValuesFromRegistry && this.ReadDebugCategoryValueFromRegistry(cat, out bValue))
-            level = bValue;
-          if ((int) externalDebugLevel != (int) level)
-            DebugCategoryEnabledSet.SetExternalDebugLevel(cat, level);
-          if ((int) this.m_arbCache[index] != (int) level)
-            this.m_arbCache[index] = level;
+            this.m_arbCache = new byte[38];
+            for (int index = 0; index < this.m_arbCache.Length; ++index)
+                this.m_arbCache[index] = (byte)0;
+            this.m_registryHelper = registryHelper;
+            this.m_invalidCache = true;
         }
-        this.m_invalidCache = false;
-      }
+
+        public byte this[DebugCategory cat]
+        {
+            get => this.GetLevel(cat);
+            set => this.SetLevel(cat, value);
+        }
+
+        public byte GetLevel(DebugCategory cat)
+        {
+            if (this.m_invalidCache)
+                this.Refresh();
+            return this.m_arbCache[(int)cat];
+        }
+
+        public void SetLevel(DebugCategory cat, byte bValue)
+        {
+            if ((int)this.m_arbCache[(int)cat] == (int)bValue)
+                return;
+            DebugCategoryEnabledSet.SetExternalDebugLevel(cat, bValue);
+            this.m_arbCache[(int)cat] = bValue;
+        }
+
+        public void SetLevel(DebugCategory cat, bool fValue)
+        {
+            byte bValue = fValue ? (byte)1 : (byte)0;
+            if (bValue != (byte)0 && (int)bValue <= (int)this.GetLevel(cat))
+                return;
+            this.SetLevel(cat, bValue);
+        }
+
+        private void Refresh()
+        {
+            lock (this)
+            {
+                for (int index = 0; index < this.m_arbCache.Length; ++index)
+                {
+                    DebugCategory cat = (DebugCategory)index;
+                    byte externalDebugLevel = DebugCategoryEnabledSet.GetExternalDebugLevel(cat);
+                    byte level = externalDebugLevel;
+                    byte bValue;
+                    if (this.m_registryHelper.ReadValuesFromRegistry && this.ReadDebugCategoryValueFromRegistry(cat, out bValue))
+                        level = bValue;
+                    if ((int)externalDebugLevel != (int)level)
+                        DebugCategoryEnabledSet.SetExternalDebugLevel(cat, level);
+                    if ((int)this.m_arbCache[index] != (int)level)
+                        this.m_arbCache[index] = level;
+                }
+                this.m_invalidCache = false;
+            }
+        }
+
+        internal void Invalidate()
+        {
+            if (this.m_invalidCache)
+                return;
+            lock (this)
+            {
+                if (this.m_invalidCache)
+                    return;
+                this.m_invalidCache = true;
+            }
+        }
+
+        private bool ReadDebugCategoryValueFromRegistry(DebugCategory cat, out byte bValue) => this.m_registryHelper.ReadValueFromRegistry(cat.ToString(), out bValue);
+
+        private static byte GetExternalDebugLevel(DebugCategory cat) => DebugCategoryEnabledSet.IsExternalCategory(cat) ? eDebugApi.DebugGetCategoryLevel(cat) : (byte)0;
+
+        private static void SetExternalDebugLevel(DebugCategory cat, byte level)
+        {
+            if (!DebugCategoryEnabledSet.IsExternalCategory(cat))
+                return;
+            eDebugApi.DebugSetCategoryLevel(cat, level);
+        }
+
+        private static bool IsExternalCategory(DebugCategory cat) => (uint)cat < 25U;
     }
-
-    internal void Invalidate()
-    {
-      if (this.m_invalidCache)
-        return;
-      lock (this)
-      {
-        if (this.m_invalidCache)
-          return;
-        this.m_invalidCache = true;
-      }
-    }
-
-    private bool ReadDebugCategoryValueFromRegistry(DebugCategory cat, out byte bValue) => this.m_registryHelper.ReadValueFromRegistry(cat.ToString(), out bValue);
-
-    private static byte GetExternalDebugLevel(DebugCategory cat) => DebugCategoryEnabledSet.IsExternalCategory(cat) ? eDebugApi.DebugGetCategoryLevel(cat) : (byte) 0;
-
-    private static void SetExternalDebugLevel(DebugCategory cat, byte level)
-    {
-      if (!DebugCategoryEnabledSet.IsExternalCategory(cat))
-        return;
-      eDebugApi.DebugSetCategoryLevel(cat, level);
-    }
-
-    private static bool IsExternalCategory(DebugCategory cat) => (uint) cat < 25U;
-  }
 }

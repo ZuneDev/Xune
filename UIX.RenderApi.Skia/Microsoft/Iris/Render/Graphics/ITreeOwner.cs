@@ -6,8 +6,8 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal interface ITreeOwner
-  {
-    TreeNode Root { get; }
-  }
+    internal interface ITreeOwner
+    {
+        TreeNode Root { get; }
+    }
 }

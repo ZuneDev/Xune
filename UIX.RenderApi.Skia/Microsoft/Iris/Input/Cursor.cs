@@ -6,82 +6,82 @@
 
 namespace Microsoft.Iris.Input
 {
-  public class Cursor
-  {
-    public const int NoneResourceId = 1;
-    public const int MoveResourceId = 2;
-    public const int CopyResourceId = 3;
-    public static readonly Cursor Arrow = new Cursor(32512, CursorID.Arrow);
-    public static readonly Cursor AppStarting = new Cursor(32550, CursorID.AppStarting);
-    public static readonly Cursor Crosshair = new Cursor(32515, CursorID.Crosshair);
-    public static readonly Cursor Default = Cursor.Arrow;
-    public static readonly Cursor Hand = new Cursor(32649, CursorID.Hand);
-    public static readonly Cursor Help = new Cursor(32651, CursorID.Help);
-    public static readonly Cursor IBeam = new Cursor(32513, CursorID.IBeam);
-    public static readonly Cursor No = new Cursor(32648, CursorID.No);
-    public static readonly Cursor Size = new Cursor(32646, CursorID.Size);
-    public static readonly Cursor SizeNS = new Cursor(32645, CursorID.SizeNS);
-    public static readonly Cursor SizeWE = new Cursor(32644, CursorID.SizeWE);
-    public static readonly Cursor SizeNWSE = new Cursor(32642, CursorID.SizeNWSE);
-    public static readonly Cursor SizeNESW = new Cursor(32643, CursorID.SizeNESW);
-    public static readonly Cursor WaitCursor = new Cursor(32514, CursorID.Wait);
-    public static readonly Cursor UpArrow = new Cursor(32516, CursorID.UpArrow);
-    public static readonly Cursor NullCursor = new Cursor(0, CursorID.None);
-    public static readonly Cursor Cancel = new Cursor(1, CursorID.Cancel);
-    public static readonly Cursor Move = new Cursor(2, CursorID.Move);
-    public static readonly Cursor Copy = new Cursor(3, CursorID.Copy);
-    private int m_idResource;
-    private CursorID m_idCursor;
-
-    public Cursor(int idResource, CursorID idCursor)
+    public class Cursor
     {
-      this.m_idResource = idResource;
-      this.m_idCursor = idCursor;
+        public const int NoneResourceId = 1;
+        public const int MoveResourceId = 2;
+        public const int CopyResourceId = 3;
+        public static readonly Cursor Arrow = new Cursor(32512, CursorID.Arrow);
+        public static readonly Cursor AppStarting = new Cursor(32550, CursorID.AppStarting);
+        public static readonly Cursor Crosshair = new Cursor(32515, CursorID.Crosshair);
+        public static readonly Cursor Default = Cursor.Arrow;
+        public static readonly Cursor Hand = new Cursor(32649, CursorID.Hand);
+        public static readonly Cursor Help = new Cursor(32651, CursorID.Help);
+        public static readonly Cursor IBeam = new Cursor(32513, CursorID.IBeam);
+        public static readonly Cursor No = new Cursor(32648, CursorID.No);
+        public static readonly Cursor Size = new Cursor(32646, CursorID.Size);
+        public static readonly Cursor SizeNS = new Cursor(32645, CursorID.SizeNS);
+        public static readonly Cursor SizeWE = new Cursor(32644, CursorID.SizeWE);
+        public static readonly Cursor SizeNWSE = new Cursor(32642, CursorID.SizeNWSE);
+        public static readonly Cursor SizeNESW = new Cursor(32643, CursorID.SizeNESW);
+        public static readonly Cursor WaitCursor = new Cursor(32514, CursorID.Wait);
+        public static readonly Cursor UpArrow = new Cursor(32516, CursorID.UpArrow);
+        public static readonly Cursor NullCursor = new Cursor(0, CursorID.None);
+        public static readonly Cursor Cancel = new Cursor(1, CursorID.Cancel);
+        public static readonly Cursor Move = new Cursor(2, CursorID.Move);
+        public static readonly Cursor Copy = new Cursor(3, CursorID.Copy);
+        private int m_idResource;
+        private CursorID m_idCursor;
+
+        public Cursor(int idResource, CursorID idCursor)
+        {
+            this.m_idResource = idResource;
+            this.m_idCursor = idCursor;
+        }
+
+        public int ResourceId => this.m_idResource;
+
+        public CursorID CursorID => this.m_idCursor;
+
+        public static Cursor GetCursor(CursorID cursor)
+        {
+            switch (cursor)
+            {
+                case CursorID.Arrow:
+                    return Cursor.Arrow;
+                case CursorID.Cancel:
+                    return Cursor.Cancel;
+                case CursorID.Copy:
+                    return Cursor.Copy;
+                case CursorID.Crosshair:
+                    return Cursor.Crosshair;
+                case CursorID.IBeam:
+                    return Cursor.IBeam;
+                case CursorID.Hand:
+                    return Cursor.Hand;
+                case CursorID.Move:
+                    return Cursor.Move;
+                case CursorID.No:
+                    return Cursor.No;
+                case CursorID.None:
+                    return Cursor.NullCursor;
+                case CursorID.Size:
+                    return Cursor.Size;
+                case CursorID.SizeNS:
+                    return Cursor.SizeNS;
+                case CursorID.SizeWE:
+                    return Cursor.SizeWE;
+                case CursorID.SizeNWSE:
+                    return Cursor.SizeNWSE;
+                case CursorID.SizeNESW:
+                    return Cursor.SizeNESW;
+                case CursorID.UpArrow:
+                    return Cursor.UpArrow;
+                case CursorID.Wait:
+                    return Cursor.WaitCursor;
+                default:
+                    return (Cursor)null;
+            }
+        }
     }
-
-    public int ResourceId => this.m_idResource;
-
-    public CursorID CursorID => this.m_idCursor;
-
-    public static Cursor GetCursor(CursorID cursor)
-    {
-      switch (cursor)
-      {
-        case CursorID.Arrow:
-          return Cursor.Arrow;
-        case CursorID.Cancel:
-          return Cursor.Cancel;
-        case CursorID.Copy:
-          return Cursor.Copy;
-        case CursorID.Crosshair:
-          return Cursor.Crosshair;
-        case CursorID.IBeam:
-          return Cursor.IBeam;
-        case CursorID.Hand:
-          return Cursor.Hand;
-        case CursorID.Move:
-          return Cursor.Move;
-        case CursorID.No:
-          return Cursor.No;
-        case CursorID.None:
-          return Cursor.NullCursor;
-        case CursorID.Size:
-          return Cursor.Size;
-        case CursorID.SizeNS:
-          return Cursor.SizeNS;
-        case CursorID.SizeWE:
-          return Cursor.SizeWE;
-        case CursorID.SizeNWSE:
-          return Cursor.SizeNWSE;
-        case CursorID.SizeNESW:
-          return Cursor.SizeNESW;
-        case CursorID.UpArrow:
-          return Cursor.UpArrow;
-        case CursorID.Wait:
-          return Cursor.WaitCursor;
-        default:
-          return (Cursor) null;
-      }
-    }
-  }
 }

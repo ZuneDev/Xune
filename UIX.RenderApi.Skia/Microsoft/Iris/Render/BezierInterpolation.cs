@@ -6,19 +6,19 @@
 
 namespace Microsoft.Iris.Render
 {
-  public sealed class BezierInterpolation : AnimationInterpolation
-  {
-    private float m_controlPoint1;
-    private float m_controlPoint2;
-
-    public BezierInterpolation(float controlPoint1, float controlPoint2)
+    public sealed class BezierInterpolation : AnimationInterpolation
     {
-      this.m_controlPoint1 = controlPoint1;
-      this.m_controlPoint2 = controlPoint2;
+        private float m_controlPoint1;
+        private float m_controlPoint2;
+
+        public BezierInterpolation(float controlPoint1, float controlPoint2)
+        {
+            this.m_controlPoint1 = controlPoint1;
+            this.m_controlPoint2 = controlPoint2;
+        }
+
+        internal float ControlPoint1 => this.m_controlPoint1;
+
+        internal float ControlPoint2 => this.m_controlPoint2;
     }
-
-    internal float ControlPoint1 => this.m_controlPoint1;
-
-    internal float ControlPoint2 => this.m_controlPoint2;
-  }
 }

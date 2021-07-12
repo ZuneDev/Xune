@@ -8,8 +8,8 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
 {
-  internal interface IInputCallback
-  {
-    unsafe void OnInput(RENDERHANDLE target, Message* inputInfo);
-  }
+    internal interface IInputCallback
+    {
+        unsafe void OnInput(RENDERHANDLE target, Message* inputInfo);
+    }
 }

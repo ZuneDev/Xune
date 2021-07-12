@@ -8,16 +8,16 @@ using Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class GdiEffect : Effect
-  {
-    internal GdiEffect(GdiEffectTemplate effectTemplate)
-      : base((EffectTemplate) effectTemplate)
-      => this.m_remoteEffect = (Microsoft.Iris.Render.Protocols.Splash.Rendering.RemoteEffect) this.m_effectTemplate.Session.BuildRemoteGdiEffect(this);
-
-    internal override void RemoteEffect()
+    internal class GdiEffect : Effect
     {
-      ((RemoteGdiEffect) this.m_remoteEffect).SendSetType((int) ((GdiEffectTemplate) this.m_effectTemplate).Type);
-      this.Initialize();
+        internal GdiEffect(GdiEffectTemplate effectTemplate)
+          : base((EffectTemplate)effectTemplate)
+          => this.m_remoteEffect = (Microsoft.Iris.Render.Protocols.Splash.Rendering.RemoteEffect)this.m_effectTemplate.Session.BuildRemoteGdiEffect(this);
+
+        internal override void RemoteEffect()
+        {
+            ((RemoteGdiEffect)this.m_remoteEffect).SendSetType((int)((GdiEffectTemplate)this.m_effectTemplate).Type);
+            this.Initialize();
+        }
     }
-  }
 }

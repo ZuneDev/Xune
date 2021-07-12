@@ -8,9 +8,9 @@ using System;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class DataBufferCleanupInfo
-  {
-    public IntPtr rgConvertData;
-    public ImageLoadInfo imageLoadInfo;
-  }
+    internal class DataBufferCleanupInfo
+    {
+        public IntPtr rgConvertData;
+        public ImageLoadInfo imageLoadInfo;
+    }
 }

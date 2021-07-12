@@ -6,38 +6,38 @@
 
 namespace Microsoft.Iris.Render
 {
-  internal static class SurfaceFormatInfo
-  {
-    public static int GetBitsPerPixel(SurfaceFormat nFormat) => (int) ((uint) (nFormat & (SurfaceFormat) 16711680) >> 16);
-
-    public static SurfaceFormat FromImageFormat(ImageFormat fmt)
+    internal static class SurfaceFormatInfo
     {
-      switch (fmt)
-      {
-        case ImageFormat.A8R8G8B8:
-          return SurfaceFormat.ARGB32;
-        case ImageFormat.X8R8G8B8:
-          return SurfaceFormat.RGB32;
-        case ImageFormat.A8:
-          return SurfaceFormat.A8;
-        default:
-          return SurfaceFormat.None;
-      }
-    }
+        public static int GetBitsPerPixel(SurfaceFormat nFormat) => (int)((uint)(nFormat & (SurfaceFormat)16711680) >> 16);
 
-    public static ImageFormat ToImageFormat(SurfaceFormat fmt)
-    {
-      switch (fmt)
-      {
-        case SurfaceFormat.A8:
-          return ImageFormat.A8;
-        case SurfaceFormat.RGB32:
-          return ImageFormat.X8R8G8B8;
-        case SurfaceFormat.ARGB32:
-          return ImageFormat.A8R8G8B8;
-        default:
-          return ImageFormat.None;
-      }
+        public static SurfaceFormat FromImageFormat(ImageFormat fmt)
+        {
+            switch (fmt)
+            {
+                case ImageFormat.A8R8G8B8:
+                    return SurfaceFormat.ARGB32;
+                case ImageFormat.X8R8G8B8:
+                    return SurfaceFormat.RGB32;
+                case ImageFormat.A8:
+                    return SurfaceFormat.A8;
+                default:
+                    return SurfaceFormat.None;
+            }
+        }
+
+        public static ImageFormat ToImageFormat(SurfaceFormat fmt)
+        {
+            switch (fmt)
+            {
+                case SurfaceFormat.A8:
+                    return ImageFormat.A8;
+                case SurfaceFormat.RGB32:
+                    return ImageFormat.X8R8G8B8;
+                case SurfaceFormat.ARGB32:
+                    return ImageFormat.A8R8G8B8;
+                default:
+                    return ImageFormat.None;
+            }
+        }
     }
-  }
 }

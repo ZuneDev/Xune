@@ -6,9 +6,9 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum BinaryOpCode
-  {
-    Add,
-    Multiply,
-  }
+    public enum BinaryOpCode
+    {
+        Add,
+        Multiply,
+    }
 }

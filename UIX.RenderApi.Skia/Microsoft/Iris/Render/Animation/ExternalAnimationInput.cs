@@ -12,74 +12,74 @@ using System;
 
 namespace Microsoft.Iris.Render.Animation
 {
-  internal class ExternalAnimationInput : 
-    SharedRenderObject,
-    IExternalAnimationInput,
-    IAnimatableObject,
-    IAnimatable,
-    ISharedRenderObject,
-    IRenderHandleOwner
-  {
-    private static uint s_uniqueIdSeed = 1;
-    private uint m_uniqueId;
-    private RemoteExternalAnimationInput m_remoteObject;
-    private IAnimationPropertyMap m_propertyMap;
-    private RenderSession m_session;
-
-    public ExternalAnimationInput(
-      object objUser,
-      RenderSession session,
-      IAnimationPropertyMap propertyMap)
+    internal class ExternalAnimationInput :
+      SharedRenderObject,
+      IExternalAnimationInput,
+      IAnimatableObject,
+      IAnimatable,
+      ISharedRenderObject,
+      IRenderHandleOwner
     {
-      Debug2.Validate(objUser != null, typeof (ArgumentNullException), nameof (objUser));
-      Debug2.Validate(propertyMap != null, typeof (ArgumentNullException), nameof (propertyMap));
-      this.m_uniqueId = ExternalAnimationInput.s_uniqueIdSeed++;
-      this.m_propertyMap = propertyMap;
-      this.m_session = session;
-      this.m_remoteObject = session.BuildRemoteExternalAnimationInput(this, this.m_uniqueId);
-      this.RegisterUsage(objUser);
+        private static uint s_uniqueIdSeed = 1;
+        private uint m_uniqueId;
+        private RemoteExternalAnimationInput m_remoteObject;
+        private IAnimationPropertyMap m_propertyMap;
+        private RenderSession m_session;
+
+        public ExternalAnimationInput(
+          object objUser,
+          RenderSession session,
+          IAnimationPropertyMap propertyMap)
+        {
+            Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
+            Debug2.Validate(propertyMap != null, typeof(ArgumentNullException), nameof(propertyMap));
+            this.m_uniqueId = ExternalAnimationInput.s_uniqueIdSeed++;
+            this.m_propertyMap = propertyMap;
+            this.m_session = session;
+            this.m_remoteObject = session.BuildRemoteExternalAnimationInput(this, this.m_uniqueId);
+            this.RegisterUsage(objUser);
+        }
+
+        protected override void Dispose(bool inDispose)
+        {
+            try
+            {
+                if (inDispose && this.m_remoteObject != null)
+                    this.m_remoteObject.Dispose();
+                this.m_remoteObject = (RemoteExternalAnimationInput)null;
+                this.m_propertyMap = (IAnimationPropertyMap)null;
+                this.m_session = (RenderSession)null;
+            }
+            finally
+            {
+                base.Dispose(inDispose);
+            }
+        }
+
+        public uint UniqueId => this.m_uniqueId;
+
+        RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteObject.RenderHandle;
+
+        void IRenderHandleOwner.OnDisconnect()
+        {
+            this.m_uniqueId = 0U;
+            this.m_remoteObject = (RemoteExternalAnimationInput)null;
+        }
+
+        RENDERHANDLE IAnimatableObject.GetObjectId() => this.m_remoteObject.RenderHandle;
+
+        uint IAnimatableObject.GetPropertyId(string propertyName) => this.m_propertyMap.GetPropertyId(propertyName);
+
+        AnimationInputType IAnimatableObject.GetPropertyType(
+          string propertyName)
+        {
+            return this.m_propertyMap.GetPropertyType(propertyName);
+        }
+
+        IAnimationInputProvider IExternalAnimationInput.CreateProvider(
+          object objUser)
+        {
+            return (IAnimationInputProvider)new AnimationInputProvider(objUser, this.m_session, this);
+        }
     }
-
-    protected override void Dispose(bool inDispose)
-    {
-      try
-      {
-        if (inDispose && this.m_remoteObject != null)
-          this.m_remoteObject.Dispose();
-        this.m_remoteObject = (RemoteExternalAnimationInput) null;
-        this.m_propertyMap = (IAnimationPropertyMap) null;
-        this.m_session = (RenderSession) null;
-      }
-      finally
-      {
-        base.Dispose(inDispose);
-      }
-    }
-
-    public uint UniqueId => this.m_uniqueId;
-
-    RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteObject.RenderHandle;
-
-    void IRenderHandleOwner.OnDisconnect()
-    {
-      this.m_uniqueId = 0U;
-      this.m_remoteObject = (RemoteExternalAnimationInput) null;
-    }
-
-    RENDERHANDLE IAnimatableObject.GetObjectId() => this.m_remoteObject.RenderHandle;
-
-    uint IAnimatableObject.GetPropertyId(string propertyName) => this.m_propertyMap.GetPropertyId(propertyName);
-
-    AnimationInputType IAnimatableObject.GetPropertyType(
-      string propertyName)
-    {
-      return this.m_propertyMap.GetPropertyType(propertyName);
-    }
-
-    IAnimationInputProvider IExternalAnimationInput.CreateProvider(
-      object objUser)
-    {
-      return (IAnimationInputProvider) new AnimationInputProvider(objUser, this.m_session, this);
-    }
-  }
 }

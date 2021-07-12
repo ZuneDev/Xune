@@ -6,8 +6,8 @@
 
 namespace Microsoft.Iris.Render
 {
-  public class InvAlphaElement : EffectOperation
-  {
-    public InvAlphaElement() => this.m_typeOperation = EffectOperationType.InvAlpha;
-  }
+    public class InvAlphaElement : EffectOperation
+    {
+        public InvAlphaElement() => this.m_typeOperation = EffectOperationType.InvAlpha;
+    }
 }

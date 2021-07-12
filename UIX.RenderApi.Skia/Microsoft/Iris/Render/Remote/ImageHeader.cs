@@ -8,12 +8,12 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Remote
 {
-  [ComVisible(false)]
-  public struct ImageHeader
-  {
-    public Size sizeActualPxl;
-    public Size sizeOriginalPxl;
-    public int nStride;
-    public SurfaceFormat nFormat;
-  }
+    [ComVisible(false)]
+    public struct ImageHeader
+    {
+        public Size sizeActualPxl;
+        public Size sizeOriginalPxl;
+        public int nStride;
+        public SurfaceFormat nFormat;
+    }
 }

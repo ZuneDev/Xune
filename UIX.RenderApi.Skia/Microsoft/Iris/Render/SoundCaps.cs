@@ -8,8 +8,8 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render
 {
-  [StructLayout(LayoutKind.Sequential, Size = 1)]
-  public struct SoundCaps
-  {
-  }
+    [StructLayout(LayoutKind.Sequential, Size = 1)]
+    public struct SoundCaps
+    {
+    }
 }

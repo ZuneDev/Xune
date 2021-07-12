@@ -10,75 +10,75 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public class GaussianBlurElement : EffectOperation
-  {
-    internal const string ModePropertyName = "Mode";
-    internal const string KernelRadiusPropertyName = "KernelRadius";
-    internal const string BlurinessPropertyName = "Bluriness";
-    private GaussianBlurMode m_blurMode;
-    private byte m_nModeID;
-    private int m_nKernelRadius;
-    private byte m_nKernelRadiusID;
-    private float m_flBluriness;
-    private byte m_nBlurinessID;
-
-    public GaussianBlurElement(GaussianBlurMode blurMode, int nKernalRadius, float flBluriness)
+    public class GaussianBlurElement : EffectOperation
     {
-      Debug2.Validate((double) flBluriness > 0.0 && (double) flBluriness <= 6.0, typeof (ArgumentOutOfRangeException), "Valid range for Bluriness is (0,6]");
-      Debug2.Validate(nKernalRadius >= 1 && nKernalRadius <= 6, typeof (ArgumentOutOfRangeException), "Valid range for KernelRadius is [1,6]");
-      this.m_blurMode = blurMode;
-      this.m_nKernelRadius = nKernalRadius;
-      this.m_flBluriness = flBluriness;
-      this.m_typeOperation = EffectOperationType.GaussianBlur;
-    }
+        internal const string ModePropertyName = "Mode";
+        internal const string KernelRadiusPropertyName = "KernelRadius";
+        internal const string BlurinessPropertyName = "Bluriness";
+        private GaussianBlurMode m_blurMode;
+        private byte m_nModeID;
+        private int m_nKernelRadius;
+        private byte m_nKernelRadiusID;
+        private float m_flBluriness;
+        private byte m_nBlurinessID;
 
-    public GaussianBlurElement()
-    {
-      this.m_blurMode = GaussianBlurMode.Normal;
-      this.m_nKernelRadius = 1;
-      this.m_flBluriness = 1.5f;
-      this.m_typeOperation = EffectOperationType.GaussianBlur;
-    }
+        public GaussianBlurElement(GaussianBlurMode blurMode, int nKernalRadius, float flBluriness)
+        {
+            Debug2.Validate((double)flBluriness > 0.0 && (double)flBluriness <= 6.0, typeof(ArgumentOutOfRangeException), "Valid range for Bluriness is (0,6]");
+            Debug2.Validate(nKernalRadius >= 1 && nKernalRadius <= 6, typeof(ArgumentOutOfRangeException), "Valid range for KernelRadius is [1,6]");
+            this.m_blurMode = blurMode;
+            this.m_nKernelRadius = nKernalRadius;
+            this.m_flBluriness = flBluriness;
+            this.m_typeOperation = EffectOperationType.GaussianBlur;
+        }
 
-    public GaussianBlurMode Mode
-    {
-      get => this.m_blurMode;
-      set => this.m_blurMode = value;
-    }
+        public GaussianBlurElement()
+        {
+            this.m_blurMode = GaussianBlurMode.Normal;
+            this.m_nKernelRadius = 1;
+            this.m_flBluriness = 1.5f;
+            this.m_typeOperation = EffectOperationType.GaussianBlur;
+        }
 
-    public int KernelRadius
-    {
-      get => this.m_nKernelRadius;
-      set
-      {
-        Debug2.Validate(value >= 1 && value <= 6, typeof (ArgumentOutOfRangeException), "Valid range for KernelRadius is [1,6]");
-        this.m_nKernelRadius = value;
-      }
-    }
+        public GaussianBlurMode Mode
+        {
+            get => this.m_blurMode;
+            set => this.m_blurMode = value;
+        }
 
-    public float Bluriness
-    {
-      get => this.m_flBluriness;
-      set
-      {
-        Debug2.Validate((double) value > 0.0 && (double) value <= 6.0, typeof (ArgumentOutOfRangeException), "Valid range for Bluriness is (0,6]");
-        this.m_flBluriness = value;
-      }
-    }
+        public int KernelRadius
+        {
+            get => this.m_nKernelRadius;
+            set
+            {
+                Debug2.Validate(value >= 1 && value <= 6, typeof(ArgumentOutOfRangeException), "Valid range for KernelRadius is [1,6]");
+                this.m_nKernelRadius = value;
+            }
+        }
 
-    internal override int PreProcessProperties(
-      Map<string, EffectProperty> dictionary,
-      ref byte nNextUniqueID)
-    {
-      return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Mode", (byte) 5, ref this.m_nModeID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "KernelRadius", (byte) 5, ref this.m_nKernelRadiusID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Bluriness", (byte) 8, ref this.m_nBlurinessID, ref nNextUniqueID);
-    }
+        public float Bluriness
+        {
+            get => this.m_flBluriness;
+            set
+            {
+                Debug2.Validate((double)value > 0.0 && (double)value <= 6.0, typeof(ArgumentOutOfRangeException), "Valid range for Bluriness is (0,6]");
+                this.m_flBluriness = value;
+            }
+        }
 
-    internal override void AddCacheKey(ByteBuilder cacheKey)
-    {
-      base.AddCacheKey(cacheKey);
-      this.GeneratePropertyCacheKey("Mode", this.m_nModeID, (byte) this.m_blurMode, cacheKey);
-      this.GeneratePropertyCacheKey("KernelRadius", this.m_nKernelRadiusID, this.m_nKernelRadius, cacheKey);
-      this.GeneratePropertyCacheKey("Bluriness", this.m_nBlurinessID, this.m_flBluriness, cacheKey);
+        internal override int PreProcessProperties(
+          Map<string, EffectProperty> dictionary,
+          ref byte nNextUniqueID)
+        {
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Mode", (byte)5, ref this.m_nModeID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "KernelRadius", (byte)5, ref this.m_nKernelRadiusID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Bluriness", (byte)8, ref this.m_nBlurinessID, ref nNextUniqueID);
+        }
+
+        internal override void AddCacheKey(ByteBuilder cacheKey)
+        {
+            base.AddCacheKey(cacheKey);
+            this.GeneratePropertyCacheKey("Mode", this.m_nModeID, (byte)this.m_blurMode, cacheKey);
+            this.GeneratePropertyCacheKey("KernelRadius", this.m_nKernelRadiusID, this.m_nKernelRadius, cacheKey);
+            this.GeneratePropertyCacheKey("Bluriness", this.m_nBlurinessID, this.m_flBluriness, cacheKey);
+        }
     }
-  }
 }

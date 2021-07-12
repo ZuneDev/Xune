@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class VariableInfo
-  {
-    internal int ID;
-    internal bool IsDynamic;
-    internal Dx9VariableType Type;
-    internal string Name;
-    internal object DefaultValue;
-  }
+    internal class VariableInfo
+    {
+        internal int ID;
+        internal bool IsDynamic;
+        internal Dx9VariableType Type;
+        internal string Name;
+        internal object DefaultValue;
+    }
 }

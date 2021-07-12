@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum AlphaOperation
-  {
-    Add,
-    Subtract,
-    Multiply,
-    Source1,
-    Source2,
-  }
+    public enum AlphaOperation
+    {
+        Add,
+        Subtract,
+        Multiply,
+        Source1,
+        Source2,
+    }
 }

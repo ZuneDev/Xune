@@ -8,12 +8,12 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Animation
 {
-  internal interface IAnimatableObject : IAnimatable, ISharedRenderObject
-  {
-    RENDERHANDLE GetObjectId();
+    internal interface IAnimatableObject : IAnimatable, ISharedRenderObject
+    {
+        RENDERHANDLE GetObjectId();
 
-    uint GetPropertyId(string propertyName);
+        uint GetPropertyId(string propertyName);
 
-    AnimationInputType GetPropertyType(string propertyName);
-  }
+        AnimationInputType GetPropertyType(string propertyName);
+    }
 }

@@ -6,14 +6,14 @@
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal enum TransportProtocol
-  {
-    None = 0,
-    Min = 1,
-    VC = 1,
-    TCP = 2,
-    UDP = 3,
-    Max = 4,
-    PIPE = 4,
-  }
+    internal enum TransportProtocol
+    {
+        None = 0,
+        Min = 1,
+        VC = 1,
+        TCP = 2,
+        UDP = 3,
+        Max = 4,
+        PIPE = 4,
+    }
 }

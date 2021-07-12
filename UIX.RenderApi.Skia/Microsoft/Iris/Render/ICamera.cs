@@ -6,16 +6,16 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface ICamera : IAnimatable, ISharedRenderObject
-  {
-    Vector3 Eye { get; set; }
+    public interface ICamera : IAnimatable, ISharedRenderObject
+    {
+        Vector3 Eye { get; set; }
 
-    Vector3 At { get; set; }
+        Vector3 At { get; set; }
 
-    Vector3 Up { get; set; }
+        Vector3 Up { get; set; }
 
-    float Zn { get; set; }
+        float Zn { get; set; }
 
-    bool Perspective { get; set; }
-  }
+        bool Perspective { get; set; }
+    }
 }

@@ -8,16 +8,16 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 {
-  internal interface IVideoPoolCallback
-  {
-    void OnInvalidate(RENDERHANDLE target);
+    internal interface IVideoPoolCallback
+    {
+        void OnInvalidate(RENDERHANDLE target);
 
-    void OnInputChanged(
-      RENDERHANDLE target,
-      Size sizeTargetPxl,
-      Size sizeAspectRatioPxl,
-      uint nFrameRateNumerator,
-      uint nFrameRateDenominator,
-      SurfaceFormat nFormat);
-  }
+        void OnInputChanged(
+          RENDERHANDLE target,
+          Size sizeTargetPxl,
+          Size sizeAspectRatioPxl,
+          uint nFrameRateNumerator,
+          uint nFrameRateDenominator,
+          SurfaceFormat nFormat);
+    }
 }

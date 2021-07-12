@@ -9,16 +9,16 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  public class GradientInformation : IDisposable
-  {
-    public ImageInformation imageInfo;
-    internal GCHandle gcData;
-
-    void IDisposable.Dispose()
+    public class GradientInformation : IDisposable
     {
-      if (!this.gcData.IsAllocated)
-        return;
-      this.gcData.Free();
+        public ImageInformation imageInfo;
+        internal GCHandle gcData;
+
+        void IDisposable.Dispose()
+        {
+            if (!this.gcData.IsAllocated)
+                return;
+            this.gcData.Free();
+        }
     }
-  }
 }

@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void SessionConnectHandler(bool fIsConnected);
+    public delegate void SessionConnectHandler(bool fIsConnected);
 }

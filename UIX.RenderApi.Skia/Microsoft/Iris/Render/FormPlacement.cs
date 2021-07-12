@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render
 {
-  public struct FormPlacement
-  {
-    public Rectangle NormalPosition;
-    public Point MaximizedLocation;
-    public uint ShowState;
-  }
+    public struct FormPlacement
+    {
+        public Rectangle NormalPosition;
+        public Point MaximizedLocation;
+        public uint ShowState;
+    }
 }

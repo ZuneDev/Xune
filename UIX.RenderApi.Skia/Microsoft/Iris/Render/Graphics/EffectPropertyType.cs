@@ -6,18 +6,18 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal enum EffectPropertyType : byte
-  {
-    Integer,
-    Float,
-    Vector2,
-    Vector3,
-    Vector4,
-    Image,
-    Color,
-    ImageArray,
-    Video,
-    Byte,
-    Max,
-  }
+    internal enum EffectPropertyType : byte
+    {
+        Integer,
+        Float,
+        Vector2,
+        Vector3,
+        Vector4,
+        Image,
+        Color,
+        ImageArray,
+        Video,
+        Byte,
+        Max,
+    }
 }

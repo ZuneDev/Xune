@@ -6,8 +6,8 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum SoundDataFormat
-  {
-    PCM = 1,
-  }
+    public enum SoundDataFormat
+    {
+        PCM = 1,
+    }
 }

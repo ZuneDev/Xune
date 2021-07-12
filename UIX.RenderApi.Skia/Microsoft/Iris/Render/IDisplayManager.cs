@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IDisplayManager
-  {
-    IDisplay PrimaryDisplay { get; }
+    public interface IDisplayManager
+    {
+        IDisplay PrimaryDisplay { get; }
 
-    DisplayMode[] ExtraModes { get; set; }
+        DisplayMode[] ExtraModes { get; set; }
 
-    IDisplay DisplayFromDeviceName(string stDeviceName);
-  }
+        IDisplay DisplayFromDeviceName(string stDeviceName);
+    }
 }

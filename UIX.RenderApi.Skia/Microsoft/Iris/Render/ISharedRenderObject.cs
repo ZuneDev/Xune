@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface ISharedRenderObject
-  {
-    int UsageCount { get; }
+    public interface ISharedRenderObject
+    {
+        int UsageCount { get; }
 
-    void RegisterUsage(object user);
+        void RegisterUsage(object user);
 
-    void UnregisterUsage(object user);
-  }
+        void UnregisterUsage(object user);
+    }
 }

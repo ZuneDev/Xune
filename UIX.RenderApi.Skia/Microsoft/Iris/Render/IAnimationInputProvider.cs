@@ -6,26 +6,26 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IAnimationInputProvider : IAnimatable, ISharedRenderObject
-  {
-    void PublishFloat(string propertyName, float value);
+    public interface IAnimationInputProvider : IAnimatable, ISharedRenderObject
+    {
+        void PublishFloat(string propertyName, float value);
 
-    void PublishVector2(string propertyName, Vector2 value);
+        void PublishVector2(string propertyName, Vector2 value);
 
-    void PublishVector3(string propertyName, Vector3 value);
+        void PublishVector3(string propertyName, Vector3 value);
 
-    void PublishVector4(string propertyName, Vector4 value);
+        void PublishVector4(string propertyName, Vector4 value);
 
-    void PublishQuaternion(string propertyName, Quaternion value);
+        void PublishQuaternion(string propertyName, Quaternion value);
 
-    void RevokeFloat(string propertyName);
+        void RevokeFloat(string propertyName);
 
-    void RevokeVector2(string propertyName);
+        void RevokeVector2(string propertyName);
 
-    void RevokeVector3(string propertyName);
+        void RevokeVector3(string propertyName);
 
-    void RevokeVector4(string propertyName);
+        void RevokeVector4(string propertyName);
 
-    void RevokeQuaternion(string propertyName);
-  }
+        void RevokeQuaternion(string propertyName);
+    }
 }

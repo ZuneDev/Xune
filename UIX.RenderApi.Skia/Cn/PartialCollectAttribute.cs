@@ -9,9 +9,9 @@ using System.Diagnostics;
 
 namespace Cn
 {
-  [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-  [Conditional("NEVER")]
-  public class PartialCollectAttribute : Attribute
-  {
-  }
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [Conditional("NEVER")]
+    public class PartialCollectAttribute : Attribute
+    {
+    }
 }

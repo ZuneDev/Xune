@@ -6,20 +6,20 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IVideoStream : ISharedRenderObject
-  {
-    int StreamID { get; }
+    public interface IVideoStream : ISharedRenderObject
+    {
+        int StreamID { get; }
 
-    float ContentOverscan { get; set; }
+        float ContentOverscan { get; set; }
 
-    int ContentAspectWidth { get; }
+        int ContentAspectWidth { get; }
 
-    int ContentAspectHeight { get; }
+        int ContentAspectHeight { get; }
 
-    int ContentHeight { get; }
+        int ContentHeight { get; }
 
-    int ContentWidth { get; }
+        int ContentWidth { get; }
 
-    event InvalidateContentHandler InvalidateContentEvent;
-  }
+        event InvalidateContentHandler InvalidateContentEvent;
+    }
 }

@@ -8,24 +8,24 @@ using System;
 
 namespace Microsoft.Iris.Input
 {
-  [Serializable]
-  public struct RawHidData
-  {
-    public uint _commandCode;
-    public uint _usagePage;
-    public KeyAction _action;
-    public InputDeviceType _deviceType;
-
-    public RawHidData(
-      uint commandCode,
-      uint usagePage,
-      KeyAction action,
-      InputDeviceType deviceType)
+    [Serializable]
+    public struct RawHidData
     {
-      this._commandCode = commandCode;
-      this._usagePage = usagePage;
-      this._action = action;
-      this._deviceType = deviceType;
+        public uint _commandCode;
+        public uint _usagePage;
+        public KeyAction _action;
+        public InputDeviceType _deviceType;
+
+        public RawHidData(
+          uint commandCode,
+          uint usagePage,
+          KeyAction action,
+          InputDeviceType deviceType)
+        {
+            this._commandCode = commandCode;
+            this._usagePage = usagePage;
+            this._action = action;
+            this._deviceType = deviceType;
+        }
     }
-  }
 }

@@ -6,24 +6,24 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IGraphicsDevice
-  {
-    GraphicsDeviceType DeviceType { get; }
+    public interface IGraphicsDevice
+    {
+        GraphicsDeviceType DeviceType { get; }
 
-    Size MaximumImageSize { get; }
+        Size MaximumImageSize { get; }
 
-    bool IsVideoComposited { get; }
+        bool IsVideoComposited { get; }
 
-    GraphicsRenderingQuality RenderingQuality { get; }
+        GraphicsRenderingQuality RenderingQuality { get; }
 
-    void RenderNowIfPossible();
+        void RenderNowIfPossible();
 
-    void BeginCaptureBackBuffer(string stFileName);
+        void BeginCaptureBackBuffer(string stFileName);
 
-    void EndCaptureBackBuffer();
+        void EndCaptureBackBuffer();
 
-    void TriggerDeviceReset();
+        void TriggerDeviceReset();
 
-    event BackBufferCapturedHandler BackBufferCapturedEvent;
-  }
+        event BackBufferCapturedHandler BackBufferCapturedEvent;
+    }
 }

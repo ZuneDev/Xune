@@ -8,8 +8,8 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 {
-  internal interface IAnimationCallback
-  {
-    void AsyncNotify(RENDERHANDLE target, int nCookie);
-  }
+    internal interface IAnimationCallback
+    {
+        void AsyncNotify(RENDERHANDLE target, int nCookie);
+    }
 }

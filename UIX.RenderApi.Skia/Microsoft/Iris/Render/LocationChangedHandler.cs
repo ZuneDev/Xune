@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void LocationChangedHandler(Point ptPosition);
+    public delegate void LocationChangedHandler(Point ptPosition);
 }

@@ -6,11 +6,11 @@
 
 namespace Microsoft.Iris.Input
 {
-  public enum KeyAction
-  {
-    None,
-    Up,
-    Down,
-    Character,
-  }
+    public enum KeyAction
+    {
+        None,
+        Up,
+        Down,
+        Character,
+    }
 }

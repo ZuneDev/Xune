@@ -9,16 +9,16 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public sealed class SCurveInterpolation : AnimationInterpolation
-  {
-    private float m_weight;
-
-    public SCurveInterpolation(float weight)
+    public sealed class SCurveInterpolation : AnimationInterpolation
     {
-      Debug2.Validate((double) weight > 0.0, typeof (ArgumentOutOfRangeException), "weight must be > 0");
-      this.m_weight = weight;
-    }
+        private float m_weight;
 
-    internal float Weight => this.m_weight;
-  }
+        public SCurveInterpolation(float weight)
+        {
+            Debug2.Validate((double)weight > 0.0, typeof(ArgumentOutOfRangeException), "weight must be > 0");
+            this.m_weight = weight;
+        }
+
+        internal float Weight => this.m_weight;
+    }
 }

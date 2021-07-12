@@ -6,11 +6,11 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum SoundDeviceType
-  {
-    None,
-    DirectSound8,
-    WaveAudio,
-    XAudio,
-  }
+    public enum SoundDeviceType
+    {
+        None,
+        DirectSound8,
+        WaveAudio,
+        XAudio,
+    }
 }

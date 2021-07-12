@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void ActivationChangeHandler();
+    public delegate void ActivationChangeHandler();
 }

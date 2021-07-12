@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void MonitorChangedHandler();
+    public delegate void MonitorChangedHandler();
 }

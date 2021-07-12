@@ -10,91 +10,91 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Internal
 {
-  internal sealed class ObjectTracker : TrackerBase
-  {
-    private ObjectTracker.ThreadMode m_nMode;
-    private int m_idxNextIdentity;
-    private GCHandle m_hndOwner;
-
-    public ObjectTracker(RenderSession session, object objOwner)
-      : this(session, ObjectTracker.ThreadMode.Private, objOwner)
+    internal sealed class ObjectTracker : TrackerBase
     {
+        private ObjectTracker.ThreadMode m_nMode;
+        private int m_idxNextIdentity;
+        private GCHandle m_hndOwner;
+
+        public ObjectTracker(RenderSession session, object objOwner)
+          : this(session, ObjectTracker.ThreadMode.Private, objOwner)
+        {
+        }
+
+        public ObjectTracker(RenderSession session, ObjectTracker.ThreadMode nMode, object objOwner)
+        {
+            Debug2.Validate(session != null || nMode != ObjectTracker.ThreadMode.Private, typeof(ArgumentException), "must specify a session for private trackers");
+            Debug2.Validate(objOwner != null || nMode == ObjectTracker.ThreadMode.Master, typeof(ArgumentException), "must specify an owner (except mater tracker)");
+            if (nMode == ObjectTracker.ThreadMode.Private)
+                ObjectTrackerGroup.RegisterChildTracker(this);
+            this.m_nMode = nMode;
+            this.m_idxNextIdentity = 1;
+            this.m_hndOwner = GCHandle.Alloc(objOwner, GCHandleType.Weak);
+        }
+
+        protected override void Dispose(bool fInDispose)
+        {
+            base.Dispose(fInDispose);
+            if (this.m_hndOwner.IsAllocated)
+            {
+                this.m_hndOwner.Free();
+                this.m_hndOwner = new GCHandle();
+            }
+            int num = fInDispose ? 1 : 0;
+        }
+
+        public object Owner
+        {
+            get
+            {
+                object obj = (object)null;
+                if (this.m_hndOwner.IsAllocated)
+                    obj = this.m_hndOwner.Target;
+                return obj;
+            }
+        }
+
+        public int AddObject(object o)
+        {
+            int num;
+            lock (this)
+            {
+                num = this.m_idxNextIdentity++;
+                this.AddObject((object)num, o);
+            }
+            return num;
+        }
+
+        public void RemoveObject(int nIdentity) => this.RemoveKey((object)nIdentity);
+
+        public object Find(int nIdentity) => this.Find((object)nIdentity);
+
+        protected override void SetupObjectTable()
+        {
+            lock (this)
+                base.SetupObjectTable();
+        }
+
+        private void DoCleanup()
+        {
+            if (this.Owner == null)
+                this.Dispose();
+            else
+                this.RemoveDeadObjects();
+        }
+
+        private void CleanupTimer(object sender, EventArgs args)
+        {
+            this.DoCleanup();
+            foreach (ObjectTracker liveObject in this.LiveObjects)
+                liveObject.DoCleanup();
+        }
+
+        public enum ThreadMode
+        {
+            Private,
+            Shared,
+            Master,
+        }
     }
-
-    public ObjectTracker(RenderSession session, ObjectTracker.ThreadMode nMode, object objOwner)
-    {
-      Debug2.Validate(session != null || nMode != ObjectTracker.ThreadMode.Private, typeof (ArgumentException), "must specify a session for private trackers");
-      Debug2.Validate(objOwner != null || nMode == ObjectTracker.ThreadMode.Master, typeof (ArgumentException), "must specify an owner (except mater tracker)");
-      if (nMode == ObjectTracker.ThreadMode.Private)
-        ObjectTrackerGroup.RegisterChildTracker(this);
-      this.m_nMode = nMode;
-      this.m_idxNextIdentity = 1;
-      this.m_hndOwner = GCHandle.Alloc(objOwner, GCHandleType.Weak);
-    }
-
-    protected override void Dispose(bool fInDispose)
-    {
-      base.Dispose(fInDispose);
-      if (this.m_hndOwner.IsAllocated)
-      {
-        this.m_hndOwner.Free();
-        this.m_hndOwner = new GCHandle();
-      }
-      int num = fInDispose ? 1 : 0;
-    }
-
-    public object Owner
-    {
-      get
-      {
-        object obj = (object) null;
-        if (this.m_hndOwner.IsAllocated)
-          obj = this.m_hndOwner.Target;
-        return obj;
-      }
-    }
-
-    public int AddObject(object o)
-    {
-      int num;
-      lock (this)
-      {
-        num = this.m_idxNextIdentity++;
-        this.AddObject((object) num, o);
-      }
-      return num;
-    }
-
-    public void RemoveObject(int nIdentity) => this.RemoveKey((object) nIdentity);
-
-    public object Find(int nIdentity) => this.Find((object) nIdentity);
-
-    protected override void SetupObjectTable()
-    {
-      lock (this)
-        base.SetupObjectTable();
-    }
-
-    private void DoCleanup()
-    {
-      if (this.Owner == null)
-        this.Dispose();
-      else
-        this.RemoveDeadObjects();
-    }
-
-    private void CleanupTimer(object sender, EventArgs args)
-    {
-      this.DoCleanup();
-      foreach (ObjectTracker liveObject in this.LiveObjects)
-        liveObject.DoCleanup();
-    }
-
-    public enum ThreadMode
-    {
-      Private,
-      Shared,
-      Master,
-    }
-  }
 }

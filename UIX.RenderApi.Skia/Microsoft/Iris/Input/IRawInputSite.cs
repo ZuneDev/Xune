@@ -6,8 +6,8 @@
 
 namespace Microsoft.Iris.Input
 {
-  public interface IRawInputSite
-  {
-    object OwnerData { get; }
-  }
+    public interface IRawInputSite
+    {
+        object OwnerData { get; }
+    }
 }

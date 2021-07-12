@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal interface IVideoPoolNotification
-  {
-    void InvalidateClients();
+    internal interface IVideoPoolNotification
+    {
+        void InvalidateClients();
 
-    void NotifySourceChanged(Size sizeTargetPxl, Size sizeAspectRatio);
-  }
+        void NotifySourceChanged(Size sizeTargetPxl, Size sizeAspectRatio);
+    }
 }

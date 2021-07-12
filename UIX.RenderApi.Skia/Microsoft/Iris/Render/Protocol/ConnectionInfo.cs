@@ -8,9 +8,9 @@ using System;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [Serializable]
-  internal abstract class ConnectionInfo
-  {
-    public static readonly ConnectionInfo Default = (ConnectionInfo) new LocalConnectionInfo();
-  }
+    [Serializable]
+    internal abstract class ConnectionInfo
+    {
+        public static readonly ConnectionInfo Default = (ConnectionInfo)new LocalConnectionInfo();
+    }
 }

@@ -6,7 +6,7 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IActivatable
-  {
-  }
+    public interface IActivatable
+    {
+    }
 }

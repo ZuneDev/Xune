@@ -8,40 +8,40 @@ using System.Collections;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal struct AncestorEnumerator : IEnumerator, IEnumerable
-  {
-    private TreeNode m_nodeStart;
-    private TreeNode m_nodeCurrent;
-    private TreeNode m_nodeNext;
-
-    internal AncestorEnumerator(TreeNode nodeStart)
+    internal struct AncestorEnumerator : IEnumerator, IEnumerable
     {
-      this.m_nodeStart = nodeStart;
-      this.m_nodeCurrent = (TreeNode) null;
-      this.m_nodeNext = this.m_nodeStart;
+        private TreeNode m_nodeStart;
+        private TreeNode m_nodeCurrent;
+        private TreeNode m_nodeNext;
+
+        internal AncestorEnumerator(TreeNode nodeStart)
+        {
+            this.m_nodeStart = nodeStart;
+            this.m_nodeCurrent = (TreeNode)null;
+            this.m_nodeNext = this.m_nodeStart;
+        }
+
+        object IEnumerator.Current => (object)this.m_nodeCurrent;
+
+        public TreeNode Current => this.m_nodeCurrent;
+
+        IEnumerator IEnumerable.GetEnumerator() => (IEnumerator)this;
+
+        public AncestorEnumerator GetEnumerator() => this;
+
+        public void Reset()
+        {
+            this.m_nodeCurrent = (TreeNode)null;
+            this.m_nodeNext = this.m_nodeStart;
+        }
+
+        public bool MoveNext()
+        {
+            this.m_nodeCurrent = this.m_nodeNext;
+            if (this.m_nodeNext == null)
+                return false;
+            this.m_nodeNext = this.m_nodeNext.Parent;
+            return true;
+        }
     }
-
-    object IEnumerator.Current => (object) this.m_nodeCurrent;
-
-    public TreeNode Current => this.m_nodeCurrent;
-
-    IEnumerator IEnumerable.GetEnumerator() => (IEnumerator) this;
-
-    public AncestorEnumerator GetEnumerator() => this;
-
-    public void Reset()
-    {
-      this.m_nodeCurrent = (TreeNode) null;
-      this.m_nodeNext = this.m_nodeStart;
-    }
-
-    public bool MoveNext()
-    {
-      this.m_nodeCurrent = this.m_nodeNext;
-      if (this.m_nodeNext == null)
-        return false;
-      this.m_nodeNext = this.m_nodeNext.Parent;
-      return true;
-    }
-  }
 }

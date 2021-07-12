@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface ISound : ISharedRenderObject, IActivatable
-  {
-    void Play();
+    public interface ISound : ISharedRenderObject, IActivatable
+    {
+        void Play();
 
-    void Stop();
-  }
+        void Stop();
+    }
 }

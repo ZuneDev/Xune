@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal interface IChannel
-  {
-    void Connect(ContextID idRemoteContext, RENDERHANDLE hBrokerClass, MessageCookieLayout layout);
+    internal interface IChannel
+    {
+        void Connect(ContextID idRemoteContext, RENDERHANDLE hBrokerClass, MessageCookieLayout layout);
 
-    void Dispose();
+        void Dispose();
 
-    bool IsConnected { get; }
-  }
+        bool IsConnected { get; }
+    }
 }

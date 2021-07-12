@@ -8,27 +8,27 @@ using System;
 
 namespace Microsoft.Iris.Input
 {
-  [Serializable]
-  public struct RawKeyboardData
-  {
-    public Keys _virtualKey;
-    public int _scanCode;
-    public uint _repCount;
-    public InputDeviceType _deviceType;
-    public ushort _flags;
-
-    public RawKeyboardData(
-      Keys virtualKey,
-      int scanCode,
-      uint repCount,
-      ushort flags,
-      InputDeviceType deviceType)
+    [Serializable]
+    public struct RawKeyboardData
     {
-      this._virtualKey = virtualKey;
-      this._scanCode = scanCode;
-      this._repCount = repCount;
-      this._deviceType = deviceType;
-      this._flags = flags;
+        public Keys _virtualKey;
+        public int _scanCode;
+        public uint _repCount;
+        public InputDeviceType _deviceType;
+        public ushort _flags;
+
+        public RawKeyboardData(
+          Keys virtualKey,
+          int scanCode,
+          uint repCount,
+          ushort flags,
+          InputDeviceType deviceType)
+        {
+            this._virtualKey = virtualKey;
+            this._scanCode = scanCode;
+            this._repCount = repCount;
+            this._deviceType = deviceType;
+            this._flags = flags;
+        }
     }
-  }
 }

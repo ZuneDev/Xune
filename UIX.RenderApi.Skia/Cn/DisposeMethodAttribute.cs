@@ -9,9 +9,9 @@ using System.Diagnostics;
 
 namespace Cn
 {
-  [Conditional("NEVER")]
-  [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-  public class DisposeMethodAttribute : Attribute
-  {
-  }
+    [Conditional("NEVER")]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    public class DisposeMethodAttribute : Attribute
+    {
+    }
 }

@@ -9,15 +9,15 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public class InvertElement : EffectOperation
-  {
-    public InvertElement(string stName)
-      : this()
+    public class InvertElement : EffectOperation
     {
-      Debug2.Validate(!string.IsNullOrEmpty(stName), typeof (ArgumentException), nameof (stName));
-      this.m_stName = stName;
-    }
+        public InvertElement(string stName)
+          : this()
+        {
+            Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
+            this.m_stName = stName;
+        }
 
-    public InvertElement() => this.m_typeOperation = EffectOperationType.Invert;
-  }
+        public InvertElement() => this.m_typeOperation = EffectOperationType.Invert;
+    }
 }

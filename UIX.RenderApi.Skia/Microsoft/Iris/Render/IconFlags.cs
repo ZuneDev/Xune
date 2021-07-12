@@ -8,11 +8,11 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  [Flags]
-  public enum IconFlags
-  {
-    Small = 1,
-    Large = 2,
-    All = Large | Small, // 0x00000003
-  }
+    [Flags]
+    public enum IconFlags
+    {
+        Small = 1,
+        Large = 2,
+        All = Large | Small, // 0x00000003
+    }
 }

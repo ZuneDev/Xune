@@ -6,28 +6,28 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IAnimation : ISharedRenderObject
-  {
-    int RepeatCount { get; set; }
+    public interface IAnimation : ISharedRenderObject
+    {
+        int RepeatCount { get; set; }
 
-    bool IsPlaying { get; }
+        bool IsPlaying { get; }
 
-    bool IsActive { get; }
+        bool IsActive { get; }
 
-    bool AutoReset { get; set; }
+        bool AutoReset { get; set; }
 
-    AnimationResetBehavior ResetBehavior { get; set; }
+        AnimationResetBehavior ResetBehavior { get; set; }
 
-    void Play();
+        void Play();
 
-    void Pause();
+        void Pause();
 
-    void Reset();
+        void Reset();
 
-    void InstantAdvance(float advanceTime);
+        void InstantAdvance(float advanceTime);
 
-    void InstantFinish();
+        void InstantFinish();
 
-    event AsyncNotifyHandler AsyncNotifyEvent;
-  }
+        event AsyncNotifyHandler AsyncNotifyEvent;
+    }
 }

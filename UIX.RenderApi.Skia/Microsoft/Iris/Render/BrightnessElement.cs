@@ -10,44 +10,44 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public class BrightnessElement : EffectOperation
-  {
-    internal const string BrightnessPropertyName = "Brightness";
-    private float m_flBrightness;
-    private byte m_nBrightnessID;
-
-    public BrightnessElement(string stName, float flBrightness)
-      : this()
+    public class BrightnessElement : EffectOperation
     {
-      Debug2.Validate(!string.IsNullOrEmpty(stName), typeof (ArgumentException), nameof (stName));
-      Debug2.Validate((double) flBrightness >= -1.0 && (double) flBrightness <= 1.0, typeof (ArgumentOutOfRangeException), "Valid range for Brightness is [-1..1]");
-      this.m_flBrightness = flBrightness;
-      this.m_stName = stName;
+        internal const string BrightnessPropertyName = "Brightness";
+        private float m_flBrightness;
+        private byte m_nBrightnessID;
+
+        public BrightnessElement(string stName, float flBrightness)
+          : this()
+        {
+            Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
+            Debug2.Validate((double)flBrightness >= -1.0 && (double)flBrightness <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Brightness is [-1..1]");
+            this.m_flBrightness = flBrightness;
+            this.m_stName = stName;
+        }
+
+        public BrightnessElement() => this.m_typeOperation = EffectOperationType.Brightness;
+
+        public float Brightness
+        {
+            get => this.m_flBrightness;
+            set => this.m_flBrightness = value;
+        }
+
+        internal byte BrightnessID => this.m_nBrightnessID;
+
+        internal override int PreProcessProperties(
+          Map<string, EffectProperty> dictionary,
+          ref byte nNextUniqueID)
+        {
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Brightness", (byte)8, ref this.m_nBrightnessID, ref nNextUniqueID);
+        }
+
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Brightness", EffectPropertyType.Float, (object)this.m_flBrightness, this.m_nBrightnessID, dictProperties);
+
+        internal override void AddCacheKey(ByteBuilder cacheKey)
+        {
+            base.AddCacheKey(cacheKey);
+            this.GeneratePropertyCacheKey("Brightness", this.BrightnessID, this.Brightness, cacheKey);
+        }
     }
-
-    public BrightnessElement() => this.m_typeOperation = EffectOperationType.Brightness;
-
-    public float Brightness
-    {
-      get => this.m_flBrightness;
-      set => this.m_flBrightness = value;
-    }
-
-    internal byte BrightnessID => this.m_nBrightnessID;
-
-    internal override int PreProcessProperties(
-      Map<string, EffectProperty> dictionary,
-      ref byte nNextUniqueID)
-    {
-      return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Brightness", (byte) 8, ref this.m_nBrightnessID, ref nNextUniqueID);
-    }
-
-    internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Brightness", EffectPropertyType.Float, (object) this.m_flBrightness, this.m_nBrightnessID, dictProperties);
-
-    internal override void AddCacheKey(ByteBuilder cacheKey)
-    {
-      base.AddCacheKey(cacheKey);
-      this.GeneratePropertyCacheKey("Brightness", this.BrightnessID, this.Brightness, cacheKey);
-    }
-  }
 }

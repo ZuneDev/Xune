@@ -6,38 +6,38 @@
 
 namespace Microsoft.Iris.Render.Internal
 {
-  internal struct EventCookie
-  {
-    public static readonly EventCookie NULL = new EventCookie();
-    private uint m_value;
-
-    private EventCookie(uint value) => this.m_value = value;
-
-    public static bool operator ==(EventCookie hl, EventCookie hr) => (int) hl.m_value == (int) hr.m_value;
-
-    public static bool operator !=(EventCookie hl, EventCookie hr) => (int) hl.m_value != (int) hr.m_value;
-
-    public override bool Equals(object oCompare)
+    internal struct EventCookie
     {
-      switch (oCompare)
-      {
-        case uint num:
-label_3:
-          return (int) this.m_value == (int) num;
-        case EventCookie eventCookie:
-          num = eventCookie.m_value;
-          goto label_3;
-        default:
-          return false;
-      }
+        public static readonly EventCookie NULL = new EventCookie();
+        private uint m_value;
+
+        private EventCookie(uint value) => this.m_value = value;
+
+        public static bool operator ==(EventCookie hl, EventCookie hr) => (int)hl.m_value == (int)hr.m_value;
+
+        public static bool operator !=(EventCookie hl, EventCookie hr) => (int)hl.m_value != (int)hr.m_value;
+
+        public override bool Equals(object oCompare)
+        {
+            switch (oCompare)
+            {
+                case uint num:
+                label_3:
+                    return (int)this.m_value == (int)num;
+                case EventCookie eventCookie:
+                    num = eventCookie.m_value;
+                    goto label_3;
+                default:
+                    return false;
+            }
+        }
+
+        public override int GetHashCode() => (int)this.m_value;
+
+        internal static EventCookie FromUInt32(uint value) => new EventCookie(value);
+
+        internal static uint ToUInt32(EventCookie handle) => handle.m_value;
+
+        public static EventCookie ReserveSlot() => EventCookie.FromUInt32(KeyAllocator.ReserveSlot());
     }
-
-    public override int GetHashCode() => (int) this.m_value;
-
-    internal static EventCookie FromUInt32(uint value) => new EventCookie(value);
-
-    internal static uint ToUInt32(EventCookie handle) => handle.m_value;
-
-    public static EventCookie ReserveSlot() => EventCookie.FromUInt32(KeyAllocator.ReserveSlot());
-  }
 }

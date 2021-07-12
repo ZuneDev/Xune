@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal delegate void TimeoutHandler();
+    internal delegate void TimeoutHandler();
 }

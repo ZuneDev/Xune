@@ -6,26 +6,26 @@
 
 namespace Microsoft.Iris.Input
 {
-  public enum CursorID
-  {
-    NotSpecified,
-    AppStarting,
-    Arrow,
-    Cancel,
-    Copy,
-    Crosshair,
-    IBeam,
-    Hand,
-    Help,
-    Move,
-    No,
-    None,
-    Size,
-    SizeNS,
-    SizeWE,
-    SizeNWSE,
-    SizeNESW,
-    UpArrow,
-    Wait,
-  }
+    public enum CursorID
+    {
+        NotSpecified,
+        AppStarting,
+        Arrow,
+        Cancel,
+        Copy,
+        Crosshair,
+        IBeam,
+        Hand,
+        Help,
+        Move,
+        No,
+        None,
+        Size,
+        SizeNS,
+        SizeWE,
+        SizeNWSE,
+        SizeNESW,
+        UpArrow,
+        Wait,
+    }
 }

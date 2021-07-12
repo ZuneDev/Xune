@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IInputSystem
-  {
-    void RegisterRawInputCallbacks(IRawInputCallbacks handlers);
+    public interface IInputSystem
+    {
+        void RegisterRawInputCallbacks(IRawInputCallbacks handlers);
 
-    void UnregisterRawInputCallbacks();
-  }
+        void UnregisterRawInputCallbacks();
+    }
 }

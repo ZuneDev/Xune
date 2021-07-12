@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void SessionActivateHandler(bool fActive);
+    public delegate void SessionActivateHandler(bool fActive);
 }

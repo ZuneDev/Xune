@@ -6,7 +6,7 @@
 
 namespace Microsoft.Iris.Render
 {
-  public sealed class CosineInterpolation : AnimationInterpolation
-  {
-  }
+    public sealed class CosineInterpolation : AnimationInterpolation
+    {
+    }
 }

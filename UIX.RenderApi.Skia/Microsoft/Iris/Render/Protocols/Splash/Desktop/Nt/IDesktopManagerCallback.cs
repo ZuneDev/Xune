@@ -9,18 +9,18 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
 {
-  internal interface IDesktopManagerCallback
-  {
-    void OnEndDisplayModes(RENDERHANDLE target);
+    internal interface IDesktopManagerCallback
+    {
+        void OnEndDisplayModes(RENDERHANDLE target);
 
-    void OnDisplayMode(RENDERHANDLE target, RenderDisplayMode mode, bool fSupported);
+        void OnDisplayMode(RENDERHANDLE target, RenderDisplayMode mode, bool fSupported);
 
-    void OnBeginDisplayModes(RENDERHANDLE target);
+        void OnBeginDisplayModes(RENDERHANDLE target);
 
-    void OnEndEnumMonitorInfo(RENDERHANDLE target);
+        void OnEndEnumMonitorInfo(RENDERHANDLE target);
 
-    unsafe void OnMonitorInfo(RENDERHANDLE target, Message* info);
+        unsafe void OnMonitorInfo(RENDERHANDLE target, Message* info);
 
-    void OnBeginEnumMonitorInfo(RENDERHANDLE target);
-  }
+        void OnBeginEnumMonitorInfo(RENDERHANDLE target);
+    }
 }

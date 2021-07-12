@@ -6,16 +6,16 @@
 
 public struct KeyValueEntry
 {
-  private object _key;
-  private object _value;
+    private object _key;
+    private object _value;
 
-  public KeyValueEntry(object key, object value)
-  {
-    this._key = key;
-    this._value = value;
-  }
+    public KeyValueEntry(object key, object value)
+    {
+        this._key = key;
+        this._value = value;
+    }
 
-  public object Key => this._key;
+    public object Key => this._key;
 
-  public object Value => this._value;
+    public object Value => this._value;
 }

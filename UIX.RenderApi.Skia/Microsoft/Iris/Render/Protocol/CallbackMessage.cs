@@ -8,12 +8,12 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [ComVisible(false)]
-  internal struct CallbackMessage
-  {
-    public uint cbSize;
-    public uint nMsg;
-    public RENDERHANDLE idObjectSubject;
-    public RENDERHANDLE hTarget;
-  }
+    [ComVisible(false)]
+    internal struct CallbackMessage
+    {
+        public uint cbSize;
+        public uint nMsg;
+        public RENDERHANDLE idObjectSubject;
+        public RENDERHANDLE hTarget;
+    }
 }

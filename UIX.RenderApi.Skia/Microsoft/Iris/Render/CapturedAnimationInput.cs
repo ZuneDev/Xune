@@ -8,37 +8,37 @@ using Microsoft.Iris.Render.Animation;
 
 namespace Microsoft.Iris.Render
 {
-  public sealed class CapturedAnimationInput : ObjectAnimationInput
-  {
-    private bool m_refreshOnRepeat;
-
-    public CapturedAnimationInput(IAnimatable sourceObject, string sourcePropertyName)
-      : this(sourceObject, sourcePropertyName, (string) null)
+    public sealed class CapturedAnimationInput : ObjectAnimationInput
     {
-    }
+        private bool m_refreshOnRepeat;
 
-    public CapturedAnimationInput(
-      IAnimatable sourceObject,
-      string sourcePropertyName,
-      string sourceMaskSpec)
-      : base(sourceObject, sourcePropertyName, sourceMaskSpec)
-    {
-    }
+        public CapturedAnimationInput(IAnimatable sourceObject, string sourcePropertyName)
+          : this(sourceObject, sourcePropertyName, (string)null)
+        {
+        }
 
-    public CapturedAnimationInput(IAnimation sourceAnimation)
-      : this(sourceAnimation, (string) null)
-    {
-    }
+        public CapturedAnimationInput(
+          IAnimatable sourceObject,
+          string sourcePropertyName,
+          string sourceMaskSpec)
+          : base(sourceObject, sourcePropertyName, sourceMaskSpec)
+        {
+        }
 
-    public CapturedAnimationInput(IAnimation sourceAnimation, string sourceMaskSpec)
-      : base(sourceAnimation, sourceMaskSpec)
-    {
-    }
+        public CapturedAnimationInput(IAnimation sourceAnimation)
+          : this(sourceAnimation, (string)null)
+        {
+        }
 
-    public bool RefreshOnRepeat
-    {
-      get => this.m_refreshOnRepeat;
-      set => this.m_refreshOnRepeat = value;
+        public CapturedAnimationInput(IAnimation sourceAnimation, string sourceMaskSpec)
+          : base(sourceAnimation, sourceMaskSpec)
+        {
+        }
+
+        public bool RefreshOnRepeat
+        {
+            get => this.m_refreshOnRepeat;
+            set => this.m_refreshOnRepeat = value;
+        }
     }
-  }
 }

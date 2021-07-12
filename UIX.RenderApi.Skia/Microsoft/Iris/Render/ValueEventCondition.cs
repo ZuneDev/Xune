@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum ValueEventCondition : uint
-  {
-    RiseAbove,
-    RiseTo,
-    FallBelow,
-    FallTo,
-    Count,
-  }
+    public enum ValueEventCondition : uint
+    {
+        RiseAbove,
+        RiseTo,
+        FallBelow,
+        FallTo,
+        Count,
+    }
 }

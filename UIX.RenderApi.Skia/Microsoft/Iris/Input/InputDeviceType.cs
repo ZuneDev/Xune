@@ -6,11 +6,11 @@
 
 namespace Microsoft.Iris.Input
 {
-  public enum InputDeviceType
-  {
-    None,
-    Keyboard,
-    Mouse,
-    Other,
-  }
+    public enum InputDeviceType
+    {
+        None,
+        Keyboard,
+        Mouse,
+        Other,
+    }
 }

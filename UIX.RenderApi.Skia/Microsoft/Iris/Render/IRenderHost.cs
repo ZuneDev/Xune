@@ -8,8 +8,8 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IRenderHost
-  {
-    void DeferredInvoke(DeferredInvokePriority priority, IDeferredInvokeItem item, TimeSpan delay);
-  }
+    public interface IRenderHost
+    {
+        void DeferredInvoke(DeferredInvokePriority priority, IDeferredInvokeItem item, TimeSpan delay);
+    }
 }

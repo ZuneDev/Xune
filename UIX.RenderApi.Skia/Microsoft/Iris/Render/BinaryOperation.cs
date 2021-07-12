@@ -9,29 +9,29 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public class BinaryOperation : AnimationInput
-  {
-    private AnimationInput m_leftInput;
-    private AnimationInput m_rightInput;
-    private BinaryOpCode m_opCode;
-
-    public BinaryOperation(
-      BinaryOpCode opCode,
-      AnimationInput leftInput,
-      AnimationInput rightInput)
+    public class BinaryOperation : AnimationInput
     {
-      Debug2.Validate(leftInput != null, typeof (ArgumentNullException), nameof (leftInput));
-      Debug2.Validate(rightInput != null, typeof (ArgumentNullException), nameof (rightInput));
-      this.m_leftInput = leftInput;
-      this.m_rightInput = rightInput;
-      this.m_opCode = opCode;
-      this.CommonCreate(leftInput.InputType, AnimationTypeMask.Default);
+        private AnimationInput m_leftInput;
+        private AnimationInput m_rightInput;
+        private BinaryOpCode m_opCode;
+
+        public BinaryOperation(
+          BinaryOpCode opCode,
+          AnimationInput leftInput,
+          AnimationInput rightInput)
+        {
+            Debug2.Validate(leftInput != null, typeof(ArgumentNullException), nameof(leftInput));
+            Debug2.Validate(rightInput != null, typeof(ArgumentNullException), nameof(rightInput));
+            this.m_leftInput = leftInput;
+            this.m_rightInput = rightInput;
+            this.m_opCode = opCode;
+            this.CommonCreate(leftInput.InputType, AnimationTypeMask.Default);
+        }
+
+        public BinaryOpCode Operation => this.m_opCode;
+
+        public AnimationInput LeftOperand => this.m_leftInput;
+
+        public AnimationInput RightOperand => this.m_rightInput;
     }
-
-    public BinaryOpCode Operation => this.m_opCode;
-
-    public AnimationInput LeftOperand => this.m_leftInput;
-
-    public AnimationInput RightOperand => this.m_rightInput;
-  }
 }

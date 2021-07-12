@@ -6,7 +6,7 @@
 
 public interface IVector
 {
-  int Count { get; }
+    int Count { get; }
 
-  object this[int index] { get; }
+    object this[int index] { get; }
 }

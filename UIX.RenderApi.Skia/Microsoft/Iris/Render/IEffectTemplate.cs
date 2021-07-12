@@ -6,16 +6,16 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IEffectTemplate : ISharedRenderObject
-  {
-    void AddEffectProperty(string stPath);
+    public interface IEffectTemplate : ISharedRenderObject
+    {
+        void AddEffectProperty(string stPath);
 
-    bool Build(EffectInput input);
+        bool Build(EffectInput input);
 
-    IEffect CreateInstance(object objUser);
+        IEffect CreateInstance(object objUser);
 
-    bool IsBuilt { get; }
+        bool IsBuilt { get; }
 
-    string Name { get; }
-  }
+        string Name { get; }
+    }
 }

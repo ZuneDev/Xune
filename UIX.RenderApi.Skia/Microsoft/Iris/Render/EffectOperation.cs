@@ -9,19 +9,19 @@ using Microsoft.Iris.Render.Graphics;
 
 namespace Microsoft.Iris.Render
 {
-  public abstract class EffectOperation : EffectElement
-  {
-    protected EffectOperationType m_typeOperation;
-
-    internal EffectOperationType Type => this.m_typeOperation;
-
-    internal override void AddCacheKey(ByteBuilder cacheKey) => this.GenerateClassCacheKey((byte) 1, (byte) this.Type, cacheKey);
-
-    internal override int PreProcessProperties(
-      Map<string, EffectProperty> dictionary,
-      ref byte nNextUniqueID)
+    public abstract class EffectOperation : EffectElement
     {
-      return 3 + base.PreProcessProperties(dictionary, ref nNextUniqueID);
+        protected EffectOperationType m_typeOperation;
+
+        internal EffectOperationType Type => this.m_typeOperation;
+
+        internal override void AddCacheKey(ByteBuilder cacheKey) => this.GenerateClassCacheKey((byte)1, (byte)this.Type, cacheKey);
+
+        internal override int PreProcessProperties(
+          Map<string, EffectProperty> dictionary,
+          ref byte nNextUniqueID)
+        {
+            return 3 + base.PreProcessProperties(dictionary, ref nNextUniqueID);
+        }
     }
-  }
 }

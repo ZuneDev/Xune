@@ -6,11 +6,11 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum ImageFormat
-  {
-    None,
-    A8R8G8B8,
-    X8R8G8B8,
-    A8,
-  }
+    public enum ImageFormat
+    {
+        None,
+        A8R8G8B8,
+        X8R8G8B8,
+        A8,
+    }
 }

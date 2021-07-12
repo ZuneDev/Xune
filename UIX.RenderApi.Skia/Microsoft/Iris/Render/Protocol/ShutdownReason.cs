@@ -6,13 +6,13 @@
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal enum ShutdownReason
-  {
-    NoReason,
-    SelfShutdown,
-    PeerShutdown,
-    TransportClosed,
-    TransportFailure,
-    GenericFailure,
-  }
+    internal enum ShutdownReason
+    {
+        NoReason,
+        SelfShutdown,
+        PeerShutdown,
+        TransportClosed,
+        TransportFailure,
+        GenericFailure,
+    }
 }

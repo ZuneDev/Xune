@@ -8,13 +8,13 @@ using System;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class ImageLoadInfo
-  {
-    public Image imageOwner;
-    public IntPtr rgAppData;
-    public int nStride;
-    public int nLoadsInProgress;
-    public int nSystemLoadRequests;
-    public ContentNotifyHandler handlerNotify;
-  }
+    internal class ImageLoadInfo
+    {
+        public Image imageOwner;
+        public IntPtr rgAppData;
+        public int nStride;
+        public int nLoadsInProgress;
+        public int nSystemLoadRequests;
+        public ContentNotifyHandler handlerNotify;
+    }
 }

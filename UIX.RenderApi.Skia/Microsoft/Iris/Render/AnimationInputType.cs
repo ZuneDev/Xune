@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum AnimationInputType
-  {
-    Float,
-    Vector2,
-    Vector3,
-    Vector4,
-    Quaternion,
-  }
+    public enum AnimationInputType
+    {
+        Float,
+        Vector2,
+        Vector3,
+        Vector4,
+        Quaternion,
+    }
 }

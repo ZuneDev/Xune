@@ -8,39 +8,39 @@ using Microsoft.Iris.Render.Protocols.Splash.Rendering;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class Dx9Effect : Effect
-  {
-    internal Dx9Effect(Dx9EffectTemplate effectTemplate)
-      : base((EffectTemplate) effectTemplate)
-      => this.m_remoteEffect = (Microsoft.Iris.Render.Protocols.Splash.Rendering.RemoteEffect) this.m_effectTemplate.Session.BuildRemoteDx9Effect(this);
-
-    internal Dx9EffectManager EffectManager => ((Dx9GraphicsDevice) this.m_effectTemplate.Device).EffectManager;
-
-    internal override void RemoteEffect()
+    internal class Dx9Effect : Effect
     {
-      ((RemoteDx9Effect) this.m_remoteEffect).SendLoadEffectResource(((Dx9EffectTemplate) this.m_effectTemplate).EffectResource.RemoteStub);
-      this.Initialize();
-    }
+        internal Dx9Effect(Dx9EffectTemplate effectTemplate)
+          : base((EffectTemplate)effectTemplate)
+          => this.m_remoteEffect = (Microsoft.Iris.Render.Protocols.Splash.Rendering.RemoteEffect)this.m_effectTemplate.Session.BuildRemoteDx9Effect(this);
 
-    internal override void SetProperty(string stPropertyName, Image image)
-    {
-      if (image != null)
-      {
-        Dx9EffectResource effectResource = ((Dx9EffectTemplate) this.m_effectTemplate).EffectResource;
-        image.GutterSize = effectResource.GutterSize;
-      }
-      base.SetProperty(stPropertyName, image);
-    }
+        internal Dx9EffectManager EffectManager => ((Dx9GraphicsDevice)this.m_effectTemplate.Device).EffectManager;
 
-    internal override void SetProperty(string stPropertyName, IImage[] images)
-    {
-      Dx9EffectResource effectResource = ((Dx9EffectTemplate) this.m_effectTemplate).EffectResource;
-      for (int index = 0; index < images.Length; ++index)
-      {
-        if (images[index] is Image image)
-          image.GutterSize = effectResource.GutterSize;
-      }
-      base.SetProperty(stPropertyName, images);
+        internal override void RemoteEffect()
+        {
+            ((RemoteDx9Effect)this.m_remoteEffect).SendLoadEffectResource(((Dx9EffectTemplate)this.m_effectTemplate).EffectResource.RemoteStub);
+            this.Initialize();
+        }
+
+        internal override void SetProperty(string stPropertyName, Image image)
+        {
+            if (image != null)
+            {
+                Dx9EffectResource effectResource = ((Dx9EffectTemplate)this.m_effectTemplate).EffectResource;
+                image.GutterSize = effectResource.GutterSize;
+            }
+            base.SetProperty(stPropertyName, image);
+        }
+
+        internal override void SetProperty(string stPropertyName, IImage[] images)
+        {
+            Dx9EffectResource effectResource = ((Dx9EffectTemplate)this.m_effectTemplate).EffectResource;
+            for (int index = 0; index < images.Length; ++index)
+            {
+                if (images[index] is Image image)
+                    image.GutterSize = effectResource.GutterSize;
+            }
+            base.SetProperty(stPropertyName, images);
+        }
     }
-  }
 }

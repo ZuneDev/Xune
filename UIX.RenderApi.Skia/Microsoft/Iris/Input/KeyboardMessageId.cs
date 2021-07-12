@@ -6,13 +6,13 @@
 
 namespace Microsoft.Iris.Input
 {
-  public enum KeyboardMessageId
-  {
-    Down,
-    Up,
-    Char,
-    SysDown,
-    SysUp,
-    SysChar,
-  }
+    public enum KeyboardMessageId
+    {
+        Down,
+        Up,
+        Char,
+        SysDown,
+        SysUp,
+        SysChar,
+    }
 }

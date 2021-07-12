@@ -6,11 +6,11 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal enum VideoZoomMode
-  {
-    Normal,
-    Zoomed,
-    Stretched,
-    NonLinear,
-  }
+    internal enum VideoZoomMode
+    {
+        Normal,
+        Zoomed,
+        Stretched,
+        NonLinear,
+    }
 }

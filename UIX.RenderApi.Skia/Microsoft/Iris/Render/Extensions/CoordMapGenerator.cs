@@ -9,22 +9,22 @@ using System;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  public static class CoordMapGenerator
-  {
-    public static CoordMap CreateSubrect(Size sizeImage, Rectangle rect)
+    public static class CoordMapGenerator
     {
-      Debug2.Validate(rect.Right <= sizeImage.Width, typeof (ArgumentOutOfRangeException), "Desired rect cannot extend beyond the image width");
-      Debug2.Validate(rect.Bottom <= sizeImage.Height, typeof (ArgumentOutOfRangeException), "Desired rect cannot extend beyond the image height");
-      CoordMap coordMap = new CoordMap();
-      float flValue1 = (float) rect.Left / (float) sizeImage.Width;
-      float flValue2 = (float) rect.Right / (float) sizeImage.Width;
-      float flValue3 = (float) rect.Top / (float) sizeImage.Height;
-      float flValue4 = (float) rect.Bottom / (float) sizeImage.Height;
-      coordMap.AddValue(0.0f, flValue1, Orientation.Horizontal);
-      coordMap.AddValue(1f, flValue2, Orientation.Horizontal);
-      coordMap.AddValue(0.0f, flValue3, Orientation.Vertical);
-      coordMap.AddValue(1f, flValue4, Orientation.Vertical);
-      return coordMap;
+        public static CoordMap CreateSubrect(Size sizeImage, Rectangle rect)
+        {
+            Debug2.Validate(rect.Right <= sizeImage.Width, typeof(ArgumentOutOfRangeException), "Desired rect cannot extend beyond the image width");
+            Debug2.Validate(rect.Bottom <= sizeImage.Height, typeof(ArgumentOutOfRangeException), "Desired rect cannot extend beyond the image height");
+            CoordMap coordMap = new CoordMap();
+            float flValue1 = (float)rect.Left / (float)sizeImage.Width;
+            float flValue2 = (float)rect.Right / (float)sizeImage.Width;
+            float flValue3 = (float)rect.Top / (float)sizeImage.Height;
+            float flValue4 = (float)rect.Bottom / (float)sizeImage.Height;
+            coordMap.AddValue(0.0f, flValue1, Orientation.Horizontal);
+            coordMap.AddValue(1f, flValue2, Orientation.Horizontal);
+            coordMap.AddValue(0.0f, flValue3, Orientation.Vertical);
+            coordMap.AddValue(1f, flValue4, Orientation.Vertical);
+            return coordMap;
+        }
     }
-  }
 }

@@ -6,41 +6,41 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IDisplay
-  {
-    string DeviceName { get; }
+    public interface IDisplay
+    {
+        string DeviceName { get; }
 
-    Rectangle ScreenArea { get; }
+        Rectangle ScreenArea { get; }
 
-    Rectangle WorkArea { get; }
+        Rectangle WorkArea { get; }
 
-    bool IsPrimary { get; }
+        bool IsPrimary { get; }
 
-    TvFormat TvFormat { get; }
+        TvFormat TvFormat { get; }
 
-    bool TvMode { get; }
+        bool TvMode { get; }
 
-    Size LogicalFullScreenResolution { get; }
+        Size LogicalFullScreenResolution { get; }
 
-    DisplayMode[] SupportedModes { get; }
+        DisplayMode[] SupportedModes { get; }
 
-    DisplayMode[] ExtraModes { get; }
+        DisplayMode[] ExtraModes { get; }
 
-    DisplayMode[] AllModes { get; }
+        DisplayMode[] AllModes { get; }
 
-    DisplayMode CurrentMode { get; }
+        DisplayMode CurrentMode { get; }
 
-    DisplayMode DesktopMode { get; }
+        DisplayMode DesktopMode { get; }
 
-    string MonitorPnP { get; }
+        string MonitorPnP { get; }
 
-    bool ValidateDisplayMode(
-      DisplayMode modeDesired,
-      DisplayModeFlags nCheck,
-      bool fAllowAllModes,
-      out DisplayMode modeComplete,
-      out DisplayModeFlags nCompleteCheck);
+        bool ValidateDisplayMode(
+          DisplayMode modeDesired,
+          DisplayModeFlags nCheck,
+          bool fAllowAllModes,
+          out DisplayMode modeComplete,
+          out DisplayModeFlags nCompleteCheck);
 
-    bool ChangeFullScreenResolution(DisplayMode modeChanges, DisplayModeFlags nValid);
-  }
+        bool ChangeFullScreenResolution(DisplayMode modeChanges, DisplayModeFlags nValid);
+    }
 }

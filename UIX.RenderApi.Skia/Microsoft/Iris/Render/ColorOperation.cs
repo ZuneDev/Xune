@@ -6,20 +6,20 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum ColorOperation
-  {
-    Add = 0,
-    LinearDodge = 0,
-    Subtract = 1,
-    Multiply = 2,
-    Lighten = 3,
-    Darken = 4,
-    ColorDodge = 5,
-    ColorBurn = 6,
-    Screen = 7,
-    Overlay = 8,
-    SoftLight = 9,
-    HardLight = 10, // 0x0000000A
-    LinearBurn = 11, // 0x0000000B
-  }
+    public enum ColorOperation
+    {
+        Add = 0,
+        LinearDodge = 0,
+        Subtract = 1,
+        Multiply = 2,
+        Lighten = 3,
+        Darken = 4,
+        ColorDodge = 5,
+        ColorBurn = 6,
+        Screen = 7,
+        Overlay = 8,
+        SoftLight = 9,
+        HardLight = 10, // 0x0000000A
+        LinearBurn = 11, // 0x0000000B
+    }
 }

@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void CloseHandler();
+    public delegate void CloseHandler();
 }

@@ -6,38 +6,38 @@
 
 namespace Microsoft.Iris.Render.Internal
 {
-  internal class Math2
-  {
-    public static int FindPowerOf2(int nValue) => Math2.FindPowerOf2(nValue, 1);
-
-    public static int FindPowerOf2(int nValue, int nStart)
+    internal class Math2
     {
-      int num = nStart;
-      while (num < nValue)
-        num *= 2;
-      return num;
-    }
+        public static int FindPowerOf2(int nValue) => Math2.FindPowerOf2(nValue, 1);
 
-    public static int RoundUp(float flValue) => (int) ((double) flValue + 0.5);
+        public static int FindPowerOf2(int nValue, int nStart)
+        {
+            int num = nStart;
+            while (num < nValue)
+                num *= 2;
+            return num;
+        }
 
-    public static int Clamp(int nValue, int nMin, int nMax)
-    {
-      if (nValue < nMin)
-        return nMin;
-      return nValue > nMax ? nMax : nValue;
-    }
+        public static int RoundUp(float flValue) => (int)((double)flValue + 0.5);
 
-    public static float Clamp(float flValue, float flMin, float flMax)
-    {
-      if ((double) flValue < (double) flMin)
-        return flMin;
-      return (double) flValue > (double) flMax ? flMax : flValue;
-    }
+        public static int Clamp(int nValue, int nMin, int nMax)
+        {
+            if (nValue < nMin)
+                return nMin;
+            return nValue > nMax ? nMax : nValue;
+        }
 
-    public static bool WithinEpsilon(float flValue1, float flValue2)
-    {
-      float num = flValue1 - flValue2;
-      return -9.99999974737875E-06 <= (double) num && (double) num <= 9.99999974737875E-06;
+        public static float Clamp(float flValue, float flMin, float flMax)
+        {
+            if ((double)flValue < (double)flMin)
+                return flMin;
+            return (double)flValue > (double)flMax ? flMax : flValue;
+        }
+
+        public static bool WithinEpsilon(float flValue1, float flValue2)
+        {
+            float num = flValue1 - flValue2;
+            return -9.99999974737875E-06 <= (double)num && (double)num <= 9.99999974737875E-06;
+        }
     }
-  }
 }

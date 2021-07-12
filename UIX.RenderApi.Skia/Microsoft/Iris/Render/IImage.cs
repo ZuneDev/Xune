@@ -8,14 +8,14 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IImage : ISharedRenderObject
-  {
-    Size Size { get; }
+    public interface IImage : ISharedRenderObject
+    {
+        Size Size { get; }
 
-    ImageFormat Format { get; }
+        ImageFormat Format { get; }
 
-    string Identifier { get; }
+        string Identifier { get; }
 
-    bool LoadContent(ImageFormat format, Size size, int Stride, IntPtr Data);
-  }
+        bool LoadContent(ImageFormat format, Size size, int Stride, IntPtr Data);
+    }
 }

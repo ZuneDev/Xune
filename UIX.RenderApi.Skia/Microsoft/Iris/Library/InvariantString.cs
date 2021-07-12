@@ -10,190 +10,190 @@ using System.Globalization;
 
 namespace Microsoft.Iris.Library
 {
-  public static class InvariantString
-  {
-    public static string Format(string format, object param) => string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param);
-
-    public static string Format(string format, object[] param) => throw new Exception("Should never format with object array. Use one of the dedicated format methods");
-
-    public static string Format(string format, object param1, object param2) => string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2);
-
-    public static string Format(string format, object param1, object param2, object param3) => string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2, param3);
-
-    public static string Format(
-      string format,
-      object param1,
-      object param2,
-      object param3,
-      object param4)
+    public static class InvariantString
     {
-      return string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2, param3, param4);
-    }
+        public static string Format(string format, object param) => string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param);
 
-    public static string Format(
-      string format,
-      object param1,
-      object param2,
-      object param3,
-      object param4,
-      object param5)
-    {
-      return string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5);
-    }
+        public static string Format(string format, object[] param) => throw new Exception("Should never format with object array. Use one of the dedicated format methods");
 
-    public static string Format(
-      string format,
-      object param1,
-      object param2,
-      object param3,
-      object param4,
-      object param5,
-      object param6)
-    {
-      return string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6);
-    }
+        public static string Format(string format, object param1, object param2) => string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2);
 
-    public static string Format(
-      string format,
-      object param1,
-      object param2,
-      object param3,
-      object param4,
-      object param5,
-      object param6,
-      object param7)
-    {
-      return string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7);
-    }
+        public static string Format(string format, object param1, object param2, object param3) => string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3);
 
-    public static string Format(
-      string format,
-      object param1,
-      object param2,
-      object param3,
-      object param4,
-      object param5,
-      object param6,
-      object param7,
-      object param8)
-    {
-      return string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8);
-    }
-
-    public static string Format(
-      string format,
-      object param1,
-      object param2,
-      object param3,
-      object param4,
-      object param5,
-      object param6,
-      object param7,
-      object param8,
-      object param9)
-    {
-      return string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9);
-    }
-
-    public static string Format(
-      string format,
-      object param1,
-      object param2,
-      object param3,
-      object param4,
-      object param5,
-      object param6,
-      object param7,
-      object param8,
-      object param9,
-      object param10)
-    {
-      return string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
-    }
-
-    public static string Format(
-      string format,
-      object param1,
-      object param2,
-      object param3,
-      object param4,
-      object param5,
-      object param6,
-      object param7,
-      object param8,
-      object param9,
-      object param10,
-      object param11)
-    {
-      return string.Format((IFormatProvider) CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
-    }
-
-    public static bool Equals(string leftName, string rightName) => string.Compare(leftName, rightName, StringComparison.Ordinal) == 0;
-
-    public static bool EqualsI(string leftName, string rightName) => string.Compare(leftName, rightName, StringComparison.OrdinalIgnoreCase) == 0;
-
-    public static bool StartsWith(string valueName, string prefixName) => valueName.StartsWith(prefixName, StringComparison.Ordinal);
-
-    public static bool StartsWithI(string valueName, string prefixName) => valueName.StartsWith(prefixName, StringComparison.OrdinalIgnoreCase);
-
-    public static bool EndsWith(string valueName, string suffixName) => valueName.EndsWith(suffixName, StringComparison.Ordinal);
-
-    public static bool EndsWithI(string valueName, string suffixName) => valueName.EndsWith(suffixName, StringComparison.OrdinalIgnoreCase);
-
-    public static string ValueToString(ushort v, string formatName) => v.ToString(formatName, (IFormatProvider) CultureInfo.InvariantCulture);
-
-    public static IEqualityComparer<string> OrdinalIgnoreCaseComparer => (IEqualityComparer<string>) InvariantString.OrdinalIgnoreCaseStringComparer.Instance;
-
-    public static IEqualityComparer<string> OrdinalComparer => (IEqualityComparer<string>) InvariantString.OrdinalStringComparer.Instance;
-
-    public class OrdinalStringComparer : IEqualityComparer<string>
-    {
-      private static InvariantString.OrdinalStringComparer _instance;
-
-      private OrdinalStringComparer()
-      {
-      }
-
-      public static InvariantString.OrdinalStringComparer Instance
-      {
-        get
+        public static string Format(
+          string format,
+          object param1,
+          object param2,
+          object param3,
+          object param4)
         {
-          if (InvariantString.OrdinalStringComparer._instance == null)
-            InvariantString.OrdinalStringComparer._instance = new InvariantString.OrdinalStringComparer();
-          return InvariantString.OrdinalStringComparer._instance;
+            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4);
         }
-      }
 
-      public int Compare(string x, string y) => string.Compare(x, y, StringComparison.Ordinal);
-
-      public int GetHashCode(string obj) => obj.GetHashCode();
-
-      public bool Equals(string x, string y) => this.Compare(x, y) == 0;
-    }
-
-    public class OrdinalIgnoreCaseStringComparer : IEqualityComparer<string>
-    {
-      private static InvariantString.OrdinalIgnoreCaseStringComparer _instance;
-
-      private OrdinalIgnoreCaseStringComparer()
-      {
-      }
-
-      public static InvariantString.OrdinalIgnoreCaseStringComparer Instance
-      {
-        get
+        public static string Format(
+          string format,
+          object param1,
+          object param2,
+          object param3,
+          object param4,
+          object param5)
         {
-          if (InvariantString.OrdinalIgnoreCaseStringComparer._instance == null)
-            InvariantString.OrdinalIgnoreCaseStringComparer._instance = new InvariantString.OrdinalIgnoreCaseStringComparer();
-          return InvariantString.OrdinalIgnoreCaseStringComparer._instance;
+            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5);
         }
-      }
 
-      public int Compare(string x, string y) => string.Compare(x, y, StringComparison.OrdinalIgnoreCase);
+        public static string Format(
+          string format,
+          object param1,
+          object param2,
+          object param3,
+          object param4,
+          object param5,
+          object param6)
+        {
+            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6);
+        }
 
-      public int GetHashCode(string obj) => obj.ToLowerInvariant().GetHashCode();
+        public static string Format(
+          string format,
+          object param1,
+          object param2,
+          object param3,
+          object param4,
+          object param5,
+          object param6,
+          object param7)
+        {
+            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7);
+        }
 
-      public bool Equals(string x, string y) => this.Compare(x, y) == 0;
+        public static string Format(
+          string format,
+          object param1,
+          object param2,
+          object param3,
+          object param4,
+          object param5,
+          object param6,
+          object param7,
+          object param8)
+        {
+            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8);
+        }
+
+        public static string Format(
+          string format,
+          object param1,
+          object param2,
+          object param3,
+          object param4,
+          object param5,
+          object param6,
+          object param7,
+          object param8,
+          object param9)
+        {
+            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9);
+        }
+
+        public static string Format(
+          string format,
+          object param1,
+          object param2,
+          object param3,
+          object param4,
+          object param5,
+          object param6,
+          object param7,
+          object param8,
+          object param9,
+          object param10)
+        {
+            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+        }
+
+        public static string Format(
+          string format,
+          object param1,
+          object param2,
+          object param3,
+          object param4,
+          object param5,
+          object param6,
+          object param7,
+          object param8,
+          object param9,
+          object param10,
+          object param11)
+        {
+            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
+        }
+
+        public static bool Equals(string leftName, string rightName) => string.Compare(leftName, rightName, StringComparison.Ordinal) == 0;
+
+        public static bool EqualsI(string leftName, string rightName) => string.Compare(leftName, rightName, StringComparison.OrdinalIgnoreCase) == 0;
+
+        public static bool StartsWith(string valueName, string prefixName) => valueName.StartsWith(prefixName, StringComparison.Ordinal);
+
+        public static bool StartsWithI(string valueName, string prefixName) => valueName.StartsWith(prefixName, StringComparison.OrdinalIgnoreCase);
+
+        public static bool EndsWith(string valueName, string suffixName) => valueName.EndsWith(suffixName, StringComparison.Ordinal);
+
+        public static bool EndsWithI(string valueName, string suffixName) => valueName.EndsWith(suffixName, StringComparison.OrdinalIgnoreCase);
+
+        public static string ValueToString(ushort v, string formatName) => v.ToString(formatName, (IFormatProvider)CultureInfo.InvariantCulture);
+
+        public static IEqualityComparer<string> OrdinalIgnoreCaseComparer => (IEqualityComparer<string>)InvariantString.OrdinalIgnoreCaseStringComparer.Instance;
+
+        public static IEqualityComparer<string> OrdinalComparer => (IEqualityComparer<string>)InvariantString.OrdinalStringComparer.Instance;
+
+        public class OrdinalStringComparer : IEqualityComparer<string>
+        {
+            private static InvariantString.OrdinalStringComparer _instance;
+
+            private OrdinalStringComparer()
+            {
+            }
+
+            public static InvariantString.OrdinalStringComparer Instance
+            {
+                get
+                {
+                    if (InvariantString.OrdinalStringComparer._instance == null)
+                        InvariantString.OrdinalStringComparer._instance = new InvariantString.OrdinalStringComparer();
+                    return InvariantString.OrdinalStringComparer._instance;
+                }
+            }
+
+            public int Compare(string x, string y) => string.Compare(x, y, StringComparison.Ordinal);
+
+            public int GetHashCode(string obj) => obj.GetHashCode();
+
+            public bool Equals(string x, string y) => this.Compare(x, y) == 0;
+        }
+
+        public class OrdinalIgnoreCaseStringComparer : IEqualityComparer<string>
+        {
+            private static InvariantString.OrdinalIgnoreCaseStringComparer _instance;
+
+            private OrdinalIgnoreCaseStringComparer()
+            {
+            }
+
+            public static InvariantString.OrdinalIgnoreCaseStringComparer Instance
+            {
+                get
+                {
+                    if (InvariantString.OrdinalIgnoreCaseStringComparer._instance == null)
+                        InvariantString.OrdinalIgnoreCaseStringComparer._instance = new InvariantString.OrdinalIgnoreCaseStringComparer();
+                    return InvariantString.OrdinalIgnoreCaseStringComparer._instance;
+                }
+            }
+
+            public int Compare(string x, string y) => string.Compare(x, y, StringComparison.OrdinalIgnoreCase);
+
+            public int GetHashCode(string obj) => obj.ToLowerInvariant().GetHashCode();
+
+            public bool Equals(string x, string y) => this.Compare(x, y) == 0;
+        }
     }
-  }
 }

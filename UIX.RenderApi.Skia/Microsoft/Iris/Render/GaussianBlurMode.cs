@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum GaussianBlurMode
-  {
-    Normal,
-    Horizontal,
-    Vertical,
-  }
+    public enum GaussianBlurMode
+    {
+        Normal,
+        Horizontal,
+        Vertical,
+    }
 }

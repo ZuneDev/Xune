@@ -6,45 +6,45 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IKeyframeAnimation : IAnimation, ISharedRenderObject, IActivatable
-  {
-    int KeyframeCount { get; }
+    public interface IKeyframeAnimation : IAnimation, ISharedRenderObject, IActivatable
+    {
+        int KeyframeCount { get; }
 
-    AnimationInput InitialValue { get; }
+        AnimationInput InitialValue { get; }
 
-    AnimationInput Reference { get; set; }
+        AnimationInput Reference { get; set; }
 
-    AnimationInput Scale { get; set; }
+        AnimationInput Scale { get; set; }
 
-    AnimationInputType Type { get; }
+        AnimationInputType Type { get; }
 
-    void AddKeyframe(AnimationKeyframe keyframe);
+        void AddKeyframe(AnimationKeyframe keyframe);
 
-    AnimationKeyframe GetKeyframe(int keyframeIndex);
+        AnimationKeyframe GetKeyframe(int keyframeIndex);
 
-    void SetKeyframe(int keyframeIndex, AnimationKeyframe keyframe);
+        void SetKeyframe(int keyframeIndex, AnimationKeyframe keyframe);
 
-    void AddTarget(IAnimatable targetObject, string targetProperty);
+        void AddTarget(IAnimatable targetObject, string targetProperty);
 
-    void AddTarget(IAnimatable targetObject, string targetProperty, string targetPropertyMask);
+        void AddTarget(IAnimatable targetObject, string targetProperty, string targetPropertyMask);
 
-    void RemoveTarget(IAnimatable targetObject, string targetProperty, string targetPropertyMask);
+        void RemoveTarget(IAnimatable targetObject, string targetProperty, string targetPropertyMask);
 
-    void RemoveAllTargets();
+        void RemoveAllTargets();
 
-    void AddStageEvent(AnimationStage animationStage, AnimationEvent animationEvent);
+        void AddStageEvent(AnimationStage animationStage, AnimationEvent animationEvent);
 
-    void AddTimeEvent(float absoluteTime, AnimationEvent animationEvent);
+        void AddTimeEvent(float absoluteTime, AnimationEvent animationEvent);
 
-    void AddProgressEvent(float progress, AnimationEvent animationEvent);
+        void AddProgressEvent(float progress, AnimationEvent animationEvent);
 
-    void AddValueEvent(
-      ValueEventCondition condition,
-      AnimationInput reference,
-      AnimationEvent animationEvent);
+        void AddValueEvent(
+          ValueEventCondition condition,
+          AnimationInput reference,
+          AnimationEvent animationEvent);
 
-    void RemoveEvent(AnimationEvent animationEvent);
+        void RemoveEvent(AnimationEvent animationEvent);
 
-    void RemoveAllEvents();
-  }
+        void RemoveAllEvents();
+    }
 }

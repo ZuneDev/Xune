@@ -8,29 +8,29 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IRenderEngine : IRenderObject, IDisposable
-  {
-    void Initialize(
-      GraphicsDeviceType typeGraphics,
-      GraphicsRenderingQuality renderingQuality,
-      SoundDeviceType typeSound);
+    public interface IRenderEngine : IRenderObject, IDisposable
+    {
+        void Initialize(
+          GraphicsDeviceType typeGraphics,
+          GraphicsRenderingQuality renderingQuality,
+          SoundDeviceType typeSound);
 
-    IRenderSession Session { get; }
+        IRenderSession Session { get; }
 
-    IRenderWindow Window { get; }
+        IRenderWindow Window { get; }
 
-    IDisplayManager DisplayManager { get; }
+        IDisplayManager DisplayManager { get; }
 
-    bool ProcessNativeEvents();
+        bool ProcessNativeEvents();
 
-    void WaitForWork(uint nTimeoutInMsecs);
+        void WaitForWork(uint nTimeoutInMsecs);
 
-    void InterThreadWake();
+        void InterThreadWake();
 
-    void FlushBatch();
+        void FlushBatch();
 
-    bool IsGraphicsDeviceAvailable(GraphicsDeviceType type, bool fFilterRecommended);
+        bool IsGraphicsDeviceAvailable(GraphicsDeviceType type, bool fFilterRecommended);
 
-    bool IsSoundDeviceAvailable(SoundDeviceType type);
-  }
+        bool IsSoundDeviceAvailable(SoundDeviceType type);
+    }
 }

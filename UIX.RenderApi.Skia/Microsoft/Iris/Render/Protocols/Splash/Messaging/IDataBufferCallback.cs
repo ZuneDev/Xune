@@ -8,8 +8,8 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
 {
-  internal interface IDataBufferCallback
-  {
-    void OnComplete(RENDERHANDLE target);
-  }
+    internal interface IDataBufferCallback
+    {
+        void OnComplete(RENDERHANDLE target);
+    }
 }

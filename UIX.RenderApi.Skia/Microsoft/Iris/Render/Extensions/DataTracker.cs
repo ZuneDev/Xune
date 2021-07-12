@@ -9,35 +9,35 @@ using System;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  public class DataTracker : IDisposable
-  {
-    private Map<object, IDisposable> m_dictData;
-
-    public DataTracker() => this.m_dictData = new Map<object, IDisposable>();
-
-    public void AddData(object o, IDisposable data)
+    public class DataTracker : IDisposable
     {
-      Debug2.Validate(o != null, typeof (ArgumentNullException), "IRenderObject is invalid");
-      Debug2.Validate(data != null, typeof (ArgumentNullException), "Data is invalid");
-      Debug2.Validate(!this.m_dictData.ContainsKey(o), typeof (InvalidOperationException), "DataTracker only supports one resource per IRenderObject");
-      this.m_dictData[o] = data;
-    }
+        private Map<object, IDisposable> m_dictData;
 
-    public void DisposeAndRemoveData(object o)
-    {
-      IDisposable disposable;
-      if (!this.m_dictData.TryGetValue(o, out disposable))
-        return;
-      disposable.Dispose();
-      this.m_dictData.Remove(o);
-    }
+        public DataTracker() => this.m_dictData = new Map<object, IDisposable>();
 
-    public void Dispose()
-    {
-      foreach (IDisposable disposable in this.m_dictData.Values)
-        disposable.Dispose();
-      this.m_dictData = (Map<object, IDisposable>) null;
-      GC.SuppressFinalize((object) this);
+        public void AddData(object o, IDisposable data)
+        {
+            Debug2.Validate(o != null, typeof(ArgumentNullException), "IRenderObject is invalid");
+            Debug2.Validate(data != null, typeof(ArgumentNullException), "Data is invalid");
+            Debug2.Validate(!this.m_dictData.ContainsKey(o), typeof(InvalidOperationException), "DataTracker only supports one resource per IRenderObject");
+            this.m_dictData[o] = data;
+        }
+
+        public void DisposeAndRemoveData(object o)
+        {
+            IDisposable disposable;
+            if (!this.m_dictData.TryGetValue(o, out disposable))
+                return;
+            disposable.Dispose();
+            this.m_dictData.Remove(o);
+        }
+
+        public void Dispose()
+        {
+            foreach (IDisposable disposable in this.m_dictData.Values)
+                disposable.Dispose();
+            this.m_dictData = (Map<object, IDisposable>)null;
+            GC.SuppressFinalize((object)this);
+        }
     }
-  }
 }

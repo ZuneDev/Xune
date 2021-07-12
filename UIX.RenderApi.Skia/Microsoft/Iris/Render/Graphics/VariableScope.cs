@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal enum VariableScope : byte
-  {
-    Global = 1,
-    Local = 2,
-    Const = 3,
-  }
+    internal enum VariableScope : byte
+    {
+        Global = 1,
+        Local = 2,
+        Const = 3,
+    }
 }

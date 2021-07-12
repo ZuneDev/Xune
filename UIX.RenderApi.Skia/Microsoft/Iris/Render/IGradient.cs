@@ -6,16 +6,16 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IGradient : ISharedRenderObject
-  {
-    Orientation Orientation { get; set; }
+    public interface IGradient : ISharedRenderObject
+    {
+        Orientation Orientation { get; set; }
 
-    ColorF ColorMask { get; set; }
+        ColorF ColorMask { get; set; }
 
-    float Offset { get; set; }
+        float Offset { get; set; }
 
-    void AddValue(float flPosition, float flValue, RelativeSpace rsSpace);
+        void AddValue(float flPosition, float flValue, RelativeSpace rsSpace);
 
-    void Clear();
-  }
+        void Clear();
+    }
 }

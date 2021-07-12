@@ -8,29 +8,29 @@ using Microsoft.Iris.Render.Animation;
 
 namespace Microsoft.Iris.Render
 {
-  public sealed class ContinuousAnimationInput : ObjectAnimationInput
-  {
-    public ContinuousAnimationInput(IAnimatable sourceObject, string sourcePropertyName)
-      : this(sourceObject, sourcePropertyName, (string) null)
+    public sealed class ContinuousAnimationInput : ObjectAnimationInput
     {
-    }
+        public ContinuousAnimationInput(IAnimatable sourceObject, string sourcePropertyName)
+          : this(sourceObject, sourcePropertyName, (string)null)
+        {
+        }
 
-    public ContinuousAnimationInput(
-      IAnimatable sourceObject,
-      string sourcePropertyName,
-      string sourceMaskSpec)
-      : base(sourceObject, sourcePropertyName, sourceMaskSpec)
-    {
-    }
+        public ContinuousAnimationInput(
+          IAnimatable sourceObject,
+          string sourcePropertyName,
+          string sourceMaskSpec)
+          : base(sourceObject, sourcePropertyName, sourceMaskSpec)
+        {
+        }
 
-    public ContinuousAnimationInput(IAnimation sourceAnimation)
-      : this(sourceAnimation, (string) null)
-    {
-    }
+        public ContinuousAnimationInput(IAnimation sourceAnimation)
+          : this(sourceAnimation, (string)null)
+        {
+        }
 
-    public ContinuousAnimationInput(IAnimation sourceAnimation, string sourceMaskSpec)
-      : base(sourceAnimation, sourceMaskSpec)
-    {
+        public ContinuousAnimationInput(IAnimation sourceAnimation, string sourceMaskSpec)
+          : base(sourceAnimation, sourceMaskSpec)
+        {
+        }
     }
-  }
 }

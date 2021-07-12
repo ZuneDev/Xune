@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal enum PoolAllocMethod
-  {
-    Available,
-    New,
-    ScavengeDead,
-    CompactDead,
-    CompactAll,
-  }
+    internal enum PoolAllocMethod
+    {
+        Available,
+        New,
+        ScavengeDead,
+        CompactDead,
+        CompactAll,
+    }
 }

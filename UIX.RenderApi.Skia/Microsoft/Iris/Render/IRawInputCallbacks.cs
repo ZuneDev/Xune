@@ -8,18 +8,18 @@ using Microsoft.Iris.Input;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IRawInputCallbacks
-  {
-    InputHandlerFlags InputHandlerMask { get; }
+    public interface IRawInputCallbacks
+    {
+        InputHandlerFlags InputHandlerMask { get; }
 
-    void HandleRawKeyboardInput(uint messageID, InputModifiers modifiers, ref RawKeyboardData args);
+        void HandleRawKeyboardInput(uint messageID, InputModifiers modifiers, ref RawKeyboardData args);
 
-    void HandleRawMouseInput(uint messageID, InputModifiers modifiers, ref RawMouseData args);
+        void HandleRawMouseInput(uint messageID, InputModifiers modifiers, ref RawMouseData args);
 
-    void HandleRawHidInput(ref RawHidData args);
+        void HandleRawHidInput(ref RawHidData args);
 
-    void HandleRawDragInput(uint messageID, InputModifiers modifiers, ref RawDragData args);
+        void HandleRawDragInput(uint messageID, InputModifiers modifiers, ref RawDragData args);
 
-    void HandleAppCommand(ref RawHidData args);
-  }
+        void HandleAppCommand(ref RawHidData args);
+    }
 }

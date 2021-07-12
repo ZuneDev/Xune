@@ -6,15 +6,15 @@
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal struct MessageCookieLayout
-  {
-    public short numberOfGroupBits;
-    public short numberOfObjectBits;
-
-    public static MessageCookieLayout Default => new MessageCookieLayout()
+    internal struct MessageCookieLayout
     {
-      numberOfGroupBits = 4,
-      numberOfObjectBits = 20
-    };
-  }
+        public short numberOfGroupBits;
+        public short numberOfObjectBits;
+
+        public static MessageCookieLayout Default => new MessageCookieLayout()
+        {
+            numberOfGroupBits = 4,
+            numberOfObjectBits = 20
+        };
+    }
 }

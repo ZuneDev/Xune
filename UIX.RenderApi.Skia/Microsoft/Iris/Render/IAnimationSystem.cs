@@ -6,30 +6,30 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IAnimationSystem
-  {
-    int UpdatesPerSecond { get; set; }
+    public interface IAnimationSystem
+    {
+        int UpdatesPerSecond { get; set; }
 
-    float SpeedAdjustment { get; set; }
+        float SpeedAdjustment { get; set; }
 
-    bool BackCompat { set; }
+        bool BackCompat { set; }
 
-    IKeyframeAnimation CreateKeyframeAnimation(
-      object objUser,
-      AnimationInput initialValue);
+        IKeyframeAnimation CreateKeyframeAnimation(
+          object objUser,
+          AnimationInput initialValue);
 
-    IAnimationGroup CreateAnimationGroup(object objUser);
+        IAnimationGroup CreateAnimationGroup(object objUser);
 
-    IExternalAnimationInput CreateExternalAnimationInput(
-      object objUser,
-      IAnimationPropertyMap propertyMap);
+        IExternalAnimationInput CreateExternalAnimationInput(
+          object objUser,
+          IAnimationPropertyMap propertyMap);
 
-    void PulseTimeAdvance(int nAdvanceMs);
+        void PulseTimeAdvance(int nAdvanceMs);
 
-    void PauseAnimations();
+        void PauseAnimations();
 
-    void StepAnimations(int nAdvanceMs);
+        void StepAnimations(int nAdvanceMs);
 
-    void ResumeAnimations();
-  }
+        void ResumeAnimations();
+    }
 }

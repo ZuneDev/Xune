@@ -9,12 +9,12 @@ using System.Diagnostics;
 
 namespace Cn
 {
-  [Conditional("NEVER")]
-  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true, Inherited = false)]
-  public class TypeInitializeDependencyAttribute : Attribute
-  {
-    public Type Type;
+    [Conditional("NEVER")]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true, Inherited = false)]
+    public class TypeInitializeDependencyAttribute : Attribute
+    {
+        public Type Type;
 
-    public TypeInitializeDependencyAttribute(Type type) => this.Type = type;
-  }
+        public TypeInitializeDependencyAttribute(Type type) => this.Type = type;
+    }
 }

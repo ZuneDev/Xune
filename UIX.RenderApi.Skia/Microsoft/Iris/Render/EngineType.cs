@@ -6,8 +6,8 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum EngineType
-  {
-    Iris,
-  }
+    public enum EngineType
+    {
+        Iris,
+    }
 }

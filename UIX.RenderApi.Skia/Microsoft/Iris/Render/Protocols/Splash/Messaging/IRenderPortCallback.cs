@@ -8,10 +8,10 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
 {
-  internal interface IRenderPortCallback
-  {
-    void OnBatchProcessed(RENDERHANDLE target, uint uBatchCompleted);
+    internal interface IRenderPortCallback
+    {
+        void OnBatchProcessed(RENDERHANDLE target, uint uBatchCompleted);
 
-    void OnPingReply(RENDERHANDLE target);
-  }
+        void OnPingReply(RENDERHANDLE target);
+    }
 }

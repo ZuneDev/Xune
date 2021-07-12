@@ -8,28 +8,28 @@ using System;
 
 namespace Microsoft.Iris.Render.Common
 {
-  internal class DeferredInvokeItem : IDeferredInvokeItem
-  {
-    private Delegate m_method;
-    private object m_args;
-    private SharedRenderObject m_owner;
-
-    internal DeferredInvokeItem(SharedRenderObject owner, Delegate method, object args)
+    internal class DeferredInvokeItem : IDeferredInvokeItem
     {
-      this.m_method = method;
-      this.m_args = args;
-      this.m_owner = owner;
-      if (this.m_owner == null)
-        return;
-      this.m_owner.RegisterUsage((object) this);
-    }
+        private Delegate m_method;
+        private object m_args;
+        private SharedRenderObject m_owner;
 
-    public void Dispatch()
-    {
-      ((DeferredHandler) this.m_method)(this.m_args);
-      if (this.m_owner == null)
-        return;
-      this.m_owner.UnregisterUsage((object) this);
+        internal DeferredInvokeItem(SharedRenderObject owner, Delegate method, object args)
+        {
+            this.m_method = method;
+            this.m_args = args;
+            this.m_owner = owner;
+            if (this.m_owner == null)
+                return;
+            this.m_owner.RegisterUsage((object)this);
+        }
+
+        public void Dispatch()
+        {
+            ((DeferredHandler)this.m_method)(this.m_args);
+            if (this.m_owner == null)
+                return;
+            this.m_owner.UnregisterUsage((object)this);
+        }
     }
-  }
 }

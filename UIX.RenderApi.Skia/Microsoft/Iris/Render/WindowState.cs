@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum WindowState
-  {
-    Normal,
-    Minimized,
-    Maximized,
-  }
+    public enum WindowState
+    {
+        Normal,
+        Minimized,
+        Maximized,
+    }
 }

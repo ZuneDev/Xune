@@ -9,41 +9,41 @@ using System;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal class LocalChannel : RenderObject, IChannel
-  {
-    private IntPtr m_renderThread;
-
-    public LocalChannel(LocalConnectionInfo connectionInfo)
+    internal class LocalChannel : RenderObject, IChannel
     {
-    }
+        private IntPtr m_renderThread;
 
-    public bool IsConnected => this.m_renderThread != IntPtr.Zero;
+        public LocalChannel(LocalConnectionInfo connectionInfo)
+        {
+        }
 
-    public void Connect(
-      ContextID remoteContextId,
-      RENDERHANDLE brokerClassHandle,
-      MessageCookieLayout layout)
-    {
-      Debug2.Validate(remoteContextId != ContextID.NULL, typeof (ArgumentNullException), nameof (remoteContextId));
-      EngineApi.IFC(EngineApi.SpRenderThreadInit(ref new EngineApi.InitArgs(layout, remoteContextId)
-      {
-        idObjectBrokerClass = brokerClassHandle
-      }, out this.m_renderThread));
-    }
+        public bool IsConnected => this.m_renderThread != IntPtr.Zero;
 
-    protected override void Dispose(bool inDispose)
-    {
-      try
-      {
-        if (!(this.m_renderThread != IntPtr.Zero))
-          return;
-        EngineApi.IFC(EngineApi.SpRenderThreadUninit(this.m_renderThread));
-        this.m_renderThread = IntPtr.Zero;
-      }
-      finally
-      {
-        base.Dispose(inDispose);
-      }
+        public void Connect(
+          ContextID remoteContextId,
+          RENDERHANDLE brokerClassHandle,
+          MessageCookieLayout layout)
+        {
+            Debug2.Validate(remoteContextId != ContextID.NULL, typeof(ArgumentNullException), nameof(remoteContextId));
+            EngineApi.IFC(EngineApi.SpRenderThreadInit(ref new EngineApi.InitArgs(layout, remoteContextId)
+            {
+                idObjectBrokerClass = brokerClassHandle
+            }, out this.m_renderThread));
+        }
+
+        protected override void Dispose(bool inDispose)
+        {
+            try
+            {
+                if (!(this.m_renderThread != IntPtr.Zero))
+                    return;
+                EngineApi.IFC(EngineApi.SpRenderThreadUninit(this.m_renderThread));
+                this.m_renderThread = IntPtr.Zero;
+            }
+            finally
+            {
+                base.Dispose(inDispose);
+            }
+        }
     }
-  }
 }

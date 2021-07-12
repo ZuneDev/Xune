@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void InvalidateContentHandler();
+    public delegate void InvalidateContentHandler();
 }

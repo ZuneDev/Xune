@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IExternalAnimationInput : IAnimatable, ISharedRenderObject
-  {
-    uint UniqueId { get; }
+    public interface IExternalAnimationInput : IAnimatable, ISharedRenderObject
+    {
+        uint UniqueId { get; }
 
-    IAnimationInputProvider CreateProvider(object objUser);
-  }
+        IAnimationInputProvider CreateProvider(object objUser);
+    }
 }

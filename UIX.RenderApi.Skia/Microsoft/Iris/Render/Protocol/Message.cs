@@ -8,11 +8,11 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [ComVisible(false)]
-  internal struct Message
-  {
-    public uint cbSize;
-    public uint nMsg;
-    public RENDERHANDLE idObjectSubject;
-  }
+    [ComVisible(false)]
+    internal struct Message
+    {
+        public uint cbSize;
+        public uint nMsg;
+        public RENDERHANDLE idObjectSubject;
+    }
 }

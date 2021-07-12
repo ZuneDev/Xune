@@ -8,24 +8,24 @@ using Microsoft.Iris.Library;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class Dx9VideoElement
-  {
-    internal static void Generate(VideoElement efiVideo, ref Dx9EffectBuilder effectBuilder)
+    internal class Dx9VideoElement
     {
-      Dx9TextureInfo dx9TextureInfo = effectBuilder.AllocateTexture();
-      TextureVariableInfo textureVariableInfo = new TextureVariableInfo();
-      textureVariableInfo.ID = (int) efiVideo.VideoStreamID;
-      textureVariableInfo.Type = Dx9VariableType.Texture;
-      textureVariableInfo.Name = effectBuilder.GenerateGlobalVariable(textureVariableInfo.Type, efiVideo.Name);
-      textureVariableInfo.DefaultValue = (object) efiVideo.VideoStream;
-      textureVariableInfo.SamplerName = dx9TextureInfo.Sampler;
-      textureVariableInfo.MinFilter = "Linear";
-      textureVariableInfo.MagFilter = "Linear";
-      textureVariableInfo.CoordinateMapID = -1;
-      textureVariableInfo.ImageIndexID = -1;
-      effectBuilder.AddPropertyVariable((VariableInfo) textureVariableInfo);
-      effectBuilder.PixelShaderOutput = effectBuilder.GenerateLocalVariable(Dx9VariableType.Vector4, efiVideo.Name);
-      effectBuilder.EmitPixelFragment(InvariantString.Format("    // Load the surface\r\n    float4 {0} = tex2D({1}, {2});\r\n\r\n", (object) effectBuilder.PixelShaderOutput, (object) dx9TextureInfo.Sampler, (object) dx9TextureInfo.TexCoordInput));
+        internal static void Generate(VideoElement efiVideo, ref Dx9EffectBuilder effectBuilder)
+        {
+            Dx9TextureInfo dx9TextureInfo = effectBuilder.AllocateTexture();
+            TextureVariableInfo textureVariableInfo = new TextureVariableInfo();
+            textureVariableInfo.ID = (int)efiVideo.VideoStreamID;
+            textureVariableInfo.Type = Dx9VariableType.Texture;
+            textureVariableInfo.Name = effectBuilder.GenerateGlobalVariable(textureVariableInfo.Type, efiVideo.Name);
+            textureVariableInfo.DefaultValue = (object)efiVideo.VideoStream;
+            textureVariableInfo.SamplerName = dx9TextureInfo.Sampler;
+            textureVariableInfo.MinFilter = "Linear";
+            textureVariableInfo.MagFilter = "Linear";
+            textureVariableInfo.CoordinateMapID = -1;
+            textureVariableInfo.ImageIndexID = -1;
+            effectBuilder.AddPropertyVariable((VariableInfo)textureVariableInfo);
+            effectBuilder.PixelShaderOutput = effectBuilder.GenerateLocalVariable(Dx9VariableType.Vector4, efiVideo.Name);
+            effectBuilder.EmitPixelFragment(InvariantString.Format("    // Load the surface\r\n    float4 {0} = tex2D({1}, {2});\r\n\r\n", (object)effectBuilder.PixelShaderOutput, (object)dx9TextureInfo.Sampler, (object)dx9TextureInfo.TexCoordInput));
+        }
     }
-  }
 }

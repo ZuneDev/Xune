@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal interface IDynamicBlock
-  {
-    int NearEdge { get; }
+    internal interface IDynamicBlock
+    {
+        int NearEdge { get; }
 
-    int FarEdge { get; }
-  }
+        int FarEdge { get; }
+    }
 }

@@ -8,15 +8,15 @@ using System;
 
 namespace Microsoft.Iris.Input
 {
-  [Flags]
-  public enum InputHandlerFlags
-  {
-    None = 0,
-    Keyboard = 1,
-    Mouse = 2,
-    Drag = 4,
-    Hid = 8,
-    AppCommand = 16, // 0x00000010
-    All = AppCommand | Hid | Drag | Mouse | Keyboard, // 0x0000001F
-  }
+    [Flags]
+    public enum InputHandlerFlags
+    {
+        None = 0,
+        Keyboard = 1,
+        Mouse = 2,
+        Drag = 4,
+        Hid = 8,
+        AppCommand = 16, // 0x00000010
+        All = AppCommand | Hid | Drag | Mouse | Keyboard, // 0x0000001F
+    }
 }

@@ -8,10 +8,10 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Animation
 {
-  internal interface IActivatableObject : IActivatable
-  {
-    RENDERHANDLE GetObjectId();
+    internal interface IActivatableObject : IActivatable
+    {
+        RENDERHANDLE GetObjectId();
 
-    uint GetMethodId(string methodName);
-  }
+        uint GetMethodId(string methodName);
+    }
 }

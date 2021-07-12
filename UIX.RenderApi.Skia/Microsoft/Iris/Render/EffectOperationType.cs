@@ -6,21 +6,21 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum EffectOperationType : byte
-  {
-    Brightness = 1,
-    Contrast = 2,
-    Desaturate = 3,
-    EdgeDetection = 4,
-    Emboss = 5,
-    GaussianBlur = 6,
-    HSL = 7,
-    HSV = 8,
-    InvAlpha = 9,
-    InvColor = 10, // 0x0A
-    Invert = 11, // 0x0B
-    LightShaft = 12, // 0x0C
-    Sepia = 13, // 0x0D
-    MaxValue = 14, // 0x0E
-  }
+    public enum EffectOperationType : byte
+    {
+        Brightness = 1,
+        Contrast = 2,
+        Desaturate = 3,
+        EdgeDetection = 4,
+        Emboss = 5,
+        GaussianBlur = 6,
+        HSL = 7,
+        HSV = 8,
+        InvAlpha = 9,
+        InvColor = 10, // 0x0A
+        Invert = 11, // 0x0B
+        LightShaft = 12, // 0x0C
+        Sepia = 13, // 0x0D
+        MaxValue = 14, // 0x0E
+    }
 }

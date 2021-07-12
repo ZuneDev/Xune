@@ -12,105 +12,105 @@ using System.Security;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  [SuppressUnmanagedCodeSecurity]
-  internal class RegistryListener : IDisposable
-  {
-    private Win32Api.WaitOrTimerCallBack m_RegistryChangeCallback;
-    private IntPtr m_hWaitHandle = IntPtr.Zero;
-    private Win32Api.HANDLE m_hRegEvent = Win32Api.HANDLE.NULL;
-    private IntPtr m_hkey = IntPtr.Zero;
-    private string m_stRegKey;
-
-    public RegistryListener(string stKey)
+    [SuppressUnmanagedCodeSecurity]
+    internal class RegistryListener : IDisposable
     {
-      this.m_stRegKey = stKey;
-      this.m_RegistryChangeCallback = new Win32Api.WaitOrTimerCallBack(this.OnRegistryChanged);
-    }
+        private Win32Api.WaitOrTimerCallBack m_RegistryChangeCallback;
+        private IntPtr m_hWaitHandle = IntPtr.Zero;
+        private Win32Api.HANDLE m_hRegEvent = Win32Api.HANDLE.NULL;
+        private IntPtr m_hkey = IntPtr.Zero;
+        private string m_stRegKey;
 
-    ~RegistryListener()
-    {
-    }
-
-    void IDisposable.Dispose() => this.StopListeningForRegistryChangeNotifications();
-
-    public bool ReadValueFromRegistry(string st, out int nValue)
-    {
-      nValue = 0;
-      RegistryKey registryKey = RegistryKey.Open(RegistryKey.HKEY_CURRENT_USER, this.m_stRegKey);
-      if (registryKey == null)
-        return false;
-      bool flag = registryKey.ReadInt(st, out nValue);
-      registryKey.Close();
-      return flag;
-    }
-
-    public bool ReadValueFromRegistry(string st, out byte bValue)
-    {
-      int nValue;
-      bool flag = this.ReadValueFromRegistry(st, out nValue);
-      bValue = (byte) nValue;
-      return flag;
-    }
-
-    public bool ReadValueFromRegistry(string st, out bool fValue)
-    {
-      int nValue;
-      bool flag = this.ReadValueFromRegistry(st, out nValue);
-      fValue = nValue != 0;
-      return flag;
-    }
-
-    internal void StartListeningForRegistryChanges()
-    {
-      lock (this)
-      {
-        this.StopListeningForRegistryChangeNotifications();
-        this.m_hkey = IntPtr.Zero;
-        if (Win32Api.RegOpenKeyExW(Win32Api.HKEY_CURRENT_USER, this.m_stRegKey, 0, 16, out this.m_hkey) != 0)
-          return;
-        this.m_hRegEvent = Win32Api.CreateEvent(IntPtr.Zero, false, false, (string) null);
-        int num = Win32Api.RegNotifyChangeKeyValue(this.m_hkey, true, 15, this.m_hRegEvent, true);
-        if (num != 0)
-          throw new Exception(string.Format((IFormatProvider) CultureInfo.InvariantCulture, "Unable to register key change handler: {0} (due to error {1})", (object) this.m_stRegKey, (object) num));
-        IntPtr phNewWaitObject;
-        if (Win32Api.RegisterWaitForSingleObject(out phNewWaitObject, this.m_hRegEvent.h, this.m_RegistryChangeCallback, IntPtr.Zero, uint.MaxValue, 4U) == 0)
+        public RegistryListener(string stKey)
         {
-          this.StopListeningForRegistryChangeNotifications();
-          throw new Exception("Unable to register wait for object.");
+            this.m_stRegKey = stKey;
+            this.m_RegistryChangeCallback = new Win32Api.WaitOrTimerCallBack(this.OnRegistryChanged);
         }
-        this.m_hWaitHandle = phNewWaitObject;
-      }
-    }
 
-    private void StopListeningForRegistryChangeNotifications()
-    {
-      lock (this)
-      {
-        if (this.m_hWaitHandle != IntPtr.Zero)
+        ~RegistryListener()
         {
-          Win32Api.UnregisterWait(this.m_hWaitHandle);
-          this.m_hWaitHandle = IntPtr.Zero;
         }
-        if (this.m_hRegEvent != Win32Api.HANDLE.NULL)
+
+        void IDisposable.Dispose() => this.StopListeningForRegistryChangeNotifications();
+
+        public bool ReadValueFromRegistry(string st, out int nValue)
         {
-          Win32Api.CloseHandle(this.m_hRegEvent);
-          this.m_hRegEvent = Win32Api.HANDLE.NULL;
+            nValue = 0;
+            RegistryKey registryKey = RegistryKey.Open(RegistryKey.HKEY_CURRENT_USER, this.m_stRegKey);
+            if (registryKey == null)
+                return false;
+            bool flag = registryKey.ReadInt(st, out nValue);
+            registryKey.Close();
+            return flag;
         }
-        if (!(this.m_hkey != IntPtr.Zero))
-          return;
-        Win32Api.RegCloseKey(this.m_hkey);
-        this.m_hkey = IntPtr.Zero;
-      }
-    }
 
-    public event EventHandler RegistryChanged;
+        public bool ReadValueFromRegistry(string st, out byte bValue)
+        {
+            int nValue;
+            bool flag = this.ReadValueFromRegistry(st, out nValue);
+            bValue = (byte)nValue;
+            return flag;
+        }
 
-    private void OnRegistryChanged(IntPtr ptrParameter, byte b)
-    {
-      this.StopListeningForRegistryChangeNotifications();
-      if (this.RegistryChanged == null)
-        return;
-      this.RegistryChanged((object) this, EventArgs.Empty);
+        public bool ReadValueFromRegistry(string st, out bool fValue)
+        {
+            int nValue;
+            bool flag = this.ReadValueFromRegistry(st, out nValue);
+            fValue = nValue != 0;
+            return flag;
+        }
+
+        internal void StartListeningForRegistryChanges()
+        {
+            lock (this)
+            {
+                this.StopListeningForRegistryChangeNotifications();
+                this.m_hkey = IntPtr.Zero;
+                if (Win32Api.RegOpenKeyExW(Win32Api.HKEY_CURRENT_USER, this.m_stRegKey, 0, 16, out this.m_hkey) != 0)
+                    return;
+                this.m_hRegEvent = Win32Api.CreateEvent(IntPtr.Zero, false, false, (string)null);
+                int num = Win32Api.RegNotifyChangeKeyValue(this.m_hkey, true, 15, this.m_hRegEvent, true);
+                if (num != 0)
+                    throw new Exception(string.Format((IFormatProvider)CultureInfo.InvariantCulture, "Unable to register key change handler: {0} (due to error {1})", (object)this.m_stRegKey, (object)num));
+                IntPtr phNewWaitObject;
+                if (Win32Api.RegisterWaitForSingleObject(out phNewWaitObject, this.m_hRegEvent.h, this.m_RegistryChangeCallback, IntPtr.Zero, uint.MaxValue, 4U) == 0)
+                {
+                    this.StopListeningForRegistryChangeNotifications();
+                    throw new Exception("Unable to register wait for object.");
+                }
+                this.m_hWaitHandle = phNewWaitObject;
+            }
+        }
+
+        private void StopListeningForRegistryChangeNotifications()
+        {
+            lock (this)
+            {
+                if (this.m_hWaitHandle != IntPtr.Zero)
+                {
+                    Win32Api.UnregisterWait(this.m_hWaitHandle);
+                    this.m_hWaitHandle = IntPtr.Zero;
+                }
+                if (this.m_hRegEvent != Win32Api.HANDLE.NULL)
+                {
+                    Win32Api.CloseHandle(this.m_hRegEvent);
+                    this.m_hRegEvent = Win32Api.HANDLE.NULL;
+                }
+                if (!(this.m_hkey != IntPtr.Zero))
+                    return;
+                Win32Api.RegCloseKey(this.m_hkey);
+                this.m_hkey = IntPtr.Zero;
+            }
+        }
+
+        public event EventHandler RegistryChanged;
+
+        private void OnRegistryChanged(IntPtr ptrParameter, byte b)
+        {
+            this.StopListeningForRegistryChangeNotifications();
+            if (this.RegistryChanged == null)
+                return;
+            this.RegistryChanged((object)this, EventArgs.Empty);
+        }
     }
-  }
 }

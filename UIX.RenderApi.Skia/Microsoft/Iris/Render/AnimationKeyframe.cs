@@ -9,29 +9,29 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public sealed class AnimationKeyframe
-  {
-    private float m_time;
-    private AnimationInput m_value;
-    private AnimationInterpolation m_interpolation;
-
-    public AnimationKeyframe(
-      float time,
-      AnimationInput value,
-      AnimationInterpolation interpolation)
+    public sealed class AnimationKeyframe
     {
-      Debug2.Validate((double) time >= 0.0, typeof (ArgumentException), "'time' must not be negative");
-      Debug2.Validate(value != null, typeof (ArgumentNullException), nameof (value));
-      Debug2.Validate(interpolation != null, typeof (ArgumentNullException), nameof (interpolation));
-      this.m_time = time;
-      this.m_value = value;
-      this.m_interpolation = interpolation;
+        private float m_time;
+        private AnimationInput m_value;
+        private AnimationInterpolation m_interpolation;
+
+        public AnimationKeyframe(
+          float time,
+          AnimationInput value,
+          AnimationInterpolation interpolation)
+        {
+            Debug2.Validate((double)time >= 0.0, typeof(ArgumentException), "'time' must not be negative");
+            Debug2.Validate(value != null, typeof(ArgumentNullException), nameof(value));
+            Debug2.Validate(interpolation != null, typeof(ArgumentNullException), nameof(interpolation));
+            this.m_time = time;
+            this.m_value = value;
+            this.m_interpolation = interpolation;
+        }
+
+        public float Time => this.m_time;
+
+        public AnimationInput Value => this.m_value;
+
+        public AnimationInterpolation Interpolation => this.m_interpolation;
     }
-
-    public float Time => this.m_time;
-
-    public AnimationInput Value => this.m_value;
-
-    public AnimationInterpolation Interpolation => this.m_interpolation;
-  }
 }

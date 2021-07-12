@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum DeferredInvokePriority
-  {
-    High,
-    Normal,
-    VisualUpdate,
-    Low,
-    Idle,
-  }
+    public enum DeferredInvokePriority
+    {
+        High,
+        Normal,
+        VisualUpdate,
+        Low,
+        Idle,
+    }
 }

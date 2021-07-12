@@ -8,44 +8,44 @@ using System;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  public class DebugNone : IDebug, IDisposable
-  {
-    void IDisposable.Dispose()
+    public class DebugNone : IDebug, IDisposable
     {
-    }
+        void IDisposable.Dispose()
+        {
+        }
 
-    void IDebug.Enter(string stContext)
-    {
-    }
+        void IDebug.Enter(string stContext)
+        {
+        }
 
-    void IDebug.Leave(string stContext)
-    {
-    }
+        void IDebug.Leave(string stContext)
+        {
+        }
 
-    void IDebug.Assert(bool fCondition, string stMessage)
-    {
-    }
+        void IDebug.Assert(bool fCondition, string stMessage)
+        {
+        }
 
-    void IDebug.Throw(bool fCondition, string stMessage)
-    {
-    }
+        void IDebug.Throw(bool fCondition, string stMessage)
+        {
+        }
 
-    void IDebug.Write(DebugCategory nCategory, int nLevel, string stMessage)
-    {
-    }
+        void IDebug.Write(DebugCategory nCategory, int nLevel, string stMessage)
+        {
+        }
 
-    void IDebug.WriteLine(DebugCategory nCategory, int nLevel, string stMessage)
-    {
-    }
+        void IDebug.WriteLine(DebugCategory nCategory, int nLevel, string stMessage)
+        {
+        }
 
-    void IDebug.Indent(DebugCategory nCategory, int nLevel)
-    {
-    }
+        void IDebug.Indent(DebugCategory nCategory, int nLevel)
+        {
+        }
 
-    void IDebug.Unindent(DebugCategory nCategory, int nLevel)
-    {
-    }
+        void IDebug.Unindent(DebugCategory nCategory, int nLevel)
+        {
+        }
 
-    bool IDebug.IsCategoryEnabled(DebugCategory category, int nLevel) => false;
-  }
+        bool IDebug.IsCategoryEnabled(DebugCategory category, int nLevel) => false;
+    }
 }

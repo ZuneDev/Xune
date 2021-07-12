@@ -11,182 +11,182 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render
 {
-  public abstract class TrackerBase
-  {
-    private static readonly TrackerBase.ObjectTest s_testAll = new TrackerBase.ObjectTest(TrackerBase.AllObjectTest);
-    private static readonly TrackerBase.ObjectTest s_testDead = new TrackerBase.ObjectTest(TrackerBase.DeadObjectTest);
-    private static readonly TrackerBase.ObjectTest s_testObject = new TrackerBase.ObjectTest(TrackerBase.SpecificObjectTest);
-    private Map<object, GCHandle> m_tblObjects;
-
-    ~TrackerBase() => this.Dispose(false);
-
-    public void Dispose()
+    public abstract class TrackerBase
     {
-      GC.SuppressFinalize((object) this);
-      this.Dispose(true);
-    }
+        private static readonly TrackerBase.ObjectTest s_testAll = new TrackerBase.ObjectTest(TrackerBase.AllObjectTest);
+        private static readonly TrackerBase.ObjectTest s_testDead = new TrackerBase.ObjectTest(TrackerBase.DeadObjectTest);
+        private static readonly TrackerBase.ObjectTest s_testObject = new TrackerBase.ObjectTest(TrackerBase.SpecificObjectTest);
+        private Map<object, GCHandle> m_tblObjects;
 
-    protected virtual void Dispose(bool fInDispose) => this.RemoveObjects(TrackerBase.s_testAll);
+        ~TrackerBase() => this.Dispose(false);
 
-    public bool IsEmpty => this.m_tblObjects.Count == 0;
-
-    public ArrayList LiveObjects
-    {
-      get
-      {
-        ArrayList arrayList = new ArrayList();
-        lock (this)
+        public void Dispose()
         {
-          if (this.m_tblObjects != null)
-          {
-            foreach (KeyValueEntry<object, GCHandle> tblObject in this.m_tblObjects)
+            GC.SuppressFinalize((object)this);
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool fInDispose) => this.RemoveObjects(TrackerBase.s_testAll);
+
+        public bool IsEmpty => this.m_tblObjects.Count == 0;
+
+        public ArrayList LiveObjects
+        {
+            get
             {
-              object target = tblObject.Value.Target;
-              if (target != null)
-                arrayList.Add(target);
+                ArrayList arrayList = new ArrayList();
+                lock (this)
+                {
+                    if (this.m_tblObjects != null)
+                    {
+                        foreach (KeyValueEntry<object, GCHandle> tblObject in this.m_tblObjects)
+                        {
+                            object target = tblObject.Value.Target;
+                            if (target != null)
+                                arrayList.Add(target);
+                        }
+                    }
+                }
+                return arrayList;
             }
-          }
         }
-        return arrayList;
-      }
-    }
 
-    public void AddObject(object key, object value)
-    {
-      lock (this)
-      {
-        if (this.m_tblObjects == null)
-          this.SetupObjectTable();
-        this.m_tblObjects[key] = GCHandle.Alloc(value, GCHandleType.Weak);
-      }
-    }
-
-    public void RemoveKey(object key)
-    {
-      lock (this)
-      {
-        GCHandle gcHandle;
-        if (!this.m_tblObjects.TryGetValue(key, out gcHandle))
+        public void AddObject(object key, object value)
         {
-          Debug2.Validate(false, typeof (InvalidOperationException), "Unable to find object with key " + key);
-        }
-        else
-        {
-          gcHandle.Free();
-          this.m_tblObjects.Remove(key);
-        }
-      }
-    }
-
-    public void RemoveKeys(TrackerBase.KeyTest keyTest)
-    {
-      lock (this)
-      {
-        if (this.m_tblObjects == null)
-          return;
-        ArrayList arrayList = (ArrayList) null;
-        foreach (string key in this.m_tblObjects.Keys)
-        {
-          if (keyTest == null || keyTest(key))
-          {
-            if (arrayList == null)
-              arrayList = new ArrayList();
-            arrayList.Add((object) key);
-          }
-        }
-        if (arrayList == null)
-          return;
-        foreach (object key in arrayList)
-          this.RemoveKey(key);
-      }
-    }
-
-    public void RemoveObject(object objRemove) => this.RemoveObjects(TrackerBase.s_testObject, objRemove);
-
-    public void RemoveDeadObjects() => this.RemoveObjects(TrackerBase.s_testDead);
-
-    public void RemoveAllObjects() => this.RemoveObjects(TrackerBase.s_testAll);
-
-    public void RemoveObjects(TrackerBase.ObjectTest test) => this.RemoveObjects(test, (object) null);
-
-    public void RemoveObjects(TrackerBase.ObjectTest test, object objParam)
-    {
-      lock (this)
-      {
-        if (this.m_tblObjects == null)
-          return;
-        ArrayList arrayList = (ArrayList) null;
-        foreach (KeyValueEntry<object, GCHandle> tblObject in this.m_tblObjects)
-        {
-          GCHandle gcHandle = tblObject.Value;
-          object target = gcHandle.Target;
-          if (target == null || test(target, objParam))
-          {
-            if (arrayList == null)
-              arrayList = new ArrayList();
-            object key = tblObject.Key;
-            arrayList.Add(key);
-            gcHandle.Free();
-          }
-        }
-        if (arrayList == null)
-          return;
-        foreach (object key in arrayList)
-          this.m_tblObjects.Remove(key);
-      }
-    }
-
-    public object Find(object key)
-    {
-      object obj = (object) null;
-      lock (this)
-      {
-        if (this.m_tblObjects != null)
-        {
-          GCHandle gcHandle;
-          if (this.m_tblObjects.TryGetValue(key, out gcHandle))
-          {
-            obj = gcHandle.Target;
-            if (obj == null)
+            lock (this)
             {
-              this.m_tblObjects.Remove(key);
-              gcHandle.Free();
+                if (this.m_tblObjects == null)
+                    this.SetupObjectTable();
+                this.m_tblObjects[key] = GCHandle.Alloc(value, GCHandleType.Weak);
             }
-          }
         }
-      }
-      return obj;
+
+        public void RemoveKey(object key)
+        {
+            lock (this)
+            {
+                GCHandle gcHandle;
+                if (!this.m_tblObjects.TryGetValue(key, out gcHandle))
+                {
+                    Debug2.Validate(false, typeof(InvalidOperationException), "Unable to find object with key " + key);
+                }
+                else
+                {
+                    gcHandle.Free();
+                    this.m_tblObjects.Remove(key);
+                }
+            }
+        }
+
+        public void RemoveKeys(TrackerBase.KeyTest keyTest)
+        {
+            lock (this)
+            {
+                if (this.m_tblObjects == null)
+                    return;
+                ArrayList arrayList = (ArrayList)null;
+                foreach (string key in this.m_tblObjects.Keys)
+                {
+                    if (keyTest == null || keyTest(key))
+                    {
+                        if (arrayList == null)
+                            arrayList = new ArrayList();
+                        arrayList.Add((object)key);
+                    }
+                }
+                if (arrayList == null)
+                    return;
+                foreach (object key in arrayList)
+                    this.RemoveKey(key);
+            }
+        }
+
+        public void RemoveObject(object objRemove) => this.RemoveObjects(TrackerBase.s_testObject, objRemove);
+
+        public void RemoveDeadObjects() => this.RemoveObjects(TrackerBase.s_testDead);
+
+        public void RemoveAllObjects() => this.RemoveObjects(TrackerBase.s_testAll);
+
+        public void RemoveObjects(TrackerBase.ObjectTest test) => this.RemoveObjects(test, (object)null);
+
+        public void RemoveObjects(TrackerBase.ObjectTest test, object objParam)
+        {
+            lock (this)
+            {
+                if (this.m_tblObjects == null)
+                    return;
+                ArrayList arrayList = (ArrayList)null;
+                foreach (KeyValueEntry<object, GCHandle> tblObject in this.m_tblObjects)
+                {
+                    GCHandle gcHandle = tblObject.Value;
+                    object target = gcHandle.Target;
+                    if (target == null || test(target, objParam))
+                    {
+                        if (arrayList == null)
+                            arrayList = new ArrayList();
+                        object key = tblObject.Key;
+                        arrayList.Add(key);
+                        gcHandle.Free();
+                    }
+                }
+                if (arrayList == null)
+                    return;
+                foreach (object key in arrayList)
+                    this.m_tblObjects.Remove(key);
+            }
+        }
+
+        public object Find(object key)
+        {
+            object obj = (object)null;
+            lock (this)
+            {
+                if (this.m_tblObjects != null)
+                {
+                    GCHandle gcHandle;
+                    if (this.m_tblObjects.TryGetValue(key, out gcHandle))
+                    {
+                        obj = gcHandle.Target;
+                        if (obj == null)
+                        {
+                            this.m_tblObjects.Remove(key);
+                            gcHandle.Free();
+                        }
+                    }
+                }
+            }
+            return obj;
+        }
+
+        public bool ContainsKey(object key)
+        {
+            bool flag = false;
+            lock (this)
+            {
+                if (this.m_tblObjects != null)
+                    flag = this.m_tblObjects.ContainsKey(key);
+            }
+            return flag;
+        }
+
+        protected virtual void SetupObjectTable()
+        {
+            lock (this)
+            {
+                if (this.m_tblObjects != null)
+                    return;
+                this.m_tblObjects = new Map<object, GCHandle>();
+            }
+        }
+
+        private static bool AllObjectTest(object objSubject, object objParam) => true;
+
+        private static bool DeadObjectTest(object objSubject, object objParam) => false;
+
+        private static bool SpecificObjectTest(object objSubject, object objParam) => objSubject == objParam;
+
+        public delegate bool ObjectTest(object objSubject, object objParam);
+
+        public delegate bool KeyTest(string key);
     }
-
-    public bool ContainsKey(object key)
-    {
-      bool flag = false;
-      lock (this)
-      {
-        if (this.m_tblObjects != null)
-          flag = this.m_tblObjects.ContainsKey(key);
-      }
-      return flag;
-    }
-
-    protected virtual void SetupObjectTable()
-    {
-      lock (this)
-      {
-        if (this.m_tblObjects != null)
-          return;
-        this.m_tblObjects = new Map<object, GCHandle>();
-      }
-    }
-
-    private static bool AllObjectTest(object objSubject, object objParam) => true;
-
-    private static bool DeadObjectTest(object objSubject, object objParam) => false;
-
-    private static bool SpecificObjectTest(object objSubject, object objParam) => objSubject == objParam;
-
-    public delegate bool ObjectTest(object objSubject, object objParam);
-
-    public delegate bool KeyTest(string key);
-  }
 }

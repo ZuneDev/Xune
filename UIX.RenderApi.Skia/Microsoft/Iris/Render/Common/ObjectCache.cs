@@ -8,120 +8,120 @@ using System;
 
 namespace Microsoft.Iris.Render.Common
 {
-  internal class ObjectCache : RenderObject
-  {
-    private const int k_nReductionThreshold = 3;
-    private Vector<CachedRenderObject> m_listObjects;
-    private int m_nMaxCacheSize;
-    private int m_nMinCacheSize;
-    private int m_nStepSize;
-    private int m_cCacheMisses;
-    private int m_cCacheHits;
-    private bool m_fWasCacheFull;
-    private int m_cReductionRequests;
-
-    internal ObjectCache(int nMinSize, int nMaxSize, int nStepSize)
+    internal class ObjectCache : RenderObject
     {
-      this.m_listObjects = new Vector<CachedRenderObject>(nMinSize);
-      this.m_nMinCacheSize = nMinSize;
-      this.m_nMaxCacheSize = nMaxSize;
-      this.m_nStepSize = nStepSize;
-    }
+        private const int k_nReductionThreshold = 3;
+        private Vector<CachedRenderObject> m_listObjects;
+        private int m_nMaxCacheSize;
+        private int m_nMinCacheSize;
+        private int m_nStepSize;
+        private int m_cCacheMisses;
+        private int m_cCacheHits;
+        private bool m_fWasCacheFull;
+        private int m_cReductionRequests;
 
-    protected override void Dispose(bool fInDispose)
-    {
-      try
-      {
-        if (fInDispose)
+        internal ObjectCache(int nMinSize, int nMaxSize, int nStepSize)
         {
-          foreach (CachedRenderObject listObject in this.m_listObjects)
-          {
-            listObject.Cache = (ObjectCache) null;
-            listObject.UnregisterUsage((object) this);
-          }
+            this.m_listObjects = new Vector<CachedRenderObject>(nMinSize);
+            this.m_nMinCacheSize = nMinSize;
+            this.m_nMaxCacheSize = nMaxSize;
+            this.m_nStepSize = nStepSize;
         }
-        this.m_listObjects = (Vector<CachedRenderObject>) null;
-      }
-      finally
-      {
-        base.Dispose(fInDispose);
-      }
-    }
 
-    internal int Size => this.m_listObjects.Count;
-
-    internal bool Add(CachedRenderObject obj)
-    {
-      if (this.m_listObjects.Count < this.m_listObjects.Capacity)
-      {
-        obj.RegisterUsage((object) this);
-        this.m_listObjects.Add(obj);
-        return true;
-      }
-      this.m_fWasCacheFull = true;
-      return false;
-    }
-
-    internal CachedRenderObject Remove(object objUser)
-    {
-      if (this.m_listObjects.Count > 0)
-      {
-        ++this.m_cCacheHits;
-        int index = this.m_listObjects.Count - 1;
-        CachedRenderObject listObject = this.m_listObjects[index];
-        this.m_listObjects.RemoveAt(index);
-        listObject.RegisterUsage(objUser);
-        listObject.UnregisterUsage((object) this);
-        return listObject;
-      }
-      ++this.m_cCacheMisses;
-      return (CachedRenderObject) null;
-    }
-
-    internal void RemoveAll()
-    {
-      foreach (CachedRenderObject listObject in this.m_listObjects)
-      {
-        listObject.Cache = (ObjectCache) null;
-        listObject.UnregisterUsage((object) this);
-      }
-      this.m_listObjects.Clear();
-    }
-
-    internal void Update()
-    {
-      if (this.ShouldGrowCache())
-        this.m_listObjects.Capacity = Math.Min(this.m_listObjects.Capacity + this.m_nStepSize, this.m_nMaxCacheSize);
-      else if (this.ShouldShrinkCache())
-      {
-        if (this.m_cReductionRequests > 3)
+        protected override void Dispose(bool fInDispose)
         {
-          int num = Math.Max(this.m_listObjects.Capacity - this.m_nStepSize, this.m_nMinCacheSize);
-          if (this.m_listObjects.Count - num > 0)
-          {
-            for (int index = this.m_listObjects.Count - 1; index >= num; --index)
+            try
             {
-              CachedRenderObject listObject = this.m_listObjects[index];
-              listObject.Cache = (ObjectCache) null;
-              listObject.UnregisterUsage((object) this);
-              this.m_listObjects.RemoveAt(index);
+                if (fInDispose)
+                {
+                    foreach (CachedRenderObject listObject in this.m_listObjects)
+                    {
+                        listObject.Cache = (ObjectCache)null;
+                        listObject.UnregisterUsage((object)this);
+                    }
+                }
+                this.m_listObjects = (Vector<CachedRenderObject>)null;
             }
-          }
-          this.m_listObjects.Capacity = num;
-          this.m_cReductionRequests = 0;
+            finally
+            {
+                base.Dispose(fInDispose);
+            }
         }
-        else
-          ++this.m_cReductionRequests;
-      }
-      else
-        this.m_cReductionRequests = 0;
-      this.m_cCacheMisses = 0;
-      this.m_cCacheHits = 0;
-      this.m_fWasCacheFull = false;
+
+        internal int Size => this.m_listObjects.Count;
+
+        internal bool Add(CachedRenderObject obj)
+        {
+            if (this.m_listObjects.Count < this.m_listObjects.Capacity)
+            {
+                obj.RegisterUsage((object)this);
+                this.m_listObjects.Add(obj);
+                return true;
+            }
+            this.m_fWasCacheFull = true;
+            return false;
+        }
+
+        internal CachedRenderObject Remove(object objUser)
+        {
+            if (this.m_listObjects.Count > 0)
+            {
+                ++this.m_cCacheHits;
+                int index = this.m_listObjects.Count - 1;
+                CachedRenderObject listObject = this.m_listObjects[index];
+                this.m_listObjects.RemoveAt(index);
+                listObject.RegisterUsage(objUser);
+                listObject.UnregisterUsage((object)this);
+                return listObject;
+            }
+            ++this.m_cCacheMisses;
+            return (CachedRenderObject)null;
+        }
+
+        internal void RemoveAll()
+        {
+            foreach (CachedRenderObject listObject in this.m_listObjects)
+            {
+                listObject.Cache = (ObjectCache)null;
+                listObject.UnregisterUsage((object)this);
+            }
+            this.m_listObjects.Clear();
+        }
+
+        internal void Update()
+        {
+            if (this.ShouldGrowCache())
+                this.m_listObjects.Capacity = Math.Min(this.m_listObjects.Capacity + this.m_nStepSize, this.m_nMaxCacheSize);
+            else if (this.ShouldShrinkCache())
+            {
+                if (this.m_cReductionRequests > 3)
+                {
+                    int num = Math.Max(this.m_listObjects.Capacity - this.m_nStepSize, this.m_nMinCacheSize);
+                    if (this.m_listObjects.Count - num > 0)
+                    {
+                        for (int index = this.m_listObjects.Count - 1; index >= num; --index)
+                        {
+                            CachedRenderObject listObject = this.m_listObjects[index];
+                            listObject.Cache = (ObjectCache)null;
+                            listObject.UnregisterUsage((object)this);
+                            this.m_listObjects.RemoveAt(index);
+                        }
+                    }
+                    this.m_listObjects.Capacity = num;
+                    this.m_cReductionRequests = 0;
+                }
+                else
+                    ++this.m_cReductionRequests;
+            }
+            else
+                this.m_cReductionRequests = 0;
+            this.m_cCacheMisses = 0;
+            this.m_cCacheHits = 0;
+            this.m_fWasCacheFull = false;
+        }
+
+        private bool ShouldGrowCache() => this.m_cCacheMisses > 0 && this.m_fWasCacheFull && this.m_listObjects.Capacity < this.m_nMaxCacheSize;
+
+        private bool ShouldShrinkCache() => this.m_cCacheMisses + this.m_cCacheHits == 0 && this.m_listObjects.Capacity > this.m_nMinCacheSize;
     }
-
-    private bool ShouldGrowCache() => this.m_cCacheMisses > 0 && this.m_fWasCacheFull && this.m_listObjects.Capacity < this.m_nMaxCacheSize;
-
-    private bool ShouldShrinkCache() => this.m_cCacheMisses + this.m_cCacheHits == 0 && this.m_listObjects.Capacity > this.m_nMinCacheSize;
-  }
 }

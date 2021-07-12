@@ -6,11 +6,11 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal enum SurfacePoolAllocationResult
-  {
-    NotAllocated,
-    Requested,
-    Immoveable,
-    NotEnoughVideoMemory,
-  }
+    internal enum SurfacePoolAllocationResult
+    {
+        NotAllocated,
+        Requested,
+        Immoveable,
+        NotEnoughVideoMemory,
+    }
 }

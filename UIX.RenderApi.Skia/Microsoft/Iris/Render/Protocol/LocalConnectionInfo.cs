@@ -8,8 +8,8 @@ using System;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [Serializable]
-  internal sealed class LocalConnectionInfo : ConnectionInfo
-  {
-  }
+    [Serializable]
+    internal sealed class LocalConnectionInfo : ConnectionInfo
+    {
+    }
 }

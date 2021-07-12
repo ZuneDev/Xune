@@ -6,13 +6,13 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum AnimationStage : uint
-  {
-    Start,
-    LoopStart,
-    LoopComplete,
-    Complete,
-    Reset,
-    Count,
-  }
+    public enum AnimationStage : uint
+    {
+        Start,
+        LoopStart,
+        LoopComplete,
+        Complete,
+        Reset,
+        Count,
+    }
 }

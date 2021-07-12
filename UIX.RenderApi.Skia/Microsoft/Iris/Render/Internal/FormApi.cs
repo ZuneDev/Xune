@@ -8,14 +8,14 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Internal
 {
-  internal static class FormApi
-  {
-    private const string s_stEhRenderDll = "UIXRender.dll";
+    internal static class FormApi
+    {
+        private const string s_stEhRenderDll = "UIXRender.dll";
 
-    [DllImport("UIXRender.dll")]
-    public static extern HRESULT SpGdiplusInit();
+        [DllImport("UIXRender.dll")]
+        public static extern HRESULT SpGdiplusInit();
 
-    [DllImport("UIXRender.dll")]
-    public static extern HRESULT SpGdiplusUninit();
-  }
+        [DllImport("UIXRender.dll")]
+        public static extern HRESULT SpGdiplusUninit();
+    }
 }

@@ -8,10 +8,10 @@ using System.Threading;
 
 namespace Microsoft.Iris.Render.Internal
 {
-  internal class KeyAllocator
-  {
-    private static int s_idxKeyGen;
+    internal class KeyAllocator
+    {
+        private static int s_idxKeyGen;
 
-    internal static uint ReserveSlot() => (uint) Interlocked.Increment(ref KeyAllocator.s_idxKeyGen);
-  }
+        internal static uint ReserveSlot() => (uint)Interlocked.Increment(ref KeyAllocator.s_idxKeyGen);
+    }
 }

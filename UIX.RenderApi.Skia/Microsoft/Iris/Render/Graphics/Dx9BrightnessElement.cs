@@ -8,22 +8,22 @@ using Microsoft.Iris.Library;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class Dx9BrightnessElement
-  {
-    internal static void Generate(
-      BrightnessElement efoBrightness,
-      ref Dx9EffectBuilder effectBuilder)
+    internal class Dx9BrightnessElement
     {
-      VariableInfo variableInfo = new VariableInfo()
-      {
-        ID = (int) efoBrightness.BrightnessID,
-        Type = Dx9VariableType.Float,
-        IsDynamic = efoBrightness.IsDynamicProperty("Brightness")
-      };
-      variableInfo.Name = variableInfo.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo.Type, efoBrightness.Name) : effectBuilder.GenerateGlobalConstant(variableInfo.Type, efoBrightness.Name);
-      variableInfo.DefaultValue = (object) efoBrightness.Brightness;
-      effectBuilder.AddPropertyVariable(variableInfo);
-      effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        // adjust brightness based on input\r\n        {0}.rgb += float3({1}, {1}, {1});\r\n    }}\r\n", (object) effectBuilder.PixelShaderOutput, (object) variableInfo.Name));
+        internal static void Generate(
+          BrightnessElement efoBrightness,
+          ref Dx9EffectBuilder effectBuilder)
+        {
+            VariableInfo variableInfo = new VariableInfo()
+            {
+                ID = (int)efoBrightness.BrightnessID,
+                Type = Dx9VariableType.Float,
+                IsDynamic = efoBrightness.IsDynamicProperty("Brightness")
+            };
+            variableInfo.Name = variableInfo.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo.Type, efoBrightness.Name) : effectBuilder.GenerateGlobalConstant(variableInfo.Type, efoBrightness.Name);
+            variableInfo.DefaultValue = (object)efoBrightness.Brightness;
+            effectBuilder.AddPropertyVariable(variableInfo);
+            effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        // adjust brightness based on input\r\n        {0}.rgb += float3({1}, {1}, {1});\r\n    }}\r\n", (object)effectBuilder.PixelShaderOutput, (object)variableInfo.Name));
+        }
     }
-  }
 }

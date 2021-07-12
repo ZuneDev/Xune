@@ -6,16 +6,16 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum AnimationTypeChannel
-  {
-    O = 0,
-    R = 1,
-    X = 1,
-    G = 2,
-    Y = 2,
-    B = 3,
-    Z = 3,
-    A = 4,
-    W = 4,
-  }
+    public enum AnimationTypeChannel
+    {
+        O = 0,
+        R = 1,
+        X = 1,
+        G = 2,
+        Y = 2,
+        B = 3,
+        Z = 3,
+        A = 4,
+        W = 4,
+    }
 }

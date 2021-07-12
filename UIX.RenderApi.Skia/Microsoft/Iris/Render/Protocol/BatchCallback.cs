@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal delegate void BatchCallback();
+    internal delegate void BatchCallback();
 }

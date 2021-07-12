@@ -9,12 +9,12 @@ using System.Diagnostics;
 
 namespace Cn
 {
-  [Conditional("NEVER")]
-  [AttributeUsage(AttributeTargets.Method | AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-  public class CodeGenNameAttribute : Attribute
-  {
-    public string Name;
+    [Conditional("NEVER")]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
+    public class CodeGenNameAttribute : Attribute
+    {
+        public string Name;
 
-    public CodeGenNameAttribute(string stName) => this.Name = stName;
-  }
+        public CodeGenNameAttribute(string stName) => this.Name = stName;
+    }
 }

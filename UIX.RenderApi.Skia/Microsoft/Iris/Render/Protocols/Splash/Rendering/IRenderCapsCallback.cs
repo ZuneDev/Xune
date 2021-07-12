@@ -9,14 +9,14 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 {
-  internal interface IRenderCapsCallback
-  {
-    void OnSoundCaps(RENDERHANDLE target, uint nCookie, Microsoft.Iris.Render.Internal.SoundCaps capsInfo);
+    internal interface IRenderCapsCallback
+    {
+        void OnSoundCaps(RENDERHANDLE target, uint nCookie, Microsoft.Iris.Render.Internal.SoundCaps capsInfo);
 
-    void OnGraphicsCaps(RENDERHANDLE target, uint nCookie, GraphicsCaps capsInfo);
+        void OnGraphicsCaps(RENDERHANDLE target, uint nCookie, GraphicsCaps capsInfo);
 
-    void OnEndCapsCheck(RENDERHANDLE target, uint nCookie);
+        void OnEndCapsCheck(RENDERHANDLE target, uint nCookie);
 
-    void OnBeginCapsCheck(RENDERHANDLE target, uint nCookie);
-  }
+        void OnBeginCapsCheck(RENDERHANDLE target, uint nCookie);
+    }
 }

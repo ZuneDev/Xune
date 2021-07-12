@@ -9,79 +9,79 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  [ComVisible(false)]
-  [StructLayout(LayoutKind.Sequential)]
-  public class ImageRequirements
-  {
-    private ImageRequirements.Fields m_nMask;
-    private Size m_sizeMaximumPxl;
-    private int m_nBorderPxl;
-    private ColorF m_clrBorder;
-
-    public Size MaximumSize
+    [ComVisible(false)]
+    [StructLayout(LayoutKind.Sequential)]
+    public class ImageRequirements
     {
-      get => this.m_sizeMaximumPxl;
-      set
-      {
-        this.m_sizeMaximumPxl = value;
-        if (this.m_sizeMaximumPxl.IsZero)
-          this.m_nMask &= ~ImageRequirements.Fields.MaximumSize;
-        else
-          this.m_nMask |= ImageRequirements.Fields.MaximumSize;
-      }
-    }
+        private ImageRequirements.Fields m_nMask;
+        private Size m_sizeMaximumPxl;
+        private int m_nBorderPxl;
+        private ColorF m_clrBorder;
 
-    public bool Flippable
-    {
-      get => (this.m_nMask & ImageRequirements.Fields.Flippable) != ImageRequirements.Fields.None;
-      set
-      {
-        if (value)
-          this.m_nMask |= ImageRequirements.Fields.Flippable;
-        else
-          this.m_nMask &= ~ImageRequirements.Fields.Flippable;
-      }
-    }
+        public Size MaximumSize
+        {
+            get => this.m_sizeMaximumPxl;
+            set
+            {
+                this.m_sizeMaximumPxl = value;
+                if (this.m_sizeMaximumPxl.IsZero)
+                    this.m_nMask &= ~ImageRequirements.Fields.MaximumSize;
+                else
+                    this.m_nMask |= ImageRequirements.Fields.MaximumSize;
+            }
+        }
 
-    public int BorderWidth
-    {
-      get => this.m_nBorderPxl;
-      set
-      {
-        this.m_nBorderPxl = value;
-        if (this.m_nBorderPxl > 0)
-          this.m_nMask |= ImageRequirements.Fields.Border;
-        else
-          this.m_nMask &= ~ImageRequirements.Fields.Border;
-      }
-    }
+        public bool Flippable
+        {
+            get => (this.m_nMask & ImageRequirements.Fields.Flippable) != ImageRequirements.Fields.None;
+            set
+            {
+                if (value)
+                    this.m_nMask |= ImageRequirements.Fields.Flippable;
+                else
+                    this.m_nMask &= ~ImageRequirements.Fields.Flippable;
+            }
+        }
 
-    public ColorF BorderColor
-    {
-      get => this.m_clrBorder;
-      set => this.m_clrBorder = value;
-    }
+        public int BorderWidth
+        {
+            get => this.m_nBorderPxl;
+            set
+            {
+                this.m_nBorderPxl = value;
+                if (this.m_nBorderPxl > 0)
+                    this.m_nMask |= ImageRequirements.Fields.Border;
+                else
+                    this.m_nMask &= ~ImageRequirements.Fields.Border;
+            }
+        }
 
-    public bool AntialiasEdges
-    {
-      get => (this.m_nMask & ImageRequirements.Fields.AntialiasEdges) != ImageRequirements.Fields.None;
-      set
-      {
-        if (value)
-          this.m_nMask |= ImageRequirements.Fields.AntialiasEdges;
-        else
-          this.m_nMask &= ~ImageRequirements.Fields.AntialiasEdges;
-      }
-    }
+        public ColorF BorderColor
+        {
+            get => this.m_clrBorder;
+            set => this.m_clrBorder = value;
+        }
 
-    [Flags]
-    internal enum Fields
-    {
-      None = 0,
-      MaximumSize = 1,
-      Border = 2,
-      Flippable = 4,
-      AntialiasEdges = 16, // 0x00000010
+        public bool AntialiasEdges
+        {
+            get => (this.m_nMask & ImageRequirements.Fields.AntialiasEdges) != ImageRequirements.Fields.None;
+            set
+            {
+                if (value)
+                    this.m_nMask |= ImageRequirements.Fields.AntialiasEdges;
+                else
+                    this.m_nMask &= ~ImageRequirements.Fields.AntialiasEdges;
+            }
+        }
+
+        [Flags]
+        internal enum Fields
+        {
+            None = 0,
+            MaximumSize = 1,
+            Border = 2,
+            Flippable = 4,
+            AntialiasEdges = 16, // 0x00000010
+        }
     }
-  }
 }

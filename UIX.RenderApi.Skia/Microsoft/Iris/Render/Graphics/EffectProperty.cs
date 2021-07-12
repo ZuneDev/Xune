@@ -9,134 +9,134 @@ using Microsoft.Iris.Render.Internal;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class EffectProperty : RenderObject
-  {
-    private const byte k_dynamicFlag = 128;
-    private byte m_nID;
-    private object m_oValue;
-    private byte m_propertyType;
-
-    internal EffectProperty(
-      string stName,
-      EffectPropertyType eptType,
-      bool fIsDynamic,
-      object oValue,
-      byte nID)
+    internal class EffectProperty : RenderObject
     {
-      this.m_propertyType = (byte) eptType;
-      this.IsDynamic = fIsDynamic;
-      this.m_nID = nID;
-      this.Value = oValue;
+        private const byte k_dynamicFlag = 128;
+        private byte m_nID;
+        private object m_oValue;
+        private byte m_propertyType;
+
+        internal EffectProperty(
+          string stName,
+          EffectPropertyType eptType,
+          bool fIsDynamic,
+          object oValue,
+          byte nID)
+        {
+            this.m_propertyType = (byte)eptType;
+            this.IsDynamic = fIsDynamic;
+            this.m_nID = nID;
+            this.Value = oValue;
+        }
+
+        private EffectProperty(EffectProperty copy)
+        {
+            this.m_propertyType = copy.m_propertyType;
+            this.IsDynamic = copy.IsDynamic;
+            this.m_nID = copy.m_nID;
+            this.Value = copy.Value;
+        }
+
+        protected override void Dispose(bool fInDispose)
+        {
+            try
+            {
+                if (!fInDispose || this.m_oValue == null)
+                    return;
+                this.ModifyUsage(false);
+                this.m_oValue = (object)null;
+            }
+            finally
+            {
+                base.Dispose(fInDispose);
+            }
+        }
+
+        internal object Value
+        {
+            get => this.m_oValue;
+            set
+            {
+                this.ModifyUsage(false);
+                this.m_oValue = value;
+                this.ModifyUsage(true);
+            }
+        }
+
+        internal bool IsDynamic
+        {
+            get => ((int)this.m_propertyType & 128) == 128;
+            set
+            {
+                if (value)
+                    this.m_propertyType |= (byte)128;
+                else
+                    this.m_propertyType &= (byte)127;
+            }
+        }
+
+        internal bool IsSharedResource => this.Type == EffectPropertyType.Image || this.Type == EffectPropertyType.ImageArray || this.Type == EffectPropertyType.Video;
+
+        internal EffectPropertyType Type => (EffectPropertyType)((uint)this.m_propertyType & 4294967167U);
+
+        internal byte ID
+        {
+            get => this.m_nID;
+            set => this.m_nID = value;
+        }
+
+        internal bool HasIdenticalValue(object oValue)
+        {
+            switch (this.Type)
+            {
+                case EffectPropertyType.Integer:
+                    return (int)this.Value == (int)oValue;
+                case EffectPropertyType.Float:
+                    return !Math2.WithinEpsilon((float)this.Value, (float)oValue);
+                case EffectPropertyType.Vector2:
+                    return (Vector2)this.Value == (Vector2)oValue;
+                case EffectPropertyType.Vector3:
+                    return (Vector3)this.Value == (Vector3)oValue;
+                case EffectPropertyType.Vector4:
+                    return (Vector4)this.Value == (Vector4)oValue;
+                case EffectPropertyType.Image:
+                    return (Image)this.Value == (Image)oValue;
+                case EffectPropertyType.Color:
+                    return (ColorF)this.Value == (ColorF)oValue;
+                case EffectPropertyType.ImageArray:
+                    SharedResource[] resources1 = ((SharedResourceArray)oValue).Resources;
+                    SharedResource[] resources2 = ((SharedResourceArray)this.Value).Resources;
+                    if (resources1.Length != resources1.Length)
+                        return false;
+                    for (int index = 0; index < resources2.Length; ++index)
+                    {
+                        if (resources2[index] != resources1[index])
+                            return false;
+                    }
+                    return true;
+                case EffectPropertyType.Video:
+                    return (VideoStream)this.Value == (VideoStream)oValue;
+                default:
+                    return false;
+            }
+        }
+
+        internal EffectProperty Clone() => new EffectProperty(this);
+
+        private void ModifyUsage(bool fLock)
+        {
+            if (this.m_oValue == null || !(this.m_oValue is SharedResource oValue))
+                return;
+            if (fLock)
+            {
+                oValue.RegisterUsage((object)this);
+                oValue.AddActiveUser((object)this);
+            }
+            else
+            {
+                oValue.RemoveActiveUser((object)this);
+                oValue.UnregisterUsage((object)this);
+            }
+        }
     }
-
-    private EffectProperty(EffectProperty copy)
-    {
-      this.m_propertyType = copy.m_propertyType;
-      this.IsDynamic = copy.IsDynamic;
-      this.m_nID = copy.m_nID;
-      this.Value = copy.Value;
-    }
-
-    protected override void Dispose(bool fInDispose)
-    {
-      try
-      {
-        if (!fInDispose || this.m_oValue == null)
-          return;
-        this.ModifyUsage(false);
-        this.m_oValue = (object) null;
-      }
-      finally
-      {
-        base.Dispose(fInDispose);
-      }
-    }
-
-    internal object Value
-    {
-      get => this.m_oValue;
-      set
-      {
-        this.ModifyUsage(false);
-        this.m_oValue = value;
-        this.ModifyUsage(true);
-      }
-    }
-
-    internal bool IsDynamic
-    {
-      get => ((int) this.m_propertyType & 128) == 128;
-      set
-      {
-        if (value)
-          this.m_propertyType |= (byte) 128;
-        else
-          this.m_propertyType &= (byte) 127;
-      }
-    }
-
-    internal bool IsSharedResource => this.Type == EffectPropertyType.Image || this.Type == EffectPropertyType.ImageArray || this.Type == EffectPropertyType.Video;
-
-    internal EffectPropertyType Type => (EffectPropertyType) ((uint) this.m_propertyType & 4294967167U);
-
-    internal byte ID
-    {
-      get => this.m_nID;
-      set => this.m_nID = value;
-    }
-
-    internal bool HasIdenticalValue(object oValue)
-    {
-      switch (this.Type)
-      {
-        case EffectPropertyType.Integer:
-          return (int) this.Value == (int) oValue;
-        case EffectPropertyType.Float:
-          return !Math2.WithinEpsilon((float) this.Value, (float) oValue);
-        case EffectPropertyType.Vector2:
-          return (Vector2) this.Value == (Vector2) oValue;
-        case EffectPropertyType.Vector3:
-          return (Vector3) this.Value == (Vector3) oValue;
-        case EffectPropertyType.Vector4:
-          return (Vector4) this.Value == (Vector4) oValue;
-        case EffectPropertyType.Image:
-          return (Image) this.Value == (Image) oValue;
-        case EffectPropertyType.Color:
-          return (ColorF) this.Value == (ColorF) oValue;
-        case EffectPropertyType.ImageArray:
-          SharedResource[] resources1 = ((SharedResourceArray) oValue).Resources;
-          SharedResource[] resources2 = ((SharedResourceArray) this.Value).Resources;
-          if (resources1.Length != resources1.Length)
-            return false;
-          for (int index = 0; index < resources2.Length; ++index)
-          {
-            if (resources2[index] != resources1[index])
-              return false;
-          }
-          return true;
-        case EffectPropertyType.Video:
-          return (VideoStream) this.Value == (VideoStream) oValue;
-        default:
-          return false;
-      }
-    }
-
-    internal EffectProperty Clone() => new EffectProperty(this);
-
-    private void ModifyUsage(bool fLock)
-    {
-      if (this.m_oValue == null || !(this.m_oValue is SharedResource oValue))
-        return;
-      if (fLock)
-      {
-        oValue.RegisterUsage((object) this);
-        oValue.AddActiveUser((object) this);
-      }
-      else
-      {
-        oValue.RemoveActiveUser((object) this);
-        oValue.UnregisterUsage((object) this);
-      }
-    }
-  }
 }

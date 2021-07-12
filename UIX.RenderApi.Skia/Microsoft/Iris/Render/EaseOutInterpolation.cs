@@ -9,21 +9,21 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public sealed class EaseOutInterpolation : AnimationInterpolation
-  {
-    private float m_weight;
-    private float m_handle;
-
-    public EaseOutInterpolation(float weight, float handle)
+    public sealed class EaseOutInterpolation : AnimationInterpolation
     {
-      Debug2.Validate((double) weight > 0.0, typeof (ArgumentOutOfRangeException), nameof (weight));
-      Debug2.Validate((double) handle > 0.0 && (double) handle < 1.0, typeof (ArgumentOutOfRangeException), nameof (handle));
-      this.m_weight = weight;
-      this.m_handle = handle;
+        private float m_weight;
+        private float m_handle;
+
+        public EaseOutInterpolation(float weight, float handle)
+        {
+            Debug2.Validate((double)weight > 0.0, typeof(ArgumentOutOfRangeException), nameof(weight));
+            Debug2.Validate((double)handle > 0.0 && (double)handle < 1.0, typeof(ArgumentOutOfRangeException), nameof(handle));
+            this.m_weight = weight;
+            this.m_handle = handle;
+        }
+
+        internal float Weight => this.m_weight;
+
+        internal float Handle => this.m_handle;
     }
-
-    internal float Weight => this.m_weight;
-
-    internal float Handle => this.m_handle;
-  }
 }

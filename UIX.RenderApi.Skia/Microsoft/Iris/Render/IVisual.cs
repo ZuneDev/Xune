@@ -8,18 +8,18 @@ using Microsoft.Iris.Input;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IVisual : IRawInputSite, IAnimatable, ISharedRenderObject
-  {
-    MouseOptions MouseOptions { get; set; }
+    public interface IVisual : IRawInputSite, IAnimatable, ISharedRenderObject
+    {
+        MouseOptions MouseOptions { get; set; }
 
-    IVisualContainer Parent { get; }
+        IVisualContainer Parent { get; }
 
-    string DebugID { get; set; }
+        string DebugID { get; set; }
 
-    ColorF DebugColor { get; set; }
+        ColorF DebugColor { get; set; }
 
-    void Remove();
+        void Remove();
 
-    void CopyFrom(IVisual visualSource);
-  }
+        void CopyFrom(IVisual visualSource);
+    }
 }

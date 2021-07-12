@@ -9,18 +9,18 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  [ComVisible(false)]
-  internal struct HSpBitmap
-  {
-    internal IntPtr h;
-    internal static readonly HSpBitmap NULL = new HSpBitmap();
+    [ComVisible(false)]
+    internal struct HSpBitmap
+    {
+        internal IntPtr h;
+        internal static readonly HSpBitmap NULL = new HSpBitmap();
 
-    public static bool operator ==(HSpBitmap hA, HSpBitmap hB) => hA.h == hB.h;
+        public static bool operator ==(HSpBitmap hA, HSpBitmap hB) => hA.h == hB.h;
 
-    public static bool operator !=(HSpBitmap hA, HSpBitmap hB) => hA.h != hB.h;
+        public static bool operator !=(HSpBitmap hA, HSpBitmap hB) => hA.h != hB.h;
 
-    public override bool Equals(object oCompare) => oCompare is HSpBitmap hspBitmap && this.h == hspBitmap.h;
+        public override bool Equals(object oCompare) => oCompare is HSpBitmap hspBitmap && this.h == hspBitmap.h;
 
-    public override int GetHashCode() => (int) this.h.ToInt64();
-  }
+        public override int GetHashCode() => (int)this.h.ToInt64();
+    }
 }

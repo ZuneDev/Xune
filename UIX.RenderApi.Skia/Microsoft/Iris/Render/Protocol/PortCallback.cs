@@ -6,8 +6,8 @@
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal unsafe delegate void PortCallback(
-    RenderPort port,
-    IRenderHandleOwner owner,
-    CallbackMessage* message);
+    internal unsafe delegate void PortCallback(
+      RenderPort port,
+      IRenderHandleOwner owner,
+      CallbackMessage* message);
 }

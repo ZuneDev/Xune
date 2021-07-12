@@ -6,13 +6,13 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal enum Dx9VariableType : byte
-  {
-    Integer,
-    Float,
-    Vector2,
-    Vector3,
-    Vector4,
-    Texture,
-  }
+    internal enum Dx9VariableType : byte
+    {
+        Integer,
+        Float,
+        Vector2,
+        Vector3,
+        Vector4,
+        Texture,
+    }
 }

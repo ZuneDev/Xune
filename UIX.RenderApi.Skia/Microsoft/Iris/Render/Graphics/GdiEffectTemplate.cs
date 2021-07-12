@@ -10,71 +10,71 @@ using System;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class GdiEffectTemplate : EffectTemplate
-  {
-    private GdiEffectType m_type;
-
-    internal GdiEffectTemplate(RenderSession session, GraphicsDevice device, string stName)
-      : base(session, device, stName)
-      => this.m_type = GdiEffectType.None;
-
-    internal GdiEffectType Type => this.m_type;
-
-    public override IEffect CreateInstance(object objUser)
+    internal class GdiEffectTemplate : EffectTemplate
     {
-      Debug2.Validate(this.m_fBuilt, typeof (InvalidOperationException), "Cannot create instance if the template is not built");
-      GdiEffect gdiEffect = (GdiEffect) null;
-      if (this.m_cache != null)
-        gdiEffect = (GdiEffect) this.m_cache.Remove(objUser);
-      if (gdiEffect == null)
-      {
-        gdiEffect = new GdiEffect(this);
-        gdiEffect.Cache = this.m_cache;
-        gdiEffect.RegisterUsage(objUser);
-        gdiEffect.RemoteEffect();
-      }
-      return (IEffect) gdiEffect;
-    }
+        private GdiEffectType m_type;
 
-    protected override bool Build(EffectInput input)
-    {
-      if (!this.ProcessEffectElement(input))
-        return false;
-      int nPropCacheSize = 0;
-      if (!this.GenerateProperties(input, this.m_dynamicProperties, out nPropCacheSize))
-        return false;
-      Map<string, EffectProperty>.Enumerator enumerator = this.m_dynamicProperties.GetEnumerator();
-      while (enumerator.MoveNext())
-      {
-        EffectProperty effectProperty = enumerator.Current.Value;
-        if (effectProperty == null || !effectProperty.IsDynamic)
+        internal GdiEffectTemplate(RenderSession session, GraphicsDevice device, string stName)
+          : base(session, device, stName)
+          => this.m_type = GdiEffectType.None;
+
+        internal GdiEffectType Type => this.m_type;
+
+        public override IEffect CreateInstance(object objUser)
         {
-          this.m_dynamicProperties.Remove(enumerator.Current.Key);
-          enumerator = this.m_dynamicProperties.GetEnumerator();
+            Debug2.Validate(this.m_fBuilt, typeof(InvalidOperationException), "Cannot create instance if the template is not built");
+            GdiEffect gdiEffect = (GdiEffect)null;
+            if (this.m_cache != null)
+                gdiEffect = (GdiEffect)this.m_cache.Remove(objUser);
+            if (gdiEffect == null)
+            {
+                gdiEffect = new GdiEffect(this);
+                gdiEffect.Cache = this.m_cache;
+                gdiEffect.RegisterUsage(objUser);
+                gdiEffect.RemoteEffect();
+            }
+            return (IEffect)gdiEffect;
         }
-      }
-      return true;
-    }
 
-    private bool ProcessEffectElement(EffectInput element)
-    {
-      switch (element.Type)
-      {
-        case EffectInputType.Color:
-          this.m_type = GdiEffectType.LoadColor;
-          return true;
-        case EffectInputType.Image:
-          this.m_type = GdiEffectType.LoadImage;
-          return true;
-        default:
-          return false;
-      }
-    }
+        protected override bool Build(EffectInput input)
+        {
+            if (!this.ProcessEffectElement(input))
+                return false;
+            int nPropCacheSize = 0;
+            if (!this.GenerateProperties(input, this.m_dynamicProperties, out nPropCacheSize))
+                return false;
+            Map<string, EffectProperty>.Enumerator enumerator = this.m_dynamicProperties.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                EffectProperty effectProperty = enumerator.Current.Value;
+                if (effectProperty == null || !effectProperty.IsDynamic)
+                {
+                    this.m_dynamicProperties.Remove(enumerator.Current.Key);
+                    enumerator = this.m_dynamicProperties.GetEnumerator();
+                }
+            }
+            return true;
+        }
 
-    protected override void ResetInternalState()
-    {
-      base.ResetInternalState();
-      this.m_type = GdiEffectType.None;
+        private bool ProcessEffectElement(EffectInput element)
+        {
+            switch (element.Type)
+            {
+                case EffectInputType.Color:
+                    this.m_type = GdiEffectType.LoadColor;
+                    return true;
+                case EffectInputType.Image:
+                    this.m_type = GdiEffectType.LoadImage;
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        protected override void ResetInternalState()
+        {
+            base.ResetInternalState();
+            this.m_type = GdiEffectType.None;
+        }
     }
-  }
 }

@@ -6,9 +6,9 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum EmbossDirection
-  {
-    LeftToRight,
-    RightToLeft,
-  }
+    public enum EmbossDirection
+    {
+        LeftToRight,
+        RightToLeft,
+    }
 }

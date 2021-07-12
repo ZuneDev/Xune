@@ -6,10 +6,10 @@
 
 namespace System.Collections.Generic
 {
-  internal class HashHelpers
-  {
-    internal static readonly int[] s_primes = new int[72]
+    internal class HashHelpers
     {
+        internal static readonly int[] s_primes = new int[72]
+        {
       3,
       7,
       11,
@@ -82,37 +82,37 @@ namespace System.Collections.Generic
       4999559,
       5999471,
       7199369
-    };
+        };
 
-    internal static bool IsPrime(int candidate)
-    {
-      if ((candidate & 1) == 0)
-        return candidate == 2;
-      int num = (int) Math.Sqrt((double) candidate);
-      for (int index = 3; index <= num; index += 2)
-      {
-        if (candidate % index == 0)
-          return false;
-      }
-      return true;
-    }
+        internal static bool IsPrime(int candidate)
+        {
+            if ((candidate & 1) == 0)
+                return candidate == 2;
+            int num = (int)Math.Sqrt((double)candidate);
+            for (int index = 3; index <= num; index += 2)
+            {
+                if (candidate % index == 0)
+                    return false;
+            }
+            return true;
+        }
 
-    internal static int GetPrime(int min)
-    {
-      if (min < 0)
-        throw new ArgumentException(nameof (min));
-      for (int index = 0; index < HashHelpers.s_primes.Length; ++index)
-      {
-        int prime = HashHelpers.s_primes[index];
-        if (prime >= min)
-          return prime;
-      }
-      for (int candidate = min | 1; candidate < int.MaxValue; candidate += 2)
-      {
-        if (HashHelpers.IsPrime(candidate))
-          return candidate;
-      }
-      return min;
+        internal static int GetPrime(int min)
+        {
+            if (min < 0)
+                throw new ArgumentException(nameof(min));
+            for (int index = 0; index < HashHelpers.s_primes.Length; ++index)
+            {
+                int prime = HashHelpers.s_primes[index];
+                if (prime >= min)
+                    return prime;
+            }
+            for (int candidate = min | 1; candidate < int.MaxValue; candidate += 2)
+            {
+                if (HashHelpers.IsPrime(candidate))
+                    return candidate;
+            }
+            return min;
+        }
     }
-  }
 }

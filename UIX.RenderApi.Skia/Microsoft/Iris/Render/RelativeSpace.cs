@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum RelativeSpace
-  {
-    Min = 0,
-    Max = 1,
-    Global = 4,
-  }
+    public enum RelativeSpace
+    {
+        Min = 0,
+        Max = 1,
+        Global = 4,
+    }
 }

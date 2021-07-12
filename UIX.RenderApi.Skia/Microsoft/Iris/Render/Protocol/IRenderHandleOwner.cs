@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal interface IRenderHandleOwner
-  {
-    RENDERHANDLE RenderHandle { get; }
+    internal interface IRenderHandleOwner
+    {
+        RENDERHANDLE RenderHandle { get; }
 
-    void OnDisconnect();
-  }
+        void OnDisconnect();
+    }
 }

@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void WindowStateChangedHandler(bool fUnplanned);
+    public delegate void WindowStateChangedHandler(bool fUnplanned);
 }

@@ -8,16 +8,16 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Sound
 {
-  [ComVisible(false)]
-  internal struct SoundHeader
-  {
-    public ushort wFormatTag;
-    public ushort nChannels;
-    public uint nSamplesPerSec;
-    public uint nAvgBytesPerSec;
-    public ushort nBlockAlign;
-    public ushort wBitsPerSample;
-    public ushort cbExtraData;
-    public uint cbDataSize;
-  }
+    [ComVisible(false)]
+    internal struct SoundHeader
+    {
+        public ushort wFormatTag;
+        public ushort nChannels;
+        public uint nSamplesPerSec;
+        public uint nAvgBytesPerSec;
+        public ushort nBlockAlign;
+        public ushort wBitsPerSample;
+        public ushort cbExtraData;
+        public uint cbDataSize;
+    }
 }

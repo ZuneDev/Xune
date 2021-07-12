@@ -9,18 +9,18 @@ using System;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [Serializable]
-  internal sealed class RelayConnectionInfo : RemoteConnectionInfoBase
-  {
-    private string m_serverName;
-
-    public RelayConnectionInfo(RemoteConnectionInfo serverInfo, string serverName)
-      : base(serverInfo.TransportProtocol, serverInfo.SessionName, serverInfo.SwapByteOrder)
+    [Serializable]
+    internal sealed class RelayConnectionInfo : RemoteConnectionInfoBase
     {
-      Debug2.Validate(serverName != null, typeof (ArgumentNullException), nameof (serverName));
-      this.m_serverName = serverName;
-    }
+        private string m_serverName;
 
-    public string Server => this.m_serverName;
-  }
+        public RelayConnectionInfo(RemoteConnectionInfo serverInfo, string serverName)
+          : base(serverInfo.TransportProtocol, serverInfo.SessionName, serverInfo.SwapByteOrder)
+        {
+            Debug2.Validate(serverName != null, typeof(ArgumentNullException), nameof(serverName));
+            this.m_serverName = serverName;
+        }
+
+        public string Server => this.m_serverName;
+    }
 }

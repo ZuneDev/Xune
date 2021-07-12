@@ -8,13 +8,13 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  [Serializable]
-  public abstract class EngineInfo
-  {
-    private EngineType m_engineType;
+    [Serializable]
+    public abstract class EngineInfo
+    {
+        private EngineType m_engineType;
 
-    protected EngineInfo(EngineType engineType) => this.m_engineType = engineType;
+        protected EngineInfo(EngineType engineType) => this.m_engineType = engineType;
 
-    internal EngineType Type => this.m_engineType;
-  }
+        internal EngineType Type => this.m_engineType;
+    }
 }

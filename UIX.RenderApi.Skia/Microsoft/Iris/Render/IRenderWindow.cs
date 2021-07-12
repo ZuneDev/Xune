@@ -8,132 +8,132 @@ using Microsoft.Iris.Input;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IRenderWindow
-  {
-    int Left { get; }
+    public interface IRenderWindow
+    {
+        int Left { get; }
 
-    int Top { get; }
+        int Top { get; }
 
-    int Right { get; }
+        int Right { get; }
 
-    int Bottom { get; }
+        int Bottom { get; }
 
-    int Width { get; }
+        int Width { get; }
 
-    int Height { get; }
+        int Height { get; }
 
-    HWND WindowHandle { get; }
+        HWND WindowHandle { get; }
 
-    Size ClientSize { get; set; }
+        Size ClientSize { get; set; }
 
-    Size InitialClientSize { get; set; }
+        Size InitialClientSize { get; set; }
 
-    FormPlacement InitialPlacement { set; }
+        FormPlacement InitialPlacement { set; }
 
-    FormPlacement FinalPlacement { get; }
+        FormPlacement FinalPlacement { get; }
 
-    int MinResizeWidth { get; set; }
+        int MinResizeWidth { get; set; }
 
-    int MaxResizeWidth { get; set; }
+        int MaxResizeWidth { get; set; }
 
-    Point Position { get; set; }
+        Point Position { get; set; }
 
-    string Text { get; set; }
+        string Text { get; set; }
 
-    Cursor Cursor { get; set; }
+        Cursor Cursor { get; set; }
 
-    Cursor IdleCursor { get; set; }
+        Cursor IdleCursor { get; set; }
 
-    bool Visible { get; set; }
+        bool Visible { get; set; }
 
-    bool IsLoaded { get; }
+        bool IsLoaded { get; }
 
-    ColorF BackgroundColor { get; set; }
+        ColorF BackgroundColor { get; set; }
 
-    bool EnableExternalDragDrop { get; set; }
+        bool EnableExternalDragDrop { get; set; }
 
-    bool IsDragInProgress { get; set; }
+        bool IsDragInProgress { get; set; }
 
-    IDisplay CurrentDisplay { get; set; }
+        IDisplay CurrentDisplay { get; set; }
 
-    bool FullScreenExclusive { get; set; }
+        bool FullScreenExclusive { get; set; }
 
-    bool ActivationState { get; }
+        bool ActivationState { get; }
 
-    WindowState WindowState { get; set; }
+        WindowState WindowState { get; set; }
 
-    FormStyleInfo Styles { get; set; }
+        FormStyleInfo Styles { get; set; }
 
-    HWND AppNotifyWindow { set; }
+        HWND AppNotifyWindow { set; }
 
-    IVisualContainer VisualRoot { get; }
+        IVisualContainer VisualRoot { get; }
 
-    void Initialize();
+        void Initialize();
 
-    void SetIcon(string sModuleName, uint nResourceID, IconFlags nOptions);
+        void SetIcon(string sModuleName, uint nResourceID, IconFlags nOptions);
 
-    void SetEdgeImages(bool fActiveEdges, ShadowEdgePart[] edges);
+        void SetEdgeImages(bool fActiveEdges, ShadowEdgePart[] edges);
 
-    void SetWindowOptions(WindowOptions options, bool enable);
+        void SetWindowOptions(WindowOptions options, bool enable);
 
-    void SetMouseIdleOptions(Size sizeMouseIdleTolerance, uint nMouseIdleDelay);
+        void SetMouseIdleOptions(Size sizeMouseIdleTolerance, uint nMouseIdleDelay);
 
-    void SetCapture(IRawInputSite captureSite, bool state);
+        void SetCapture(IRawInputSite captureSite, bool state);
 
-    void SetDragDropResult(uint nDragOverResult, uint nDragDropResult);
+        void SetDragDropResult(uint nDragOverResult, uint nDragDropResult);
 
-    void ClientToScreen(ref Point point);
+        void ClientToScreen(ref Point point);
 
-    void ScreenToClient(ref Point point);
+        void ScreenToClient(ref Point point);
 
-    void ForceMouseIdle(bool fIdle);
+        void ForceMouseIdle(bool fIdle);
 
-    void LockMouseActive(bool fActive);
+        void LockMouseActive(bool fActive);
 
-    void RefreshHitTarget();
+        void RefreshHitTarget();
 
-    void TakeFocus();
+        void TakeFocus();
 
-    void TakeForeground(bool fForce);
+        void TakeForeground(bool fForce);
 
-    void BringToTop();
+        void BringToTop();
 
-    void Restore();
+        void Restore();
 
-    void TemporarilyExitExclusiveMode();
+        void TemporarilyExitExclusiveMode();
 
-    void Close(FormCloseReason fcrCloseReason);
+        void Close(FormCloseReason fcrCloseReason);
 
-    IHwndHostWindow CreateHwndHostWindow();
+        IHwndHostWindow CreateHwndHostWindow();
 
-    event LocationChangedHandler LocationChangedEvent;
+        event LocationChangedHandler LocationChangedEvent;
 
-    event SizeChangedHandler SizeChangedEvent;
+        event SizeChangedHandler SizeChangedEvent;
 
-    event MonitorChangedHandler MonitorChangedEvent;
+        event MonitorChangedHandler MonitorChangedEvent;
 
-    event WindowStateChangedHandler WindowStateChangedEvent;
+        event WindowStateChangedHandler WindowStateChangedEvent;
 
-    event SysCommandHandler SysCommandEvent;
+        event SysCommandHandler SysCommandEvent;
 
-    event MouseIdleHandler MouseIdleEvent;
+        event MouseIdleHandler MouseIdleEvent;
 
-    event ShowHandler ShowEvent;
+        event ShowHandler ShowEvent;
 
-    event ActivationChangeHandler ActivationChangeEvent;
+        event ActivationChangeHandler ActivationChangeEvent;
 
-    event SessionActivateHandler SessionActivateEvent;
+        event SessionActivateHandler SessionActivateEvent;
 
-    event SessionConnectHandler SessionConnectEvent;
+        event SessionConnectHandler SessionConnectEvent;
 
-    event SetFocusHandler SetFocusEvent;
+        event SetFocusHandler SetFocusEvent;
 
-    event LoadHandler LoadEvent;
+        event LoadHandler LoadEvent;
 
-    event CloseHandler CloseEvent;
+        event CloseHandler CloseEvent;
 
-    event CloseRequestHandler CloseRequestEvent;
+        event CloseRequestHandler CloseRequestEvent;
 
-    event ForwardMessageHandler ForwardMessageEvent;
-  }
+        event ForwardMessageHandler ForwardMessageEvent;
+    }
 }

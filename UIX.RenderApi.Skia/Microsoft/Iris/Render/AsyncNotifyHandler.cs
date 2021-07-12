@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void AsyncNotifyHandler(int nCookie);
+    public delegate void AsyncNotifyHandler(int nCookie);
 }

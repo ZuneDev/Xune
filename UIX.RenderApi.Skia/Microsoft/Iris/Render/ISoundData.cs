@@ -8,20 +8,20 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public interface ISoundData
-  {
-    SoundDataFormat Format { get; }
+    public interface ISoundData
+    {
+        SoundDataFormat Format { get; }
 
-    uint ChannelCount { get; }
+        uint ChannelCount { get; }
 
-    uint SampleRate { get; }
+        uint SampleRate { get; }
 
-    uint SampleSize { get; }
+        uint SampleSize { get; }
 
-    uint SampleCount { get; }
+        uint SampleCount { get; }
 
-    IntPtr AcquireContent();
+        IntPtr AcquireContent();
 
-    void ReleaseContent();
-  }
+        void ReleaseContent();
+    }
 }

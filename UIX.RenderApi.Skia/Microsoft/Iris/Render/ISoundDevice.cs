@@ -6,14 +6,14 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface ISoundDevice
-  {
-    SoundDeviceType DeviceType { get; }
+    public interface ISoundDevice
+    {
+        SoundDeviceType DeviceType { get; }
 
-    bool Mute { get; set; }
+        bool Mute { get; set; }
 
-    float Volume { get; set; }
+        float Volume { get; set; }
 
-    ISoundBuffer CreateSoundBuffer(object objUser, ISoundData soundData);
-  }
+        ISoundBuffer CreateSoundBuffer(object objUser, ISoundData soundData);
+    }
 }

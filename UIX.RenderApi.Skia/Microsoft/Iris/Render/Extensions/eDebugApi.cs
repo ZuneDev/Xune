@@ -11,34 +11,34 @@ using System.Security;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  [SuppressUnmanagedCodeSecurity]
-  internal static class eDebugApi
-  {
-    private const string k_strEhDebugDllFileName = "UIXsup.dll";
-
-    static eDebugApi()
+    [SuppressUnmanagedCodeSecurity]
+    internal static class eDebugApi
     {
-      IntPtr h = Win32Api.LoadLibraryEx("UIXsup.dll", Win32Api.HANDLE.NULL, 0U).h;
+        private const string k_strEhDebugDllFileName = "UIXsup.dll";
+
+        static eDebugApi()
+        {
+            IntPtr h = Win32Api.LoadLibraryEx("UIXsup.dll", Win32Api.HANDLE.NULL, 0U).h;
+        }
+
+        [DllImport("UIXsup.dll")]
+        internal static extern bool DebugDisplayErrorStack(
+          string stMessage,
+          string filename,
+          int line,
+          string title,
+          string stackTrace);
+
+        [DllImport("UIXsup.dll")]
+        internal static extern void DebugSetTimedWriteLines(bool fEnabled);
+
+        [DllImport("UIXsup.dll")]
+        internal static extern void DebugSetWriteLinePrefix(string stPrefix);
+
+        [DllImport("UIXsup.dll")]
+        internal static extern byte DebugGetCategoryLevel(DebugCategory cat);
+
+        [DllImport("UIXsup.dll")]
+        internal static extern void DebugSetCategoryLevel(DebugCategory cat, byte level);
     }
-
-    [DllImport("UIXsup.dll")]
-    internal static extern bool DebugDisplayErrorStack(
-      string stMessage,
-      string filename,
-      int line,
-      string title,
-      string stackTrace);
-
-    [DllImport("UIXsup.dll")]
-    internal static extern void DebugSetTimedWriteLines(bool fEnabled);
-
-    [DllImport("UIXsup.dll")]
-    internal static extern void DebugSetWriteLinePrefix(string stPrefix);
-
-    [DllImport("UIXsup.dll")]
-    internal static extern byte DebugGetCategoryLevel(DebugCategory cat);
-
-    [DllImport("UIXsup.dll")]
-    internal static extern void DebugSetCategoryLevel(DebugCategory cat, byte level);
-  }
 }

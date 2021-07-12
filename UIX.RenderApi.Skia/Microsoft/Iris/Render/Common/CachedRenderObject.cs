@@ -6,23 +6,23 @@
 
 namespace Microsoft.Iris.Render.Common
 {
-  internal abstract class CachedRenderObject : SharedRenderObject
-  {
-    private ObjectCache m_cache;
-
-    internal ObjectCache Cache
+    internal abstract class CachedRenderObject : SharedRenderObject
     {
-      get => this.m_cache;
-      set => this.m_cache = value;
-    }
+        private ObjectCache m_cache;
 
-    internal override void UnregisterUsage(object user)
-    {
-      if (this.UsageCount == 1 && this.m_cache != null && this.m_cache.Add(this))
-        this.Reset();
-      base.UnregisterUsage(user);
-    }
+        internal ObjectCache Cache
+        {
+            get => this.m_cache;
+            set => this.m_cache = value;
+        }
 
-    internal abstract void Reset();
-  }
+        internal override void UnregisterUsage(object user)
+        {
+            if (this.UsageCount == 1 && this.m_cache != null && this.m_cache.Add(this))
+                this.Reset();
+            base.UnregisterUsage(user);
+        }
+
+        internal abstract void Reset();
+    }
 }

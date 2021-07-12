@@ -8,40 +8,40 @@ using System;
 
 namespace Microsoft.Iris.Render.Animation
 {
-  internal class AnimationGroup : Microsoft.Iris.Render.Animation.Animation, IAnimationGroup, IAnimation, ISharedRenderObject
-  {
-    internal AnimationGroup(AnimationSystem owner) => throw new NotImplementedException("Not implemented yet");
-
-    public override int RepeatCount
+    internal class AnimationGroup : Microsoft.Iris.Render.Animation.Animation, IAnimationGroup, IAnimation, ISharedRenderObject
     {
-      get => throw new NotImplementedException();
-      set => throw new NotImplementedException();
+        internal AnimationGroup(AnimationSystem owner) => throw new NotImplementedException("Not implemented yet");
+
+        public override int RepeatCount
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+
+        public override bool IsPlaying => throw new NotImplementedException();
+
+        public override bool IsActive => throw new NotImplementedException();
+
+        public override bool AutoReset
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+
+        public override AnimationResetBehavior ResetBehavior
+        {
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
+        }
+
+        public override void Play() => throw new NotImplementedException();
+
+        public override void Pause() => throw new NotImplementedException();
+
+        public override void Reset() => throw new NotImplementedException();
+
+        public override void InstantAdvance(float advanceTime) => throw new NotImplementedException();
+
+        public override void InstantFinish() => throw new NotImplementedException();
     }
-
-    public override bool IsPlaying => throw new NotImplementedException();
-
-    public override bool IsActive => throw new NotImplementedException();
-
-    public override bool AutoReset
-    {
-      get => throw new NotImplementedException();
-      set => throw new NotImplementedException();
-    }
-
-    public override AnimationResetBehavior ResetBehavior
-    {
-      get => throw new NotImplementedException();
-      set => throw new NotImplementedException();
-    }
-
-    public override void Play() => throw new NotImplementedException();
-
-    public override void Pause() => throw new NotImplementedException();
-
-    public override void Reset() => throw new NotImplementedException();
-
-    public override void InstantAdvance(float advanceTime) => throw new NotImplementedException();
-
-    public override void InstantFinish() => throw new NotImplementedException();
-  }
 }

@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal enum GdiEffectType : byte
-  {
-    LoadColor,
-    LoadImage,
-    None,
-  }
+    internal enum GdiEffectType : byte
+    {
+        LoadColor,
+        LoadImage,
+        None,
+    }
 }

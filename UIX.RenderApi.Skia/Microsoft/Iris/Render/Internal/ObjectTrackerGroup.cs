@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render.Internal
 {
-  internal static class ObjectTrackerGroup
-  {
-    private static ObjectTracker s_objectTrackerGroup = new ObjectTracker((RenderSession) null, ObjectTracker.ThreadMode.Master, (object) null);
+    internal static class ObjectTrackerGroup
+    {
+        private static ObjectTracker s_objectTrackerGroup = new ObjectTracker((RenderSession)null, ObjectTracker.ThreadMode.Master, (object)null);
 
-    internal static void RegisterChildTracker(ObjectTracker trackerToAdd) => ObjectTrackerGroup.s_objectTrackerGroup.AddObject((object) trackerToAdd);
-  }
+        internal static void RegisterChildTracker(ObjectTracker trackerToAdd) => ObjectTrackerGroup.s_objectTrackerGroup.AddObject((object)trackerToAdd);
+    }
 }

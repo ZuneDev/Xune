@@ -8,12 +8,12 @@ using Microsoft.Iris.Render.Common;
 
 namespace Microsoft.Iris.Render
 {
-  public abstract class EffectInput : EffectElement
-  {
-    internal EffectInputType m_typeInput;
+    public abstract class EffectInput : EffectElement
+    {
+        internal EffectInputType m_typeInput;
 
-    internal EffectInputType Type => this.m_typeInput;
+        internal EffectInputType Type => this.m_typeInput;
 
-    internal override void AddCacheKey(ByteBuilder cacheKey) => this.GenerateClassCacheKey((byte) 0, (byte) this.m_typeInput, cacheKey);
-  }
+        internal override void AddCacheKey(ByteBuilder cacheKey) => this.GenerateClassCacheKey((byte)0, (byte)this.m_typeInput, cacheKey);
+    }
 }

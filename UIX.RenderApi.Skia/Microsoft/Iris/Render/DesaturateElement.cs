@@ -10,44 +10,44 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public class DesaturateElement : EffectOperation
-  {
-    internal const string DesaturatePropertyName = "Desaturate";
-    private float m_flDesaturate;
-    private byte m_nDesaturateID;
-
-    public DesaturateElement(string stName, float flDesaturate)
-      : this()
+    public class DesaturateElement : EffectOperation
     {
-      Debug2.Validate(!string.IsNullOrEmpty(stName), typeof (ArgumentException), nameof (stName));
-      Debug2.Validate((double) flDesaturate >= 0.0 && (double) flDesaturate <= 1.0, typeof (ArgumentOutOfRangeException), "Valid range for desaturate is [0,1]");
-      this.m_flDesaturate = flDesaturate;
-      this.m_stName = stName;
+        internal const string DesaturatePropertyName = "Desaturate";
+        private float m_flDesaturate;
+        private byte m_nDesaturateID;
+
+        public DesaturateElement(string stName, float flDesaturate)
+          : this()
+        {
+            Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
+            Debug2.Validate((double)flDesaturate >= 0.0 && (double)flDesaturate <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for desaturate is [0,1]");
+            this.m_flDesaturate = flDesaturate;
+            this.m_stName = stName;
+        }
+
+        public DesaturateElement() => this.m_typeOperation = EffectOperationType.Desaturate;
+
+        public float Desaturate
+        {
+            get => this.m_flDesaturate;
+            set => this.m_flDesaturate = value;
+        }
+
+        internal byte DesaturateID => this.m_nDesaturateID;
+
+        internal override int PreProcessProperties(
+          Map<string, EffectProperty> dictionary,
+          ref byte nNextUniqueID)
+        {
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Desaturate", (byte)8, ref this.m_nDesaturateID, ref nNextUniqueID);
+        }
+
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Desaturate", EffectPropertyType.Float, (object)this.m_flDesaturate, this.m_nDesaturateID, dictProperties);
+
+        internal override void AddCacheKey(ByteBuilder cacheKey)
+        {
+            base.AddCacheKey(cacheKey);
+            this.GeneratePropertyCacheKey("Desaturate", this.DesaturateID, this.Desaturate, cacheKey);
+        }
     }
-
-    public DesaturateElement() => this.m_typeOperation = EffectOperationType.Desaturate;
-
-    public float Desaturate
-    {
-      get => this.m_flDesaturate;
-      set => this.m_flDesaturate = value;
-    }
-
-    internal byte DesaturateID => this.m_nDesaturateID;
-
-    internal override int PreProcessProperties(
-      Map<string, EffectProperty> dictionary,
-      ref byte nNextUniqueID)
-    {
-      return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Desaturate", (byte) 8, ref this.m_nDesaturateID, ref nNextUniqueID);
-    }
-
-    internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Desaturate", EffectPropertyType.Float, (object) this.m_flDesaturate, this.m_nDesaturateID, dictProperties);
-
-    internal override void AddCacheKey(ByteBuilder cacheKey)
-    {
-      base.AddCacheKey(cacheKey);
-      this.GeneratePropertyCacheKey("Desaturate", this.DesaturateID, this.Desaturate, cacheKey);
-    }
-  }
 }

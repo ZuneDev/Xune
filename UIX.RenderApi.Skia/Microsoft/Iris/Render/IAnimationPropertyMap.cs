@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IAnimationPropertyMap
-  {
-    uint GetPropertyId(string propertyName);
+    public interface IAnimationPropertyMap
+    {
+        uint GetPropertyId(string propertyName);
 
-    AnimationInputType GetPropertyType(string propertyName);
-  }
+        AnimationInputType GetPropertyType(string propertyName);
+    }
 }

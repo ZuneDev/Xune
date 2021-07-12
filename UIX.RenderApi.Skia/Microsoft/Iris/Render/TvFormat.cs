@@ -6,11 +6,11 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum TvFormat
-  {
-    None,
-    Ntsc,
-    Pal,
-    Pal60,
-  }
+    public enum TvFormat
+    {
+        None,
+        Ntsc,
+        Pal,
+        Pal60,
+    }
 }

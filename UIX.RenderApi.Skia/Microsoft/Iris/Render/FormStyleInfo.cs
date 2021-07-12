@@ -6,23 +6,23 @@
 
 namespace Microsoft.Iris.Render
 {
-  public struct FormStyleInfo
-  {
-    public uint uStyleRestored;
-    public uint uExStyleRestored;
-    public uint uStyleMinimized;
-    public uint uExStyleMinimized;
-    public uint uStyleMaximized;
-    public uint uExStyleMaximized;
-    public uint uStyleFullscreen;
-    public uint uExStyleFullscreen;
+    public struct FormStyleInfo
+    {
+        public uint uStyleRestored;
+        public uint uExStyleRestored;
+        public uint uStyleMinimized;
+        public uint uExStyleMinimized;
+        public uint uStyleMaximized;
+        public uint uExStyleMaximized;
+        public uint uStyleFullscreen;
+        public uint uExStyleFullscreen;
 
-    public override bool Equals(object o) => o is FormStyleInfo formStyleInfo && (int) this.uStyleRestored == (int) formStyleInfo.uStyleRestored && ((int) this.uExStyleRestored == (int) formStyleInfo.uExStyleRestored && (int) this.uStyleMinimized == (int) formStyleInfo.uStyleMinimized) && ((int) this.uExStyleMinimized == (int) formStyleInfo.uExStyleMinimized && (int) this.uStyleMaximized == (int) formStyleInfo.uStyleMaximized && ((int) this.uExStyleMaximized == (int) formStyleInfo.uExStyleMaximized && (int) this.uStyleFullscreen == (int) formStyleInfo.uStyleFullscreen)) && (int) this.uExStyleFullscreen == (int) formStyleInfo.uExStyleFullscreen;
+        public override bool Equals(object o) => o is FormStyleInfo formStyleInfo && (int)this.uStyleRestored == (int)formStyleInfo.uStyleRestored && ((int)this.uExStyleRestored == (int)formStyleInfo.uExStyleRestored && (int)this.uStyleMinimized == (int)formStyleInfo.uStyleMinimized) && ((int)this.uExStyleMinimized == (int)formStyleInfo.uExStyleMinimized && (int)this.uStyleMaximized == (int)formStyleInfo.uStyleMaximized && ((int)this.uExStyleMaximized == (int)formStyleInfo.uExStyleMaximized && (int)this.uStyleFullscreen == (int)formStyleInfo.uStyleFullscreen)) && (int)this.uExStyleFullscreen == (int)formStyleInfo.uExStyleFullscreen;
 
-    public override int GetHashCode() => (int) this.uStyleRestored ^ (int) this.uExStyleRestored;
+        public override int GetHashCode() => (int)this.uStyleRestored ^ (int)this.uExStyleRestored;
 
-    public static bool operator ==(FormStyleInfo fsi1, FormStyleInfo fsi2) => fsi1.Equals((object) fsi2);
+        public static bool operator ==(FormStyleInfo fsi1, FormStyleInfo fsi2) => fsi1.Equals((object)fsi2);
 
-    public static bool operator !=(FormStyleInfo fsi1, FormStyleInfo fsi2) => !(fsi1 == fsi2);
-  }
+        public static bool operator !=(FormStyleInfo fsi1, FormStyleInfo fsi2) => !(fsi1 == fsi2);
+    }
 }

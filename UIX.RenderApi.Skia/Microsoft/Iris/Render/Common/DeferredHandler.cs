@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render.Common
 {
-  internal delegate void DeferredHandler(object args);
+    internal delegate void DeferredHandler(object args);
 }

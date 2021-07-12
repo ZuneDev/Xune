@@ -9,38 +9,38 @@ using System.Diagnostics;
 
 namespace Microsoft.Iris.Render.Common
 {
-  internal abstract class RenderObject : IRenderObject, IDisposable
-  {
-    private bool m_fObjectDisposed;
-
-    internal RenderObject() => this.m_fObjectDisposed = false;
-
-    ~RenderObject()
+    internal abstract class RenderObject : IRenderObject, IDisposable
     {
-      if (this.m_fObjectDisposed)
-        return;
-      this.Dispose(false);
+        private bool m_fObjectDisposed;
+
+        internal RenderObject() => this.m_fObjectDisposed = false;
+
+        ~RenderObject()
+        {
+            if (this.m_fObjectDisposed)
+                return;
+            this.Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            if (this.m_fObjectDisposed)
+                return;
+            this.Dispose(true);
+            GC.SuppressFinalize((object)this);
+        }
+
+        protected virtual void Dispose(bool fInDispose) => this.m_fObjectDisposed = true;
+
+        internal string DebugDescription
+        {
+            get => "<unknown>";
+            set
+            {
+            }
+        }
+
+        [Conditional("DEBUG")]
+        protected virtual void Invariant() => Debug2.Validate(!this.m_fObjectDisposed, typeof(ObjectDisposedException), this.GetType().ToString());
     }
-
-    public void Dispose()
-    {
-      if (this.m_fObjectDisposed)
-        return;
-      this.Dispose(true);
-      GC.SuppressFinalize((object) this);
-    }
-
-    protected virtual void Dispose(bool fInDispose) => this.m_fObjectDisposed = true;
-
-    internal string DebugDescription
-    {
-      get => "<unknown>";
-      set
-      {
-      }
-    }
-
-    [Conditional("DEBUG")]
-    protected virtual void Invariant() => Debug2.Validate(!this.m_fObjectDisposed, typeof (ObjectDisposedException), this.GetType().ToString());
-  }
 }

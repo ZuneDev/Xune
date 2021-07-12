@@ -6,9 +6,9 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum ContentNotification
-  {
-    Acquire,
-    Release,
-  }
+    public enum ContentNotification
+    {
+        Acquire,
+        Release,
+    }
 }

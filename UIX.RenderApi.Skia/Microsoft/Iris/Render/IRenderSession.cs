@@ -8,28 +8,28 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IRenderSession : IRenderObject, IDisposable
-  {
-    IAnimationSystem AnimationSystem { get; }
+    public interface IRenderSession : IRenderObject, IDisposable
+    {
+        IAnimationSystem AnimationSystem { get; }
 
-    IInputSystem InputSystem { get; }
+        IInputSystem InputSystem { get; }
 
-    IGraphicsDevice GraphicsDevice { get; }
+        IGraphicsDevice GraphicsDevice { get; }
 
-    ISoundDevice SoundDevice { get; }
+        ISoundDevice SoundDevice { get; }
 
-    IEffectTemplate CreateEffectTemplate(object objUser, string stName);
+        IEffectTemplate CreateEffectTemplate(object objUser, string stName);
 
-    IVideoStream CreateVideoStream(object objUser);
+        IVideoStream CreateVideoStream(object objUser);
 
-    IVisualContainer CreateVisualContainer(object objUser, object objOwnerData);
+        IVisualContainer CreateVisualContainer(object objUser, object objOwnerData);
 
-    ICamera CreateCamera(object objUser);
+        ICamera CreateCamera(object objUser);
 
-    IGradient CreateGradient(object objUser);
+        IGradient CreateGradient(object objUser);
 
-    ISprite CreateSprite(object objUser, object objOwnerData);
+        ISprite CreateSprite(object objUser, object objOwnerData);
 
-    IImage CreateImage(object objUser, string identifier, ContentNotifyHandler handler);
-  }
+        IImage CreateImage(object objUser, string identifier, ContentNotifyHandler handler);
+    }
 }

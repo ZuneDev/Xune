@@ -6,28 +6,28 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IEffect : IAnimatable, ISharedRenderObject
-  {
-    void SetProperty(string stPropertyName, int nValue);
+    public interface IEffect : IAnimatable, ISharedRenderObject
+    {
+        void SetProperty(string stPropertyName, int nValue);
 
-    void SetProperty(string stPropertyName, float flValue);
+        void SetProperty(string stPropertyName, float flValue);
 
-    void SetProperty(string stPropertyName, Vector2 vValue);
+        void SetProperty(string stPropertyName, Vector2 vValue);
 
-    void SetProperty(string stPropertyName, Vector3 vValue);
+        void SetProperty(string stPropertyName, Vector3 vValue);
 
-    void SetProperty(string stPropertyName, Vector4 vValue);
+        void SetProperty(string stPropertyName, Vector4 vValue);
 
-    void SetProperty(string stPropertyName, ColorF colorValue);
+        void SetProperty(string stPropertyName, ColorF colorValue);
 
-    void SetProperty(string stPropertyName, IImage imgValue);
+        void SetProperty(string stPropertyName, IImage imgValue);
 
-    void SetProperty(string stPropertyName, IImage[] imgValue);
+        void SetProperty(string stPropertyName, IImage[] imgValue);
 
-    void SetProperty(string stPropertyName, IVideoStream streamValue);
+        void SetProperty(string stPropertyName, IVideoStream streamValue);
 
-    string Name { get; }
+        string Name { get; }
 
-    IEffectTemplate Template { get; }
-  }
+        IEffectTemplate Template { get; }
+    }
 }

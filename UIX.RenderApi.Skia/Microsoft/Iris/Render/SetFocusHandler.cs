@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void SetFocusHandler(bool focused);
+    public delegate void SetFocusHandler(bool focused);
 }

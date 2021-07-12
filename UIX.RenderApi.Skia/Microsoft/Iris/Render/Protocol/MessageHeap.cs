@@ -10,245 +10,245 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  internal class MessageHeap : RenderObject
-  {
-    private MessageHeap.BlockInfo headBlock;
-    private MessageHeap.BlockInfo tailBlock;
-    private uint nextBlockId;
-    private uint smallBlockSize;
-    private uint blockHeaderSize;
-    private uint allocExtraSize;
-    private uint key;
-
-    public MessageHeap(uint blockSize, uint headerSize, uint allocationExtra)
+    internal class MessageHeap : RenderObject
     {
-      Debug2.Validate(blockSize > headerSize, typeof (ArgumentException), "Blocks must be larger than their headers");
-      this.smallBlockSize = blockSize;
-      this.blockHeaderSize = headerSize;
-      this.allocExtraSize = allocationExtra;
-      this.nextBlockId = 1U;
-      this.CreateBlock(MessageHeap.BlockType.First, this.smallBlockSize);
-    }
+        private MessageHeap.BlockInfo headBlock;
+        private MessageHeap.BlockInfo tailBlock;
+        private uint nextBlockId;
+        private uint smallBlockSize;
+        private uint blockHeaderSize;
+        private uint allocExtraSize;
+        private uint key;
 
-    protected override void Dispose(bool inDispose)
-    {
-      try
-      {
-        if (this.IsDisposed)
-          return;
-        this.ReleaseAll(true);
-      }
-      finally
-      {
-        base.Dispose(inDispose);
-      }
-    }
-
-    internal bool IsDisposed => this.headBlock == null;
-
-    public unsafe void* Alloc(uint size)
-    {
-      size += this.allocExtraSize;
-      uint num = (uint) (sizeof (void*) - 1);
-      size = (uint) ((int) size + (int) num & ~(int) num);
-      MessageHeap.BlockInfo block = this.tailBlock;
-      if (size > block.size - block.used)
-      {
-        MessageHeap.BlockType type = MessageHeap.BlockType.Normal;
-        uint actualSize = this.smallBlockSize;
-        if (size > this.smallBlockSize - this.blockHeaderSize)
+        public MessageHeap(uint blockSize, uint headerSize, uint allocationExtra)
         {
-          type = MessageHeap.BlockType.Large;
-          actualSize = this.blockHeaderSize + size;
+            Debug2.Validate(blockSize > headerSize, typeof(ArgumentException), "Blocks must be larger than their headers");
+            this.smallBlockSize = blockSize;
+            this.blockHeaderSize = headerSize;
+            this.allocExtraSize = allocationExtra;
+            this.nextBlockId = 1U;
+            this.CreateBlock(MessageHeap.BlockType.First, this.smallBlockSize);
         }
-        block = this.CreateBlock(type, actualSize);
-      }
-      this.ZeroMemoryBlock(block, block.used, this.allocExtraSize);
-      void* voidPtr = (void*) ((IntPtr) block.data + ((int) block.used + (int) this.allocExtraSize));
-      block.used += size;
-      ++this.key;
-      return voidPtr;
-    }
 
-    public unsafe MessageHeap.Block LookupBlock(void* p)
-    {
-      MessageHeap.BlockInfo blockInfo = this.LookupBlockWorker(p);
-      return new MessageHeap.Block(blockInfo.id, blockInfo.data, blockInfo.used);
-    }
-
-    public void Reset() => this.ReleaseAll(false);
-
-    public int BlockCount
-    {
-      get
-      {
-        int num = 0;
-        MessageHeap.BlockInfo blockInfo = this.headBlock;
-        while (blockInfo != null)
+        protected override void Dispose(bool inDispose)
         {
-          blockInfo = blockInfo.next;
-          ++num;
+            try
+            {
+                if (this.IsDisposed)
+                    return;
+                this.ReleaseAll(true);
+            }
+            finally
+            {
+                base.Dispose(inDispose);
+            }
         }
-        return num;
-      }
-    }
 
-    public MessageHeap.Enumerator GetEnumerator() => new MessageHeap.Enumerator(this);
+        internal bool IsDisposed => this.headBlock == null;
 
-    private unsafe MessageHeap.BlockInfo CreateBlock(
-      MessageHeap.BlockType type,
-      uint actualSize)
-    {
-      ++this.key;
-      MessageHeap.BlockInfo block = new MessageHeap.BlockInfo();
-      block.data = Marshal.AllocCoTaskMem((int) actualSize).ToPointer();
-      block.id = this.nextBlockId++;
-      block.type = type;
-      block.size = actualSize;
-      switch (type)
-      {
-        case MessageHeap.BlockType.First:
-          block.next = (MessageHeap.BlockInfo) null;
-          this.headBlock = block;
-          this.tailBlock = block;
-          break;
-        case MessageHeap.BlockType.Normal:
-        case MessageHeap.BlockType.Large:
-          block.next = this.tailBlock.next;
-          this.tailBlock.next = block;
-          this.tailBlock = block;
-          break;
-      }
-      block.used = this.blockHeaderSize;
-      this.ZeroMemoryBlock(block, 0U, this.blockHeaderSize);
-      return block;
-    }
-
-    private unsafe void DestroyBlock(MessageHeap.BlockInfo block)
-    {
-      Marshal.FreeCoTaskMem(new IntPtr(block.data));
-      block.data = (void*) null;
-    }
-
-    private void ReleaseAll(bool finalRelease)
-    {
-      ++this.key;
-      MessageHeap.BlockInfo block;
-      if (finalRelease)
-      {
-        block = this.headBlock;
-        this.headBlock = (MessageHeap.BlockInfo) null;
-        this.tailBlock = (MessageHeap.BlockInfo) null;
-      }
-      else
-      {
-        this.ZeroMemoryBlock(this.headBlock, 0U, this.blockHeaderSize);
-        block = this.headBlock.next;
-        this.headBlock.next = (MessageHeap.BlockInfo) null;
-        this.headBlock.used = this.blockHeaderSize;
-        this.tailBlock = this.headBlock;
-        this.nextBlockId = 2U;
-      }
-      MessageHeap.BlockInfo next;
-      for (; block != null; block = next)
-      {
-        next = block.next;
-        switch (block.type)
+        public unsafe void* Alloc(uint size)
         {
-          case MessageHeap.BlockType.First:
-          case MessageHeap.BlockType.Normal:
-          case MessageHeap.BlockType.Large:
-            this.DestroyBlock(block);
-            break;
+            size += this.allocExtraSize;
+            uint num = (uint)(sizeof(void*) - 1);
+            size = (uint)((int)size + (int)num & ~(int)num);
+            MessageHeap.BlockInfo block = this.tailBlock;
+            if (size > block.size - block.used)
+            {
+                MessageHeap.BlockType type = MessageHeap.BlockType.Normal;
+                uint actualSize = this.smallBlockSize;
+                if (size > this.smallBlockSize - this.blockHeaderSize)
+                {
+                    type = MessageHeap.BlockType.Large;
+                    actualSize = this.blockHeaderSize + size;
+                }
+                block = this.CreateBlock(type, actualSize);
+            }
+            this.ZeroMemoryBlock(block, block.used, this.allocExtraSize);
+            void* voidPtr = (void*)((IntPtr)block.data + ((int)block.used + (int)this.allocExtraSize));
+            block.used += size;
+            ++this.key;
+            return voidPtr;
         }
-      }
-    }
 
-    private unsafe MessageHeap.BlockInfo LookupBlockWorker(void* p)
-    {
-      for (MessageHeap.BlockInfo blockInfo = this.headBlock; blockInfo != null; blockInfo = blockInfo.next)
-      {
-        if (p >= blockInfo.data)
+        public unsafe MessageHeap.Block LookupBlock(void* p)
         {
-          void* voidPtr = (void*) ((IntPtr) blockInfo.data + (int) blockInfo.used);
-          if (p < voidPtr)
-            return blockInfo;
+            MessageHeap.BlockInfo blockInfo = this.LookupBlockWorker(p);
+            return new MessageHeap.Block(blockInfo.id, blockInfo.data, blockInfo.used);
         }
-      }
-      throw new ArgumentException("pointer is not on this heap");
-    }
 
-    private unsafe void ZeroMemoryBlock(MessageHeap.BlockInfo block, uint offset, uint size)
-    {
-      Debug2.Validate(offset + size <= block.size, typeof (ArgumentOutOfRangeException), "Invalid memory range for block");
-      byte* numPtr1 = (byte*) ((IntPtr) block.data + (int) offset);
-      for (byte* numPtr2 = numPtr1 + (int) size; numPtr1 < numPtr2; ++numPtr1)
-        *numPtr1 = (byte) 0;
-    }
+        public void Reset() => this.ReleaseAll(false);
 
-    protected override void Invariant() => Debug2.Validate(!this.IsDisposed, typeof (InvalidOperationException), "MessageHeap has already been disposed");
-
-    internal struct Enumerator
-    {
-      private MessageHeap heap;
-      private MessageHeap.BlockInfo current;
-      private uint key;
-
-      public Enumerator(MessageHeap heap)
-      {
-        this.heap = heap;
-        this.current = (MessageHeap.BlockInfo) null;
-        this.key = heap.key;
-      }
-
-      public bool MoveNext()
-      {
-        if ((int) this.key != (int) this.heap.key)
-          throw new InvalidOperationException("heap modified while enumerator is in use");
-        this.current = this.current != null ? this.current.next : this.heap.headBlock;
-        return this.current != null;
-      }
-
-      public unsafe MessageHeap.Block Current
-      {
-        get
+        public int BlockCount
         {
-          if ((int) this.key != (int) this.heap.key)
-            throw new InvalidOperationException("heap modified while enumerator in use");
-          return new MessageHeap.Block(this.current.id, this.current.data, this.current.used);
+            get
+            {
+                int num = 0;
+                MessageHeap.BlockInfo blockInfo = this.headBlock;
+                while (blockInfo != null)
+                {
+                    blockInfo = blockInfo.next;
+                    ++num;
+                }
+                return num;
+            }
         }
-      }
-    }
 
-    internal struct Block
-    {
-      public uint id;
-      public unsafe void* data;
-      public uint size;
+        public MessageHeap.Enumerator GetEnumerator() => new MessageHeap.Enumerator(this);
 
-      public unsafe Block(uint id, void* data, uint size)
-      {
-        this.id = id;
-        this.data = data;
-        this.size = size;
-      }
-    }
+        private unsafe MessageHeap.BlockInfo CreateBlock(
+          MessageHeap.BlockType type,
+          uint actualSize)
+        {
+            ++this.key;
+            MessageHeap.BlockInfo block = new MessageHeap.BlockInfo();
+            block.data = Marshal.AllocCoTaskMem((int)actualSize).ToPointer();
+            block.id = this.nextBlockId++;
+            block.type = type;
+            block.size = actualSize;
+            switch (type)
+            {
+                case MessageHeap.BlockType.First:
+                    block.next = (MessageHeap.BlockInfo)null;
+                    this.headBlock = block;
+                    this.tailBlock = block;
+                    break;
+                case MessageHeap.BlockType.Normal:
+                case MessageHeap.BlockType.Large:
+                    block.next = this.tailBlock.next;
+                    this.tailBlock.next = block;
+                    this.tailBlock = block;
+                    break;
+            }
+            block.used = this.blockHeaderSize;
+            this.ZeroMemoryBlock(block, 0U, this.blockHeaderSize);
+            return block;
+        }
 
-    private enum BlockType
-    {
-      First,
-      Normal,
-      Large,
-    }
+        private unsafe void DestroyBlock(MessageHeap.BlockInfo block)
+        {
+            Marshal.FreeCoTaskMem(new IntPtr(block.data));
+            block.data = (void*)null;
+        }
 
-    private class BlockInfo
-    {
-      public MessageHeap.BlockInfo next;
-      public MessageHeap.BlockType type;
-      public uint id;
-      public unsafe void* data;
-      public uint size;
-      public uint used;
+        private void ReleaseAll(bool finalRelease)
+        {
+            ++this.key;
+            MessageHeap.BlockInfo block;
+            if (finalRelease)
+            {
+                block = this.headBlock;
+                this.headBlock = (MessageHeap.BlockInfo)null;
+                this.tailBlock = (MessageHeap.BlockInfo)null;
+            }
+            else
+            {
+                this.ZeroMemoryBlock(this.headBlock, 0U, this.blockHeaderSize);
+                block = this.headBlock.next;
+                this.headBlock.next = (MessageHeap.BlockInfo)null;
+                this.headBlock.used = this.blockHeaderSize;
+                this.tailBlock = this.headBlock;
+                this.nextBlockId = 2U;
+            }
+            MessageHeap.BlockInfo next;
+            for (; block != null; block = next)
+            {
+                next = block.next;
+                switch (block.type)
+                {
+                    case MessageHeap.BlockType.First:
+                    case MessageHeap.BlockType.Normal:
+                    case MessageHeap.BlockType.Large:
+                        this.DestroyBlock(block);
+                        break;
+                }
+            }
+        }
+
+        private unsafe MessageHeap.BlockInfo LookupBlockWorker(void* p)
+        {
+            for (MessageHeap.BlockInfo blockInfo = this.headBlock; blockInfo != null; blockInfo = blockInfo.next)
+            {
+                if (p >= blockInfo.data)
+                {
+                    void* voidPtr = (void*)((IntPtr)blockInfo.data + (int)blockInfo.used);
+                    if (p < voidPtr)
+                        return blockInfo;
+                }
+            }
+            throw new ArgumentException("pointer is not on this heap");
+        }
+
+        private unsafe void ZeroMemoryBlock(MessageHeap.BlockInfo block, uint offset, uint size)
+        {
+            Debug2.Validate(offset + size <= block.size, typeof(ArgumentOutOfRangeException), "Invalid memory range for block");
+            byte* numPtr1 = (byte*)((IntPtr)block.data + (int)offset);
+            for (byte* numPtr2 = numPtr1 + (int)size; numPtr1 < numPtr2; ++numPtr1)
+                *numPtr1 = (byte)0;
+        }
+
+        protected override void Invariant() => Debug2.Validate(!this.IsDisposed, typeof(InvalidOperationException), "MessageHeap has already been disposed");
+
+        internal struct Enumerator
+        {
+            private MessageHeap heap;
+            private MessageHeap.BlockInfo current;
+            private uint key;
+
+            public Enumerator(MessageHeap heap)
+            {
+                this.heap = heap;
+                this.current = (MessageHeap.BlockInfo)null;
+                this.key = heap.key;
+            }
+
+            public bool MoveNext()
+            {
+                if ((int)this.key != (int)this.heap.key)
+                    throw new InvalidOperationException("heap modified while enumerator is in use");
+                this.current = this.current != null ? this.current.next : this.heap.headBlock;
+                return this.current != null;
+            }
+
+            public unsafe MessageHeap.Block Current
+            {
+                get
+                {
+                    if ((int)this.key != (int)this.heap.key)
+                        throw new InvalidOperationException("heap modified while enumerator in use");
+                    return new MessageHeap.Block(this.current.id, this.current.data, this.current.used);
+                }
+            }
+        }
+
+        internal struct Block
+        {
+            public uint id;
+            public unsafe void* data;
+            public uint size;
+
+            public unsafe Block(uint id, void* data, uint size)
+            {
+                this.id = id;
+                this.data = data;
+                this.size = size;
+            }
+        }
+
+        private enum BlockType
+        {
+            First,
+            Normal,
+            Large,
+        }
+
+        private class BlockInfo
+        {
+            public MessageHeap.BlockInfo next;
+            public MessageHeap.BlockType type;
+            public uint id;
+            public unsafe void* data;
+            public uint size;
+            public uint used;
+        }
     }
-  }
 }

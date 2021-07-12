@@ -6,9 +6,9 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum FilterMode : byte
-  {
-    Point = 1,
-    Linear = 2,
-  }
+    public enum FilterMode : byte
+    {
+        Point = 1,
+        Linear = 2,
+    }
 }

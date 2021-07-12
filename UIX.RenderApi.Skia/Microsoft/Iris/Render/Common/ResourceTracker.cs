@@ -6,44 +6,44 @@
 
 namespace Microsoft.Iris.Render.Common
 {
-  internal class ResourceTracker
-  {
-    private int m_cUsers;
-    private static uint s_uNextUsage;
-    private uint m_uLastUsage;
-    private ResourceTracker.UsageChangeHandler m_handler;
-
-    internal ResourceTracker(ResourceTracker.UsageChangeHandler handler) => this.m_handler = handler;
-
-    internal bool InUse => this.m_cUsers > 0;
-
-    internal uint LastUsage => this.m_uLastUsage;
-
-    internal void AddActiveUser(object oUser)
+    internal class ResourceTracker
     {
-      ++this.m_cUsers;
-      this.m_uLastUsage = uint.MaxValue;
-      if (this.m_cUsers != 1)
-        return;
-      this.NotifyUsageChange(true);
-    }
+        private int m_cUsers;
+        private static uint s_uNextUsage;
+        private uint m_uLastUsage;
+        private ResourceTracker.UsageChangeHandler m_handler;
 
-    internal void RemoveActiveUser(object oUser)
-    {
-      --this.m_cUsers;
-      if (this.m_cUsers != 0)
-        return;
-      this.m_uLastUsage = ResourceTracker.s_uNextUsage++;
-      this.NotifyUsageChange(false);
-    }
+        internal ResourceTracker(ResourceTracker.UsageChangeHandler handler) => this.m_handler = handler;
 
-    protected virtual void NotifyUsageChange(bool fInUse)
-    {
-      if (this.m_handler == null)
-        return;
-      this.m_handler(fInUse);
-    }
+        internal bool InUse => this.m_cUsers > 0;
 
-    internal delegate void UsageChangeHandler(bool fInUse);
-  }
+        internal uint LastUsage => this.m_uLastUsage;
+
+        internal void AddActiveUser(object oUser)
+        {
+            ++this.m_cUsers;
+            this.m_uLastUsage = uint.MaxValue;
+            if (this.m_cUsers != 1)
+                return;
+            this.NotifyUsageChange(true);
+        }
+
+        internal void RemoveActiveUser(object oUser)
+        {
+            --this.m_cUsers;
+            if (this.m_cUsers != 0)
+                return;
+            this.m_uLastUsage = ResourceTracker.s_uNextUsage++;
+            this.NotifyUsageChange(false);
+        }
+
+        protected virtual void NotifyUsageChange(bool fInUse)
+        {
+            if (this.m_handler == null)
+                return;
+            this.m_handler(fInUse);
+        }
+
+        internal delegate void UsageChangeHandler(bool fInUse);
+    }
 }

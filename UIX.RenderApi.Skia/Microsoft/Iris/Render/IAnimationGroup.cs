@@ -6,7 +6,7 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IAnimationGroup : IAnimation, ISharedRenderObject
-  {
-  }
+    public interface IAnimationGroup : IAnimation, ISharedRenderObject
+    {
+    }
 }

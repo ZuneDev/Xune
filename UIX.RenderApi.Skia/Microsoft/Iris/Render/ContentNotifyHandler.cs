@@ -8,8 +8,8 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void ContentNotifyHandler(
-    ContentNotification Notification,
-    IImage image,
-    IntPtr data);
+    public delegate void ContentNotifyHandler(
+      ContentNotification Notification,
+      IImage image,
+      IntPtr data);
 }

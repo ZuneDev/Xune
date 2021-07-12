@@ -6,14 +6,14 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class TextureVariableInfo : VariableInfo
-  {
-    internal string SamplerName;
-    internal string MinFilter;
-    internal string MagFilter;
-    internal int CoordinateMapID;
-    internal int ImageIndexID;
+    internal class TextureVariableInfo : VariableInfo
+    {
+        internal string SamplerName;
+        internal string MinFilter;
+        internal string MagFilter;
+        internal int CoordinateMapID;
+        internal int ImageIndexID;
 
-    public TextureVariableInfo() => this.IsDynamic = true;
-  }
+        public TextureVariableInfo() => this.IsDynamic = true;
+    }
 }

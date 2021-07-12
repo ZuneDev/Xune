@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal interface ISurfaceContentOwner
-  {
-    void OnSurfaceDisposed(Surface surface);
+    internal interface ISurfaceContentOwner
+    {
+        void OnSurfaceDisposed(Surface surface);
 
-    void OnRestoreContent(Surface surface);
-  }
+        void OnRestoreContent(Surface surface);
+    }
 }

@@ -6,16 +6,16 @@
 
 namespace Microsoft.Iris.Render
 {
-  public abstract class AnimationInterpolation
-  {
-    private bool m_isSpherical;
-
-    protected AnimationInterpolation() => this.m_isSpherical = false;
-
-    public bool UseSphericalCombination
+    public abstract class AnimationInterpolation
     {
-      get => this.m_isSpherical;
-      set => this.m_isSpherical = value;
+        private bool m_isSpherical;
+
+        protected AnimationInterpolation() => this.m_isSpherical = false;
+
+        public bool UseSphericalCombination
+        {
+            get => this.m_isSpherical;
+            set => this.m_isSpherical = value;
+        }
     }
-  }
 }

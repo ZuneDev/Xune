@@ -8,31 +8,31 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Internal
 {
-  internal struct HRESULT
-  {
-    public int hr;
-
-    public HRESULT(int hr) => this.hr = hr;
-
-    public static bool operator ==(HRESULT hrA, HRESULT hrB) => hrA.hr == hrB.hr;
-
-    public static bool operator !=(HRESULT hrA, HRESULT hrB) => hrA.hr != hrB.hr;
-
-    public override bool Equals(object oCompare) => oCompare is HRESULT hresult && this.hr == hresult.hr;
-
-    public override int GetHashCode() => this.hr;
-
-    public bool IsError() => this.hr < 0;
-
-    public bool IsSuccess() => this.hr >= 0;
-
-    public void HandleError()
+    internal struct HRESULT
     {
-      if (!this.IsError())
-        return;
-      Marshal.ThrowExceptionForHR(this.hr);
-    }
+        public int hr;
 
-    public int Int => this.hr;
-  }
+        public HRESULT(int hr) => this.hr = hr;
+
+        public static bool operator ==(HRESULT hrA, HRESULT hrB) => hrA.hr == hrB.hr;
+
+        public static bool operator !=(HRESULT hrA, HRESULT hrB) => hrA.hr != hrB.hr;
+
+        public override bool Equals(object oCompare) => oCompare is HRESULT hresult && this.hr == hresult.hr;
+
+        public override int GetHashCode() => this.hr;
+
+        public bool IsError() => this.hr < 0;
+
+        public bool IsSuccess() => this.hr >= 0;
+
+        public void HandleError()
+        {
+            if (!this.IsError())
+                return;
+            Marshal.ThrowExceptionForHR(this.hr);
+        }
+
+        public int Int => this.hr;
+    }
 }

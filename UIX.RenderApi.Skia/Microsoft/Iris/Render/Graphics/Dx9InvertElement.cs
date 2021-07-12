@@ -8,8 +8,8 @@ using Microsoft.Iris.Library;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class Dx9InvertElement
-  {
-    internal static void Generate(InvertElement efoInvert, ref Dx9EffectBuilder effectBuilder) => effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        {0}.rgb = 1.0f - {0}.rgb;\r\n    }}\r\n", (object) effectBuilder.PixelShaderOutput));
-  }
+    internal class Dx9InvertElement
+    {
+        internal static void Generate(InvertElement efoInvert, ref Dx9EffectBuilder effectBuilder) => effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        {0}.rgb = 1.0f - {0}.rgb;\r\n    }}\r\n", (object)effectBuilder.PixelShaderOutput));
+    }
 }

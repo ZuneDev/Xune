@@ -6,10 +6,10 @@
 
 namespace Microsoft.Iris.Render
 {
-  public struct ShadowEdgePart
-  {
-    public string ModuleName;
-    public string ResourceName;
-    public Inset SplitPoints;
-  }
+    public struct ShadowEdgePart
+    {
+        public string ModuleName;
+        public string ResourceName;
+        public Inset SplitPoints;
+    }
 }

@@ -8,48 +8,48 @@ using Microsoft.Iris.Input;
 
 namespace Microsoft.Iris.Render
 {
-  public interface IVisualContainer : IVisual, IRawInputSite, IAnimatable, ISharedRenderObject
-  {
-    bool IsRoot { get; }
+    public interface IVisualContainer : IVisual, IRawInputSite, IAnimatable, ISharedRenderObject
+    {
+        bool IsRoot { get; }
 
-    Vector3 Position { get; set; }
+        Vector3 Position { get; set; }
 
-    Vector2 Size { get; set; }
+        Vector2 Size { get; set; }
 
-    bool Visible { get; set; }
+        bool Visible { get; set; }
 
-    Vector3 Scale { get; set; }
+        Vector3 Scale { get; set; }
 
-    AxisAngle Rotation { get; set; }
+        AxisAngle Rotation { get; set; }
 
-    float Alpha { get; set; }
+        float Alpha { get; set; }
 
-    Vector3 CenterPoint { get; set; }
+        Vector3 CenterPoint { get; set; }
 
-    uint Layer { get; set; }
+        uint Layer { get; set; }
 
-    int ChildCount { get; }
+        int ChildCount { get; }
 
-    ICamera Camera { get; set; }
+        ICamera Camera { get; set; }
 
-    void SetPosition(Vector3 value, bool force);
+        void SetPosition(Vector3 value, bool force);
 
-    void SetSize(Vector2 value, bool force);
+        void SetSize(Vector2 value, bool force);
 
-    void SetScale(Vector3 value, bool force);
+        void SetScale(Vector3 value, bool force);
 
-    void SetRotation(AxisAngle value, bool force);
+        void SetRotation(AxisAngle value, bool force);
 
-    void SetAlpha(float value, bool force);
+        void SetAlpha(float value, bool force);
 
-    void AddGradient(IGradient gradient);
+        void AddGradient(IGradient gradient);
 
-    void RemoveAllGradients();
+        void RemoveAllGradients();
 
-    void AddChild(IVisual vChild, IVisual vSibling, VisualOrder nOrder);
+        void AddChild(IVisual vChild, IVisual vSibling, VisualOrder nOrder);
 
-    void RemoveChild(IVisual vChild);
+        void RemoveChild(IVisual vChild);
 
-    void RemoveAllChildren();
-  }
+        void RemoveAllChildren();
+    }
 }

@@ -6,11 +6,11 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum AnimationResetBehavior : uint
-  {
-    LeaveCurrent,
-    SetInitialValue,
-    SetFinalValue,
-    Count,
-  }
+    public enum AnimationResetBehavior : uint
+    {
+        LeaveCurrent,
+        SetInitialValue,
+        SetFinalValue,
+        Count,
+    }
 }

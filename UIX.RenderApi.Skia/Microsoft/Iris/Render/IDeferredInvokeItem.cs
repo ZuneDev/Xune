@@ -6,8 +6,8 @@
 
 namespace Microsoft.Iris.Render
 {
-  public interface IDeferredInvokeItem
-  {
-    void Dispatch();
-  }
+    public interface IDeferredInvokeItem
+    {
+        void Dispatch();
+    }
 }

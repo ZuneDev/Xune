@@ -6,12 +6,12 @@
 
 namespace Microsoft.Iris.Render
 {
-  internal enum EffectElementCacheKeys : byte
-  {
-    Input,
-    Operation,
-    BlendOperation,
-    Property,
-    MaxValue,
-  }
+    internal enum EffectElementCacheKeys : byte
+    {
+        Input,
+        Operation,
+        BlendOperation,
+        Property,
+        MaxValue,
+    }
 }

@@ -9,19 +9,19 @@ using Microsoft.Iris.Render.Protocol;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 {
-  internal interface IDeviceCallback
-  {
-    void OnBackBufferCaptured(RENDERHANDLE target);
+    internal interface IDeviceCallback
+    {
+        void OnBackBufferCaptured(RENDERHANDLE target);
 
-    void OnSurfacePoolAllocation(
-      RENDERHANDLE target,
-      RENDERHANDLE idSurfacePool,
-      SurfacePoolAllocationResult nResult);
+        void OnSurfacePoolAllocation(
+          RENDERHANDLE target,
+          RENDERHANDLE idSurfacePool,
+          SurfacePoolAllocationResult nResult);
 
-    void OnVsaBlock(RENDERHANDLE target, bool fInBlock);
+        void OnVsaBlock(RENDERHANDLE target, bool fInBlock);
 
-    void OnLostDevice(RENDERHANDLE target, uint cRenderGeneration, bool fLost);
+        void OnLostDevice(RENDERHANDLE target, uint cRenderGeneration, bool fLost);
 
-    void OnCreated(RENDERHANDLE target, bool fAllowDynamicPool);
-  }
+        void OnCreated(RENDERHANDLE target, bool fAllowDynamicPool);
+    }
 }

@@ -9,21 +9,21 @@ using System;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  public class BitmapInformation : IDisposable
-  {
-    public ImageInformation imageInfo;
-    internal HSpBitmap hBitmap;
-
-    public void Dispose() => this.ReleaseData();
-
-    private void ReleaseData()
+    public class BitmapInformation : IDisposable
     {
-      if (!(this.hBitmap != HSpBitmap.NULL))
-        return;
-      EngineApi.IFC(ExtensionsApi.SpBitmapDelete(this.hBitmap));
-      this.hBitmap = HSpBitmap.NULL;
-    }
+        public ImageInformation imageInfo;
+        internal HSpBitmap hBitmap;
 
-    public override string ToString() => base.ToString();
-  }
+        public void Dispose() => this.ReleaseData();
+
+        private void ReleaseData()
+        {
+            if (!(this.hBitmap != HSpBitmap.NULL))
+                return;
+            EngineApi.IFC(ExtensionsApi.SpBitmapDelete(this.hBitmap));
+            this.hBitmap = HSpBitmap.NULL;
+        }
+
+        public override string ToString() => base.ToString();
+    }
 }

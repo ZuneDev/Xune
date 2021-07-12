@@ -6,15 +6,15 @@
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal class Dx9TextureInfo
-  {
-    public int ImageIndex;
-    public string TexCoordInput;
-    public string Sampler;
-    public string TexelSize;
-    public string TexUVRefPoint;
-    public string TexUVSize;
-    public int DownsamplePropertyID;
-    public int Requirements;
-  }
+    internal class Dx9TextureInfo
+    {
+        public int ImageIndex;
+        public string TexCoordInput;
+        public string Sampler;
+        public string TexelSize;
+        public string TexUVRefPoint;
+        public string TexUVSize;
+        public int DownsamplePropertyID;
+        public int Requirements;
+    }
 }

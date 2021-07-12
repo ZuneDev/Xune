@@ -9,25 +9,25 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [ComVisible(false)]
-  [Serializable]
-  internal struct RENDERGROUP
-  {
-    public static readonly RENDERGROUP NULL = new RENDERGROUP();
-    private uint value;
+    [ComVisible(false)]
+    [Serializable]
+    internal struct RENDERGROUP
+    {
+        public static readonly RENDERGROUP NULL = new RENDERGROUP();
+        private uint value;
 
-    private RENDERGROUP(uint value) => this.value = value;
+        private RENDERGROUP(uint value) => this.value = value;
 
-    public static bool operator ==(RENDERGROUP hl, RENDERGROUP hr) => (int) hl.value == (int) hr.value;
+        public static bool operator ==(RENDERGROUP hl, RENDERGROUP hr) => (int)hl.value == (int)hr.value;
 
-    public static bool operator !=(RENDERGROUP hl, RENDERGROUP hr) => (int) hl.value != (int) hr.value;
+        public static bool operator !=(RENDERGROUP hl, RENDERGROUP hr) => (int)hl.value != (int)hr.value;
 
-    public override bool Equals(object oCompare) => oCompare is RENDERGROUP rendergroup && (int) this.value == (int) rendergroup.value;
+        public override bool Equals(object oCompare) => oCompare is RENDERGROUP rendergroup && (int)this.value == (int)rendergroup.value;
 
-    public override int GetHashCode() => (int) this.value;
+        public override int GetHashCode() => (int)this.value;
 
-    public static RENDERGROUP FromUInt32(uint value) => new RENDERGROUP(value);
+        public static RENDERGROUP FromUInt32(uint value) => new RENDERGROUP(value);
 
-    public static uint ToUInt32(RENDERGROUP handle) => handle.value;
-  }
+        public static uint ToUInt32(RENDERGROUP handle) => handle.value;
+    }
 }

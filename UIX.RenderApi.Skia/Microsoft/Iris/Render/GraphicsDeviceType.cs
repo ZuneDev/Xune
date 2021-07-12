@@ -6,11 +6,11 @@
 
 namespace Microsoft.Iris.Render
 {
-  public enum GraphicsDeviceType
-  {
-    None,
-    Gdi,
-    Direct3D9,
-    XeDirectX9,
-  }
+    public enum GraphicsDeviceType
+    {
+        None,
+        Gdi,
+        Direct3D9,
+        XeDirectX9,
+    }
 }

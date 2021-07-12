@@ -9,9 +9,9 @@ using System.Diagnostics;
 
 namespace Cn
 {
-  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Interface | AttributeTargets.Delegate, AllowMultiple = false, Inherited = false)]
-  [Conditional("NEVER")]
-  public class ReflectionAttribute : Attribute
-  {
-  }
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Interface | AttributeTargets.Delegate, AllowMultiple = false, Inherited = false)]
+    [Conditional("NEVER")]
+    public class ReflectionAttribute : Attribute
+    {
+    }
 }

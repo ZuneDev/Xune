@@ -8,5 +8,5 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void SysCommandHandler(IntPtr uParam1, IntPtr uParam2);
+    public delegate void SysCommandHandler(IntPtr uParam1, IntPtr uParam2);
 }

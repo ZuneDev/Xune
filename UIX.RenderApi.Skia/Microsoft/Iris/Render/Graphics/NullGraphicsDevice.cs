@@ -11,53 +11,53 @@ using Microsoft.Iris.Render.Protocols.Splash.Rendering;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-  internal sealed class NullGraphicsDevice : GraphicsDevice, IRenderHandleOwner
-  {
-    private RemoteNullDevice m_remoteDevice;
-
-    internal NullGraphicsDevice(RenderSession session, bool fUseSplitWindowingPort)
-      : base(session, "Null")
+    internal sealed class NullGraphicsDevice : GraphicsDevice, IRenderHandleOwner
     {
-      session.AssertOwningThread();
-      this.m_remoteDevice = session.BuildRemoteNullDevice(this, fUseSplitWindowingPort);
+        private RemoteNullDevice m_remoteDevice;
+
+        internal NullGraphicsDevice(RenderSession session, bool fUseSplitWindowingPort)
+          : base(session, "Null")
+        {
+            session.AssertOwningThread();
+            this.m_remoteDevice = session.BuildRemoteNullDevice(this, fUseSplitWindowingPort);
+        }
+
+        protected override void Dispose(bool fInDispose)
+        {
+            if (fInDispose && this.m_remoteDevice != null)
+                this.m_remoteDevice.Dispose();
+            this.m_remoteDevice = (RemoteNullDevice)null;
+            base.Dispose(fInDispose);
+        }
+
+        RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteDevice.RenderHandle;
+
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = (RemoteNullDevice)null;
+
+        public override bool IsVideoComposited => false;
+
+        internal override RemoteDevice RemoteDevice => (RemoteDevice)this.m_remoteDevice;
+
+        public override bool CanPlayAnimations => false;
+
+        internal override bool IsSurfaceFormatSupported(SurfaceFormat nFormat) => nFormat != SurfaceFormat.None;
+
+        protected override void CreateSurfacePoolWorker(
+          object oSurfacePool,
+          object oHandle,
+          SurfaceFormat nFormat)
+        {
+            this.m_remoteDevice.SendCreateSurfacePool((RENDERHANDLE)oHandle, nFormat);
+        }
+
+        protected override void RestartRendering(uint nRenderGeneration) => this.m_remoteDevice.SendRestart(nRenderGeneration);
+
+        public override bool CanPlayAnimationType(AnimationInputType type) => false;
+
+        internal override EffectTemplate CreateEffectTemplate(string stName)
+        {
+            Debug2.Throw(false, "Not yet implemented");
+            return (EffectTemplate)null;
+        }
     }
-
-    protected override void Dispose(bool fInDispose)
-    {
-      if (fInDispose && this.m_remoteDevice != null)
-        this.m_remoteDevice.Dispose();
-      this.m_remoteDevice = (RemoteNullDevice) null;
-      base.Dispose(fInDispose);
-    }
-
-    RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteDevice.RenderHandle;
-
-    void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = (RemoteNullDevice) null;
-
-    public override bool IsVideoComposited => false;
-
-    internal override RemoteDevice RemoteDevice => (RemoteDevice) this.m_remoteDevice;
-
-    public override bool CanPlayAnimations => false;
-
-    internal override bool IsSurfaceFormatSupported(SurfaceFormat nFormat) => nFormat != SurfaceFormat.None;
-
-    protected override void CreateSurfacePoolWorker(
-      object oSurfacePool,
-      object oHandle,
-      SurfaceFormat nFormat)
-    {
-      this.m_remoteDevice.SendCreateSurfacePool((RENDERHANDLE) oHandle, nFormat);
-    }
-
-    protected override void RestartRendering(uint nRenderGeneration) => this.m_remoteDevice.SendRestart(nRenderGeneration);
-
-    public override bool CanPlayAnimationType(AnimationInputType type) => false;
-
-    internal override EffectTemplate CreateEffectTemplate(string stName)
-    {
-      Debug2.Throw(false, "Not yet implemented");
-      return (EffectTemplate) null;
-    }
-  }
 }

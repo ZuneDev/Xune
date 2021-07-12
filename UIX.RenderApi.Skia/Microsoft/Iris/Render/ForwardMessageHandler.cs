@@ -8,5 +8,5 @@ using System;
 
 namespace Microsoft.Iris.Render
 {
-  public delegate void ForwardMessageHandler(uint msg, IntPtr wParam, IntPtr lParam);
+    public delegate void ForwardMessageHandler(uint msg, IntPtr wParam, IntPtr lParam);
 }

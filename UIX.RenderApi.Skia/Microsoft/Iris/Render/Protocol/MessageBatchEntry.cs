@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Protocol
 {
-  [ComVisible(false)]
-  internal struct MessageBatchEntry
-  {
-    public uint uOffsetNextEntry;
-  }
+    [ComVisible(false)]
+    internal struct MessageBatchEntry
+    {
+        public uint uOffsetNextEntry;
+    }
 }

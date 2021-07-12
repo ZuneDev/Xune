@@ -9,9 +9,9 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Extensions
 {
-  [ComVisible(false)]
-  public struct ImageData
-  {
-    public IntPtr rgData;
-  }
+    [ComVisible(false)]
+    public struct ImageData
+    {
+        public IntPtr rgData;
+    }
 }

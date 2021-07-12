@@ -10,42 +10,42 @@ using System.Collections;
 
 namespace Microsoft.Iris.Render
 {
-  public class CoordMap
-  {
-    private ArrayList m_alMaps;
-
-    public CoordMap() => this.m_alMaps = new ArrayList();
-
-    public void AddValue(float flPosition, float flValue, Orientation or)
+    public class CoordMap
     {
-      Debug2.Validate((double) flPosition >= 0.0, typeof (ArgumentOutOfRangeException), "flPosition cannot be less than 0.0f");
-      Debug2.Validate((double) flValue >= 0.0, typeof (ArgumentOutOfRangeException), "flValue cannot be less than 0.0f");
-      Debug2.Validate((double) flPosition <= 1.0, typeof (ArgumentOutOfRangeException), "flPosition cannot exceed 1.0f");
-      Debug2.Validate((double) flValue <= 1.0, typeof (ArgumentOutOfRangeException), "flValue cannot exceed 1.0f");
-      foreach (CoordMap.CoordMapSample alMap in this.m_alMaps)
-      {
-        if (or == alMap.Orientation)
-          Debug2.Validate((double) flPosition != (double) alMap.flPosition, typeof (ArgumentException), "CoordMap cannot have two entries with the same flPosition and the same Orientation");
-      }
-      this.m_alMaps.Add((object) new CoordMap.CoordMapSample(flPosition, flValue, or));
+        private ArrayList m_alMaps;
+
+        public CoordMap() => this.m_alMaps = new ArrayList();
+
+        public void AddValue(float flPosition, float flValue, Orientation or)
+        {
+            Debug2.Validate((double)flPosition >= 0.0, typeof(ArgumentOutOfRangeException), "flPosition cannot be less than 0.0f");
+            Debug2.Validate((double)flValue >= 0.0, typeof(ArgumentOutOfRangeException), "flValue cannot be less than 0.0f");
+            Debug2.Validate((double)flPosition <= 1.0, typeof(ArgumentOutOfRangeException), "flPosition cannot exceed 1.0f");
+            Debug2.Validate((double)flValue <= 1.0, typeof(ArgumentOutOfRangeException), "flValue cannot exceed 1.0f");
+            foreach (CoordMap.CoordMapSample alMap in this.m_alMaps)
+            {
+                if (or == alMap.Orientation)
+                    Debug2.Validate((double)flPosition != (double)alMap.flPosition, typeof(ArgumentException), "CoordMap cannot have two entries with the same flPosition and the same Orientation");
+            }
+            this.m_alMaps.Add((object)new CoordMap.CoordMapSample(flPosition, flValue, or));
+        }
+
+        public void Clear() => this.m_alMaps.Clear();
+
+        internal ArrayList RampSamples => this.m_alMaps;
+
+        internal struct CoordMapSample
+        {
+            internal float flPosition;
+            internal float flValue;
+            internal Orientation Orientation;
+
+            internal CoordMapSample(float pos, float val, Orientation or)
+            {
+                this.flPosition = pos;
+                this.flValue = val;
+                this.Orientation = or;
+            }
+        }
     }
-
-    public void Clear() => this.m_alMaps.Clear();
-
-    internal ArrayList RampSamples => this.m_alMaps;
-
-    internal struct CoordMapSample
-    {
-      internal float flPosition;
-      internal float flValue;
-      internal Orientation Orientation;
-
-      internal CoordMapSample(float pos, float val, Orientation or)
-      {
-        this.flPosition = pos;
-        this.flValue = val;
-        this.Orientation = or;
-      }
-    }
-  }
 }
