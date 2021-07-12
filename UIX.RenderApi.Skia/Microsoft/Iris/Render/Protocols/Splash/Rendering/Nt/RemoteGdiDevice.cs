@@ -37,7 +37,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             RemoteGdiDevice remoteGdiDevice = new RemoteGdiDevice(port, _priv_owner);
             uint num = (uint)sizeof(RemoteGdiDevice.Msg23_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteGdiDevice.Msg23_Create* msg23CreatePtr = (RemoteGdiDevice.Msg23_Create*)pMem;
             msg23CreatePtr->_priv_size = num;
             msg23CreatePtr->_priv_msgid = 23U;

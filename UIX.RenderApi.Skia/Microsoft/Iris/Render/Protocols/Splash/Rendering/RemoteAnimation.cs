@@ -67,7 +67,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RemoteAnimation remoteAnimation = new RemoteAnimation(port, _priv_owner);
             uint num = (uint)sizeof(RemoteAnimation.Msg43_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteAnimation.Msg43_Create* msg43CreatePtr = (RemoteAnimation.Msg43_Create*)pMem;
             msg43CreatePtr->_priv_size = num;
             msg43CreatePtr->_priv_msgid = 43U;

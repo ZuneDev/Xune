@@ -32,7 +32,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RemoteWaitCursor remoteWaitCursor = new RemoteWaitCursor(port, _priv_owner);
             uint num = (uint)sizeof(RemoteWaitCursor.Msg5_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteWaitCursor.Msg5_Create* msg5CreatePtr = (RemoteWaitCursor.Msg5_Create*)pMem;
             msg5CreatePtr->_priv_size = num;
             msg5CreatePtr->_priv_msgid = 5U;

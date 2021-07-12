@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RemoteVisualContainer remoteVisualContainer = new RemoteVisualContainer(port, _priv_owner);
             uint num = (uint)sizeof(RemoteVisualContainer.Msg19_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteVisualContainer.Msg19_Create* msg19CreatePtr = (RemoteVisualContainer.Msg19_Create*)pMem;
             msg19CreatePtr->_priv_size = num;
             msg19CreatePtr->_priv_msgid = 19U;

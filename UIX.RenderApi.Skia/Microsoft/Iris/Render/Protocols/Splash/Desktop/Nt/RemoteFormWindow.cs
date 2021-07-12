@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             RemoteFormWindow remoteFormWindow = new RemoteFormWindow(port, _priv_owner);
             uint num = (uint)sizeof(RemoteFormWindow.Msg41_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteFormWindow.Msg41_Create* msg41CreatePtr = (RemoteFormWindow.Msg41_Create*)pMem;
             msg41CreatePtr->_priv_size = num;
             msg41CreatePtr->_priv_msgid = 41U;

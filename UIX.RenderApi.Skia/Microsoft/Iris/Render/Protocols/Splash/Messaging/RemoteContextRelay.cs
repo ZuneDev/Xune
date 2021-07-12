@@ -34,7 +34,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             BLOBREF blobref2 = blobInfo.Add(stSession);
             uint adjustedTotalSize = blobInfo.AdjustedTotalSize;
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)adjustedTotalSize);
+            byte* pMem = stackalloc byte[(int)adjustedTotalSize];
             RemoteContextRelay.Msg2_Create* msg2CreatePtr = (RemoteContextRelay.Msg2_Create*)pMem;
             msg2CreatePtr->_priv_size = adjustedTotalSize;
             msg2CreatePtr->_priv_msgid = 2U;

@@ -213,14 +213,14 @@ namespace Microsoft.Iris.Render.Internal
             InitMessageDump();
             if (uMsg >= s_rgsMessageNames.Length)
                 return null;
-            string rgsMessageName = s_rgsMessageNames[(IntPtr)uMsg];
+            string rgsMessageName = s_rgsMessageNames[uMsg];
             if (rgsMessageName != null)
                 return rgsMessageName;
             uint num = uMsg;
             while (uMsg > 0U)
             {
                 --num;
-                rgsMessageName = s_rgsMessageNames[(IntPtr)num];
+                rgsMessageName = s_rgsMessageNames[num];
                 if (rgsMessageName != null)
                     break;
             }

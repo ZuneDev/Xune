@@ -98,7 +98,7 @@ namespace Microsoft.Iris.Render.Protocol
                         else
                         {
                             byte* numPtr2 = (byte*)chPtr1;
-                            for (byte* numPtr3 = numPtr2 + ((IntPtr)(str.Length + 1) * 2).ToInt64(); numPtr2 < numPtr3; numPtr2 += 2)
+                            for (byte* numPtr3 = numPtr2 + ((long)(str.Length + 1) * 2); numPtr2 < numPtr3; numPtr2 += 2)
                             {
                                 *numPtr1++ = numPtr2[1];
                                 *numPtr1++ = *numPtr2;
@@ -123,7 +123,7 @@ namespace Microsoft.Iris.Render.Protocol
                         else
                         {
                             byte* numPtr2 = (byte*)renderhandlePtr;
-                            for (byte* numPtr3 = numPtr2 + ((IntPtr)renderhandleArray.Length * 4).ToInt64(); numPtr2 < numPtr3; numPtr2 += 4)
+                            for (byte* numPtr3 = numPtr2 + ((long)renderhandleArray.Length * 4); numPtr2 < numPtr3; numPtr2 += 4)
                             {
                                 *numPtr1++ = numPtr2[3];
                                 *numPtr1++ = numPtr2[2];

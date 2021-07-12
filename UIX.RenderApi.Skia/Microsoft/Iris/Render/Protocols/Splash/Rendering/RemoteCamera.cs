@@ -32,7 +32,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RemoteCamera remoteCamera = new RemoteCamera(port, _priv_owner);
             uint num = (uint)sizeof(RemoteCamera.Msg5_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteCamera.Msg5_Create* msg5CreatePtr = (RemoteCamera.Msg5_Create*)pMem;
             msg5CreatePtr->_priv_size = num;
             msg5CreatePtr->_priv_msgid = 5U;

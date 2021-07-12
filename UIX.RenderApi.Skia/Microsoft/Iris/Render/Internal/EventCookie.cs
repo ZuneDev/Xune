@@ -19,17 +19,16 @@ namespace Microsoft.Iris.Render.Internal
 
         public override bool Equals(object oCompare)
         {
-            switch (oCompare)
-            {
-                case uint num:
-                label_3:
-                    return (int)this.m_value == (int)num;
-                case EventCookie eventCookie:
-                    num = eventCookie.m_value;
-                    goto label_3;
-                default:
-                    return false;
-            }
+            uint num;
+
+            if (oCompare is EventCookie eventCookie)
+                num = eventCookie.m_value;
+            else if (oCompare is uint value)
+                num = value;
+            else
+                return false;
+
+            return (int)m_value == (int)num;
         }
 
         public override int GetHashCode() => (int)this.m_value;

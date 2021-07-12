@@ -13,7 +13,7 @@ namespace Microsoft.Iris.Render.Protocol
     {
         private bool m_fFreeOnDispose;
         protected RenderPort m_renderPort;
-        protected RENDERHANDLE m_renderHandle;
+        internal RENDERHANDLE m_renderHandle;
 
         public RemoteObject(RenderPort port, IRenderHandleOwner owner)
         {

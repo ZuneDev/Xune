@@ -32,7 +32,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             RemoteDesktopManager remoteDesktopManager = new RemoteDesktopManager(port, _priv_owner);
             uint num = (uint)sizeof(RemoteDesktopManager.Msg2_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteDesktopManager.Msg2_Create* msg2CreatePtr = (RemoteDesktopManager.Msg2_Create*)pMem;
             msg2CreatePtr->_priv_size = num;
             msg2CreatePtr->_priv_msgid = 2U;

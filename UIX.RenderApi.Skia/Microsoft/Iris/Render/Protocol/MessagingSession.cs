@@ -39,7 +39,7 @@ namespace Microsoft.Iris.Render.Protocol
         {
         }
 
-        internal MessagingSession(
+        internal unsafe MessagingSession(
           IRenderHost renderHost,
           RenderToken token,
           TimeoutHandler handlerTimeout,

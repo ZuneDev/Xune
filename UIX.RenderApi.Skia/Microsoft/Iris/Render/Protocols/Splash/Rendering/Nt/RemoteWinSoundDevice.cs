@@ -26,7 +26,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             RemoteWinSoundDevice remoteWinSoundDevice = new RemoteWinSoundDevice(port, _priv_owner);
             uint num = (uint)sizeof(RemoteWinSoundDevice.Msg4_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteWinSoundDevice.Msg4_Create* msg4CreatePtr = (RemoteWinSoundDevice.Msg4_Create*)pMem;
             msg4CreatePtr->_priv_size = num;
             msg4CreatePtr->_priv_msgid = 4U;

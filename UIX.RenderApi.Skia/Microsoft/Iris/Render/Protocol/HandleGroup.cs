@@ -80,7 +80,7 @@ namespace Microsoft.Iris.Render.Protocol
             get
             {
                 this.ValidateSlot(index);
-                GCHandle gcHandle = this.m_objects[(IntPtr)index];
+                GCHandle gcHandle = this.m_objects[index];
                 return !gcHandle.IsAllocated ? null : (IRenderHandleOwner)gcHandle.Target;
             }
             set
@@ -101,7 +101,7 @@ namespace Microsoft.Iris.Render.Protocol
         {
             if (!this.ValidateAccess(index, expectedUniqueness, fAllowInvalid))
                 return null;
-            GCHandle gcHandle = this.m_objects[(IntPtr)index];
+            GCHandle gcHandle = this.m_objects[index];
             return !gcHandle.IsAllocated ? null : (IRenderHandleOwner)gcHandle.Target;
         }
 
@@ -185,16 +185,16 @@ namespace Microsoft.Iris.Render.Protocol
 
         private void SetIndex(uint index, IRenderHandleOwner newOwner)
         {
-            GCHandle gch = this.m_objects[(IntPtr)index];
+            GCHandle gch = this.m_objects[index];
             if (!IsEmpty(gch))
             {
                 ((IRenderHandleOwner)gch.Target)?.OnDisconnect();
                 gch.Free();
             }
             if (newOwner != null)
-                this.m_objects[(IntPtr)index] = GCHandle.Alloc(newOwner, this.m_ht);
+                this.m_objects[index] = GCHandle.Alloc(newOwner, this.m_ht);
             else
-                this.m_objects[(IntPtr)index] = s_gchEmpty;
+                this.m_objects[index] = s_gchEmpty;
         }
 
         private void UpdateUniqueness(uint index, out uint unique)
@@ -202,9 +202,9 @@ namespace Microsoft.Iris.Render.Protocol
             byte num1 = 0;
             if (this.m_uniqueness != null)
             {
-                byte num2 = this.m_uniqueness[(IntPtr)index];
+                byte num2 = this.m_uniqueness[index];
                 num1 = num2 >= byte.MaxValue ? (byte)1 : (byte)(num2 + 1U);
-                this.m_uniqueness[(IntPtr)index] = num1;
+                this.m_uniqueness[index] = num1;
             }
             unique = num1;
         }
@@ -214,7 +214,7 @@ namespace Microsoft.Iris.Render.Protocol
             Debug2.Validate(unique <= byte.MaxValue, typeof(ArgumentOutOfRangeException), "Uniqueness must be a byte");
             if (this.m_uniqueness == null)
                 return;
-            this.m_uniqueness[(IntPtr)index] = (byte)(unique & byte.MaxValue);
+            this.m_uniqueness[index] = (byte)(unique & byte.MaxValue);
         }
 
         private void ValidateSlot(uint index) => this.ValidateSlot(index, false);
@@ -222,7 +222,7 @@ namespace Microsoft.Iris.Render.Protocol
         private bool ValidateSlot(uint index, bool fAllowInvalid)
         {
             bool flag = false;
-            if (index < this.m_alloc && ((int)this.m_usage[(IntPtr)(index >> 5)] & 1 << (int)index) != 0)
+            if (index < this.m_alloc && ((int)this.m_usage[index >> 5] & 1 << (int)index) != 0)
                 flag = true;
             Debug2.Throw(flag || fAllowInvalid, "Slot is not allocated");
             return flag;
@@ -233,7 +233,7 @@ namespace Microsoft.Iris.Render.Protocol
         private bool ValidateSlotFree(uint index, bool fAllowInvalid)
         {
             bool flag = false;
-            if (index < this.m_alloc && ((int)this.m_usage[(IntPtr)(index >> 5)] & 1 << (int)index) == 0)
+            if (index < this.m_alloc && ((int)this.m_usage[index >> 5] & 1 << (int)index) == 0)
                 flag = true;
             Debug2.Throw(flag || fAllowInvalid, "Slot is not free");
             return flag;
@@ -247,7 +247,7 @@ namespace Microsoft.Iris.Render.Protocol
                 return false;
             uint num = 0;
             if (this.m_uniqueness != null)
-                num = this.m_uniqueness[(IntPtr)index];
+                num = this.m_uniqueness[index];
             bool flag = (int)expectedUniqueness == (int)num;
             Debug2.Throw(flag || fAllowInvalid, "Slot uniqueness is stale");
             return flag;
@@ -259,7 +259,7 @@ namespace Microsoft.Iris.Render.Protocol
             uint hint;
             for (hint = this.m_hint; hint < m_usage.Length; ++hint)
             {
-                num1 = this.m_usage[(IntPtr)hint];
+                num1 = this.m_usage[hint];
                 if (num1 != uint.MaxValue)
                     break;
             }
@@ -278,7 +278,7 @@ namespace Microsoft.Iris.Render.Protocol
                 maxValue >>= (int)num2;
             }
             while (num2 != 0U);
-            this.m_usage[(IntPtr)hint] |= 1U << (int)num3;
+            this.m_usage[hint] |= 1U << (int)num3;
             ++this.m_used;
             return hint << 5 | num3;
         }
@@ -286,14 +286,14 @@ namespace Microsoft.Iris.Render.Protocol
         private void AllocSlotAt(uint index)
         {
             this.ValidateSlotFree(index);
-            this.m_usage[(IntPtr)(index >> 5)] |= 1U << (int)index;
+            this.m_usage[index >> 5] |= 1U << (int)index;
             ++this.m_used;
         }
 
         private void FreeSlot(uint index)
         {
             uint num = index >> 5;
-            this.m_usage[(IntPtr)num] &= (uint)~(1 << (int)index);
+            this.m_usage[num] &= (uint)~(1 << (int)index);
             --this.m_used;
             if (this.m_hint <= num)
                 return;
@@ -315,15 +315,15 @@ namespace Microsoft.Iris.Render.Protocol
         {
             Debug2.Validate(newSize > this.m_alloc, typeof(ArgumentException), nameof(newSize));
             Debug2.Validate(newSize <= this.m_maxObjects, typeof(InvalidOperationException), "Too many video resources have been allocated");
-            GCHandle[] gcHandleArray = new GCHandle[(IntPtr)newSize];
+            GCHandle[] gcHandleArray = new GCHandle[newSize];
             uint[] numArray1 = null;
             byte[] numArray2 = null;
             uint num = (uint)((int)newSize + 32 - 1) >> 5;
             if (this.m_usage == null || m_usage.Length < num)
-                numArray1 = new uint[(IntPtr)num];
+                numArray1 = new uint[num];
             if (this.m_uniqueness != null)
             {
-                numArray2 = new byte[(IntPtr)newSize];
+                numArray2 = new byte[newSize];
                 Array.Copy(m_uniqueness, numArray2, this.m_uniqueness.Length);
             }
             if (this.m_objects != null)
@@ -347,16 +347,16 @@ namespace Microsoft.Iris.Render.Protocol
             public ObjectCopy(HandleGroup map)
             {
                 uint used = map.m_used;
-                this.m_arObjects = new IRenderHandleOwner[(IntPtr)used];
+                this.m_arObjects = new IRenderHandleOwner[used];
                 uint num = 0;
                 for (uint index = 0; index < used; ++index)
                 {
-                    GCHandle gch = map.m_objects[(IntPtr)index];
+                    GCHandle gch = map.m_objects[index];
                     if (!IsEmpty(gch))
                     {
                         IRenderHandleOwner target = (IRenderHandleOwner)gch.Target;
                         if (target != null)
-                            this.m_arObjects[(IntPtr)num++] = target;
+                            this.m_arObjects[num++] = target;
                     }
                 }
             }

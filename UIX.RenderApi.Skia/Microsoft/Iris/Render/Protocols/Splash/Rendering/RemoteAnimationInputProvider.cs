@@ -38,7 +38,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RemoteAnimationInputProvider animationInputProvider = new RemoteAnimationInputProvider(port, _priv_owner);
             uint num = (uint)sizeof(RemoteAnimationInputProvider.Msg10_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteAnimationInputProvider.Msg10_Create* msg10CreatePtr = (RemoteAnimationInputProvider.Msg10_Create*)pMem;
             msg10CreatePtr->_priv_size = num;
             msg10CreatePtr->_priv_msgid = 10U;

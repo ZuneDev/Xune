@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             RENDERHANDLE callbackInstance = _priv_protocolInstance.RenderPortCallback_CallbackInstance;
             uint num = (uint)sizeof(LocalRenderPortCallback.Msg0_OnBatchProcessed);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             LocalRenderPortCallback.Msg0_OnBatchProcessed* onBatchProcessedPtr = (LocalRenderPortCallback.Msg0_OnBatchProcessed*)pMem;
             onBatchProcessedPtr->_priv_size = num;
             onBatchProcessedPtr->_priv_msgid = 0U;
@@ -48,7 +48,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             RENDERHANDLE callbackInstance = _priv_protocolInstance.RenderPortCallback_CallbackInstance;
             uint num = (uint)sizeof(LocalRenderPortCallback.Msg1_OnPingReply);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             LocalRenderPortCallback.Msg1_OnPingReply* msg1OnPingReplyPtr = (LocalRenderPortCallback.Msg1_OnPingReply*)pMem;
             msg1OnPingReplyPtr->_priv_size = num;
             msg1OnPingReplyPtr->_priv_msgid = 1U;
@@ -75,7 +75,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
 
         public override int GetHashCode() => base.GetHashCode();
 
-        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
+        internal static unsafe RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
 
         private static unsafe void DispatchCallback(
           RenderPort port,

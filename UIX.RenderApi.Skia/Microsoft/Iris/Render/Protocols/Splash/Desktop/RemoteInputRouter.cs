@@ -30,7 +30,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
             RemoteInputRouter remoteInputRouter = new RemoteInputRouter(port, _priv_owner);
             uint num = (uint)sizeof(RemoteInputRouter.Msg2_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteInputRouter.Msg2_Create* msg2CreatePtr = (RemoteInputRouter.Msg2_Create*)pMem;
             msg2CreatePtr->_priv_size = num;
             msg2CreatePtr->_priv_msgid = 2U;

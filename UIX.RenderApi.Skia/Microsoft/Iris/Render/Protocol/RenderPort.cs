@@ -215,28 +215,30 @@ namespace Microsoft.Iris.Render.Protocol
         {
             Debug2.Validate(idRemoteBuffer != RENDERHANDLE.NULL, typeof(ArgumentNullException), nameof(idRemoteBuffer));
             this.UpdateTraffic(0U, cbSize);
-            EngineApi.IFC(EngineApi.SpBufferOpen(&new EngineApi.BufferInfo()
+            var info = new EngineApi.BufferInfo
             {
                 idContextSrc = this._session.LocalContext,
                 idContextDest = this._idRemoteContext,
                 idBuffer = idRemoteBuffer,
                 nFlags = 0,
                 cbSizeBuffer = cbSize
-            }, pvData));
+            };
+            EngineApi.IFC(EngineApi.SpBufferOpen(&info, pvData));
         }
 
         public unsafe void SendBatchBuffer(void* pvData, uint cbSize, RENDERHANDLE idRemoteBuffer)
         {
             int num = idRemoteBuffer != RENDERHANDLE.NULL ? 1 : 0;
             this.UpdateTraffic(cbSize, 0U);
-            EngineApi.IFC(EngineApi.SpBufferOpen(&new EngineApi.BufferInfo()
+            var info = new EngineApi.BufferInfo()
             {
                 idContextSrc = this._session.LocalContext,
                 idContextDest = this._idRemoteContext,
                 idBuffer = idRemoteBuffer,
                 nFlags = EngineApi.BufferFlags.IsBatch,
                 cbSizeBuffer = cbSize
-            }, pvData));
+            };
+            EngineApi.IFC(EngineApi.SpBufferOpen(&info, pvData));
         }
 
         public unsafe void SendMessageBuffer(Message* pmsg)
@@ -245,14 +247,15 @@ namespace Microsoft.Iris.Render.Protocol
             uint src = pmsg->cbSize;
             if (this.ForeignByteOrder)
                 src = Memory.ConvertEndian(src);
-            EngineApi.IFC(EngineApi.SpBufferOpen(&new EngineApi.BufferInfo()
+            var info = new EngineApi.BufferInfo()
             {
                 idContextSrc = this._session.LocalContext,
                 idContextDest = this._idRemoteContext,
                 idBuffer = RENDERHANDLE.NULL,
                 nFlags = EngineApi.BufferFlags.CopyData,
                 cbSizeBuffer = src
-            }, pmsg));
+            };
+            EngineApi.IFC(EngineApi.SpBufferOpen(&info, pmsg));
         }
 
         private void UpdateTraffic(uint uControl, uint uData)
@@ -571,7 +574,7 @@ namespace Microsoft.Iris.Render.Protocol
 
         private void DeferredHeapReleaseWorker(object args) => this._spareHeapCache.Push((MessageHeap)args);
 
-        private object HeapCacheCallback(ObjectCache.Operation operation, object data)
+        private unsafe object HeapCacheCallback(ObjectCache.Operation operation, object data)
         {
             this.Session.AssertOwningThread();
             MessageHeap key = data as MessageHeap;
@@ -660,12 +663,12 @@ namespace Microsoft.Iris.Render.Protocol
                 uint num2 = 2U * num1;
                 if (num2 == 0U)
                     num2 = 16U;
-                RENDERHANDLE[] renderhandleArray = new RENDERHANDLE[(IntPtr)num2];
+                RENDERHANDLE[] renderhandleArray = new RENDERHANDLE[num2];
                 if (num1 > 0U)
                     Array.Copy(_pendingBatchDeletes, renderhandleArray, this._pendingBatchDeletes.Length);
                 this._pendingBatchDeletes = renderhandleArray;
             }
-            this._pendingBatchDeletes[(IntPtr)this._pendingBatchDeleteSlot] = handle;
+            this._pendingBatchDeletes[this._pendingBatchDeleteSlot] = handle;
             ++this._pendingBatchDeleteSlot;
         }
 
@@ -690,12 +693,12 @@ namespace Microsoft.Iris.Render.Protocol
                 uint num2 = 2U * num1;
                 if (num2 == 0U)
                     num2 = 16U;
-                RENDERGROUP[] rendergroupArray = new RENDERGROUP[(IntPtr)num2];
+                RENDERGROUP[] rendergroupArray = new RENDERGROUP[num2];
                 if (num1 > 0U)
                     Array.Copy(_pendingBatchGroupDeletes, rendergroupArray, this._pendingBatchGroupDeletes.Length);
                 this._pendingBatchGroupDeletes = rendergroupArray;
             }
-            this._pendingBatchGroupDeletes[(IntPtr)this._pendingBatchGroupDeleteSlot] = group;
+            this._pendingBatchGroupDeletes[this._pendingBatchGroupDeleteSlot] = group;
             ++this._pendingBatchGroupDeleteSlot;
         }
 

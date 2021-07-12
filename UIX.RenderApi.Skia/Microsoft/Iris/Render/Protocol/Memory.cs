@@ -71,10 +71,10 @@ namespace Microsoft.Iris.Render.Protocol
                         break;
                     ushort* numPtr1 = (ushort*)pointer1;
                     ushort* numPtr2 = (ushort*)pointer1;
-                    ushort* numPtr3 = (ushort*)((IntPtr)numPtr2 + new IntPtr(2));
+                    ushort* numPtr3 = (ushort*)(numPtr2 + 2);
                     ushort num3 = *numPtr2;
                     ushort* numPtr4 = numPtr1;
-                    ushort* numPtr5 = (ushort*)((IntPtr)numPtr4 + new IntPtr(2));
+                    ushort* numPtr5 = (ushort*)(numPtr4 + 2);
                     int num4 = (ushort)((num3 & 65280) >> 8 | (num3 & byte.MaxValue) << 8);
                     *numPtr4 = (ushort)num4;
                     break;

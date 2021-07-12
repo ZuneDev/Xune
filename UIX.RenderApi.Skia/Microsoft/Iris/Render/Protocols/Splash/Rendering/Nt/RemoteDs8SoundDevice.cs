@@ -25,7 +25,8 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             RemoteDs8SoundDevice remoteDs8SoundDevice = new RemoteDs8SoundDevice(port, _priv_owner);
             uint num = (uint)sizeof(RemoteDs8SoundDevice.Msg4_Create);
             // ISSUE: untyped stack allocation
-            RemoteDs8SoundDevice.Msg4_Create* msg4CreatePtr = (RemoteDs8SoundDevice.Msg4_Create*)__untypedstackalloc(1 * (int)num);
+            byte* bytes = stackalloc byte[(int)num];
+            RemoteDs8SoundDevice.Msg4_Create* msg4CreatePtr = (Msg4_Create*)bytes;
             msg4CreatePtr->_priv_size = num;
             msg4CreatePtr->_priv_msgid = 4U;
             msg4CreatePtr->hwnd = hwnd;

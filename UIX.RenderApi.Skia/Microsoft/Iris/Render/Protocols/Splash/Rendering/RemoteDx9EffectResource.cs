@@ -40,7 +40,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RemoteDx9EffectResource dx9EffectResource = new RemoteDx9EffectResource(port, _priv_owner);
             uint num = (uint)sizeof(RemoteDx9EffectResource.Msg10_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteDx9EffectResource.Msg10_Create* msg10CreatePtr = (RemoteDx9EffectResource.Msg10_Create*)pMem;
             msg10CreatePtr->_priv_size = num;
             msg10CreatePtr->_priv_msgid = 10U;

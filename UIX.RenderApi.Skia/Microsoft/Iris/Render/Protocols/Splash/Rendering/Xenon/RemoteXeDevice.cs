@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Xenon
             RemoteXeDevice remoteXeDevice = new RemoteXeDevice(port, _priv_owner);
             uint num = (uint)sizeof(RemoteXeDevice.Msg11_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteXeDevice.Msg11_Create* msg11CreatePtr = (RemoteXeDevice.Msg11_Create*)pMem;
             msg11CreatePtr->_priv_size = num;
             msg11CreatePtr->_priv_msgid = 11U;

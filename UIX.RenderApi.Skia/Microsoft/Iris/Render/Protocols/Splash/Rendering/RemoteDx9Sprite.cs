@@ -26,7 +26,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RemoteDx9Sprite remoteDx9Sprite = new RemoteDx9Sprite(port, _priv_owner);
             uint num = (uint)sizeof(RemoteDx9Sprite.Msg22_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteDx9Sprite.Msg22_Create* msg22CreatePtr = (RemoteDx9Sprite.Msg22_Create*)pMem;
             msg22CreatePtr->_priv_size = num;
             msg22CreatePtr->_priv_msgid = 22U;

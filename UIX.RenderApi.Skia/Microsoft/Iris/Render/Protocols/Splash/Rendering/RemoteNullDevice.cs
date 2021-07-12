@@ -27,7 +27,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RemoteNullDevice remoteNullDevice = new RemoteNullDevice(port, _priv_owner);
             uint num = (uint)sizeof(RemoteNullDevice.Msg8_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteNullDevice.Msg8_Create* msg8CreatePtr = (RemoteNullDevice.Msg8_Create*)pMem;
             msg8CreatePtr->_priv_size = num;
             msg8CreatePtr->_priv_msgid = 8U;

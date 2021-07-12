@@ -25,10 +25,11 @@ namespace Microsoft.Iris.Render.Protocol
           MessageCookieLayout layout)
         {
             Debug2.Validate(remoteContextId != ContextID.NULL, typeof(ArgumentNullException), nameof(remoteContextId));
-            EngineApi.IFC(EngineApi.SpRenderThreadInit(ref new EngineApi.InitArgs(layout, remoteContextId)
+            var args = new EngineApi.InitArgs(layout, remoteContextId)
             {
                 idObjectBrokerClass = brokerClassHandle
-            }, out this.m_renderThread));
+            };
+            EngineApi.IFC(EngineApi.SpRenderThreadInit(ref args, out this.m_renderThread));
         }
 
         protected override void Dispose(bool inDispose)

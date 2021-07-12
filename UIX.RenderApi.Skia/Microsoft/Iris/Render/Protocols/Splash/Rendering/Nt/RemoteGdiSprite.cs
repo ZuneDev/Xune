@@ -26,7 +26,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             RemoteGdiSprite remoteGdiSprite = new RemoteGdiSprite(port, _priv_owner);
             uint num = (uint)sizeof(RemoteGdiSprite.Msg22_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteGdiSprite.Msg22_Create* msg22CreatePtr = (RemoteGdiSprite.Msg22_Create*)pMem;
             msg22CreatePtr->_priv_size = num;
             msg22CreatePtr->_priv_msgid = 22U;

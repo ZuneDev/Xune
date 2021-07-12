@@ -29,7 +29,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Xenon
             RemoteXAudSoundDevice remoteXaudSoundDevice = new RemoteXAudSoundDevice(port, _priv_owner);
             uint num = (uint)sizeof(RemoteXAudSoundDevice.Msg6_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteXAudSoundDevice.Msg6_Create* msg6CreatePtr = (RemoteXAudSoundDevice.Msg6_Create*)pMem;
             msg6CreatePtr->_priv_size = num;
             msg6CreatePtr->_priv_msgid = 6U;

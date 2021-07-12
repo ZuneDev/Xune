@@ -29,7 +29,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RemoteRenderCaps remoteRenderCaps = new RemoteRenderCaps(port, _priv_owner);
             uint num = (uint)sizeof(RemoteRenderCaps.Msg1_Create);
             // ISSUE: untyped stack allocation
-            byte* pMem = (byte*)__untypedstackalloc(1 * (int)num);
+            byte* pMem = stackalloc byte[(int)num];
             RemoteRenderCaps.Msg1_Create* msg1CreatePtr = (RemoteRenderCaps.Msg1_Create*)pMem;
             msg1CreatePtr->_priv_size = num;
             msg1CreatePtr->_priv_msgid = 1U;
