@@ -21,7 +21,7 @@ namespace Microsoft.Iris.Render
 
         public override int GetHashCode() => (int)this.uStyleRestored ^ (int)this.uExStyleRestored;
 
-        public static bool operator ==(FormStyleInfo fsi1, FormStyleInfo fsi2) => fsi1.Equals((object)fsi2);
+        public static bool operator ==(FormStyleInfo fsi1, FormStyleInfo fsi2) => fsi1.Equals(fsi2);
 
         public static bool operator !=(FormStyleInfo fsi1, FormStyleInfo fsi2) => !(fsi1 == fsi2);
     }

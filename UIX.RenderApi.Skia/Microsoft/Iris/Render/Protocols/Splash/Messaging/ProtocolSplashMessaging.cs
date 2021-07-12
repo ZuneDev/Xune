@@ -30,7 +30,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
                 return protocolSplashMessaging;
             }
             ProtocolSplashMessaging protocolSplashMessaging1 = new ProtocolSplashMessaging(port);
-            port.BindProtocol((ProtocolInstance)protocolSplashMessaging1);
+            port.BindProtocol(protocolSplashMessaging1);
             return protocolSplashMessaging1;
         }
 

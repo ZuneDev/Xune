@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render
 
         public IVideoStream VideoStream
         {
-            get => (IVideoStream)this.m_videoStream;
+            get => m_videoStream;
             set => this.m_videoStream = value as Microsoft.Iris.Render.VideoStream;
         }
 
@@ -46,7 +46,7 @@ namespace Microsoft.Iris.Render
 
         internal override bool Process(Map<string, EffectProperty> dictProperties)
         {
-            if (!this.GenerateProperty("Video", EffectPropertyType.Video, (object)this.VideoStream, this.m_nVideoStreamID, dictProperties))
+            if (!this.GenerateProperty("Video", EffectPropertyType.Video, VideoStream, this.m_nVideoStreamID, dictProperties))
                 return false;
             dictProperties[this.GeneratePropertyPath("Video")].IsDynamic = true;
             return true;

@@ -42,7 +42,7 @@ namespace Microsoft.Iris.Render
             this.m_modeMinFilter = ftrMinification;
             this.m_modeMagFilter = ftrMagnification;
             this.m_idxCoordinateMap = idxCoordinateMap;
-            this.m_idxImageIndex = (byte)0;
+            this.m_idxImageIndex = 0;
             this.Image = imgSource;
         }
 
@@ -57,7 +57,7 @@ namespace Microsoft.Iris.Render
             Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentNullException), nameof(stName));
             Debug2.Validate(imgSource != null, typeof(ArgumentNullException), nameof(imgSource));
             Debug2.Validate(imgSource.Length > 0, typeof(ArgumentException), "ImgSource");
-            Debug2.Validate(imgSource.Length > (int)idxImageIndex, typeof(ArgumentOutOfRangeException), nameof(idxImageIndex));
+            Debug2.Validate(imgSource.Length > idxImageIndex, typeof(ArgumentOutOfRangeException), nameof(idxImageIndex));
             this.m_typeInput = EffectInputType.ComplexImage;
             this.m_stName = stName;
             this.m_modeMinFilter = ftrMinification;
@@ -69,7 +69,7 @@ namespace Microsoft.Iris.Render
 
         public IImage Image
         {
-            get => this.m_rgImages == null || this.m_rgImages.Length < 1 ? (IImage)null : this.m_rgImages[0];
+            get => this.m_rgImages == null || this.m_rgImages.Length < 1 ? null : this.m_rgImages[0];
             set
             {
                 this.m_rgImages = new IImage[1];
@@ -125,7 +125,7 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            int num = base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "MinFilter", (byte)5, ref this.m_nMinFilterID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "MagFilter", (byte)5, ref this.m_nMagFilterID, ref nNextUniqueID);
+            int num = base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "MinFilter", 5, ref this.m_nMinFilterID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "MagFilter", 5, ref this.m_nMagFilterID, ref nNextUniqueID);
             this.AddEffectProperty(dictionary, "CoordinateMapIndex");
             this.m_nCoordinateMapID = nNextUniqueID++;
             this.AddEffectProperty(dictionary, "Image");
@@ -137,12 +137,12 @@ namespace Microsoft.Iris.Render
 
         internal override bool Process(Map<string, EffectProperty> dictProperties)
         {
-            if (!this.GenerateProperty("MinFilter", EffectPropertyType.Integer, (object)(int)this.MinFilter, this.m_nMinFilterID, dictProperties) || !this.GenerateProperty("MagFilter", EffectPropertyType.Integer, (object)(int)this.MagFilter, this.m_nMagFilterID, dictProperties) || (!this.GenerateProperty("CoordinateMapIndex", EffectPropertyType.Integer, (object)(int)this.CoordinateMapIndex, this.m_nCoordinateMapID, dictProperties) || !this.GenerateProperty("ImageIndex", EffectPropertyType.Integer, (object)(int)this.ImageIndex, this.m_nImageIndexID, dictProperties)))
+            if (!this.GenerateProperty("MinFilter", EffectPropertyType.Integer, (int)this.MinFilter, this.m_nMinFilterID, dictProperties) || !this.GenerateProperty("MagFilter", EffectPropertyType.Integer, (int)this.MagFilter, this.m_nMagFilterID, dictProperties) || (!this.GenerateProperty("CoordinateMapIndex", EffectPropertyType.Integer, (int)this.CoordinateMapIndex, this.m_nCoordinateMapID, dictProperties) || !this.GenerateProperty("ImageIndex", EffectPropertyType.Integer, (int)this.ImageIndex, this.m_nImageIndexID, dictProperties)))
                 return false;
             SharedResource[] rgResources = new SharedResource[this.m_rgImages.Length];
             for (int index = 0; index < this.m_rgImages.Length; ++index)
                 rgResources[index] = (SharedResource)this.m_rgImages[index];
-            return this.GenerateProperty("Image", EffectPropertyType.ImageArray, (object)new SharedResourceArray(rgResources), this.m_nImageID, dictProperties);
+            return this.GenerateProperty("Image", EffectPropertyType.ImageArray, new SharedResourceArray(rgResources), this.m_nImageID, dictProperties);
         }
 
         internal override void AddCacheKey(ByteBuilder cacheKey)

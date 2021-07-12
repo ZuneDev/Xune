@@ -22,25 +22,25 @@ namespace Microsoft.Iris.Libraries.OS
 
         ~RegistryKey() => this.Close();
 
-        public static RegistryKey Open(IntPtr hive, string path) => RegistryKey.OpenWorker(hive, path);
+        public static RegistryKey Open(IntPtr hive, string path) => OpenWorker(hive, path);
 
         private static RegistryKey OpenWorker(IntPtr parentKey, string path)
         {
-            RegistryKey registryKey = (RegistryKey)null;
+            RegistryKey registryKey = null;
             IntPtr phkResult;
             if (Win32Api.RegOpenKeyExW(parentKey, path, 0, 131097, out phkResult) == 0)
                 registryKey = new RegistryKey(phkResult);
             return registryKey;
         }
 
-        public RegistryKey OpenSubKey(string path) => RegistryKey.OpenWorker(this._hkey, path);
+        public RegistryKey OpenSubKey(string path) => OpenWorker(this._hkey, path);
 
         public bool ReadByte(string valueName, out byte value)
         {
             bool flag = false;
-            value = (byte)0;
+            value = 0;
             int num = 0;
-            if (this.ReadInt(valueName, out num) && num >= 0 && num <= (int)byte.MaxValue)
+            if (this.ReadInt(valueName, out num) && num >= 0 && num <= byte.MaxValue)
             {
                 value = (byte)num;
                 flag = true;
@@ -79,17 +79,17 @@ namespace Microsoft.Iris.Libraries.OS
         public bool ReadString(string valueName, out string value)
         {
             bool flag = false;
-            value = (string)null;
+            value = null;
             int lpcbData = 0;
             int lpType;
-            if (Win32Api.RegQueryValueExW(this._hkey, valueName, IntPtr.Zero, out lpType, (char[])null, ref lpcbData) == 0 && lpType == 1)
+            if (Win32Api.RegQueryValueExW(this._hkey, valueName, IntPtr.Zero, out lpType, null, ref lpcbData) == 0 && lpType == 1)
                 flag = this.ReadStringValueWorker(valueName, lpcbData, out value);
             return flag;
         }
 
         private bool ReadStringValueWorker(string valueName, int dataBytes, out string value)
         {
-            value = (string)null;
+            value = null;
             bool flag = false;
             int length = dataBytes / 2;
             char[] lpData = new char[length];
@@ -108,7 +108,7 @@ namespace Microsoft.Iris.Libraries.OS
         {
             Win32Api.RegCloseKey(this._hkey);
             this._hkey = IntPtr.Zero;
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
         }
     }
 }

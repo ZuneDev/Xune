@@ -29,8 +29,8 @@ namespace Microsoft.Iris.Render.Graphics
                 this.m_remoteVideoPool = RemoteVideoPool.CreateFromHandle(this.Session.RenderingPort, rhHandle);
             }
             else
-                this.m_remoteVideoPool = RemoteVideoPool.CreateFromExternalHandle(this.Session.RenderingPort, rhHandle, (IRenderHandleOwner)this);
-            this.m_remotePool = (RemoteSurfacePool)this.m_remoteVideoPool;
+                this.m_remoteVideoPool = RemoteVideoPool.CreateFromExternalHandle(this.Session.RenderingPort, rhHandle, this);
+            this.m_remotePool = m_remoteVideoPool;
         }
 
         internal RemoteVideoPool RemoteVideoStub => this.m_remoteVideoPool;

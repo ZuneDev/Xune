@@ -27,7 +27,7 @@ namespace Microsoft.Iris.Render.Extensions
 
         public override bool Equals(object obj)
         {
-            if (object.ReferenceEquals((object)this, obj))
+            if (ReferenceEquals(this, obj))
                 return true;
             return obj is ImageCacheKey imageCacheKey && this.m_stIdentifier.Equals(imageCacheKey.m_stIdentifier) && (this.m_sizeMaxPxl == imageCacheKey.m_sizeMaxPxl && this.m_fFlippable == imageCacheKey.m_fFlippable) && this.m_fAntialiasEdges == imageCacheKey.m_fAntialiasEdges;
         }

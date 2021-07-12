@@ -42,7 +42,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             videoInputChangedPtr->sizeAspectRatio = sizeAspectRatio;
             videoInputChangedPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)videoInputChangedPtr, ref RemoteVideoPool.s_priv_ByteOrder_Msg6_NotifyVideoInputChanged, typeof(RemoteVideoPool.Msg6_NotifyVideoInputChanged), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)videoInputChangedPtr, ref s_priv_ByteOrder_Msg6_NotifyVideoInputChanged, typeof(RemoteVideoPool.Msg6_NotifyVideoInputChanged), 0, 0);
             _priv_pmsgUse = (Message*)videoInputChangedPtr;
         }
 
@@ -69,7 +69,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             setContentOverscanPtr->flContentOverscan = flContentOverscan;
             setContentOverscanPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setContentOverscanPtr, ref RemoteVideoPool.s_priv_ByteOrder_Msg7_SetContentOverscan, typeof(RemoteVideoPool.Msg7_SetContentOverscan), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setContentOverscanPtr, ref s_priv_ByteOrder_Msg7_SetContentOverscan, typeof(RemoteVideoPool.Msg7_SetContentOverscan), 0, 0);
             _priv_pmsgUse = (Message*)setContentOverscanPtr;
         }
 
@@ -96,7 +96,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             videoSizeChangedPtr->sizeTargetPxl = sizeTargetPxl;
             videoSizeChangedPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)videoSizeChangedPtr, ref RemoteVideoPool.s_priv_ByteOrder_Msg8_NotifyVideoSizeChanged, typeof(RemoteVideoPool.Msg8_NotifyVideoSizeChanged), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)videoSizeChangedPtr, ref s_priv_ByteOrder_Msg8_NotifyVideoSizeChanged, typeof(RemoteVideoPool.Msg8_NotifyVideoSizeChanged), 0, 0);
             _priv_pmsgUse = (Message*)videoSizeChangedPtr;
         }
 
@@ -131,7 +131,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg10OnFrameReadyPtr->nOptions = nOptions;
             msg10OnFrameReadyPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg10OnFrameReadyPtr, ref RemoteVideoPool.s_priv_ByteOrder_Msg10_OnFrameReady, typeof(RemoteVideoPool.Msg10_OnFrameReady), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg10OnFrameReadyPtr, ref s_priv_ByteOrder_Msg10_OnFrameReady, typeof(RemoteVideoPool.Msg10_OnFrameReady), 0, 0);
             _priv_pmsgUse = (Message*)msg10OnFrameReadyPtr;
         }
 
@@ -159,7 +159,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg11OnClockStopPtr->_priv_msgid = 11U;
             msg11OnClockStopPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg11OnClockStopPtr, ref RemoteVideoPool.s_priv_ByteOrder_Msg11_OnClockStop, typeof(RemoteVideoPool.Msg11_OnClockStop), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg11OnClockStopPtr, ref s_priv_ByteOrder_Msg11_OnClockStop, typeof(RemoteVideoPool.Msg11_OnClockStop), 0, 0);
             _priv_pmsgUse = (Message*)msg11OnClockStopPtr;
         }
 
@@ -194,7 +194,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg12OnClockStartPtr->sizeAspectRatio = sizeAspectRatio;
             msg12OnClockStartPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg12OnClockStartPtr, ref RemoteVideoPool.s_priv_ByteOrder_Msg12_OnClockStart, typeof(RemoteVideoPool.Msg12_OnClockStart), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg12OnClockStartPtr, ref s_priv_ByteOrder_Msg12_OnClockStart, typeof(RemoteVideoPool.Msg12_OnClockStart), 0, 0);
             _priv_pmsgUse = (Message*)msg12OnClockStartPtr;
         }
 
@@ -222,7 +222,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg13OnDisconnectPtr->_priv_msgid = 13U;
             msg13OnDisconnectPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg13OnDisconnectPtr, ref RemoteVideoPool.s_priv_ByteOrder_Msg13_OnDisconnect, typeof(RemoteVideoPool.Msg13_OnDisconnect), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg13OnDisconnectPtr, ref s_priv_ByteOrder_Msg13_OnDisconnect, typeof(RemoteVideoPool.Msg13_OnDisconnect), 0, 0);
             _priv_pmsgUse = (Message*)msg13OnDisconnectPtr;
         }
 
@@ -245,7 +245,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg14OnConnectPtr->_priv_msgid = 14U;
             msg14OnConnectPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg14OnConnectPtr, ref RemoteVideoPool.s_priv_ByteOrder_Msg14_OnConnect, typeof(RemoteVideoPool.Msg14_OnConnect), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg14OnConnectPtr, ref s_priv_ByteOrder_Msg14_OnConnect, typeof(RemoteVideoPool.Msg14_OnConnect), 0, 0);
             _priv_pmsgUse = (Message*)msg14OnConnectPtr;
         }
 

@@ -13,20 +13,20 @@ namespace Microsoft.Iris.Render
 {
     public abstract class TrackerBase
     {
-        private static readonly TrackerBase.ObjectTest s_testAll = new TrackerBase.ObjectTest(TrackerBase.AllObjectTest);
-        private static readonly TrackerBase.ObjectTest s_testDead = new TrackerBase.ObjectTest(TrackerBase.DeadObjectTest);
-        private static readonly TrackerBase.ObjectTest s_testObject = new TrackerBase.ObjectTest(TrackerBase.SpecificObjectTest);
+        private static readonly TrackerBase.ObjectTest s_testAll = new TrackerBase.ObjectTest(AllObjectTest);
+        private static readonly TrackerBase.ObjectTest s_testDead = new TrackerBase.ObjectTest(DeadObjectTest);
+        private static readonly TrackerBase.ObjectTest s_testObject = new TrackerBase.ObjectTest(SpecificObjectTest);
         private Map<object, GCHandle> m_tblObjects;
 
         ~TrackerBase() => this.Dispose(false);
 
         public void Dispose()
         {
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
             this.Dispose(true);
         }
 
-        protected virtual void Dispose(bool fInDispose) => this.RemoveObjects(TrackerBase.s_testAll);
+        protected virtual void Dispose(bool fInDispose) => this.RemoveObjects(s_testAll);
 
         public bool IsEmpty => this.m_tblObjects.Count == 0;
 
@@ -84,14 +84,14 @@ namespace Microsoft.Iris.Render
             {
                 if (this.m_tblObjects == null)
                     return;
-                ArrayList arrayList = (ArrayList)null;
+                ArrayList arrayList = null;
                 foreach (string key in this.m_tblObjects.Keys)
                 {
                     if (keyTest == null || keyTest(key))
                     {
                         if (arrayList == null)
                             arrayList = new ArrayList();
-                        arrayList.Add((object)key);
+                        arrayList.Add(key);
                     }
                 }
                 if (arrayList == null)
@@ -101,13 +101,13 @@ namespace Microsoft.Iris.Render
             }
         }
 
-        public void RemoveObject(object objRemove) => this.RemoveObjects(TrackerBase.s_testObject, objRemove);
+        public void RemoveObject(object objRemove) => this.RemoveObjects(s_testObject, objRemove);
 
-        public void RemoveDeadObjects() => this.RemoveObjects(TrackerBase.s_testDead);
+        public void RemoveDeadObjects() => this.RemoveObjects(s_testDead);
 
-        public void RemoveAllObjects() => this.RemoveObjects(TrackerBase.s_testAll);
+        public void RemoveAllObjects() => this.RemoveObjects(s_testAll);
 
-        public void RemoveObjects(TrackerBase.ObjectTest test) => this.RemoveObjects(test, (object)null);
+        public void RemoveObjects(TrackerBase.ObjectTest test) => this.RemoveObjects(test, null);
 
         public void RemoveObjects(TrackerBase.ObjectTest test, object objParam)
         {
@@ -115,7 +115,7 @@ namespace Microsoft.Iris.Render
             {
                 if (this.m_tblObjects == null)
                     return;
-                ArrayList arrayList = (ArrayList)null;
+                ArrayList arrayList = null;
                 foreach (KeyValueEntry<object, GCHandle> tblObject in this.m_tblObjects)
                 {
                     GCHandle gcHandle = tblObject.Value;
@@ -138,7 +138,7 @@ namespace Microsoft.Iris.Render
 
         public object Find(object key)
         {
-            object obj = (object)null;
+            object obj = null;
             lock (this)
             {
                 if (this.m_tblObjects != null)

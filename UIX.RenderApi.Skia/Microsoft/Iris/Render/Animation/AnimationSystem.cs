@@ -26,7 +26,7 @@ namespace Microsoft.Iris.Render.Animation
             this.m_remoteObject = ownerSession.BuildRemoteAnimationManager(this);
             this.m_flSpeedAdjustment = 1f;
             this.m_backCompat = false;
-            this.RegisterUsage((object)ownerSession);
+            this.RegisterUsage(ownerSession);
         }
 
         protected override void Dispose(bool inDispose)
@@ -35,8 +35,8 @@ namespace Microsoft.Iris.Render.Animation
             {
                 if (inDispose && this.m_remoteObject != null)
                     this.m_remoteObject.Dispose();
-                this.m_ownerSession = (RenderSession)null;
-                this.m_remoteObject = (RemoteAnimationManager)null;
+                this.m_ownerSession = null;
+                this.m_remoteObject = null;
             }
             finally
             {
@@ -60,7 +60,7 @@ namespace Microsoft.Iris.Render.Animation
             Debug2.Validate(initialValue != null, typeof(ArgumentNullException), nameof(initialValue));
             KeyframeAnimation keyframeAnimation = new KeyframeAnimation(this, initialValue);
             keyframeAnimation.RegisterUsage(objUser);
-            return (IKeyframeAnimation)keyframeAnimation;
+            return keyframeAnimation;
         }
 
         IAnimationGroup IAnimationSystem.CreateAnimationGroup(
@@ -69,7 +69,7 @@ namespace Microsoft.Iris.Render.Animation
             Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
             AnimationGroup animationGroup = new AnimationGroup(this);
             animationGroup.RegisterUsage(objUser);
-            return (IAnimationGroup)animationGroup;
+            return animationGroup;
         }
 
         void IAnimationSystem.PulseTimeAdvance(int nAdvanceMs) => this.PulseTimeAdvance(nAdvanceMs);
@@ -102,7 +102,7 @@ namespace Microsoft.Iris.Render.Animation
           object objUser,
           IAnimationPropertyMap propertyMap)
         {
-            return (IExternalAnimationInput)new ExternalAnimationInput(objUser, this.m_ownerSession, propertyMap);
+            return new ExternalAnimationInput(objUser, this.m_ownerSession, propertyMap);
         }
 
         void IAnimationSystem.PauseAnimations() => this.m_remoteObject.SendSetGlobalSpeedAdjustment(0.0f);
@@ -113,7 +113,7 @@ namespace Microsoft.Iris.Render.Animation
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteObject.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = (RemoteAnimationManager)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = null;
 
         protected override void Invariant()
         {

@@ -73,7 +73,7 @@ namespace Microsoft.Iris.Render
 
         public override string ToString() => base.ToString();
 
-        public bool IsZero => this.Equals(Point.Zero);
+        public bool IsZero => this.Equals(Zero);
 
         public void Offset(int dx, int dy)
         {

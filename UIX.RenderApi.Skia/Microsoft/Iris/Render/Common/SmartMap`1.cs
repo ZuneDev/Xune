@@ -31,7 +31,7 @@ namespace Microsoft.Iris.Render.Common
             {
                 foreach (SmartMap<T>.Entry entry in this.m_entryList)
                 {
-                    if (entry.oData.Equals((object)desired))
+                    if (entry.oData.Equals(desired))
                     {
                         key = entry.key;
                         return true;
@@ -121,8 +121,8 @@ namespace Microsoft.Iris.Render.Common
             {
                 int length = this.m_entryList.Length;
                 entryArray = new SmartMap<T>.Entry[length + 1];
-                Array.Copy((Array)this.m_entryList, (Array)entryArray, slotIndex);
-                Array.Copy((Array)this.m_entryList, slotIndex, (Array)entryArray, slotIndex + 1, length - slotIndex);
+                Array.Copy(m_entryList, entryArray, slotIndex);
+                Array.Copy(m_entryList, slotIndex, entryArray, slotIndex + 1, length - slotIndex);
             }
             this.m_entryList = entryArray;
             this.m_entryList[slotIndex].key = key;
@@ -135,12 +135,12 @@ namespace Microsoft.Iris.Render.Common
             if (length > 0)
             {
                 SmartMap<T>.Entry[] entryArray = new SmartMap<T>.Entry[length - 1];
-                Array.Copy((Array)this.m_entryList, (Array)entryArray, slotIndex);
-                Array.Copy((Array)this.m_entryList, slotIndex + 1, (Array)entryArray, slotIndex, length - (slotIndex + 1));
+                Array.Copy(m_entryList, entryArray, slotIndex);
+                Array.Copy(m_entryList, slotIndex + 1, entryArray, slotIndex, length - (slotIndex + 1));
                 this.m_entryList = entryArray;
             }
             else
-                this.m_entryList = (SmartMap<T>.Entry[])null;
+                this.m_entryList = null;
         }
 
         private struct Entry

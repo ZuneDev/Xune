@@ -20,7 +20,7 @@ namespace Microsoft.Iris.Render
           AnimationInput value,
           AnimationInterpolation interpolation)
         {
-            Debug2.Validate((double)time >= 0.0, typeof(ArgumentException), "'time' must not be negative");
+            Debug2.Validate(time >= 0.0, typeof(ArgumentException), "'time' must not be negative");
             Debug2.Validate(value != null, typeof(ArgumentNullException), nameof(value));
             Debug2.Validate(interpolation != null, typeof(ArgumentNullException), nameof(interpolation));
             this.m_time = time;

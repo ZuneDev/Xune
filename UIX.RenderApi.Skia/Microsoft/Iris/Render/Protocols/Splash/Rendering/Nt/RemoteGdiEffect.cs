@@ -25,7 +25,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             RenderPort port = _priv_protocolInstance.Port;
             RENDERHANDLE effectClassHandle = _priv_protocolInstance.GdiEffect_ClassHandle;
             RemoteGdiEffect remoteGdiEffect = new RemoteGdiEffect(port, _priv_owner);
-            port.CreateRemoteObject(effectClassHandle, remoteGdiEffect.m_renderHandle, (Message*)null);
+            port.CreateRemoteObject(effectClassHandle, remoteGdiEffect.m_renderHandle, null);
             return remoteGdiEffect;
         }
 
@@ -44,7 +44,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             msg8SetTypePtr->nType = nType;
             msg8SetTypePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg8SetTypePtr, ref RemoteGdiEffect.s_priv_ByteOrder_Msg8_SetType, typeof(RemoteGdiEffect.Msg8_SetType), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg8SetTypePtr, ref s_priv_ByteOrder_Msg8_SetType, typeof(RemoteGdiEffect.Msg8_SetType), 0, 0);
             _priv_pmsgUse = (Message*)msg8SetTypePtr;
         }
 

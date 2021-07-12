@@ -32,7 +32,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             msg22CreatePtr->_priv_msgid = 22U;
             msg22CreatePtr->_priv_idObjectSubject = remoteGdiSprite.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteGdiSprite.s_priv_ByteOrder_Msg22_Create, typeof(RemoteGdiSprite.Msg22_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg22_Create, typeof(RemoteGdiSprite.Msg22_Create), 0, 0);
             port.CreateRemoteObject(spriteClassHandle, remoteGdiSprite.m_renderHandle, (Message*)msg22CreatePtr);
             return remoteGdiSprite;
         }

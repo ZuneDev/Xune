@@ -37,7 +37,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             setBackgroundColorPtr->clrBack = clrBack;
             setBackgroundColorPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setBackgroundColorPtr, ref RemoteWindow.s_priv_ByteOrder_Msg0_SetBackgroundColor, typeof(RemoteWindow.Msg0_SetBackgroundColor), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setBackgroundColorPtr, ref s_priv_ByteOrder_Msg0_SetBackgroundColor, typeof(RemoteWindow.Msg0_SetBackgroundColor), 0, 0);
             _priv_pmsgUse = (Message*)setBackgroundColorPtr;
         }
 
@@ -64,7 +64,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             outlineMarkedColorPtr->clr = clr;
             outlineMarkedColorPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)outlineMarkedColorPtr, ref RemoteWindow.s_priv_ByteOrder_Msg1_SetOutlineMarkedColor, typeof(RemoteWindow.Msg1_SetOutlineMarkedColor), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)outlineMarkedColorPtr, ref s_priv_ByteOrder_Msg1_SetOutlineMarkedColor, typeof(RemoteWindow.Msg1_SetOutlineMarkedColor), 0, 0);
             _priv_pmsgUse = (Message*)outlineMarkedColorPtr;
         }
 
@@ -91,7 +91,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             setOutlineAllColorPtr->clr = clr;
             setOutlineAllColorPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setOutlineAllColorPtr, ref RemoteWindow.s_priv_ByteOrder_Msg2_SetOutlineAllColor, typeof(RemoteWindow.Msg2_SetOutlineAllColor), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setOutlineAllColorPtr, ref s_priv_ByteOrder_Msg2_SetOutlineAllColor, typeof(RemoteWindow.Msg2_SetOutlineAllColor), 0, 0);
             _priv_pmsgUse = (Message*)setOutlineAllColorPtr;
         }
 
@@ -120,7 +120,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg3ChangeDataBitsPtr->nMask = nMask;
             msg3ChangeDataBitsPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg3ChangeDataBitsPtr, ref RemoteWindow.s_priv_ByteOrder_Msg3_ChangeDataBits, typeof(RemoteWindow.Msg3_ChangeDataBits), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg3ChangeDataBitsPtr, ref s_priv_ByteOrder_Msg3_ChangeDataBits, typeof(RemoteWindow.Msg3_ChangeDataBits), 0, 0);
             _priv_pmsgUse = (Message*)msg3ChangeDataBitsPtr;
         }
 
@@ -149,7 +149,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg5SetRootPtr->visRoot = visRoot != null ? visRoot.RenderHandle : RENDERHANDLE.NULL;
             msg5SetRootPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg5SetRootPtr, ref RemoteWindow.s_priv_ByteOrder_Msg5_SetRoot, typeof(RemoteWindow.Msg5_SetRoot), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg5SetRootPtr, ref s_priv_ByteOrder_Msg5_SetRoot, typeof(RemoteWindow.Msg5_SetRoot), 0, 0);
             _priv_pmsgUse = (Message*)msg5SetRootPtr;
         }
 

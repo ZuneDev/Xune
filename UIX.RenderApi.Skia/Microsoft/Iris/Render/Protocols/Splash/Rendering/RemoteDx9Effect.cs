@@ -25,7 +25,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RenderPort port = _priv_protocolInstance.Port;
             RENDERHANDLE effectClassHandle = _priv_protocolInstance.Dx9Effect_ClassHandle;
             RemoteDx9Effect remoteDx9Effect = new RemoteDx9Effect(port, _priv_owner);
-            port.CreateRemoteObject(effectClassHandle, remoteDx9Effect.m_renderHandle, (Message*)null);
+            port.CreateRemoteObject(effectClassHandle, remoteDx9Effect.m_renderHandle, null);
             return remoteDx9Effect;
         }
 
@@ -46,7 +46,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             loadEffectResourcePtr->effectResource = effectResource != null ? effectResource.RenderHandle : RENDERHANDLE.NULL;
             loadEffectResourcePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)loadEffectResourcePtr, ref RemoteDx9Effect.s_priv_ByteOrder_Msg8_LoadEffectResource, typeof(RemoteDx9Effect.Msg8_LoadEffectResource), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)loadEffectResourcePtr, ref s_priv_ByteOrder_Msg8_LoadEffectResource, typeof(RemoteDx9Effect.Msg8_LoadEffectResource), 0, 0);
             _priv_pmsgUse = (Message*)loadEffectResourcePtr;
         }
 

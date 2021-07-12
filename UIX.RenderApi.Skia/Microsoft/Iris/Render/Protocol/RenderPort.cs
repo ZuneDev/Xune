@@ -82,7 +82,7 @@ namespace Microsoft.Iris.Render.Protocol
             this._layoutOfRenderHandles = layout;
             this._handleTable = new HandleTable(this, this._layoutOfRenderHandles);
             this._defaultGroupId = this.AllocHandleGroup(false);
-            this._rootHandle = this.AllocHandle((IRenderHandleOwner)this);
+            this._rootHandle = this.AllocHandle(this);
             if (idGroup != RENDERGROUP.NULL)
             {
                 this.AllocHandleGroupWithId(idGroup);
@@ -110,20 +110,20 @@ namespace Microsoft.Iris.Render.Protocol
 
         public void Dispose()
         {
-            this.PingReply = (EventHandler)null;
+            this.PingReply = null;
             this.DisposeObjectMaps();
             if (this._channel != null)
             {
                 this._channel.Dispose();
-                this._channel = (IChannel)null;
+                this._channel = null;
             }
             if (this._spareHeapCache == null)
                 return;
             if (this._currentMessageHeap != null)
                 this.ReleaseHeap(this._currentMessageHeap);
-            this._currentMessageHeap = (MessageHeap)null;
+            this._currentMessageHeap = null;
             this._spareHeapCache.Dispose();
-            this._spareHeapCache = (ObjectCache)null;
+            this._spareHeapCache = null;
         }
 
         public void DisposeObjectMaps()
@@ -131,7 +131,7 @@ namespace Microsoft.Iris.Render.Protocol
             if (this._handleTable == null)
                 return;
             this._handleTable.Dispose();
-            this._handleTable = (HandleTable)null;
+            this._handleTable = null;
         }
 
         public MessagingSession Session => this._session;
@@ -154,7 +154,7 @@ namespace Microsoft.Iris.Render.Protocol
 
         public ProtocolInstance LookUpProtocol(string name)
         {
-            ProtocolInstance protocolInstance = (ProtocolInstance)null;
+            ProtocolInstance protocolInstance = null;
             foreach (ProtocolInstance protocol in this._protocols)
             {
                 if (protocol.Name == name)
@@ -165,8 +165,8 @@ namespace Microsoft.Iris.Render.Protocol
 
         internal void BindProtocol(ProtocolInstance protocol)
         {
-            Debug2.Validate(this.LookUpProtocol(protocol.Name) == null, typeof(InvalidOperationException), (object)nameof(protocol), (object)"protocol already bound");
-            this._protocols.Add((object)protocol);
+            Debug2.Validate(this.LookUpProtocol(protocol.Name) == null, typeof(InvalidOperationException), nameof(protocol), "protocol already bound");
+            this._protocols.Add(protocol);
             if (this._channel == null || !this._channel.IsConnected)
                 return;
             protocol.OnConnect();
@@ -176,7 +176,7 @@ namespace Microsoft.Iris.Render.Protocol
         {
             if (className.Equals("Splash::Messaging::Broker"))
                 return this._rootHandle;
-            RENDERHANDLE idObjectClass = this.AllocHandle((IRenderHandleOwner)this);
+            RENDERHANDLE idObjectClass = this.AllocHandle(this);
             RemoteBroker.SendCreateClass(this._protocolMessaging, className, idObjectClass);
             return idObjectClass;
         }
@@ -189,7 +189,7 @@ namespace Microsoft.Iris.Render.Protocol
             RemoteBroker.SendCreateObject(this._protocolMessaging, classCreate, hNewObject, pmsgConstructor);
         }
 
-        internal unsafe void SendLocalCallbackMessage(Message* pmsgCallback) => Microsoft.Iris.Render.Protocols.Splash.Messaging.RemoteContext.SendForwardMessage(this._protocolMessaging, this._session.LocalContext, pmsgCallback);
+        internal unsafe void SendLocalCallbackMessage(Message* pmsgCallback) => Protocols.Splash.Messaging.RemoteContext.SendForwardMessage(this._protocolMessaging, this._session.LocalContext, pmsgCallback);
 
         internal void LinkContext(ContextID idContextExisting, ContextID idContextAlias) => RemoteContextRelay.SendLinkContext(this._protocolMessaging, idContextExisting, idContextAlias);
 
@@ -220,7 +220,7 @@ namespace Microsoft.Iris.Render.Protocol
                 idContextSrc = this._session.LocalContext,
                 idContextDest = this._idRemoteContext,
                 idBuffer = idRemoteBuffer,
-                nFlags = (EngineApi.BufferFlags)0,
+                nFlags = 0,
                 cbSizeBuffer = cbSize
             }, pvData));
         }
@@ -252,7 +252,7 @@ namespace Microsoft.Iris.Render.Protocol
                 idBuffer = RENDERHANDLE.NULL,
                 nFlags = EngineApi.BufferFlags.CopyData,
                 cbSizeBuffer = src
-            }, (void*)pmsg));
+            }, pmsg));
         }
 
         private void UpdateTraffic(uint uControl, uint uData)
@@ -264,7 +264,7 @@ namespace Microsoft.Iris.Render.Protocol
             {
                 if (this._fPendingTrafficSummary || !this.Session.IsConnected)
                     return;
-                this.Session.DeferredInvoke((Delegate)this._deferredTrafficUpdate, (object)null, DeferredInvokePriority.Idle, RenderPort.s_timeTrafficWindow);
+                this.Session.DeferredInvoke(_deferredTrafficUpdate, null, DeferredInvokePriority.Idle, s_timeTrafficWindow);
                 this._fPendingTrafficSummary = true;
             }
             else
@@ -275,9 +275,9 @@ namespace Microsoft.Iris.Render.Protocol
         {
             if (!this._fPendingTrafficSummary)
                 return;
-            if (DateTime.UtcNow - this._dtRecentTrafficTime < RenderPort.s_timeTrafficWindow)
+            if (DateTime.UtcNow - this._dtRecentTrafficTime < s_timeTrafficWindow)
             {
-                this.Session.DeferredInvoke((Delegate)this._deferredTrafficUpdate, (object)null, DeferredInvokePriority.Idle, this._dtRecentTrafficTime + RenderPort.s_timeTrafficWindow - DateTime.UtcNow);
+                this.Session.DeferredInvoke(_deferredTrafficUpdate, null, DeferredInvokePriority.Idle, this._dtRecentTrafficTime + s_timeTrafficWindow - DateTime.UtcNow);
             }
             else
             {
@@ -288,9 +288,9 @@ namespace Microsoft.Iris.Render.Protocol
 
         private void TrafficUpdateWorker()
         {
-            this._ulOverallControlTraffic += (ulong)this._uRecentControlTraffic;
-            this._ulOverallDataTraffic += (ulong)this._uRecentDataTraffic;
-            this._ulOverallTotalTraffic += (ulong)(this._uRecentControlTraffic + this._uRecentDataTraffic);
+            this._ulOverallControlTraffic += _uRecentControlTraffic;
+            this._ulOverallDataTraffic += _uRecentDataTraffic;
+            this._ulOverallTotalTraffic += this._uRecentControlTraffic + this._uRecentDataTraffic;
             Debug2.IsCategoryEnabled(DebugCategory.Protocol, 1);
             this._uRecentControlTraffic = 0U;
             this._uRecentDataTraffic = 0U;
@@ -341,7 +341,7 @@ namespace Microsoft.Iris.Render.Protocol
                     return;
                 if (this._channel != null && this._handleTable.GetGroup(handle) == this._defaultGroupId)
                 {
-                    this._handleTable.SetOwner(handle, (IRenderHandleOwner)null);
+                    this._handleTable.SetOwner(handle, null);
                     this.AddPendingDelete(handle);
                     RemoteBroker.SendDestroyObject(this._protocolMessaging, handle);
                 }
@@ -349,7 +349,7 @@ namespace Microsoft.Iris.Render.Protocol
                     this._handleTable.Free(handle);
             }
             else
-                this.Session.DeferredInvoke((Delegate)this._deferredObjectReleaseWorker, (object)handle, DeferredInvokePriority.High);
+                this.Session.DeferredInvoke(_deferredObjectReleaseWorker, handle, DeferredInvokePriority.High);
         }
 
         public void CancelAllocHandle(RENDERHANDLE handle)
@@ -363,7 +363,7 @@ namespace Microsoft.Iris.Render.Protocol
 
         public IRenderHandleOwner TryGetProxyOwner(RENDERHANDLE handle)
         {
-            IRenderHandleOwner renderHandleOwner = (IRenderHandleOwner)null;
+            IRenderHandleOwner renderHandleOwner = null;
             if (this._groupProxies != null)
             {
                 RENDERGROUP group = this._handleTable.GetGroup(handle);
@@ -392,7 +392,7 @@ namespace Microsoft.Iris.Render.Protocol
         {
             RENDERGROUP handle = this._handleTable.AllocGroup();
             if (this._channel != null)
-                Microsoft.Iris.Render.Protocols.Splash.Messaging.RemoteContext.SendCreateGroup(this._protocolMessaging, (int)RENDERGROUP.ToUInt32(handle), this._session.LocalContext);
+                Protocols.Splash.Messaging.RemoteContext.SendCreateGroup(this._protocolMessaging, (int)RENDERGROUP.ToUInt32(handle), this._session.LocalContext);
             else if (failIfNotConnected)
                 Debug2.Throw(false, "Not connected to renderer");
             return handle;
@@ -407,32 +407,32 @@ namespace Microsoft.Iris.Render.Protocol
                 if (this._channel != null)
                 {
                     this.AddPendingGroupDelete(group);
-                    Microsoft.Iris.Render.Protocols.Splash.Messaging.RemoteContext.SendDestroyGroup(this._protocolMessaging, (int)RENDERGROUP.ToUInt32(group));
+                    Protocols.Splash.Messaging.RemoteContext.SendDestroyGroup(this._protocolMessaging, (int)RENDERGROUP.ToUInt32(group));
                 }
                 else
                     this._handleTable.FreeGroup(group);
             }
             else
-                this.Session.DeferredInvoke((Delegate)this._deferredGroupReleaseWorker, (object)group, DeferredInvokePriority.High);
+                this.Session.DeferredInvoke(_deferredGroupReleaseWorker, group, DeferredInvokePriority.High);
         }
 
         public void RegisterGroupProxy(RENDERGROUP group, IRenderHandleOwner proxy)
         {
             if (this._groupProxies == null)
                 this._groupProxies = new Map<RENDERGROUP, WeakReference>();
-            this._groupProxies[group] = new WeakReference((object)proxy);
+            this._groupProxies[group] = new WeakReference(proxy);
         }
 
         public void RevokeGroupProxy(RENDERGROUP group)
         {
             if (this._groupProxies == null)
                 return;
-            this._groupProxies[group] = (WeakReference)null;
+            this._groupProxies[group] = null;
         }
 
         public IRenderHandleOwner GetGroupProxy(RENDERGROUP group)
         {
-            IRenderHandleOwner renderHandleOwner = (IRenderHandleOwner)null;
+            IRenderHandleOwner renderHandleOwner = null;
             if (this._groupProxies != null)
             {
                 WeakReference groupProxy = this._groupProxies[group];
@@ -451,16 +451,16 @@ namespace Microsoft.Iris.Render.Protocol
         public void ReleaseHeap(MessageHeap heap)
         {
             if (this.Session.IsOwningThread())
-                this.DeferredHeapReleaseWorker((object)heap);
+                this.DeferredHeapReleaseWorker(heap);
             else if (this.Session.OwningThread != null)
-                this.Session.DeferredInvoke((Delegate)this._deferredHeapReleaseWorker, (object)heap, DeferredInvokePriority.High);
+                this.Session.DeferredInvoke(_deferredHeapReleaseWorker, heap, DeferredInvokePriority.High);
             else
                 heap.Dispose();
         }
 
         private unsafe void StoreMessageEntry(Message* pMethodMsg)
         {
-            MessageHeap.Block block = this._currentMessageHeap.LookupBlock((void*)pMethodMsg);
+            MessageHeap.Block block = this._currentMessageHeap.LookupBlock(pMethodMsg);
             Debug2.Throw((IntPtr)block.data != IntPtr.Zero, "message should be in current message heap");
             uint num = (uint)((ulong)((sbyte*)pMethodMsg - (sbyte*)block.data) - (ulong)sizeof(MessageBatchEntry));
             if ((IntPtr)this._lastBatchEntry != IntPtr.Zero && (int)this._lastBatchBlockId == (int)block.id)
@@ -473,7 +473,7 @@ namespace Microsoft.Iris.Render.Protocol
             BatchCallback populateCallback = this._batchPopulateCallback;
             if (populateCallback == null)
                 return;
-            this._batchPopulateCallback = (BatchCallback)null;
+            this._batchPopulateCallback = null;
             populateCallback();
         }
 
@@ -506,18 +506,18 @@ namespace Microsoft.Iris.Render.Protocol
                             RENDERHANDLE idRemoteBuffer = RENDERHANDLE.NULL;
                             --blockCount;
                             if (blockCount > 0)
-                                idRemoteBuffer = this.AllocHandle((IRenderHandleOwner)this);
+                                idRemoteBuffer = this.AllocHandle(this);
                             data->idPredicateBuffer = renderhandle;
                             if (this.ForeignByteOrder)
-                                RenderPort.SwapBatchListByteOrder(data);
+                                SwapBatchListByteOrder(data);
                             num += current.size;
                             this.SendBatchBuffer(current.data, current.size, idRemoteBuffer);
                             renderhandle = idRemoteBuffer;
                         }
-                        this._currentMessageHeap = (MessageHeap)null;
-                        this._pendingBatchDeletes = (RENDERHANDLE[])null;
+                        this._currentMessageHeap = null;
+                        this._pendingBatchDeletes = null;
                         this._pendingBatchDeleteSlot = 0U;
-                        this._pendingBatchGroupDeletes = (RENDERGROUP[])null;
+                        this._pendingBatchGroupDeletes = null;
                         this._pendingBatchGroupDeleteSlot = 0U;
                     }
                     finally
@@ -526,7 +526,7 @@ namespace Microsoft.Iris.Render.Protocol
                         {
                             this.DequeuePendingBatch(nextBatchId, true);
                             this.ReleaseHeap(this._currentMessageHeap);
-                            this._currentMessageHeap = (MessageHeap)null;
+                            this._currentMessageHeap = null;
                         }
                     }
                 }
@@ -535,7 +535,7 @@ namespace Microsoft.Iris.Render.Protocol
                     if (this._currentMessageHeap != null)
                     {
                         this.ReleaseHeap(this._currentMessageHeap);
-                        this._currentMessageHeap = (MessageHeap)null;
+                        this._currentMessageHeap = null;
                     }
                     if (deliveryCallback == null)
                         return;
@@ -544,9 +544,9 @@ namespace Microsoft.Iris.Render.Protocol
             }
             finally
             {
-                this._currentMessageHeap = (MessageHeap)null;
-                this._batchPopulateCallback = (BatchCallback)null;
-                this._lastBatchEntry = (MessageBatchEntry*)null;
+                this._currentMessageHeap = null;
+                this._batchPopulateCallback = null;
+                this._lastBatchEntry = null;
                 this._lastBatchBlockId = 0U;
                 this._uBatchedMessages = 0U;
             }
@@ -556,12 +556,12 @@ namespace Microsoft.Iris.Render.Protocol
         {
             byte* pMem1 = (byte*)pHeader;
             uint num = pHeader->uOffsetFirstEntry;
-            MarshalHelper.SwapByteOrder(pMem1, ref RenderPort.s_ByteOrder_MessageBatchHeader, typeof(MessageBatchHeader), 0, 0);
+            MarshalHelper.SwapByteOrder(pMem1, ref s_ByteOrder_MessageBatchHeader, typeof(MessageBatchHeader), 0, 0);
             while (num != 0U)
             {
                 byte* pMem2 = pMem1 + (int)num;
                 num = ((MessageBatchEntry*)pMem2)->uOffsetNextEntry;
-                MarshalHelper.SwapByteOrder(pMem2, ref RenderPort.s_ByteOrder_MessageBatchEntry, typeof(MessageBatchEntry), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem2, ref s_ByteOrder_MessageBatchEntry, typeof(MessageBatchEntry), 0, 0);
             }
         }
 
@@ -569,7 +569,7 @@ namespace Microsoft.Iris.Render.Protocol
 
         private void DeferredGroupReleaseWorker(object args) => this.FreeHandleGroup((RENDERGROUP)args);
 
-        private void DeferredHeapReleaseWorker(object args) => this._spareHeapCache.Push((object)(MessageHeap)args);
+        private void DeferredHeapReleaseWorker(object args) => this._spareHeapCache.Push((MessageHeap)args);
 
         private object HeapCacheCallback(ObjectCache.Operation operation, object data)
         {
@@ -584,27 +584,27 @@ namespace Microsoft.Iris.Render.Protocol
                 case ObjectCache.Operation.Free:
                     this._activeHeaps.Remove(key);
                     key.Dispose();
-                    key = (MessageHeap)null;
+                    key = null;
                     break;
                 case ObjectCache.Operation.Freeze:
                     Debug2.Validate(key != null, typeof(ArgumentNullException), nameof(data));
                     key.Reset();
                     break;
             }
-            return (object)key;
+            return key;
         }
 
         internal unsafe void ProcessMessageBuffer(EngineApi.BufferInfo* pBufferInfo, void* pvBufferData)
         {
             if (this.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)pvBufferData, ref RenderPort.s_ByteOrder_CallbackMessage, typeof(CallbackMessage), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)pvBufferData, ref s_ByteOrder_CallbackMessage, typeof(CallbackMessage), 0, 0);
             CallbackMessage* message = (CallbackMessage*)pvBufferData;
             this.DispatchCallbackMessage(RENDERHANDLE.ToUInt32(message->idObjectSubject), message);
         }
 
         internal RENDERHANDLE RegisterCallback(PortCallback callback, out uint idCallback)
         {
-            idCallback = (uint)this._callbackHandlers.Add((object)callback);
+            idCallback = (uint)this._callbackHandlers.Add(callback);
             return RENDERHANDLE.FromUInt32(idCallback + 2U);
         }
 
@@ -616,7 +616,7 @@ namespace Microsoft.Iris.Render.Protocol
             PortCallback callbackHandler = (PortCallback)this._callbackHandlers[(int)idCallback];
             if (callbackHandler == null)
                 return;
-            IRenderHandleOwner owner = (IRenderHandleOwner)this;
+            IRenderHandleOwner owner = this;
             if (message->hTarget != RENDERHANDLE.NULL)
             {
                 if (this._handleTable == null)
@@ -632,7 +632,7 @@ namespace Microsoft.Iris.Render.Protocol
         {
             if (this.PingReply == null)
                 return;
-            this.PingReply((object)this, EventArgs.Empty);
+            this.PingReply(this, EventArgs.Empty);
         }
 
         void IRenderPortCallback.OnBatchProcessed(
@@ -662,7 +662,7 @@ namespace Microsoft.Iris.Render.Protocol
                     num2 = 16U;
                 RENDERHANDLE[] renderhandleArray = new RENDERHANDLE[(IntPtr)num2];
                 if (num1 > 0U)
-                    Array.Copy((Array)this._pendingBatchDeletes, (Array)renderhandleArray, this._pendingBatchDeletes.Length);
+                    Array.Copy(_pendingBatchDeletes, renderhandleArray, this._pendingBatchDeletes.Length);
                 this._pendingBatchDeletes = renderhandleArray;
             }
             this._pendingBatchDeletes[(IntPtr)this._pendingBatchDeleteSlot] = handle;
@@ -692,7 +692,7 @@ namespace Microsoft.Iris.Render.Protocol
                     num2 = 16U;
                 RENDERGROUP[] rendergroupArray = new RENDERGROUP[(IntPtr)num2];
                 if (num1 > 0U)
-                    Array.Copy((Array)this._pendingBatchGroupDeletes, (Array)rendergroupArray, this._pendingBatchGroupDeletes.Length);
+                    Array.Copy(_pendingBatchGroupDeletes, rendergroupArray, this._pendingBatchGroupDeletes.Length);
                 this._pendingBatchGroupDeletes = rendergroupArray;
             }
             this._pendingBatchGroupDeletes[(IntPtr)this._pendingBatchGroupDeleteSlot] = group;
@@ -717,7 +717,7 @@ namespace Microsoft.Iris.Render.Protocol
             {
                 batchSendInfo = this._freeBatchSendInfos;
                 this._freeBatchSendInfos = batchSendInfo.next;
-                batchSendInfo.next = (RenderPort.BatchSendInfo)null;
+                batchSendInfo.next = null;
                 --this._numFreeBatchSendInfos;
             }
             else
@@ -751,7 +751,7 @@ namespace Microsoft.Iris.Render.Protocol
 
         private RenderPort.BatchSendInfo DequeuePendingBatch(uint batchID, bool fFreeInfo)
         {
-            RenderPort.BatchSendInfo batchSendInfo = (RenderPort.BatchSendInfo)null;
+            RenderPort.BatchSendInfo batchSendInfo = null;
             RenderPort.BatchSendInfo info;
             for (info = this._sentBatchesHead; info != null && (int)info.batchID != (int)batchID; info = info.next)
                 batchSendInfo = info;
@@ -763,17 +763,17 @@ namespace Microsoft.Iris.Render.Protocol
                     this._sentBatchesHead = info.next;
                 else
                     batchSendInfo.next = info.next;
-                info.next = (RenderPort.BatchSendInfo)null;
+                info.next = null;
                 if (fFreeInfo)
                 {
                     this.FreeBatchSendInfo(info);
-                    info = (RenderPort.BatchSendInfo)null;
+                    info = null;
                 }
             }
             return info;
         }
 
-        public static object SyncLock => RenderPort.s_SyncLock;
+        public static object SyncLock => s_SyncLock;
 
         private class BatchSendInfo
         {
@@ -787,11 +787,11 @@ namespace Microsoft.Iris.Render.Protocol
             public void Reset()
             {
                 this.batchID = 0U;
-                this.heap = (MessageHeap)null;
-                this.pendingDeletes = (RENDERHANDLE[])null;
-                this.pendingGroupDeletes = (RENDERGROUP[])null;
-                this.deliveryCallback = (BatchCallback)null;
-                this.next = (RenderPort.BatchSendInfo)null;
+                this.heap = null;
+                this.pendingDeletes = null;
+                this.pendingGroupDeletes = null;
+                this.deliveryCallback = null;
+                this.next = null;
             }
         }
     }

@@ -42,11 +42,11 @@ namespace Microsoft.Iris.Render
           : this()
         {
             Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
-            Debug2.Validate((double)flDecay >= 0.0 && (double)flDecay <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Decay is [0,1]");
-            Debug2.Validate((double)flDensity > 0.0 && (double)flDensity <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Density is (0..1]");
-            Debug2.Validate((double)flFallOff >= 0.0 && (double)flFallOff <= 2.0, typeof(ArgumentOutOfRangeException), "Valid range for FallOff is [0..2])");
-            Debug2.Validate((double)flIntensity >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Intensity is [0..)");
-            Debug2.Validate((double)flWeight >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Weight is [0..)");
+            Debug2.Validate(flDecay >= 0.0 && flDecay <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Decay is [0,1]");
+            Debug2.Validate(flDensity > 0.0 && flDensity <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Density is (0..1]");
+            Debug2.Validate(flFallOff >= 0.0 && flFallOff <= 2.0, typeof(ArgumentOutOfRangeException), "Valid range for FallOff is [0..2])");
+            Debug2.Validate(flIntensity >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Intensity is [0..)");
+            Debug2.Validate(flWeight >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Weight is [0..)");
             this.m_stName = stName;
             this.m_vPosition = vPosition;
             this.m_flDecay = flDecay;
@@ -71,7 +71,7 @@ namespace Microsoft.Iris.Render
             get => this.m_flDecay;
             set
             {
-                Debug2.Validate((double)value >= 0.0 && (double)value <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Decay is [0,1]");
+                Debug2.Validate(value >= 0.0 && value <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Decay is [0,1]");
                 this.m_flDecay = value;
             }
         }
@@ -83,7 +83,7 @@ namespace Microsoft.Iris.Render
             get => this.m_flDensity;
             set
             {
-                Debug2.Validate((double)value > 0.0 && (double)value <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Density is (0..1]");
+                Debug2.Validate(value > 0.0 && value <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Density is (0..1]");
                 this.m_flDensity = value;
             }
         }
@@ -95,7 +95,7 @@ namespace Microsoft.Iris.Render
             get => this.m_flIntensity;
             set
             {
-                Debug2.Validate((double)value >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Intensity is [0..)");
+                Debug2.Validate(value >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Intensity is [0..)");
                 this.m_flIntensity = value;
             }
         }
@@ -107,7 +107,7 @@ namespace Microsoft.Iris.Render
             get => this.m_flFallOff;
             set
             {
-                Debug2.Validate((double)value >= 0.0 && (double)value <= 2.0, typeof(ArgumentOutOfRangeException), "Valid range for FallOff is [0..2])");
+                Debug2.Validate(value >= 0.0 && value <= 2.0, typeof(ArgumentOutOfRangeException), "Valid range for FallOff is [0..2])");
                 this.m_flFallOff = value;
             }
         }
@@ -119,7 +119,7 @@ namespace Microsoft.Iris.Render
             get => this.m_flWeight;
             set
             {
-                Debug2.Validate((double)value >= 0.0 && (double)value <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Weight is [0..)");
+                Debug2.Validate(value >= 0.0 && value <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for Weight is [0..)");
                 this.m_flWeight = value;
             }
         }
@@ -130,10 +130,10 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Position", (byte)16, ref this.m_nPositionID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Decay", (byte)8, ref this.m_nDecayID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Density", (byte)8, ref this.m_nDensityID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Intensity", (byte)8, ref this.m_nIntensityID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "FallOff", (byte)8, ref this.m_nFallOffID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Weight", (byte)8, ref this.m_nWeightID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Position", 16, ref this.m_nPositionID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Decay", 8, ref this.m_nDecayID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Density", 8, ref this.m_nDensityID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Intensity", 8, ref this.m_nIntensityID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "FallOff", 8, ref this.m_nFallOffID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Weight", 8, ref this.m_nWeightID, ref nNextUniqueID);
         }
 
-        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Position", EffectPropertyType.Vector3, (object)this.m_vPosition, this.m_nPositionID, dictProperties) && this.GenerateProperty("Decay", EffectPropertyType.Float, (object)this.m_flDecay, this.m_nDecayID, dictProperties) && (this.GenerateProperty("Density", EffectPropertyType.Float, (object)this.m_flDensity, this.m_nDensityID, dictProperties) && this.GenerateProperty("Intensity", EffectPropertyType.Float, (object)this.m_flIntensity, this.m_nIntensityID, dictProperties)) && this.GenerateProperty("FallOff", EffectPropertyType.Float, (object)this.m_flFallOff, this.m_nFallOffID, dictProperties) && this.GenerateProperty("Weight", EffectPropertyType.Float, (object)this.m_flWeight, this.m_nWeightID, dictProperties);
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Position", EffectPropertyType.Vector3, m_vPosition, this.m_nPositionID, dictProperties) && this.GenerateProperty("Decay", EffectPropertyType.Float, m_flDecay, this.m_nDecayID, dictProperties) && (this.GenerateProperty("Density", EffectPropertyType.Float, m_flDensity, this.m_nDensityID, dictProperties) && this.GenerateProperty("Intensity", EffectPropertyType.Float, m_flIntensity, this.m_nIntensityID, dictProperties)) && this.GenerateProperty("FallOff", EffectPropertyType.Float, m_flFallOff, this.m_nFallOffID, dictProperties) && this.GenerateProperty("Weight", EffectPropertyType.Float, m_flWeight, this.m_nWeightID, dictProperties);
 
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {

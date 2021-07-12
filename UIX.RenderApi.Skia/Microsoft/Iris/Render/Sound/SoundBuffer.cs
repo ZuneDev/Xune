@@ -35,7 +35,7 @@ namespace Microsoft.Iris.Render.Sound
             Debug2.Validate(soundData.SampleCount % soundData.ChannelCount == 0U, typeof(ArgumentException), "Insufficient sample data");
             this.m_device = device;
             this.m_soundData = soundData;
-            this.m_tracker = MessagingSession.Current.CreateDataBufferTracker((object)this);
+            this.m_tracker = MessagingSession.Current.CreateDataBufferTracker(this);
             this.m_remoteBuffer = this.CreateRemoteObject();
             this.LoadContent();
         }
@@ -51,10 +51,10 @@ namespace Microsoft.Iris.Render.Sound
                     if (this.m_remoteBuffer != null)
                         this.m_remoteBuffer.Dispose();
                 }
-                this.m_tracker = (DataBufferTracker)null;
-                this.m_soundData = (ISoundData)null;
-                this.m_device = (SoundDevice)null;
-                this.m_remoteBuffer = (RemoteSoundBuffer)null;
+                this.m_tracker = null;
+                this.m_soundData = null;
+                this.m_device = null;
+                this.m_remoteBuffer = null;
             }
             finally
             {
@@ -70,29 +70,29 @@ namespace Microsoft.Iris.Render.Sound
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteBuffer.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteBuffer = (RemoteSoundBuffer)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteBuffer = null;
 
         ISound ISoundBuffer.CreateSound(object objUser)
         {
             Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
             Microsoft.Iris.Render.Sound.Sound sound = new Microsoft.Iris.Render.Sound.Sound(this);
             sound.RegisterUsage(objUser);
-            return (ISound)sound;
+            return sound;
         }
 
         private RemoteSoundBuffer CreateRemoteObject()
         {
-            RemoteSoundBuffer remoteSoundBuffer = (RemoteSoundBuffer)null;
+            RemoteSoundBuffer remoteSoundBuffer = null;
             SoundHeader info;
-            info.wFormatTag = (ushort)1;
+            info.wFormatTag = 1;
             info.nChannels = (ushort)this.m_soundData.ChannelCount;
             info.nSamplesPerSec = this.m_soundData.SampleRate;
             info.nAvgBytesPerSec = this.m_soundData.SampleRate * (this.m_soundData.SampleSize / 8U) * this.m_soundData.ChannelCount;
             info.nBlockAlign = (ushort)(this.m_soundData.ChannelCount * (this.m_soundData.SampleSize / 8U));
             info.wBitsPerSample = (ushort)this.m_soundData.SampleSize;
-            info.cbExtraData = (ushort)0;
+            info.cbExtraData = 0;
             info.cbDataSize = this.m_soundData.SampleCount * (this.m_soundData.SampleSize / 8U);
-            RENDERHANDLE handle = this.m_device.Session.AllocateRenderHandle((IRenderHandleOwner)this);
+            RENDERHANDLE handle = this.m_device.Session.AllocateRenderHandle(this);
             try
             {
                 this.m_device.CreateRemoteSoundBuffer(handle, info, this.m_device.Session.RenderingProtocol.LocalSoundBufferCallbackHandle);
@@ -111,7 +111,7 @@ namespace Microsoft.Iris.Render.Sound
             if (this.m_contentLoaded)
                 return;
             IntPtr pData = this.m_soundData.AcquireContent();
-            DataBuffer dataBuffer = (DataBuffer)null;
+            DataBuffer dataBuffer = null;
             try
             {
                 uint cbSize = this.m_soundData.SampleCount * (this.m_soundData.SampleSize / 8U);
@@ -123,7 +123,7 @@ namespace Microsoft.Iris.Render.Sound
                     this.m_loadInfo.soundData = this.m_soundData;
                 }
                 ++this.m_loadInfo.loadCount;
-                this.m_tracker.Track(dataBuffer, new DataBufferTracker.CleanupEventHandler(SoundBuffer.OnDataBufferConsumed), (object)this.m_loadInfo);
+                this.m_tracker.Track(dataBuffer, new DataBufferTracker.CleanupEventHandler(OnDataBufferConsumed), m_loadInfo);
                 dataBuffer.Commit();
                 if (this.m_remoteBuffer.IsValid)
                     this.m_remoteBuffer.SendLoadSoundData(dataBuffer.RemoteStub);
@@ -143,7 +143,7 @@ namespace Microsoft.Iris.Render.Sound
             if (contextData.loadCount != 0)
                 return;
             contextData.soundData.ReleaseContent();
-            contextData.soundData = (ISoundData)null;
+            contextData.soundData = null;
         }
 
         void ISoundBufferCallback.OnSoundBufferLost(RENDERHANDLE target) => this.m_contentLoaded = false;

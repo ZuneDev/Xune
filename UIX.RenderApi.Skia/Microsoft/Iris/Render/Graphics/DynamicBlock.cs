@@ -49,13 +49,13 @@ namespace Microsoft.Iris.Render.Graphics
 
         public void Dispose()
         {
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
             this.Dispose(true);
         }
 
         private void Dispose(bool fInDispose)
         {
-            this.m_surface = (Surface)null;
+            this.m_surface = null;
             if (!fInDispose)
                 return;
             this.m_rowOwner.NotifyBlockDestroyed(this);
@@ -106,7 +106,7 @@ namespace Microsoft.Iris.Render.Graphics
                 case SurfacePoolAllocationResult.Requested:
                 case SurfacePoolAllocationResult.Immoveable:
                     remoteStub.SendRemapLocation(this.m_rcLocationPxl);
-                    alReloadContent.Add((object)surface);
+                    alReloadContent.Add(surface);
                     break;
             }
         }

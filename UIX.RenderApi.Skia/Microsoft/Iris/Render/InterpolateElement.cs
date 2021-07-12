@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render
             Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
             Debug2.Validate(effectInput1 != null, typeof(ArgumentNullException), nameof(effectInput1));
             Debug2.Validate(effectInput2 != null, typeof(ArgumentNullException), nameof(effectInput2));
-            Debug2.Validate((double)flValue >= 0.0 && (double)flValue <= 1.0, typeof(ArgumentOutOfRangeException), nameof(flValue));
+            Debug2.Validate(flValue >= 0.0 && flValue <= 1.0, typeof(ArgumentOutOfRangeException), nameof(flValue));
             this.m_stName = stName;
             this.m_effectInput1 = effectInput1;
             this.m_effectInput2 = effectInput2;
@@ -61,10 +61,10 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.m_effectInput1.PreProcessProperties(dictionary, ref nNextUniqueID) + this.m_effectInput2.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Value", (byte)8, ref this.m_nValueID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.m_effectInput1.PreProcessProperties(dictionary, ref nNextUniqueID) + this.m_effectInput2.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Value", 8, ref this.m_nValueID, ref nNextUniqueID);
         }
 
-        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.m_effectInput1.Process(dictProperties) && this.m_effectInput2.Process(dictProperties) && this.GenerateProperty("Value", EffectPropertyType.Float, (object)this.m_flValue, this.m_nValueID, dictProperties);
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.m_effectInput1.Process(dictProperties) && this.m_effectInput2.Process(dictProperties) && this.GenerateProperty("Value", EffectPropertyType.Float, m_flValue, this.m_nValueID, dictProperties);
 
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {

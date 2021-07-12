@@ -25,7 +25,7 @@ namespace Microsoft.Iris.Render.Graphics
             if (this.m_renderingQuality != GraphicsRenderingQuality.MinQuality)
             {
                 Dx9GraphicsDevice.PixelShaderProfileType pixelShaderProfile = (Dx9GraphicsDevice.PixelShaderProfileType)this.m_graphicsCaps.PixelShaderProfile;
-                if ((byte)this.m_graphicsCaps.VertexShaderProfile < (byte)1 || pixelShaderProfile < Dx9GraphicsDevice.PixelShaderProfileType.PS_2_0)
+                if ((byte)this.m_graphicsCaps.VertexShaderProfile < 1 || pixelShaderProfile < PixelShaderProfileType.PS_2_0)
                     this.m_renderingQuality = GraphicsRenderingQuality.MinQuality;
             }
             this.m_sizeGutterPxl = new Size(1, 1);
@@ -39,7 +39,7 @@ namespace Microsoft.Iris.Render.Graphics
                 if (!fInDispose || this.m_effectManager == null)
                     return;
                 this.m_effectManager.Dispose();
-                this.m_effectManager = (Dx9EffectManager)null;
+                this.m_effectManager = null;
             }
             finally
             {
@@ -103,7 +103,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         public override bool CanPlayAnimationType(AnimationInputType type) => true;
 
-        internal override EffectTemplate CreateEffectTemplate(string stName) => (EffectTemplate)new Dx9EffectTemplate(this.m_session, (GraphicsDevice)this, stName);
+        internal override EffectTemplate CreateEffectTemplate(string stName) => new Dx9EffectTemplate(this.m_session, this, stName);
 
         private enum PixelShaderProfileType : byte
         {

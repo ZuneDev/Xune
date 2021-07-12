@@ -17,15 +17,15 @@ namespace Microsoft.Iris.Render.Internal
         private GCHandle m_hndOwner;
 
         public ObjectTracker(RenderSession session, object objOwner)
-          : this(session, ObjectTracker.ThreadMode.Private, objOwner)
+          : this(session, ThreadMode.Private, objOwner)
         {
         }
 
         public ObjectTracker(RenderSession session, ObjectTracker.ThreadMode nMode, object objOwner)
         {
-            Debug2.Validate(session != null || nMode != ObjectTracker.ThreadMode.Private, typeof(ArgumentException), "must specify a session for private trackers");
-            Debug2.Validate(objOwner != null || nMode == ObjectTracker.ThreadMode.Master, typeof(ArgumentException), "must specify an owner (except mater tracker)");
-            if (nMode == ObjectTracker.ThreadMode.Private)
+            Debug2.Validate(session != null || nMode != ThreadMode.Private, typeof(ArgumentException), "must specify a session for private trackers");
+            Debug2.Validate(objOwner != null || nMode == ThreadMode.Master, typeof(ArgumentException), "must specify an owner (except mater tracker)");
+            if (nMode == ThreadMode.Private)
                 ObjectTrackerGroup.RegisterChildTracker(this);
             this.m_nMode = nMode;
             this.m_idxNextIdentity = 1;
@@ -47,7 +47,7 @@ namespace Microsoft.Iris.Render.Internal
         {
             get
             {
-                object obj = (object)null;
+                object obj = null;
                 if (this.m_hndOwner.IsAllocated)
                     obj = this.m_hndOwner.Target;
                 return obj;
@@ -60,12 +60,12 @@ namespace Microsoft.Iris.Render.Internal
             lock (this)
             {
                 num = this.m_idxNextIdentity++;
-                this.AddObject((object)num, o);
+                this.AddObject(num, o);
             }
             return num;
         }
 
-        public void RemoveObject(int nIdentity) => this.RemoveKey((object)nIdentity);
+        public void RemoveObject(int nIdentity) => this.RemoveKey(nIdentity);
 
         public object Find(int nIdentity) => this.Find((object)nIdentity);
 

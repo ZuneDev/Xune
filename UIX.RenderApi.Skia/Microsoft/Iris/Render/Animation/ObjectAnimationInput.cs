@@ -33,7 +33,7 @@ namespace Microsoft.Iris.Render.Animation
             Debug2.Validate(sourceAnimation is IAnimatableObject, typeof(ArgumentException), nameof(sourceAnimation));
             AnimationTypeMask sourceMask = AnimationTypeMask.FromString(sourceMaskSpec);
             this.m_object = (IAnimatableObject)sourceAnimation;
-            this.m_propertyName = Microsoft.Iris.Render.Animation.Animation.OutputProperty;
+            this.m_propertyName = Animation.OutputProperty;
             this.CommonCreate(this.m_object.GetPropertyType(this.m_propertyName), sourceMask);
         }
 
@@ -54,7 +54,7 @@ namespace Microsoft.Iris.Render.Animation
             bool flag = this.m_object.UsageCount == 1;
             this.m_object.UnregisterUsage(user);
             if (flag)
-                this.m_object = (IAnimatableObject)null;
+                this.m_object = null;
             base.UnregisterUsage(user);
         }
     }

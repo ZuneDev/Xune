@@ -14,14 +14,14 @@ namespace Microsoft.Iris.Render.Graphics
         {
             VariableInfo variableInfo = new VariableInfo()
             {
-                ID = (int)efoContrast.ContrastID,
+                ID = efoContrast.ContrastID,
                 Type = Dx9VariableType.Float,
                 IsDynamic = efoContrast.IsDynamicProperty("Contrast")
             };
             variableInfo.Name = variableInfo.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo.Type, efoContrast.Name) : effectBuilder.GenerateGlobalConstant(variableInfo.Type, efoContrast.Name);
-            variableInfo.DefaultValue = (object)efoContrast.Contrast;
+            variableInfo.DefaultValue = efoContrast.Contrast;
             effectBuilder.AddPropertyVariable(variableInfo);
-            effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        // apply the gain factor \r\n        {0}.rgb -= float3(0.5f, 0.5f, 0.5f)\r\n;        {0}.rgb *= float3({1}, {1}, {1});\r\n        {0}.rgb += float3(0.5f, 0.5f, 0.5f)\r\n;    }}\r\n", (object)effectBuilder.PixelShaderOutput, (object)variableInfo.Name));
+            effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        // apply the gain factor \r\n        {0}.rgb -= float3(0.5f, 0.5f, 0.5f)\r\n;        {0}.rgb *= float3({1}, {1}, {1});\r\n        {0}.rgb += float3(0.5f, 0.5f, 0.5f)\r\n;    }}\r\n", effectBuilder.PixelShaderOutput, variableInfo.Name));
         }
     }
 }

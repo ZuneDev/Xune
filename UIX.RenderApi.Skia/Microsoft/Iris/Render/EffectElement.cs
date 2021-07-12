@@ -41,7 +41,7 @@ namespace Microsoft.Iris.Render
 
         internal void GenerateClassCacheKey(byte nClass, byte nOperation, ByteBuilder cacheKey)
         {
-            cacheKey.AppendByte((byte)3);
+            cacheKey.AppendByte(3);
             cacheKey.AppendByte(nClass);
             cacheKey.AppendByte(nOperation);
         }
@@ -54,9 +54,9 @@ namespace Microsoft.Iris.Render
         {
             if (this.IsDynamicProperty(stProp))
                 return;
-            cacheKey.AppendByte((byte)5);
-            cacheKey.AppendByte((byte)3);
-            cacheKey.AppendByte((byte)9);
+            cacheKey.AppendByte(5);
+            cacheKey.AppendByte(3);
+            cacheKey.AppendByte(9);
             cacheKey.AppendByte(nPropertyId);
             cacheKey.AppendByte(nValue);
         }
@@ -69,9 +69,9 @@ namespace Microsoft.Iris.Render
         {
             if (this.IsDynamicProperty(stPropName))
                 return;
-            cacheKey.AppendByte((byte)8);
-            cacheKey.AppendByte((byte)3);
-            cacheKey.AppendByte((byte)0);
+            cacheKey.AppendByte(8);
+            cacheKey.AppendByte(3);
+            cacheKey.AppendByte(0);
             cacheKey.AppendByte(nPropertyId);
             cacheKey.AppendInt(nValue);
         }
@@ -84,9 +84,9 @@ namespace Microsoft.Iris.Render
         {
             if (this.IsDynamicProperty(stPropName))
                 return;
-            cacheKey.AppendByte((byte)8);
-            cacheKey.AppendByte((byte)3);
-            cacheKey.AppendByte((byte)1);
+            cacheKey.AppendByte(8);
+            cacheKey.AppendByte(3);
+            cacheKey.AppendByte(1);
             cacheKey.AppendByte(nPropertyId);
             cacheKey.AppendFloat(fValue);
         }
@@ -99,9 +99,9 @@ namespace Microsoft.Iris.Render
         {
             if (this.IsDynamicProperty(stPropName))
                 return;
-            cacheKey.AppendByte((byte)12);
-            cacheKey.AppendByte((byte)3);
-            cacheKey.AppendByte((byte)2);
+            cacheKey.AppendByte(12);
+            cacheKey.AppendByte(3);
+            cacheKey.AppendByte(2);
             cacheKey.AppendByte(nPropertyId);
             cacheKey.AppendVector(vValue);
         }
@@ -114,9 +114,9 @@ namespace Microsoft.Iris.Render
         {
             if (this.IsDynamicProperty(stPropName))
                 return;
-            cacheKey.AppendByte((byte)16);
-            cacheKey.AppendByte((byte)3);
-            cacheKey.AppendByte((byte)3);
+            cacheKey.AppendByte(16);
+            cacheKey.AppendByte(3);
+            cacheKey.AppendByte(3);
             cacheKey.AppendByte(nPropertyId);
             cacheKey.AppendVector(vValue);
         }
@@ -129,14 +129,14 @@ namespace Microsoft.Iris.Render
         {
             if (this.IsDynamicProperty(stPropName))
                 return;
-            cacheKey.AppendByte((byte)16);
-            cacheKey.AppendByte((byte)3);
-            cacheKey.AppendByte((byte)4);
+            cacheKey.AppendByte(16);
+            cacheKey.AppendByte(3);
+            cacheKey.AppendByte(4);
             cacheKey.AppendByte(nPropertyId);
             cacheKey.AppendVector(vValue);
         }
 
-        protected string GeneratePropertyPath(string stPropertyName) => string.Format((IFormatProvider)CultureInfo.InvariantCulture, "{0}.{1}", (object)this.m_stName, (object)stPropertyName);
+        protected string GeneratePropertyPath(string stPropertyName) => string.Format(CultureInfo.InvariantCulture, "{0}.{1}", m_stName, stPropertyName);
 
         internal bool GenerateProperty(
           string stName,
@@ -175,7 +175,7 @@ namespace Microsoft.Iris.Render
         {
             string propertyPath = this.GeneratePropertyPath(stProp);
             if (!dictionary.ContainsKey(propertyPath))
-                dictionary.Add(propertyPath, (EffectProperty)null);
+                dictionary.Add(propertyPath, null);
             this.MarkDynamicProperty(stProp);
         }
 
@@ -201,7 +201,7 @@ namespace Microsoft.Iris.Render
             if (this.VerifyDynamicProperty(dictionary, stProperty))
                 nPropertyId = nNextUniqueID++;
             else
-                num = (int)nPropSize;
+                num = nPropSize;
             return num;
         }
 

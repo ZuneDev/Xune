@@ -76,7 +76,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg43CreatePtr->_priv_ctxcb = port.Session.LocalContext;
             msg43CreatePtr->_priv_idObjectSubject = remoteAnimation.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteAnimation.s_priv_ByteOrder_Msg43_Create, typeof(RemoteAnimation.Msg43_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg43_Create, typeof(RemoteAnimation.Msg43_Create), 0, 0);
             port.CreateRemoteObject(animationClassHandle, remoteAnimation.m_renderHandle, (Message*)msg43CreatePtr);
             return remoteAnimation;
         }
@@ -94,7 +94,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0RemoveAllEventsPtr->_priv_msgid = 0U;
             msg0RemoveAllEventsPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0RemoveAllEventsPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg0_RemoveAllEvents, typeof(RemoteAnimation.Msg0_RemoveAllEvents), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0RemoveAllEventsPtr, ref s_priv_ByteOrder_Msg0_RemoveAllEvents, typeof(RemoteAnimation.Msg0_RemoveAllEvents), 0, 0);
             _priv_pmsgUse = (Message*)msg0RemoveAllEventsPtr;
         }
 
@@ -121,7 +121,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg1RemoveEventPtr->idEvent = idEvent;
             msg1RemoveEventPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1RemoveEventPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg1_RemoveEvent, typeof(RemoteAnimation.Msg1_RemoveEvent), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg1RemoveEventPtr, ref s_priv_ByteOrder_Msg1_RemoveEvent, typeof(RemoteAnimation.Msg1_RemoveEvent), 0, 0);
             _priv_pmsgUse = (Message*)msg1RemoveEventPtr;
         }
 
@@ -160,7 +160,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg2AddValueEventPtr->fAllowRepeat = fAllowRepeat ? uint.MaxValue : 0U;
             msg2AddValueEventPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg2AddValueEventPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg2_AddValueEvent, typeof(RemoteAnimation.Msg2_AddValueEvent), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg2AddValueEventPtr, ref s_priv_ByteOrder_Msg2_AddValueEvent, typeof(RemoteAnimation.Msg2_AddValueEvent), 0, 0);
             _priv_pmsgUse = (Message*)msg2AddValueEventPtr;
         }
 
@@ -206,7 +206,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             addProgressEventPtr->fAllowRepeat = fAllowRepeat ? uint.MaxValue : 0U;
             addProgressEventPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)addProgressEventPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg3_AddProgressEvent, typeof(RemoteAnimation.Msg3_AddProgressEvent), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)addProgressEventPtr, ref s_priv_ByteOrder_Msg3_AddProgressEvent, typeof(RemoteAnimation.Msg3_AddProgressEvent), 0, 0);
             _priv_pmsgUse = (Message*)addProgressEventPtr;
         }
 
@@ -252,7 +252,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg4AddTimeEventPtr->fAllowRepeat = fAllowRepeat ? uint.MaxValue : 0U;
             msg4AddTimeEventPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg4AddTimeEventPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg4_AddTimeEvent, typeof(RemoteAnimation.Msg4_AddTimeEvent), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg4AddTimeEventPtr, ref s_priv_ByteOrder_Msg4_AddTimeEvent, typeof(RemoteAnimation.Msg4_AddTimeEvent), 0, 0);
             _priv_pmsgUse = (Message*)msg4AddTimeEventPtr;
         }
 
@@ -298,7 +298,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg5AddStageEventPtr->fAllowRepeat = fAllowRepeat ? uint.MaxValue : 0U;
             msg5AddStageEventPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg5AddStageEventPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg5_AddStageEvent, typeof(RemoteAnimation.Msg5_AddStageEvent), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg5AddStageEventPtr, ref s_priv_ByteOrder_Msg5_AddStageEvent, typeof(RemoteAnimation.Msg5_AddStageEvent), 0, 0);
             _priv_pmsgUse = (Message*)msg5AddStageEventPtr;
         }
 
@@ -332,7 +332,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg6RemoveTargetPtr->targetId = targetId;
             msg6RemoveTargetPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg6RemoveTargetPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg6_RemoveTarget, typeof(RemoteAnimation.Msg6_RemoveTarget), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg6RemoveTargetPtr, ref s_priv_ByteOrder_Msg6_RemoveTarget, typeof(RemoteAnimation.Msg6_RemoveTarget), 0, 0);
             _priv_pmsgUse = (Message*)msg6RemoveTargetPtr;
         }
 
@@ -365,7 +365,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg7AddTargetPtr->propertyInfo = propertyInfo;
             msg7AddTargetPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg7AddTargetPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg7_AddTarget, typeof(RemoteAnimation.Msg7_AddTarget), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg7AddTargetPtr, ref s_priv_ByteOrder_Msg7_AddTarget, typeof(RemoteAnimation.Msg7_AddTarget), 0, 0);
             _priv_pmsgUse = (Message*)msg7AddTargetPtr;
         }
 
@@ -402,7 +402,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg8SetEaseOutPtr->flHandle = flHandle;
             msg8SetEaseOutPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg8SetEaseOutPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg8_SetEaseOut, typeof(RemoteAnimation.Msg8_SetEaseOut), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg8SetEaseOutPtr, ref s_priv_ByteOrder_Msg8_SetEaseOut, typeof(RemoteAnimation.Msg8_SetEaseOut), 0, 0);
             _priv_pmsgUse = (Message*)msg8SetEaseOutPtr;
         }
 
@@ -439,7 +439,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg9SetEaseInPtr->flHandle = flHandle;
             msg9SetEaseInPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg9SetEaseInPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg9_SetEaseIn, typeof(RemoteAnimation.Msg9_SetEaseIn), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg9SetEaseInPtr, ref s_priv_ByteOrder_Msg9_SetEaseIn, typeof(RemoteAnimation.Msg9_SetEaseIn), 0, 0);
             _priv_pmsgUse = (Message*)msg9SetEaseInPtr;
         }
 
@@ -476,7 +476,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg10SetBezierPtr->flHandle2 = flHandle2;
             msg10SetBezierPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg10SetBezierPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg10_SetBezier, typeof(RemoteAnimation.Msg10_SetBezier), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg10SetBezierPtr, ref s_priv_ByteOrder_Msg10_SetBezier, typeof(RemoteAnimation.Msg10_SetBezier), 0, 0);
             _priv_pmsgUse = (Message*)msg10SetBezierPtr;
         }
 
@@ -509,7 +509,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg11SetCosinePtr->fSpherical = fSpherical ? uint.MaxValue : 0U;
             msg11SetCosinePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg11SetCosinePtr, ref RemoteAnimation.s_priv_ByteOrder_Msg11_SetCosine, typeof(RemoteAnimation.Msg11_SetCosine), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg11SetCosinePtr, ref s_priv_ByteOrder_Msg11_SetCosine, typeof(RemoteAnimation.Msg11_SetCosine), 0, 0);
             _priv_pmsgUse = (Message*)msg11SetCosinePtr;
         }
 
@@ -538,7 +538,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg12SetSinePtr->fSpherical = fSpherical ? uint.MaxValue : 0U;
             msg12SetSinePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg12SetSinePtr, ref RemoteAnimation.s_priv_ByteOrder_Msg12_SetSine, typeof(RemoteAnimation.Msg12_SetSine), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg12SetSinePtr, ref s_priv_ByteOrder_Msg12_SetSine, typeof(RemoteAnimation.Msg12_SetSine), 0, 0);
             _priv_pmsgUse = (Message*)msg12SetSinePtr;
         }
 
@@ -569,7 +569,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg13SetScurvePtr->flWeight = flWeight;
             msg13SetScurvePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg13SetScurvePtr, ref RemoteAnimation.s_priv_ByteOrder_Msg13_SetSCurve, typeof(RemoteAnimation.Msg13_SetSCurve), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg13SetScurvePtr, ref s_priv_ByteOrder_Msg13_SetSCurve, typeof(RemoteAnimation.Msg13_SetSCurve), 0, 0);
             _priv_pmsgUse = (Message*)msg13SetScurvePtr;
         }
 
@@ -600,7 +600,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg14SetLogarithmicPtr->flWeight = flWeight;
             msg14SetLogarithmicPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg14SetLogarithmicPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg14_SetLogarithmic, typeof(RemoteAnimation.Msg14_SetLogarithmic), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg14SetLogarithmicPtr, ref s_priv_ByteOrder_Msg14_SetLogarithmic, typeof(RemoteAnimation.Msg14_SetLogarithmic), 0, 0);
             _priv_pmsgUse = (Message*)msg14SetLogarithmicPtr;
         }
 
@@ -631,7 +631,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg15SetExponentialPtr->flWeight = flWeight;
             msg15SetExponentialPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg15SetExponentialPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg15_SetExponential, typeof(RemoteAnimation.Msg15_SetExponential), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg15SetExponentialPtr, ref s_priv_ByteOrder_Msg15_SetExponential, typeof(RemoteAnimation.Msg15_SetExponential), 0, 0);
             _priv_pmsgUse = (Message*)msg15SetExponentialPtr;
         }
 
@@ -660,7 +660,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg16SetLinearPtr->fSpherical = fSpherical ? uint.MaxValue : 0U;
             msg16SetLinearPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg16SetLinearPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg16_SetLinear, typeof(RemoteAnimation.Msg16_SetLinear), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg16SetLinearPtr, ref s_priv_ByteOrder_Msg16_SetLinear, typeof(RemoteAnimation.Msg16_SetLinear), 0, 0);
             _priv_pmsgUse = (Message*)msg16SetLinearPtr;
         }
 
@@ -689,7 +689,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             setBinaryOperationPtr->opCode = opCode;
             setBinaryOperationPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setBinaryOperationPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg17_SetBinaryOperation, typeof(RemoteAnimation.Msg17_SetBinaryOperation), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setBinaryOperationPtr, ref s_priv_ByteOrder_Msg17_SetBinaryOperation, typeof(RemoteAnimation.Msg17_SetBinaryOperation), 0, 0);
             _priv_pmsgUse = (Message*)setBinaryOperationPtr;
         }
 
@@ -722,7 +722,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg18SetContinuousPtr->propertyInfo = propertyInfo;
             msg18SetContinuousPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg18SetContinuousPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg18_SetContinuous, typeof(RemoteAnimation.Msg18_SetContinuous), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg18SetContinuousPtr, ref s_priv_ByteOrder_Msg18_SetContinuous, typeof(RemoteAnimation.Msg18_SetContinuous), 0, 0);
             _priv_pmsgUse = (Message*)msg18SetContinuousPtr;
         }
 
@@ -761,7 +761,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg19SetCapturedPtr->fRefreshOnRepeat = fRefreshOnRepeat ? uint.MaxValue : 0U;
             msg19SetCapturedPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg19SetCapturedPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg19_SetCaptured, typeof(RemoteAnimation.Msg19_SetCaptured), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg19SetCapturedPtr, ref s_priv_ByteOrder_Msg19_SetCaptured, typeof(RemoteAnimation.Msg19_SetCaptured), 0, 0);
             _priv_pmsgUse = (Message*)msg19SetCapturedPtr;
         }
 
@@ -795,7 +795,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg20SetQuaternionPtr->qValue = qValue;
             msg20SetQuaternionPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg20SetQuaternionPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg20_SetQuaternion, typeof(RemoteAnimation.Msg20_SetQuaternion), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg20SetQuaternionPtr, ref s_priv_ByteOrder_Msg20_SetQuaternion, typeof(RemoteAnimation.Msg20_SetQuaternion), 0, 0);
             _priv_pmsgUse = (Message*)msg20SetQuaternionPtr;
         }
 
@@ -824,7 +824,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg21SetVector4Ptr->vValue = vValue;
             msg21SetVector4Ptr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg21SetVector4Ptr, ref RemoteAnimation.s_priv_ByteOrder_Msg21_SetVector4, typeof(RemoteAnimation.Msg21_SetVector4), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg21SetVector4Ptr, ref s_priv_ByteOrder_Msg21_SetVector4, typeof(RemoteAnimation.Msg21_SetVector4), 0, 0);
             _priv_pmsgUse = (Message*)msg21SetVector4Ptr;
         }
 
@@ -853,7 +853,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg22SetVector3Ptr->vValue = vValue;
             msg22SetVector3Ptr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg22SetVector3Ptr, ref RemoteAnimation.s_priv_ByteOrder_Msg22_SetVector3, typeof(RemoteAnimation.Msg22_SetVector3), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg22SetVector3Ptr, ref s_priv_ByteOrder_Msg22_SetVector3, typeof(RemoteAnimation.Msg22_SetVector3), 0, 0);
             _priv_pmsgUse = (Message*)msg22SetVector3Ptr;
         }
 
@@ -882,7 +882,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg23SetVector2Ptr->vValue = vValue;
             msg23SetVector2Ptr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg23SetVector2Ptr, ref RemoteAnimation.s_priv_ByteOrder_Msg23_SetVector2, typeof(RemoteAnimation.Msg23_SetVector2), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg23SetVector2Ptr, ref s_priv_ByteOrder_Msg23_SetVector2, typeof(RemoteAnimation.Msg23_SetVector2), 0, 0);
             _priv_pmsgUse = (Message*)msg23SetVector2Ptr;
         }
 
@@ -911,7 +911,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg24SetFloatPtr->flValue = flValue;
             msg24SetFloatPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg24SetFloatPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg24_SetFloat, typeof(RemoteAnimation.Msg24_SetFloat), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg24SetFloatPtr, ref s_priv_ByteOrder_Msg24_SetFloat, typeof(RemoteAnimation.Msg24_SetFloat), 0, 0);
             _priv_pmsgUse = (Message*)msg24SetFloatPtr;
         }
 
@@ -938,7 +938,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             endAnimationInputPtr->idxKeyframe = idxKeyframe;
             endAnimationInputPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)endAnimationInputPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg25_EndAnimationInput, typeof(RemoteAnimation.Msg25_EndAnimationInput), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)endAnimationInputPtr, ref s_priv_ByteOrder_Msg25_EndAnimationInput, typeof(RemoteAnimation.Msg25_EndAnimationInput), 0, 0);
             _priv_pmsgUse = (Message*)endAnimationInputPtr;
         }
 
@@ -965,7 +965,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             beginAnimationInputPtr->idxKeyframe = idxKeyframe;
             beginAnimationInputPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)beginAnimationInputPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg26_BeginAnimationInput, typeof(RemoteAnimation.Msg26_BeginAnimationInput), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)beginAnimationInputPtr, ref s_priv_ByteOrder_Msg26_BeginAnimationInput, typeof(RemoteAnimation.Msg26_BeginAnimationInput), 0, 0);
             _priv_pmsgUse = (Message*)beginAnimationInputPtr;
         }
 
@@ -994,7 +994,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg27SetKeyframeTimePtr->flTimeSec = flTimeSec;
             msg27SetKeyframeTimePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg27SetKeyframeTimePtr, ref RemoteAnimation.s_priv_ByteOrder_Msg27_SetKeyframeTime, typeof(RemoteAnimation.Msg27_SetKeyframeTime), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg27SetKeyframeTimePtr, ref s_priv_ByteOrder_Msg27_SetKeyframeTime, typeof(RemoteAnimation.Msg27_SetKeyframeTime), 0, 0);
             _priv_pmsgUse = (Message*)msg27SetKeyframeTimePtr;
         }
 
@@ -1021,7 +1021,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             setKeyframeCountPtr->cKeyframes = cKeyframes;
             setKeyframeCountPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setKeyframeCountPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg29_SetKeyframeCount, typeof(RemoteAnimation.Msg29_SetKeyframeCount), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setKeyframeCountPtr, ref s_priv_ByteOrder_Msg29_SetKeyframeCount, typeof(RemoteAnimation.Msg29_SetKeyframeCount), 0, 0);
             _priv_pmsgUse = (Message*)setKeyframeCountPtr;
         }
 
@@ -1050,7 +1050,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg31AddKeyframePtr->flTimeSec = flTimeSec;
             msg31AddKeyframePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg31AddKeyframePtr, ref RemoteAnimation.s_priv_ByteOrder_Msg31_AddKeyframe, typeof(RemoteAnimation.Msg31_AddKeyframe), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg31AddKeyframePtr, ref s_priv_ByteOrder_Msg31_AddKeyframe, typeof(RemoteAnimation.Msg31_AddKeyframe), 0, 0);
             _priv_pmsgUse = (Message*)msg31AddKeyframePtr;
         }
 
@@ -1073,7 +1073,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg32InstantFinishPtr->_priv_msgid = 32U;
             msg32InstantFinishPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg32InstantFinishPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg32_InstantFinish, typeof(RemoteAnimation.Msg32_InstantFinish), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg32InstantFinishPtr, ref s_priv_ByteOrder_Msg32_InstantFinish, typeof(RemoteAnimation.Msg32_InstantFinish), 0, 0);
             _priv_pmsgUse = (Message*)msg32InstantFinishPtr;
         }
 
@@ -1100,7 +1100,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg33InstantAdvancePtr->advanceTime = advanceTime;
             msg33InstantAdvancePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg33InstantAdvancePtr, ref RemoteAnimation.s_priv_ByteOrder_Msg33_InstantAdvance, typeof(RemoteAnimation.Msg33_InstantAdvance), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg33InstantAdvancePtr, ref s_priv_ByteOrder_Msg33_InstantAdvance, typeof(RemoteAnimation.Msg33_InstantAdvance), 0, 0);
             _priv_pmsgUse = (Message*)msg33InstantAdvancePtr;
         }
 
@@ -1123,7 +1123,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg34ResetPtr->_priv_msgid = 34U;
             msg34ResetPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg34ResetPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg34_Reset, typeof(RemoteAnimation.Msg34_Reset), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg34ResetPtr, ref s_priv_ByteOrder_Msg34_Reset, typeof(RemoteAnimation.Msg34_Reset), 0, 0);
             _priv_pmsgUse = (Message*)msg34ResetPtr;
         }
 
@@ -1146,7 +1146,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg35PausePtr->_priv_msgid = 35U;
             msg35PausePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg35PausePtr, ref RemoteAnimation.s_priv_ByteOrder_Msg35_Pause, typeof(RemoteAnimation.Msg35_Pause), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg35PausePtr, ref s_priv_ByteOrder_Msg35_Pause, typeof(RemoteAnimation.Msg35_Pause), 0, 0);
             _priv_pmsgUse = (Message*)msg35PausePtr;
         }
 
@@ -1169,7 +1169,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg36PlayPtr->_priv_msgid = 36U;
             msg36PlayPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg36PlayPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg36_Play, typeof(RemoteAnimation.Msg36_Play), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg36PlayPtr, ref s_priv_ByteOrder_Msg36_Play, typeof(RemoteAnimation.Msg36_Play), 0, 0);
             _priv_pmsgUse = (Message*)msg36PlayPtr;
         }
 
@@ -1196,7 +1196,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             setResetBehaviorPtr->behavior = behavior;
             setResetBehaviorPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setResetBehaviorPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg37_SetResetBehavior, typeof(RemoteAnimation.Msg37_SetResetBehavior), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setResetBehaviorPtr, ref s_priv_ByteOrder_Msg37_SetResetBehavior, typeof(RemoteAnimation.Msg37_SetResetBehavior), 0, 0);
             _priv_pmsgUse = (Message*)setResetBehaviorPtr;
         }
 
@@ -1223,7 +1223,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg39SetAutoResetPtr->fAutoReset = fAutoReset ? uint.MaxValue : 0U;
             msg39SetAutoResetPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg39SetAutoResetPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg39_SetAutoReset, typeof(RemoteAnimation.Msg39_SetAutoReset), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg39SetAutoResetPtr, ref s_priv_ByteOrder_Msg39_SetAutoReset, typeof(RemoteAnimation.Msg39_SetAutoReset), 0, 0);
             _priv_pmsgUse = (Message*)msg39SetAutoResetPtr;
         }
 
@@ -1250,7 +1250,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg41SetRepeatCountPtr->cRepeats = cRepeats;
             msg41SetRepeatCountPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg41SetRepeatCountPtr, ref RemoteAnimation.s_priv_ByteOrder_Msg41_SetRepeatCount, typeof(RemoteAnimation.Msg41_SetRepeatCount), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg41SetRepeatCountPtr, ref s_priv_ByteOrder_Msg41_SetRepeatCount, typeof(RemoteAnimation.Msg41_SetRepeatCount), 0, 0);
             _priv_pmsgUse = (Message*)msg41SetRepeatCountPtr;
         }
 

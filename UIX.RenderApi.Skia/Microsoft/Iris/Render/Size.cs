@@ -13,7 +13,7 @@ namespace Microsoft.Iris.Render
         private int m_width;
         private int m_height;
         public static readonly Size Zero = new Size(0, 0);
-        public static readonly object ZeroBox = (object)Size.Zero;
+        public static readonly object ZeroBox = Zero;
 
         public Size(int width, int height)
         {
@@ -81,23 +81,23 @@ namespace Microsoft.Iris.Render
 
         public static Size Max(Size sz1, Size sz2) => new Size(Math.Max(sz1.Width, sz2.Width), Math.Max(sz1.Height, sz2.Height));
 
-        public bool IsZero => this.Equals(Size.Zero);
+        public bool IsZero => this.Equals(Zero);
 
         public bool IsEmpty => this.Width == 0 || this.Height == 0;
 
         public static Size LargestFit(Size source, Size bounds)
         {
-            float num = (float)source.Width / (float)source.Height;
-            Size size = new Size(bounds.Width, (int)Math.Ceiling((double)bounds.Width / (double)num));
+            float num = source.Width / (float)source.Height;
+            Size size = new Size(bounds.Width, (int)Math.Ceiling(bounds.Width / (double)num));
             if (size.Height > bounds.Height)
-                size = new Size((int)Math.Ceiling((double)bounds.Height * (double)num), bounds.Height);
+                size = new Size((int)Math.Ceiling(bounds.Height * (double)num), bounds.Height);
             return size;
         }
 
         public void Scale(float flScale)
         {
-            this.Width = (int)((double)this.Width * (double)flScale);
-            this.Height = (int)((double)this.Height * (double)flScale);
+            this.Width = (int)(Width * (double)flScale);
+            this.Height = (int)(Height * (double)flScale);
         }
 
         public static Size Scale(Size size, float flScale)

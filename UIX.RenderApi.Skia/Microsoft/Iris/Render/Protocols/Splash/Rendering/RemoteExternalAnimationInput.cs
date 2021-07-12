@@ -34,7 +34,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0CreatePtr->nUniqueId = nUniqueId;
             msg0CreatePtr->_priv_idObjectSubject = externalAnimationInput.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteExternalAnimationInput.s_priv_ByteOrder_Msg0_Create, typeof(RemoteExternalAnimationInput.Msg0_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg0_Create, typeof(RemoteExternalAnimationInput.Msg0_Create), 0, 0);
             port.CreateRemoteObject(inputClassHandle, externalAnimationInput.m_renderHandle, (Message*)msg0CreatePtr);
             return externalAnimationInput;
         }

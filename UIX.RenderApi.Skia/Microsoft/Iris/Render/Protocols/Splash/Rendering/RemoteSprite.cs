@@ -42,7 +42,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg18SetNineGridPtr->nBottom = nBottom;
             msg18SetNineGridPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg18SetNineGridPtr, ref RemoteSprite.s_priv_ByteOrder_Msg18_SetNineGrid, typeof(RemoteSprite.Msg18_SetNineGrid), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg18SetNineGridPtr, ref s_priv_ByteOrder_Msg18_SetNineGrid, typeof(RemoteSprite.Msg18_SetNineGrid), 0, 0);
             _priv_pmsgUse = (Message*)msg18SetNineGridPtr;
         }
 
@@ -75,7 +75,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             addCoordMapEntryPtr->flValue = flValue;
             addCoordMapEntryPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)addCoordMapEntryPtr, ref RemoteSprite.s_priv_ByteOrder_Msg19_AddCoordMapEntry, typeof(RemoteSprite.Msg19_AddCoordMapEntry), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)addCoordMapEntryPtr, ref s_priv_ByteOrder_Msg19_AddCoordMapEntry, typeof(RemoteSprite.Msg19_AddCoordMapEntry), 0, 0);
             _priv_pmsgUse = (Message*)addCoordMapEntryPtr;
         }
 
@@ -102,7 +102,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg20ClearCoordMapsPtr->_priv_msgid = 20U;
             msg20ClearCoordMapsPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg20ClearCoordMapsPtr, ref RemoteSprite.s_priv_ByteOrder_Msg20_ClearCoordMaps, typeof(RemoteSprite.Msg20_ClearCoordMaps), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg20ClearCoordMapsPtr, ref s_priv_ByteOrder_Msg20_ClearCoordMaps, typeof(RemoteSprite.Msg20_ClearCoordMaps), 0, 0);
             _priv_pmsgUse = (Message*)msg20ClearCoordMapsPtr;
         }
 
@@ -131,7 +131,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg21SetEffectPtr->effect = effect != null ? effect.RenderHandle : RENDERHANDLE.NULL;
             msg21SetEffectPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg21SetEffectPtr, ref RemoteSprite.s_priv_ByteOrder_Msg21_SetEffect, typeof(RemoteSprite.Msg21_SetEffect), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg21SetEffectPtr, ref s_priv_ByteOrder_Msg21_SetEffect, typeof(RemoteSprite.Msg21_SetEffect), 0, 0);
             _priv_pmsgUse = (Message*)msg21SetEffectPtr;
         }
 

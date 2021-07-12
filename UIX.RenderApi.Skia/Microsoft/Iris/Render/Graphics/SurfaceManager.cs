@@ -47,9 +47,9 @@ namespace Microsoft.Iris.Render.Graphics
                         alDynamicSet.Dispose();
                     this.CollectLargeSurfaces();
                 }
-                this.m_listLargeSurfaces = (LinkedList<Surface>)null;
-                this.m_alDynamicSets = (ArrayList)null;
-                this.m_device = (GraphicsDevice)null;
+                this.m_listLargeSurfaces = null;
+                this.m_alDynamicSets = null;
+                this.m_device = null;
             }
             finally
             {
@@ -59,10 +59,10 @@ namespace Microsoft.Iris.Render.Graphics
 
         private void PreallocateDynamicPools(SurfaceManager.VideoMemoryBreakdown vmb)
         {
-            this.m_alDynamicSets.Add((object)new DynamicPoolSet(this.m_device, SurfaceFormat.ARGB32));
+            this.m_alDynamicSets.Add(new DynamicPoolSet(this.m_device, SurfaceFormat.ARGB32));
             int num = 0;
             int index = 0;
-            while ((long)num < (long)vmb.cbMinimumPool)
+            while (num < vmb.cbMinimumPool)
             {
                 DynamicPool dynamicPool = ((DynamicPoolSet)this.m_alDynamicSets[index]).AllocateDynamicPool(vmb.sizeDynamicPoolPxl, 8, vmb.ThresholdHeightPxl);
                 num += dynamicPool.TotalSize.Width * dynamicPool.TotalSize.Height * SurfaceFormatInfo.GetBitsPerPixel(dynamicPool.Format) / 8;
@@ -86,8 +86,8 @@ namespace Microsoft.Iris.Render.Graphics
             Debug2.Validate(sizeContentPxl.Width > 0 && sizeContentPxl.Height > 0, typeof(ArgumentOutOfRangeException), "Must provide positive area for surface");
             bool flag1 = false;
             bool flag2 = false;
-            Surface surface = (Surface)null;
-            DynamicPoolSet dynamicPoolSet = (DynamicPoolSet)null;
+            Surface surface = null;
+            DynamicPoolSet dynamicPoolSet = null;
             for (int index = 0; index < this.m_alDynamicSets.Count; ++index)
             {
                 dynamicPoolSet = (DynamicPoolSet)this.m_alDynamicSets[index];
@@ -133,7 +133,7 @@ namespace Microsoft.Iris.Render.Graphics
                 {
                     DestroyWhenEmpty = true
                 }, surfaceOwner, sizeContentPxl);
-                surface.RegisterUsage((object)this);
+                surface.RegisterUsage(this);
             }
             if (flag2)
                 this.m_listLargeSurfaces.AddLast(new LinkedListNode<Surface>(surface));
@@ -159,13 +159,13 @@ namespace Microsoft.Iris.Render.Graphics
             Debug2.Validate(nPoolID > 0, typeof(ArgumentException), "Must have valid ID");
             Debug2.Validate(this.m_device.IsSurfaceFormatSupported(nFormat), typeof(ArgumentException), "Surface format is not supported");
             Debug2.Validate(sizeStoragePxl.Width > 0 && sizeStoragePxl.Height > 0, typeof(ArgumentException), "Must have valid surface size");
-            Debug2.Validate(this.m_dictNamedPools[nPoolID] == null, (Type)null, "SurfacePool must not already be allocated");
+            Debug2.Validate(this.m_dictNamedPools[nPoolID] == null, null, "SurfacePool must not already be allocated");
             SurfacePool surfacePool = new SurfacePool(this.m_device, sizeStoragePxl, nFormat);
             try
             {
                 surfacePool.DestroyWhenEmpty = false;
                 this.m_dictNamedPools[nPoolID] = surfacePool;
-                surfacePool = (SurfacePool)null;
+                surfacePool = null;
             }
             finally
             {
@@ -175,9 +175,9 @@ namespace Microsoft.Iris.Render.Graphics
 
         public void FreeNamedSurface(int nPoolID)
         {
-            Debug2.Validate(nPoolID > 0, (Type)null, "Must have valid ID");
+            Debug2.Validate(nPoolID > 0, null, "Must have valid ID");
             SurfacePool dictNamedPool = this.m_dictNamedPools[nPoolID];
-            Debug2.Validate(dictNamedPool != null, (Type)null, "Must have previously allocated pool");
+            Debug2.Validate(dictNamedPool != null, null, "Must have previously allocated pool");
             this.m_dictNamedPools.Remove(nPoolID);
             dictNamedPool.Dispose();
         }
@@ -201,7 +201,7 @@ namespace Microsoft.Iris.Render.Graphics
                 Surface surface = node.Value;
                 if (!surface.InUse)
                 {
-                    surface.UnregisterUsage((object)this);
+                    surface.UnregisterUsage(this);
                     this.m_listLargeSurfaces.Remove(node);
                 }
             }

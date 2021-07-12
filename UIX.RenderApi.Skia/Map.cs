@@ -39,7 +39,7 @@ public class Map
         get
         {
             int entry = this.FindEntry(key);
-            return entry >= 0 ? this._entries[entry].value : (object)null;
+            return entry >= 0 ? this._entries[entry].value : null;
         }
         set => this.Insert(key, value, false);
     }
@@ -52,7 +52,7 @@ public class Map
             return;
         for (int index = 0; index < this._buckets.Length; ++index)
             this._buckets[index] = -1;
-        Array.Clear((Array)this._entries, 0, this._count);
+        Array.Clear(_entries, 0, this._count);
         this._freeList = -1;
         this._count = 0;
         this._freeCount = 0;
@@ -132,7 +132,7 @@ public class Map
         for (int index = 0; index < numArray.Length; ++index)
             numArray[index] = -1;
         Map.Entry[] entryArray = new Map.Entry[prime];
-        Array.Copy((Array)this._entries, 0, (Array)entryArray, 0, this._count);
+        Array.Copy(_entries, 0, entryArray, 0, this._count);
         for (int index1 = 0; index1 < this._count; ++index1)
         {
             int index2 = entryArray[index1].hashCode % prime;
@@ -160,8 +160,8 @@ public class Map
                         this._entries[index2].next = this._entries[index3].next;
                     this._entries[index3].hashCode = -1;
                     this._entries[index3].next = this._freeList;
-                    this._entries[index3].key = (object)null;
-                    this._entries[index3].value = (object)null;
+                    this._entries[index3].key = null;
+                    this._entries[index3].value = null;
                     this._freeList = index3;
                     ++this._freeCount;
                     ++this._version;
@@ -181,7 +181,7 @@ public class Map
             value = this._entries[entry].value;
             return true;
         }
-        value = (object)null;
+        value = null;
         return false;
     }
 
@@ -201,7 +201,7 @@ public class Map
             this._dictionary = dictionary;
             this._version = this._dictionary._version;
             this._index = 0;
-            this._current = new KeyValueEntry<object, object>((object)null, (object)null);
+            this._current = new KeyValueEntry<object, object>(null, null);
         }
 
         public bool MoveNext()
@@ -218,7 +218,7 @@ public class Map
                 }
             }
             this._index = this._dictionary._count + 1;
-            this._current = new KeyValueEntry<object, object>((object)null, (object)null);
+            this._current = new KeyValueEntry<object, object>(null, null);
             return false;
         }
 
@@ -247,7 +247,7 @@ public class Map
                 this._dictionary = dictionary;
                 this._version = dictionary._version;
                 this._index = 0;
-                this._currentKey = (object)null;
+                this._currentKey = null;
             }
 
             public bool MoveNext()
@@ -264,7 +264,7 @@ public class Map
                     }
                 }
                 this._index = this._dictionary._count + 1;
-                this._currentKey = (object)null;
+                this._currentKey = null;
                 return false;
             }
 
@@ -294,7 +294,7 @@ public class Map
                 this._dictionary = dictionary;
                 this._version = dictionary._version;
                 this._index = 0;
-                this._currentValue = (object)null;
+                this._currentValue = null;
             }
 
             public bool MoveNext()
@@ -311,7 +311,7 @@ public class Map
                     }
                 }
                 this._index = this._dictionary._count + 1;
-                this._currentValue = (object)null;
+                this._currentValue = null;
                 return false;
             }
 

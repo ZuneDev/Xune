@@ -24,13 +24,13 @@ namespace Microsoft.Iris.Render.Protocol
         public unsafe BlobInfo(RenderPort port, uint origTotal)
         {
             this.m_foreignByteOrder = port.ForeignByteOrder;
-            this.m_data = BlobInfo.s_cache;
-            BlobInfo.s_cache = (Vector)null;
+            this.m_data = s_cache;
+            s_cache = null;
             if (this.m_data == null)
                 this.m_data = new Vector();
             this.m_totalSize = origTotal;
             this.m_blobsOffset = origTotal;
-            this.m_pmsgBlob = (Message*)null;
+            this.m_pmsgBlob = null;
         }
 
         public uint AdjustedTotalSize => this.m_totalSize;
@@ -40,7 +40,7 @@ namespace Microsoft.Iris.Render.Protocol
         public BLOBREF Add(RENDERHANDLE[] param)
         {
             uint cbData = param == null ? 0U : (uint)(param.Length * 4);
-            return this.Add((object)param, cbData);
+            return this.Add(param, cbData);
         }
 
         public BLOBREF Add(string param)
@@ -48,7 +48,7 @@ namespace Microsoft.Iris.Render.Protocol
             if (param == null)
                 param = "";
             uint cbData = (uint)((param.Length + 1) * 2);
-            return this.Add((object)param, cbData);
+            return this.Add(param, cbData);
         }
 
         public unsafe BLOBREF Add(Message* pmsg)
@@ -59,16 +59,16 @@ namespace Microsoft.Iris.Render.Protocol
                 this.m_pmsgBlob = pmsg;
                 cbData = pmsg->cbSize;
             }
-            return this.Add(BlobInfo.s_msgBlobSentinal, cbData);
+            return this.Add(s_msgBlobSentinal, cbData);
         }
 
         private BLOBREF Add(object param, uint cbData)
         {
-            Debug2.Validate(cbData < (uint)ushort.MaxValue, typeof(ArgumentException), (object)"data blob too large", (object)nameof(param));
+            Debug2.Validate(cbData < ushort.MaxValue, typeof(ArgumentException), "data blob too large", nameof(param));
             BLOBREF blobref = BLOBREF.FromUInt32(this.m_totalSize | cbData << 16);
             if (cbData != 0U)
             {
-                if (this.m_totalSize + cbData > (uint)ushort.MaxValue)
+                if (this.m_totalSize + cbData > ushort.MaxValue)
                     throw new InvalidOperationException("insufficient space in message for data blob");
                 this.m_totalSize += cbData;
                 this.m_data.Add(param);
@@ -133,7 +133,7 @@ namespace Microsoft.Iris.Render.Protocol
                         }
                     }
                 }
-                else if (obj == BlobInfo.s_msgBlobSentinal)
+                else if (obj == s_msgBlobSentinal)
                 {
                     byte* pmsgBlob = (byte*)this.m_pmsgBlob;
                     byte* numPtr2 = pmsgBlob + (int)this.m_pmsgBlob->cbSize;
@@ -144,8 +144,8 @@ namespace Microsoft.Iris.Render.Protocol
                     Debug2.Throw(false, "Unexpected type.");
             }
             this.m_data.Clear();
-            BlobInfo.s_cache = this.m_data;
-            this.m_data = (Vector)null;
+            s_cache = this.m_data;
+            this.m_data = null;
         }
     }
 }

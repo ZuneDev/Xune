@@ -13,7 +13,7 @@ namespace Microsoft.Iris.Render
         private object m_inputValue;
 
         public ConstantAnimationInput(float sourceValue)
-          : this(sourceValue, (string)null)
+          : this(sourceValue, null)
         {
         }
 
@@ -21,11 +21,11 @@ namespace Microsoft.Iris.Render
         {
             AnimationTypeMask animationTypeMask = AnimationTypeMask.FromString(sourceMaskSpec);
             this.CommonCreate(AnimationInputType.Float, animationTypeMask);
-            this.m_inputValue = this.ApplyMask(animationTypeMask, (object)sourceValue);
+            this.m_inputValue = this.ApplyMask(animationTypeMask, sourceValue);
         }
 
         public ConstantAnimationInput(Vector2 sourceValue)
-          : this(sourceValue, (string)null)
+          : this(sourceValue, null)
         {
         }
 
@@ -33,11 +33,11 @@ namespace Microsoft.Iris.Render
         {
             AnimationTypeMask animationTypeMask = AnimationTypeMask.FromString(sourceMaskSpec);
             this.CommonCreate(AnimationInputType.Vector2, animationTypeMask);
-            this.m_inputValue = this.ApplyMask(animationTypeMask, (object)sourceValue);
+            this.m_inputValue = this.ApplyMask(animationTypeMask, sourceValue);
         }
 
         public ConstantAnimationInput(Vector3 sourceValue)
-          : this(sourceValue, (string)null)
+          : this(sourceValue, null)
         {
         }
 
@@ -45,11 +45,11 @@ namespace Microsoft.Iris.Render
         {
             AnimationTypeMask animationTypeMask = AnimationTypeMask.FromString(sourceMaskSpec);
             this.CommonCreate(AnimationInputType.Vector3, animationTypeMask);
-            this.m_inputValue = this.ApplyMask(animationTypeMask, (object)sourceValue);
+            this.m_inputValue = this.ApplyMask(animationTypeMask, sourceValue);
         }
 
         public ConstantAnimationInput(Vector4 sourceValue)
-          : this(sourceValue, (string)null)
+          : this(sourceValue, null)
         {
         }
 
@@ -57,11 +57,11 @@ namespace Microsoft.Iris.Render
         {
             AnimationTypeMask animationTypeMask = AnimationTypeMask.FromString(sourceMaskSpec);
             this.CommonCreate(AnimationInputType.Vector4, animationTypeMask);
-            this.m_inputValue = this.ApplyMask(animationTypeMask, (object)sourceValue);
+            this.m_inputValue = this.ApplyMask(animationTypeMask, sourceValue);
         }
 
         public ConstantAnimationInput(Quaternion sourceValue)
-          : this(sourceValue, (string)null)
+          : this(sourceValue, null)
         {
         }
 
@@ -69,14 +69,14 @@ namespace Microsoft.Iris.Render
         {
             AnimationTypeMask animationTypeMask = AnimationTypeMask.FromString(sourceMaskSpec);
             this.CommonCreate(AnimationInputType.Quaternion, animationTypeMask);
-            this.m_inputValue = this.ApplyMask(animationTypeMask, (object)sourceValue);
+            this.m_inputValue = this.ApplyMask(animationTypeMask, sourceValue);
         }
 
         internal object RawValue => this.m_inputValue;
 
         private object ApplyMask(AnimationTypeMask mask, object value)
         {
-            object obj = (object)null;
+            object obj = null;
             if (mask.ChannelCount == 0U)
             {
                 obj = value;
@@ -117,23 +117,23 @@ namespace Microsoft.Iris.Render
                         numArray[3] = quaternion.W;
                         break;
                     default:
-                        Debug2.Throw(false, "Unsupported type: {0}", (object)value.GetType());
+                        Debug2.Throw(false, "Unsupported type: {0}", value.GetType());
                         break;
                 }
                 switch (mask.ChannelCount)
                 {
                     case 1:
-                        obj = (object)(float)(mask[0] == AnimationTypeChannel.O ? 0.0 : (double)numArray[(int)(mask[0] - 1)]);
+                        obj = (float)(mask[0] == AnimationTypeChannel.O ? 0.0 : numArray[(int)(mask[0] - 1)]);
                         break;
                     case 2:
-                        obj = (object)new Vector2()
+                        obj = new Vector2()
                         {
                             X = (mask[0] == AnimationTypeChannel.O ? 0.0f : numArray[(int)(mask[0] - 1)]),
                             Y = (mask[1] == AnimationTypeChannel.O ? 0.0f : numArray[(int)(mask[1] - 1)])
                         };
                         break;
                     case 3:
-                        obj = (object)new Vector3()
+                        obj = new Vector3()
                         {
                             X = (mask[0] == AnimationTypeChannel.O ? 0.0f : numArray[(int)(mask[0] - 1)]),
                             Y = (mask[1] == AnimationTypeChannel.O ? 0.0f : numArray[(int)(mask[1] - 1)]),
@@ -141,7 +141,7 @@ namespace Microsoft.Iris.Render
                         };
                         break;
                     case 4:
-                        obj = (object)new Vector4()
+                        obj = new Vector4()
                         {
                             X = (mask[0] == AnimationTypeChannel.O ? 0.0f : numArray[(int)(mask[0] - 1)]),
                             Y = (mask[1] == AnimationTypeChannel.O ? 0.0f : numArray[(int)(mask[1] - 1)]),

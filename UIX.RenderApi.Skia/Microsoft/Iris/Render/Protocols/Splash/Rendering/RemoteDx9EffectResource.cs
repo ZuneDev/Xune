@@ -48,7 +48,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg10CreatePtr->dataBuffer = dataBuffer != null ? dataBuffer.RenderHandle : RENDERHANDLE.NULL;
             msg10CreatePtr->_priv_idObjectSubject = dx9EffectResource.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg10_Create, typeof(RemoteDx9EffectResource.Msg10_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg10_Create, typeof(RemoteDx9EffectResource.Msg10_Create), 0, 0);
             port.CreateRemoteObject(resourceClassHandle, dx9EffectResource.m_renderHandle, (Message*)msg10CreatePtr);
             return dx9EffectResource;
         }
@@ -71,7 +71,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)msg0SetDebugIdPtr);
             msg0SetDebugIdPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0SetDebugIdPtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg0_SetDebugID, typeof(RemoteDx9EffectResource.Msg0_SetDebugID), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0SetDebugIdPtr, ref s_priv_ByteOrder_Msg0_SetDebugID, typeof(RemoteDx9EffectResource.Msg0_SetDebugID), 0, 0);
             _priv_pmsgUse = (Message*)msg0SetDebugIdPtr;
         }
 
@@ -98,7 +98,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg1SetGutterSizePtr->sizeGutterPxl = sizeGutterPxl;
             msg1SetGutterSizePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1SetGutterSizePtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg1_SetGutterSize, typeof(RemoteDx9EffectResource.Msg1_SetGutterSize), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg1SetGutterSizePtr, ref s_priv_ByteOrder_Msg1_SetGutterSize, typeof(RemoteDx9EffectResource.Msg1_SetGutterSize), 0, 0);
             _priv_pmsgUse = (Message*)msg1SetGutterSizePtr;
         }
 
@@ -123,7 +123,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             postPropertiesAddedPtr->_priv_msgid = 2U;
             postPropertiesAddedPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)postPropertiesAddedPtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg2_PostPropertiesAdded, typeof(RemoteDx9EffectResource.Msg2_PostPropertiesAdded), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)postPropertiesAddedPtr, ref s_priv_ByteOrder_Msg2_PostPropertiesAdded, typeof(RemoteDx9EffectResource.Msg2_PostPropertiesAdded), 0, 0);
             _priv_pmsgUse = (Message*)postPropertiesAddedPtr;
         }
 
@@ -165,7 +165,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)textureRequirementsPtr);
             textureRequirementsPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)textureRequirementsPtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg3_AddTextureRequirements, typeof(RemoteDx9EffectResource.Msg3_AddTextureRequirements), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)textureRequirementsPtr, ref s_priv_ByteOrder_Msg3_AddTextureRequirements, typeof(RemoteDx9EffectResource.Msg3_AddTextureRequirements), 0, 0);
             _priv_pmsgUse = (Message*)textureRequirementsPtr;
         }
 
@@ -205,7 +205,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)msg4AddPropertyPtr);
             msg4AddPropertyPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg4AddPropertyPtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg4_AddProperty, typeof(RemoteDx9EffectResource.Msg4_AddProperty), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg4AddPropertyPtr, ref s_priv_ByteOrder_Msg4_AddProperty, typeof(RemoteDx9EffectResource.Msg4_AddProperty), 0, 0);
             _priv_pmsgUse = (Message*)msg4AddPropertyPtr;
         }
 
@@ -237,7 +237,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)msg5AddPropertyPtr);
             msg5AddPropertyPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg5AddPropertyPtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg5_AddProperty, typeof(RemoteDx9EffectResource.Msg5_AddProperty), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg5AddPropertyPtr, ref s_priv_ByteOrder_Msg5_AddProperty, typeof(RemoteDx9EffectResource.Msg5_AddProperty), 0, 0);
             _priv_pmsgUse = (Message*)msg5AddPropertyPtr;
         }
 
@@ -269,7 +269,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)msg6AddPropertyPtr);
             msg6AddPropertyPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg6AddPropertyPtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg6_AddProperty, typeof(RemoteDx9EffectResource.Msg6_AddProperty), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg6AddPropertyPtr, ref s_priv_ByteOrder_Msg6_AddProperty, typeof(RemoteDx9EffectResource.Msg6_AddProperty), 0, 0);
             _priv_pmsgUse = (Message*)msg6AddPropertyPtr;
         }
 
@@ -301,7 +301,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)msg7AddPropertyPtr);
             msg7AddPropertyPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg7AddPropertyPtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg7_AddProperty, typeof(RemoteDx9EffectResource.Msg7_AddProperty), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg7AddPropertyPtr, ref s_priv_ByteOrder_Msg7_AddProperty, typeof(RemoteDx9EffectResource.Msg7_AddProperty), 0, 0);
             _priv_pmsgUse = (Message*)msg7AddPropertyPtr;
         }
 
@@ -333,7 +333,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)msg8AddPropertyPtr);
             msg8AddPropertyPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg8AddPropertyPtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg8_AddProperty, typeof(RemoteDx9EffectResource.Msg8_AddProperty), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg8AddPropertyPtr, ref s_priv_ByteOrder_Msg8_AddProperty, typeof(RemoteDx9EffectResource.Msg8_AddProperty), 0, 0);
             _priv_pmsgUse = (Message*)msg8AddPropertyPtr;
         }
 
@@ -365,7 +365,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)msg9AddPropertyPtr);
             msg9AddPropertyPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg9AddPropertyPtr, ref RemoteDx9EffectResource.s_priv_ByteOrder_Msg9_AddProperty, typeof(RemoteDx9EffectResource.Msg9_AddProperty), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg9AddPropertyPtr, ref s_priv_ByteOrder_Msg9_AddProperty, typeof(RemoteDx9EffectResource.Msg9_AddProperty), 0, 0);
             _priv_pmsgUse = (Message*)msg9AddPropertyPtr;
         }
 

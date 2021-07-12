@@ -15,32 +15,32 @@ namespace Microsoft.Iris.Render.Graphics
             effectBuilder.EmitIncludesFragment("\"HSL.fx\"");
             VariableInfo variableInfo1 = new VariableInfo()
             {
-                ID = (int)efoHSL.HueID,
+                ID = efoHSL.HueID,
                 Type = Dx9VariableType.Float,
                 IsDynamic = efoHSL.IsDynamicProperty("Hue")
             };
             variableInfo1.Name = variableInfo1.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo1.Type, efoHSL.Name + "Hue") : effectBuilder.GenerateGlobalConstant(variableInfo1.Type, efoHSL.Name + "Hue");
-            variableInfo1.DefaultValue = (object)efoHSL.Hue;
+            variableInfo1.DefaultValue = efoHSL.Hue;
             effectBuilder.AddPropertyVariable(variableInfo1);
             VariableInfo variableInfo2 = new VariableInfo()
             {
-                ID = (int)efoHSL.SaturationID,
+                ID = efoHSL.SaturationID,
                 Type = Dx9VariableType.Float,
                 IsDynamic = efoHSL.IsDynamicProperty("Saturation")
             };
             variableInfo2.Name = variableInfo2.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo2.Type, efoHSL.Name + "Saturation") : effectBuilder.GenerateGlobalConstant(variableInfo2.Type, efoHSL.Name + "Saturation");
-            variableInfo2.DefaultValue = (object)efoHSL.Saturation;
+            variableInfo2.DefaultValue = efoHSL.Saturation;
             effectBuilder.AddPropertyVariable(variableInfo2);
             VariableInfo variableInfo3 = new VariableInfo()
             {
-                ID = (int)efoHSL.LightnessID,
+                ID = efoHSL.LightnessID,
                 Type = Dx9VariableType.Float,
                 IsDynamic = efoHSL.IsDynamicProperty("Lightness")
             };
             variableInfo3.Name = variableInfo3.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo3.Type, efoHSL.Name + "Lightness") : effectBuilder.GenerateGlobalConstant(variableInfo3.Type, efoHSL.Name + "Lightness");
-            variableInfo3.DefaultValue = (object)efoHSL.Lightness;
+            variableInfo3.DefaultValue = efoHSL.Lightness;
             effectBuilder.AddPropertyVariable(variableInfo3);
-            effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        // convert to HSL color space\r\n        float3 fHSL = RGBToHSL({0});\r\n\r\n        // adjust Hue, Sat and Luma\r\n        fHSL *= float3({1}, {2}, {3});\r\n        fHSL = saturate(fHSL);\r\n\r\n        // convert back to RGB space\r\n        float3 fBackToRGB = HSLToRGB(fHSL);\r\n        {0}.rgb = fBackToRGB;\r\n    }}\r\n", (object)effectBuilder.PixelShaderOutput, (object)variableInfo1.Name, (object)variableInfo2.Name, (object)variableInfo3.Name));
+            effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        // convert to HSL color space\r\n        float3 fHSL = RGBToHSL({0});\r\n\r\n        // adjust Hue, Sat and Luma\r\n        fHSL *= float3({1}, {2}, {3});\r\n        fHSL = saturate(fHSL);\r\n\r\n        // convert back to RGB space\r\n        float3 fBackToRGB = HSLToRGB(fHSL);\r\n        {0}.rgb = fBackToRGB;\r\n    }}\r\n", effectBuilder.PixelShaderOutput, variableInfo1.Name, variableInfo2.Name, variableInfo3.Name));
         }
     }
 }

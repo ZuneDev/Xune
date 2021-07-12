@@ -42,7 +42,7 @@ namespace Microsoft.Iris.Render.Internal
             this.m_arExtraModes = DisplayMode.EmptyModes;
             this.m_arAllModes = DisplayMode.EmptyModes;
             this.m_modeCurrent = new DisplayMode();
-            this.m_nCurrentValid = (DisplayModeFlags)0;
+            this.m_nCurrentValid = 0;
         }
 
         public string DeviceName => this.m_stDeviceName;
@@ -100,7 +100,7 @@ namespace Microsoft.Iris.Render.Internal
             nCompleteCheck = this.m_nCurrentValid;
             DisplayMode[] array = fAllowAllModes ? this.m_arAllModes : this.m_arExtraModes;
             DisplayMode.RenderModeComparer renderModeComparer = new DisplayMode.RenderModeComparer();
-            if (Array.BinarySearch<DisplayMode>(array, modeDesired, (IComparer<DisplayMode>)renderModeComparer) >= 0)
+            if (Array.BinarySearch<DisplayMode>(array, modeDesired, renderModeComparer) >= 0)
             {
                 modeComplete = modeDesired;
                 nCompleteCheck = DisplayModeFlags.Size | DisplayModeFlags.Format | DisplayModeFlags.RefreshRate;
@@ -108,11 +108,11 @@ namespace Microsoft.Iris.Render.Internal
             else
             {
                 modeComplete = this.m_modeDesktop;
-                int num = Display.ComputeRank(this.m_modeDesktop, modeDesired, nCheck);
+                int num = ComputeRank(this.m_modeDesktop, modeDesired, nCheck);
                 nCompleteCheck = DisplayModeFlags.Size | DisplayModeFlags.Format | DisplayModeFlags.RefreshRate;
                 foreach (DisplayMode arSupportedMode in this.m_arSupportedModes)
                 {
-                    int rank = Display.ComputeRank(arSupportedMode, modeDesired, nCheck);
+                    int rank = ComputeRank(arSupportedMode, modeDesired, nCheck);
                     if (rank >= num)
                     {
                         modeComplete = arSupportedMode;
@@ -139,8 +139,8 @@ namespace Microsoft.Iris.Render.Internal
         public bool ChangeFullScreenResolution(DisplayMode modeChanges, DisplayModeFlags nValid)
         {
             bool flag = false;
-            Debug2.Validate(modeChanges.sizePhysicalPxl.Width == 0 && modeChanges.sizePhysicalPxl.Height == 0 || modeChanges.sizePhysicalPxl.Width > 0 && modeChanges.sizePhysicalPxl.Height > 0, typeof(ArgumentException), (object)"Must specify physical 0 x 0 or a positive size", (object)typeof(ArgumentOutOfRangeException));
-            Debug2.Validate(modeChanges.sizeLogicalPxl.Width == 0 && modeChanges.sizeLogicalPxl.Height == 0 || modeChanges.sizeLogicalPxl.Width > 0 && modeChanges.sizeLogicalPxl.Height > 0, typeof(ArgumentException), (object)"Must specify logical 0 x 0 or a positive size", (object)typeof(ArgumentOutOfRangeException));
+            Debug2.Validate(modeChanges.sizePhysicalPxl.Width == 0 && modeChanges.sizePhysicalPxl.Height == 0 || modeChanges.sizePhysicalPxl.Width > 0 && modeChanges.sizePhysicalPxl.Height > 0, typeof(ArgumentException), "Must specify physical 0 x 0 or a positive size", typeof(ArgumentOutOfRangeException));
+            Debug2.Validate(modeChanges.sizeLogicalPxl.Width == 0 && modeChanges.sizeLogicalPxl.Height == 0 || modeChanges.sizeLogicalPxl.Width > 0 && modeChanges.sizeLogicalPxl.Height > 0, typeof(ArgumentException), "Must specify logical 0 x 0 or a positive size", typeof(ArgumentOutOfRangeException));
             Debug2.Validate(modeChanges.nRefreshRate >= 0 && modeChanges.nRefreshRate < 1000, typeof(ArgumentException), "Must have valid refresh rate");
             DisplayMode modeCurrent = this.m_modeCurrent;
             this.m_modeCurrent.ChangeFrom(modeChanges, nValid);
@@ -190,9 +190,9 @@ namespace Microsoft.Iris.Render.Internal
                 Size size = new Size(modeDesired.sizePhysicalPxl.Width - modeValid.sizePhysicalPxl.Width, modeDesired.sizePhysicalPxl.Height - modeValid.sizePhysicalPxl.Height);
                 if (modeValid.sizePhysicalPxl.Width < 640 && modeValid.sizePhysicalPxl.Height < 480 || size.Width >= 0 && size.Height >= 0)
                 {
-                    float flValue1 = Math.Abs((float)size.Width / (float)modeValid.sizePhysicalPxl.Width);
-                    float flValue2 = Math.Abs((float)size.Height / (float)modeValid.sizePhysicalPxl.Height);
-                    int num2 = 2000 - (int)(1000.0 * (double)Math2.Clamp(flValue1, 0.0f, 1f) + 1000.0 * (double)Math2.Clamp(flValue2, 0.0f, 1f));
+                    float flValue1 = Math.Abs(size.Width / (float)modeValid.sizePhysicalPxl.Width);
+                    float flValue2 = Math.Abs(size.Height / (float)modeValid.sizePhysicalPxl.Height);
+                    int num2 = 2000 - (int)(1000.0 * Math2.Clamp(flValue1, 0.0f, 1f) + 1000.0 * Math2.Clamp(flValue2, 0.0f, 1f));
                     if (num2 < 0)
                         num2 = 0;
                     num1 += num2;

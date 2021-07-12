@@ -34,8 +34,8 @@ namespace Microsoft.Iris.Render.Graphics
           bool fRotated,
           PoolAllocMethod allocMethod)
         {
-            ArrayList alReloadContent = (ArrayList)null;
-            DynamicRow dynamicRow = (DynamicRow)null;
+            ArrayList alReloadContent = null;
+            DynamicRow dynamicRow = null;
             switch (allocMethod)
             {
                 case PoolAllocMethod.Available:
@@ -48,7 +48,7 @@ namespace Microsoft.Iris.Render.Graphics
                     dynamicRow = this.m_poolOwner.CreateRow(alReloadContent, this, surfaceOwner, sizeRequestPxl, allocMethod);
                     if (dynamicRow != null)
                     {
-                        this.m_alRows.Add((object)dynamicRow);
+                        this.m_alRows.Add(dynamicRow);
                         break;
                     }
                     break;
@@ -66,7 +66,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (this.m_fCompacting)
                 return;
-            this.NotifyEmptyWorker(this.m_alRows.IndexOf((object)rowEmpty));
+            this.NotifyEmptyWorker(this.m_alRows.IndexOf(rowEmpty));
         }
 
         private void NotifyEmptyWorker(int idxRow)
@@ -87,7 +87,7 @@ namespace Microsoft.Iris.Render.Graphics
                 if (nRequestedWidth <= alRow.LargestFree)
                     return alRow;
             }
-            return (DynamicRow)null;
+            return null;
         }
 
         private DynamicRow ScavengeForAvailableSpace(
@@ -97,7 +97,7 @@ namespace Microsoft.Iris.Render.Graphics
             uint uAvgTimestampsNoCompact;
             uint uAvgTimestampsWithCompact;
             object objResultOfSpeculation = this.m_poolOwner.SpeculateScavengeRows(this.RowHeight, this, out uAvgTimestampsNoCompact, out uAvgTimestampsWithCompact);
-            DynamicRow dynamicRow = (DynamicRow)null;
+            DynamicRow dynamicRow = null;
             if (uAvgTimestampsNoCompact == uint.MaxValue)
                 dynamicRow = this.ScavengeLocalRows(alReloadContent, sizeRequested.Width);
             if (uAvgTimestampsNoCompact != uint.MaxValue || uAvgTimestampsWithCompact != uint.MaxValue)
@@ -112,11 +112,11 @@ namespace Microsoft.Iris.Render.Graphics
 
         private DynamicRow ScavengeLocalRows(ArrayList alReloadContent, int nRequestedWidth)
         {
-            DynamicRow dynamicRow1 = (DynamicRow)null;
-            object obj1 = (object)null;
+            DynamicRow dynamicRow1 = null;
+            object obj1 = null;
             uint num1 = uint.MaxValue;
-            DynamicRow dynamicRow2 = (DynamicRow)null;
-            object obj2 = (object)null;
+            DynamicRow dynamicRow2 = null;
+            object obj2 = null;
             uint num2 = uint.MaxValue;
             for (int index = 0; index < this.m_alRows.Count; ++index)
             {
@@ -145,9 +145,9 @@ namespace Microsoft.Iris.Render.Graphics
                 objResultOfPotentialCalculation = obj2;
             }
             if (dynamicRow3 != null && !dynamicRow3.FinishScavengeBlocks(alReloadContent, nRequestedWidth, objResultOfPotentialCalculation))
-                dynamicRow3 = (DynamicRow)null;
-            if (dynamicRow3 != null && !this.m_alRows.Contains((object)dynamicRow3))
-                dynamicRow3 = (DynamicRow)null;
+                dynamicRow3 = null;
+            if (dynamicRow3 != null && !this.m_alRows.Contains(dynamicRow3))
+                dynamicRow3 = null;
             return dynamicRow3;
         }
 

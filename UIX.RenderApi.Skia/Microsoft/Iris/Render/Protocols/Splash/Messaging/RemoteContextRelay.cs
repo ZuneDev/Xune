@@ -44,7 +44,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             blobInfo.Attach((Message*)msg2CreatePtr);
             msg2CreatePtr->_priv_idObjectSubject = remoteContextRelay.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteContextRelay.s_priv_ByteOrder_Msg2_Create, typeof(RemoteContextRelay.Msg2_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg2_Create, typeof(RemoteContextRelay.Msg2_Create), 0, 0);
             port.CreateRemoteObject(relayClassHandle, remoteContextRelay.m_renderHandle, (Message*)msg2CreatePtr);
             return remoteContextRelay;
         }
@@ -68,7 +68,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             msg0UnlinkContextPtr->idContextAlias = idContextAlias;
             msg0UnlinkContextPtr->_priv_idObjectSubject = relayClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0UnlinkContextPtr, ref RemoteContextRelay.s_priv_ByteOrder_Msg0_UnlinkContext, typeof(RemoteContextRelay.Msg0_UnlinkContext), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0UnlinkContextPtr, ref s_priv_ByteOrder_Msg0_UnlinkContext, typeof(RemoteContextRelay.Msg0_UnlinkContext), 0, 0);
             _priv_pmsgUse = (Message*)msg0UnlinkContextPtr;
         }
 
@@ -79,7 +79,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteContextRelay.BuildUnlinkContext(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idContextExisting, idContextAlias);
+            BuildUnlinkContext(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idContextExisting, idContextAlias);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 
@@ -102,7 +102,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             msg1LinkContextPtr->idContextAlias = idContextAlias;
             msg1LinkContextPtr->_priv_idObjectSubject = relayClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1LinkContextPtr, ref RemoteContextRelay.s_priv_ByteOrder_Msg1_LinkContext, typeof(RemoteContextRelay.Msg1_LinkContext), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg1LinkContextPtr, ref s_priv_ByteOrder_Msg1_LinkContext, typeof(RemoteContextRelay.Msg1_LinkContext), 0, 0);
             _priv_pmsgUse = (Message*)msg1LinkContextPtr;
         }
 
@@ -113,7 +113,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteContextRelay.BuildLinkContext(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idContextExisting, idContextAlias);
+            BuildLinkContext(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idContextExisting, idContextAlias);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 

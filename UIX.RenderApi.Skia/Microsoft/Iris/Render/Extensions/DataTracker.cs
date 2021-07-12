@@ -36,8 +36,8 @@ namespace Microsoft.Iris.Render.Extensions
         {
             foreach (IDisposable disposable in this.m_dictData.Values)
                 disposable.Dispose();
-            this.m_dictData = (Map<object, IDisposable>)null;
-            GC.SuppressFinalize((object)this);
+            this.m_dictData = null;
+            GC.SuppressFinalize(this);
         }
     }
 }

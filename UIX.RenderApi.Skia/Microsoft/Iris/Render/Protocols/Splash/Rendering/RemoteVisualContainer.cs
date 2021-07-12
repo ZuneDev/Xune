@@ -34,7 +34,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg19CreatePtr->_priv_msgid = 19U;
             msg19CreatePtr->_priv_idObjectSubject = remoteVisualContainer.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteVisualContainer.s_priv_ByteOrder_Msg19_Create, typeof(RemoteVisualContainer.Msg19_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg19_Create, typeof(RemoteVisualContainer.Msg19_Create), 0, 0);
             port.CreateRemoteObject(containerClassHandle, remoteVisualContainer.m_renderHandle, (Message*)msg19CreatePtr);
             return remoteVisualContainer;
         }
@@ -56,7 +56,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg18SetCameraPtr->camera = camera != null ? camera.RenderHandle : RENDERHANDLE.NULL;
             msg18SetCameraPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg18SetCameraPtr, ref RemoteVisualContainer.s_priv_ByteOrder_Msg18_SetCamera, typeof(RemoteVisualContainer.Msg18_SetCamera), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg18SetCameraPtr, ref s_priv_ByteOrder_Msg18_SetCamera, typeof(RemoteVisualContainer.Msg18_SetCamera), 0, 0);
             _priv_pmsgUse = (Message*)msg18SetCameraPtr;
         }
 

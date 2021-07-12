@@ -29,7 +29,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (fInDispose && this.m_remoteDevice != null)
                     this.m_remoteDevice.Dispose();
-                this.m_remoteDevice = (RemoteNtDevice)null;
+                this.m_remoteDevice = null;
             }
             finally
             {
@@ -39,11 +39,11 @@ namespace Microsoft.Iris.Render.Graphics
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteDevice.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = (RemoteNtDevice)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = null;
 
         internal RemoteNtDevice RemoteStub => this.m_remoteDevice;
 
-        internal override RemoteDevice RemoteDevice => (RemoteDevice)this.m_remoteDevice;
+        internal override RemoteDevice RemoteDevice => m_remoteDevice;
 
         public Size EstimatedMaxPerformantResolution
         {
@@ -134,18 +134,18 @@ namespace Microsoft.Iris.Render.Graphics
             if (totalVideoMemory > 67108864UL)
                 sizeSurfacePxl = totalVideoMemory <= 134217728UL ? new Size(1920, 1280) : new Size(2048, 1600);
             videoMemoryBreakdown.sizeLargeBuffersPxl = sizeSurfacePxl;
-            uint num2 = NtGraphicsDevice.GetPixelCB(sizeSurfacePxl) * 3U;
-            ulong num3 = num1 - (ulong)num2;
+            uint num2 = GetPixelCB(sizeSurfacePxl) * 3U;
+            ulong num3 = num1 - num2;
             videoMemoryBreakdown.cbVideo = 16777216U;
-            ulong num4 = num3 - (ulong)videoMemoryBreakdown.cbVideo;
+            ulong num4 = num3 - videoMemoryBreakdown.cbVideo;
             videoMemoryBreakdown.sizeBackgroundPxl = new Size(1024, 768);
-            uint pixelCb = NtGraphicsDevice.GetPixelCB(videoMemoryBreakdown.sizeBackgroundPxl);
-            ulong num5 = num4 - (ulong)pixelCb - totalVideoMemory / 20UL;
+            uint pixelCb = GetPixelCB(videoMemoryBreakdown.sizeBackgroundPxl);
+            ulong num5 = num4 - pixelCb - totalVideoMemory / 20UL;
             videoMemoryBreakdown.sizeDynamicPoolPxl = dedicatedVideoMemory >= 121634816UL ? new Size(2048, 2048) : new Size(1920, 548);
             uint num6 = (uint)(videoMemoryBreakdown.sizeDynamicPoolPxl.Width * videoMemoryBreakdown.sizeDynamicPoolPxl.Height * 4);
-            for (uint index = 33554432; videoMemoryBreakdown.cbMinimumPool < index && num5 > (ulong)num6; num5 -= (ulong)num6)
+            for (uint index = 33554432; videoMemoryBreakdown.cbMinimumPool < index && num5 > num6; num5 -= num6)
                 videoMemoryBreakdown.cbMinimumPool += num6;
-            return (object)videoMemoryBreakdown;
+            return videoMemoryBreakdown;
         }
     }
 }

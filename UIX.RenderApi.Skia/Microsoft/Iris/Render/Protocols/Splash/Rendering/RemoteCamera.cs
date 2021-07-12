@@ -38,7 +38,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg5CreatePtr->_priv_msgid = 5U;
             msg5CreatePtr->_priv_idObjectSubject = remoteCamera.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteCamera.s_priv_ByteOrder_Msg5_Create, typeof(RemoteCamera.Msg5_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg5_Create, typeof(RemoteCamera.Msg5_Create), 0, 0);
             port.CreateRemoteObject(cameraClassHandle, remoteCamera.m_renderHandle, (Message*)msg5CreatePtr);
             return remoteCamera;
         }
@@ -58,7 +58,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0SetPerspectivePtr->fPerspective = fPerspective ? uint.MaxValue : 0U;
             msg0SetPerspectivePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0SetPerspectivePtr, ref RemoteCamera.s_priv_ByteOrder_Msg0_SetPerspective, typeof(RemoteCamera.Msg0_SetPerspective), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0SetPerspectivePtr, ref s_priv_ByteOrder_Msg0_SetPerspective, typeof(RemoteCamera.Msg0_SetPerspective), 0, 0);
             _priv_pmsgUse = (Message*)msg0SetPerspectivePtr;
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg1SetZnPtr->flZn = flZn;
             msg1SetZnPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1SetZnPtr, ref RemoteCamera.s_priv_ByteOrder_Msg1_SetZn, typeof(RemoteCamera.Msg1_SetZn), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg1SetZnPtr, ref s_priv_ByteOrder_Msg1_SetZn, typeof(RemoteCamera.Msg1_SetZn), 0, 0);
             _priv_pmsgUse = (Message*)msg1SetZnPtr;
         }
 
@@ -112,7 +112,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg2SetUpPtr->vUp = vUp;
             msg2SetUpPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg2SetUpPtr, ref RemoteCamera.s_priv_ByteOrder_Msg2_SetUp, typeof(RemoteCamera.Msg2_SetUp), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg2SetUpPtr, ref s_priv_ByteOrder_Msg2_SetUp, typeof(RemoteCamera.Msg2_SetUp), 0, 0);
             _priv_pmsgUse = (Message*)msg2SetUpPtr;
         }
 
@@ -139,7 +139,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg3SetAtPtr->vAt = vAt;
             msg3SetAtPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg3SetAtPtr, ref RemoteCamera.s_priv_ByteOrder_Msg3_SetAt, typeof(RemoteCamera.Msg3_SetAt), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg3SetAtPtr, ref s_priv_ByteOrder_Msg3_SetAt, typeof(RemoteCamera.Msg3_SetAt), 0, 0);
             _priv_pmsgUse = (Message*)msg3SetAtPtr;
         }
 
@@ -166,7 +166,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg4SetEyePtr->vEye = vEye;
             msg4SetEyePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg4SetEyePtr, ref RemoteCamera.s_priv_ByteOrder_Msg4_SetEye, typeof(RemoteCamera.Msg4_SetEye), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg4SetEyePtr, ref s_priv_ByteOrder_Msg4_SetEye, typeof(RemoteCamera.Msg4_SetEye), 0, 0);
             _priv_pmsgUse = (Message*)msg4SetEyePtr;
         }
 

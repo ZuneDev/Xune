@@ -24,39 +24,39 @@ namespace Microsoft.Iris.Render.Extensions
             if (this.m_eDebug == null)
                 return;
             this.m_eDebug.Dispose();
-            this.m_eDebug = (eDebug)null;
+            this.m_eDebug = null;
         }
 
         public static Stack CurrentContextStack
         {
             get
             {
-                Stack stack = (Stack)null;
-                DebugDefault.s_contextLock.AcquireReaderLock(-1);
+                Stack stack = null;
+                s_contextLock.AcquireReaderLock(-1);
                 try
                 {
-                    stack = DebugDefault.s_contextDict[Thread.CurrentThread];
+                    stack = s_contextDict[Thread.CurrentThread];
                 }
                 finally
                 {
-                    DebugDefault.s_contextLock.ReleaseReaderLock();
+                    s_contextLock.ReleaseReaderLock();
                 }
                 if (stack == null)
                 {
-                    DebugDefault.s_contextLock.AcquireWriterLock(-1);
+                    s_contextLock.AcquireWriterLock(-1);
                     try
                     {
-                        stack = DebugDefault.s_contextDict[Thread.CurrentThread];
+                        stack = s_contextDict[Thread.CurrentThread];
                         if (stack == null)
                         {
                             stack = new Stack();
-                            stack.Push((object)"<top>");
-                            DebugDefault.s_contextDict[Thread.CurrentThread] = stack;
+                            stack.Push("<top>");
+                            s_contextDict[Thread.CurrentThread] = stack;
                         }
                     }
                     finally
                     {
-                        DebugDefault.s_contextLock.ReleaseWriterLock();
+                        s_contextLock.ReleaseWriterLock();
                     }
                 }
                 return stack;
@@ -67,27 +67,27 @@ namespace Microsoft.Iris.Render.Extensions
         {
             if (context == null)
                 context = "<null>";
-            DebugDefault.CurrentContextStack.Push((object)context);
-            this.m_eDebug.WriteLinePrefix = string.Format((IFormatProvider)CultureInfo.InvariantCulture, "[{0}]", (object)context);
+            CurrentContextStack.Push(context);
+            this.m_eDebug.WriteLinePrefix = string.Format(CultureInfo.InvariantCulture, "[{0}]", context);
         }
 
         void IDebug.Leave(string context)
         {
-            Stack currentContextStack = DebugDefault.CurrentContextStack;
+            Stack currentContextStack = CurrentContextStack;
             this.m_eDebug.Assert(currentContextStack.Count > 0, "Context stack is empty");
             if (currentContextStack.Count > 0)
-                this.m_eDebug.WriteLinePrefix = string.Format((IFormatProvider)CultureInfo.InvariantCulture, "[{0}]", (object)(string)currentContextStack.Peek());
+                this.m_eDebug.WriteLinePrefix = string.Format(CultureInfo.InvariantCulture, "[{0}]", (string)currentContextStack.Peek());
             else
-                this.m_eDebug.WriteLinePrefix = (string)null;
+                this.m_eDebug.WriteLinePrefix = null;
         }
 
         void IDebug.Assert(bool condition, string message) => this.m_eDebug.Assert(condition, message);
 
         void IDebug.Throw(bool condition, string message) => this.m_eDebug.Prompt(condition, message, typeof(InvalidOperationException));
 
-        void IDebug.Write(DebugCategory category, int level, string message) => this.m_eDebug.Write(category, (byte)level, (object)message);
+        void IDebug.Write(DebugCategory category, int level, string message) => this.m_eDebug.Write(category, (byte)level, message);
 
-        void IDebug.WriteLine(DebugCategory category, int level, string message) => this.m_eDebug.WriteLine(category, (byte)level, (object)message);
+        void IDebug.WriteLine(DebugCategory category, int level, string message) => this.m_eDebug.WriteLine(category, (byte)level, message);
 
         void IDebug.Indent(DebugCategory category, int level) => this.m_eDebug.Indent(category, (byte)level);
 

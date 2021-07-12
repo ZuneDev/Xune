@@ -36,7 +36,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg3CreatePtr->_priv_msgid = 3U;
             msg3CreatePtr->_priv_idObjectSubject = animationManager.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteAnimationManager.s_priv_ByteOrder_Msg3_Create, typeof(RemoteAnimationManager.Msg3_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg3_Create, typeof(RemoteAnimationManager.Msg3_Create), 0, 0);
             port.CreateRemoteObject(managerClassHandle, animationManager.m_renderHandle, (Message*)msg3CreatePtr);
             return animationManager;
         }
@@ -56,7 +56,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             setAnimationRatePtr->nFramesPerSecond = nFramesPerSecond;
             setAnimationRatePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setAnimationRatePtr, ref RemoteAnimationManager.s_priv_ByteOrder_Msg0_SetAnimationRate, typeof(RemoteAnimationManager.Msg0_SetAnimationRate), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setAnimationRatePtr, ref s_priv_ByteOrder_Msg0_SetAnimationRate, typeof(RemoteAnimationManager.Msg0_SetAnimationRate), 0, 0);
             _priv_pmsgUse = (Message*)setAnimationRatePtr;
         }
 
@@ -83,7 +83,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             pulseTimeAdvancePtr->nPulseMs = nPulseMs;
             pulseTimeAdvancePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)pulseTimeAdvancePtr, ref RemoteAnimationManager.s_priv_ByteOrder_Msg1_PulseTimeAdvance, typeof(RemoteAnimationManager.Msg1_PulseTimeAdvance), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)pulseTimeAdvancePtr, ref s_priv_ByteOrder_Msg1_PulseTimeAdvance, typeof(RemoteAnimationManager.Msg1_PulseTimeAdvance), 0, 0);
             _priv_pmsgUse = (Message*)pulseTimeAdvancePtr;
         }
 
@@ -110,7 +110,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             globalSpeedAdjustmentPtr->flFactor = flFactor;
             globalSpeedAdjustmentPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)globalSpeedAdjustmentPtr, ref RemoteAnimationManager.s_priv_ByteOrder_Msg2_SetGlobalSpeedAdjustment, typeof(RemoteAnimationManager.Msg2_SetGlobalSpeedAdjustment), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)globalSpeedAdjustmentPtr, ref s_priv_ByteOrder_Msg2_SetGlobalSpeedAdjustment, typeof(RemoteAnimationManager.Msg2_SetGlobalSpeedAdjustment), 0, 0);
             _priv_pmsgUse = (Message*)globalSpeedAdjustmentPtr;
         }
 

@@ -48,13 +48,13 @@ namespace Microsoft.Iris.Render.Graphics
             this.m_session = device.Session;
             Debug2.Validate(this.m_session != null, typeof(InvalidOperationException), "Creating a SurfacePool requires a RenderSession");
             this.m_session.AssertOwningThread();
-            this.m_remotePool = (RemoteSurfacePool)null;
+            this.m_remotePool = null;
             this.m_sizeStoragePxl = new Size();
             this.m_nFormat = nFormat;
             RENDERHANDLE handle = rhExternal;
             if (handle == RENDERHANDLE.NULL)
             {
-                handle = this.m_session.RenderingPort.AllocHandle((IRenderHandleOwner)this);
+                handle = this.m_session.RenderingPort.AllocHandle(this);
                 this.m_fPrimaryOwner = true;
             }
             try
@@ -65,12 +65,12 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (this.m_remotePool == null)
                 {
-                    GC.SuppressFinalize((object)this);
+                    GC.SuppressFinalize(this);
                     if (this.m_fPrimaryOwner)
                         this.m_session.RenderingPort.FreeHandle(handle);
                 }
             }
-            this.m_trackerSurfaces = new ObjectTracker(this.m_session, (object)this);
+            this.m_trackerSurfaces = new ObjectTracker(this.m_session, this);
             if (this.m_fPrimaryOwner)
                 return;
             this.m_nStorage = SurfacePoolAllocationResult.Immoveable;
@@ -84,7 +84,7 @@ namespace Microsoft.Iris.Render.Graphics
                 this.m_remotePool = RemoteSurfacePool.CreateFromHandle(this.m_session.RenderingPort, handle);
             }
             else
-                this.m_remotePool = RemoteSurfacePool.CreateFromExternalHandle(this.m_session.RenderingPort, handle, (IRenderHandleOwner)this);
+                this.m_remotePool = RemoteSurfacePool.CreateFromExternalHandle(this.m_session.RenderingPort, handle, this);
         }
 
         protected override void Dispose(bool fInDispose)
@@ -94,16 +94,16 @@ namespace Microsoft.Iris.Render.Graphics
                 if (fInDispose)
                 {
                     if (this.m_effect != null)
-                        this.m_effect.UnregisterUsage((object)this);
+                        this.m_effect.UnregisterUsage(this);
                     this.DisposeAllSurfaces();
                     this.m_trackerSurfaces.Dispose();
                     this.m_remotePool.Dispose();
                     this.m_device.OnSurfacePoolDispose();
                 }
-                this.m_effect = (Effect)null;
-                this.m_remotePool = (RemoteSurfacePool)null;
-                this.m_trackerSurfaces = (ObjectTracker)null;
-                this.m_device = (GraphicsDevice)null;
+                this.m_effect = null;
+                this.m_remotePool = null;
+                this.m_trackerSurfaces = null;
+                this.m_device = null;
             }
             finally
             {
@@ -113,7 +113,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remotePool.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remotePool = (RemoteSurfacePool)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remotePool = null;
 
         public Size StorageSize => this.m_sizeStoragePxl;
 
@@ -135,9 +135,9 @@ namespace Microsoft.Iris.Render.Graphics
         {
             get
             {
-                IList list = (IList)null;
+                IList list = null;
                 if (this.m_trackerSurfaces != null)
-                    list = (IList)this.m_trackerSurfaces.LiveObjects;
+                    list = m_trackerSurfaces.LiveObjects;
                 return list;
             }
         }
@@ -153,11 +153,11 @@ namespace Microsoft.Iris.Render.Graphics
                 if (this.m_effect == effect)
                     return;
                 if (this.m_effect != null)
-                    this.m_effect.UnregisterUsage((object)this);
+                    this.m_effect.UnregisterUsage(this);
                 this.m_effect = effect;
                 if (this.m_effect != null)
-                    this.m_effect.RegisterUsage((object)this);
-                this.m_remotePool.SendSetEffect(this.m_effect == null ? (RemoteEffect)null : this.m_effect.RemoteStub);
+                    this.m_effect.RegisterUsage(this);
+                this.m_remotePool.SendSetEffect(this.m_effect == null ? null : this.m_effect.RemoteStub);
             }
         }
 
@@ -167,7 +167,7 @@ namespace Microsoft.Iris.Render.Graphics
             return this.AttachSurface(spNew);
         }
 
-        internal int AttachSurface(Surface spNew) => this.m_trackerSurfaces.AddObject((object)spNew);
+        internal int AttachSurface(Surface spNew) => this.m_trackerSurfaces.AddObject(spNew);
 
         internal void DisposeAllSurfaces()
         {
@@ -175,7 +175,7 @@ namespace Microsoft.Iris.Render.Graphics
                 return;
             ArrayList liveObjects = this.m_trackerSurfaces.LiveObjects;
             for (int index = 0; index < liveObjects.Count; ++index)
-                ((SharedRenderObject)liveObjects[index]).UnregisterUsage((object)this);
+                ((SharedRenderObject)liveObjects[index]).UnregisterUsage(this);
         }
 
         internal void NotifyDisposeSurface(int nID)
@@ -206,7 +206,7 @@ namespace Microsoft.Iris.Render.Graphics
                 return;
             int surfacePoolInstanceId = surCur.SurfacePoolInstanceID;
             surfacePool.NotifyDisposeSurface(surfacePoolInstanceId);
-            int nNewInstanceID = poolNew.m_trackerSurfaces.AddObject((object)surCur);
+            int nNewInstanceID = poolNew.m_trackerSurfaces.AddObject(surCur);
             surCur.NotifyNewPool(poolNew, nNewInstanceID);
         }
 

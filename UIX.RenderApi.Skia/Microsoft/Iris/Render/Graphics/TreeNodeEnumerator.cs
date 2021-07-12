@@ -17,17 +17,17 @@ namespace Microsoft.Iris.Render.Graphics
         internal TreeNodeEnumerator(TreeNode nodeParent)
         {
             this.m_nodeParent = nodeParent;
-            this.m_nodeCurrent = (TreeNode)null;
+            this.m_nodeCurrent = null;
             this.m_nodeNext = nodeParent.FirstChild;
         }
 
-        object IEnumerator.Current => (object)this.m_nodeCurrent;
+        object IEnumerator.Current => m_nodeCurrent;
 
         public TreeNode Current => this.m_nodeCurrent;
 
         public void Reset()
         {
-            this.m_nodeCurrent = (TreeNode)null;
+            this.m_nodeCurrent = null;
             this.m_nodeNext = this.m_nodeParent.FirstChild;
         }
 

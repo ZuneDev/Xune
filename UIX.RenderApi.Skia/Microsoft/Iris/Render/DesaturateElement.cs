@@ -20,7 +20,7 @@ namespace Microsoft.Iris.Render
           : this()
         {
             Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
-            Debug2.Validate((double)flDesaturate >= 0.0 && (double)flDesaturate <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for desaturate is [0,1]");
+            Debug2.Validate(flDesaturate >= 0.0 && flDesaturate <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for desaturate is [0,1]");
             this.m_flDesaturate = flDesaturate;
             this.m_stName = stName;
         }
@@ -39,10 +39,10 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Desaturate", (byte)8, ref this.m_nDesaturateID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Desaturate", 8, ref this.m_nDesaturateID, ref nNextUniqueID);
         }
 
-        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Desaturate", EffectPropertyType.Float, (object)this.m_flDesaturate, this.m_nDesaturateID, dictProperties);
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Desaturate", EffectPropertyType.Float, m_flDesaturate, this.m_nDesaturateID, dictProperties);
 
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {

@@ -22,7 +22,7 @@ namespace Microsoft.Iris.Render
         private float m_flG;
         private float m_flB;
 
-        public ColorF(int red, int green, int blue) => this = ColorF.FromArgb((int)byte.MaxValue, red, green, blue);
+        public ColorF(int red, int green, int blue) => this = FromArgb(byte.MaxValue, red, green, blue);
 
         public ColorF(float red, float green, float blue)
         {
@@ -32,7 +32,7 @@ namespace Microsoft.Iris.Render
             this.m_flB = blue;
         }
 
-        public ColorF(int alpha, int red, int green, int blue) => this = ColorF.FromArgb(alpha, red, green, blue);
+        public ColorF(int alpha, int red, int green, int blue) => this = FromArgb(alpha, red, green, blue);
 
         public ColorF(float alpha, float red, float green, float blue)
         {
@@ -68,46 +68,46 @@ namespace Microsoft.Iris.Render
 
         public uint PackedInt
         {
-            get => (uint)((int)ColorF.ChannelToByte(this.m_flA) << 24 | (int)ColorF.ChannelToByte(this.m_flR) << 16 | (int)ColorF.ChannelToByte(this.m_flG) << 8) | (uint)ColorF.ChannelToByte(this.m_flB);
-            set => this = ColorF.FromArgb(value);
+            get => (uint)(ChannelToByte(this.m_flA) << 24 | ChannelToByte(this.m_flR) << 16 | ChannelToByte(this.m_flG) << 8) | ChannelToByte(this.m_flB);
+            set => this = FromArgb(value);
         }
 
         private static float CheckByte(int value, string name)
         {
-            if (value < 0 || value > (int)byte.MaxValue)
-                throw new ArgumentException(string.Format("Invalid value ({0}) for {1} color channel. Expecting a value between 0 and 255.", (object)value, (object)name), name);
-            return (float)value / (float)byte.MaxValue;
+            if (value < 0 || value > byte.MaxValue)
+                throw new ArgumentException(string.Format("Invalid value ({0}) for {1} color channel. Expecting a value between 0 and 255.", value, name), name);
+            return value / (float)byte.MaxValue;
         }
 
-        private static byte ChannelToByte(float flChannel) => (byte)Math.Round((double)Math.Max(Math.Min(1f, flChannel), 0.0f) * (double)byte.MaxValue);
+        private static byte ChannelToByte(float flChannel) => (byte)Math.Round(Math.Max(Math.Min(1f, flChannel), 0.0f) * (double)byte.MaxValue);
 
-        private static uint MakeArgb(byte alpha, byte red, byte green, byte blue) => (uint)((int)red << 16 | (int)green << 8 | (int)blue | (int)alpha << 24);
+        private static uint MakeArgb(byte alpha, byte red, byte green, byte blue) => (uint)(red << 16 | green << 8 | blue | alpha << 24);
 
-        internal static ColorF FromCOLORREF(Win32Api.COLORREF cr) => ColorF.FromArgb(Win32Api.GetRValue(cr), Win32Api.GetGValue(cr), Win32Api.GetBValue(cr));
+        internal static ColorF FromCOLORREF(Win32Api.COLORREF cr) => FromArgb(Win32Api.GetRValue(cr), Win32Api.GetGValue(cr), Win32Api.GetBValue(cr));
 
-        public static ColorF FromArgb(uint argb) => new ColorF((int)(argb >> 24) & (int)byte.MaxValue, (int)(argb >> 16) & (int)byte.MaxValue, (int)(argb >> 8) & (int)byte.MaxValue, (int)argb & (int)byte.MaxValue);
+        public static ColorF FromArgb(uint argb) => new ColorF((int)(argb >> 24) & byte.MaxValue, (int)(argb >> 16) & byte.MaxValue, (int)(argb >> 8) & byte.MaxValue, (int)argb & byte.MaxValue);
 
-        public static ColorF FromArgb(int alpha, int red, int green, int blue) => new ColorF(ColorF.CheckByte(alpha, nameof(alpha)), ColorF.CheckByte(red, nameof(red)), ColorF.CheckByte(green, nameof(green)), ColorF.CheckByte(blue, nameof(blue)));
+        public static ColorF FromArgb(int alpha, int red, int green, int blue) => new ColorF(CheckByte(alpha, nameof(alpha)), CheckByte(red, nameof(red)), CheckByte(green, nameof(green)), CheckByte(blue, nameof(blue)));
 
-        public static ColorF FromArgb(int red, int green, int blue) => ColorF.FromArgb((int)byte.MaxValue, red, green, blue);
+        public static ColorF FromArgb(int red, int green, int blue) => FromArgb(byte.MaxValue, red, green, blue);
 
-        internal Win32Api.COLORREF ToCOLORREF() => Win32Api.RGB(ColorF.ChannelToByte(this.m_flR), ColorF.ChannelToByte(this.m_flG), ColorF.ChannelToByte(this.m_flB));
+        internal Win32Api.COLORREF ToCOLORREF() => Win32Api.RGB(ChannelToByte(this.m_flR), ChannelToByte(this.m_flG), ChannelToByte(this.m_flB));
 
-        internal Win32Api.COLORREF ToCOLORREF2() => Win32Api.ARGB(ColorF.ChannelToByte(this.m_flA), ColorF.ChannelToByte(this.m_flR), ColorF.ChannelToByte(this.m_flG), ColorF.ChannelToByte(this.m_flB));
+        internal Win32Api.COLORREF ToCOLORREF2() => Win32Api.ARGB(ChannelToByte(this.m_flA), ChannelToByte(this.m_flR), ChannelToByte(this.m_flG), ChannelToByte(this.m_flB));
 
         internal float GetValue()
         {
             float num1 = this.m_flR;
             float num2 = this.m_flR;
-            if ((double)this.m_flG > (double)num1)
+            if (m_flG > (double)num1)
                 num1 = this.m_flG;
-            if ((double)this.m_flB > (double)num1)
+            if (m_flB > (double)num1)
                 num1 = this.m_flB;
-            if ((double)this.m_flG < (double)num2)
+            if (m_flG < (double)num2)
                 num2 = this.m_flG;
-            if ((double)this.m_flB < (double)num2)
+            if (m_flB < (double)num2)
                 num2 = this.m_flB;
-            return (float)(((double)num1 + (double)num2) / 2.0);
+            return (float)((num1 + (double)num2) / 2.0);
         }
 
         internal float GetHue()
@@ -117,23 +117,23 @@ namespace Microsoft.Iris.Render
             float num1 = 0.0f;
             float num2 = this.m_flR;
             float num3 = this.m_flR;
-            if ((double)this.m_flG > (double)num2)
+            if (m_flG > (double)num2)
                 num2 = this.m_flG;
-            if ((double)this.m_flB > (double)num2)
+            if (m_flB > (double)num2)
                 num2 = this.m_flB;
-            if ((double)this.m_flG < (double)num3)
+            if (m_flG < (double)num3)
                 num3 = this.m_flG;
-            if ((double)this.m_flB < (double)num3)
+            if (m_flB < (double)num3)
                 num3 = this.m_flB;
             float num4 = num2 - num3;
-            if ((double)this.m_flR == (double)num2)
+            if (m_flR == (double)num2)
                 num1 = (this.m_flG - this.m_flB) / num4;
-            else if ((double)this.m_flG == (double)num2)
-                num1 = (float)(2.0 + ((double)this.m_flB - (double)this.m_flR) / (double)num4);
-            else if ((double)this.m_flB == (double)num2)
-                num1 = (float)(4.0 + ((double)this.m_flR - (double)this.m_flG) / (double)num4);
+            else if (m_flG == (double)num2)
+                num1 = (float)(2.0 + (m_flB - (double)this.m_flR) / num4);
+            else if (m_flB == (double)num2)
+                num1 = (float)(4.0 + (m_flR - (double)this.m_flG) / num4);
             float num5 = num1 * 60f;
-            if ((double)num5 < 0.0)
+            if (num5 < 0.0)
                 num5 += 360f;
             return num5;
         }
@@ -143,16 +143,16 @@ namespace Microsoft.Iris.Render
             float num = 0.0f;
             float flValue1 = this.m_flR;
             float flValue2 = this.m_flR;
-            if ((double)this.m_flG > (double)flValue1)
+            if (m_flG > (double)flValue1)
                 flValue1 = this.m_flG;
-            if ((double)this.m_flB > (double)flValue1)
+            if (m_flB > (double)flValue1)
                 flValue1 = this.m_flB;
-            if ((double)this.m_flG < (double)flValue2)
+            if (m_flG < (double)flValue2)
                 flValue2 = this.m_flG;
-            if ((double)this.m_flB < (double)flValue2)
+            if (m_flB < (double)flValue2)
                 flValue2 = this.m_flB;
             if (!Math2.WithinEpsilon(flValue1, flValue2))
-                num = ((double)flValue1 + (double)flValue2) / 2.0 > 0.5 ? (float)(((double)flValue1 - (double)flValue2) / (2.0 - (double)flValue1 - (double)flValue2)) : (float)(((double)flValue1 - (double)flValue2) / ((double)flValue1 + (double)flValue2));
+                num = (flValue1 + (double)flValue2) / 2.0 > 0.5 ? (float)((flValue1 - (double)flValue2) / (2.0 - flValue1 - flValue2)) : (float)((flValue1 - (double)flValue2) / (flValue1 + (double)flValue2));
             return num;
         }
 
@@ -162,17 +162,17 @@ namespace Microsoft.Iris.Render
           float flSaturation,
           float flValue)
         {
-            Debug2.Validate((double)flHue >= 0.0 && (double)flHue < 360.0, typeof(ArgumentOutOfRangeException), nameof(flHue));
-            Debug2.Validate((double)flSaturation >= 0.0 && (double)flSaturation <= 1.0, typeof(ArgumentOutOfRangeException), nameof(flSaturation));
-            Debug2.Validate((double)flValue >= 0.0 && (double)flValue <= 1.0, typeof(ArgumentOutOfRangeException), nameof(flValue));
+            Debug2.Validate(flHue >= 0.0 && flHue < 360.0, typeof(ArgumentOutOfRangeException), nameof(flHue));
+            Debug2.Validate(flSaturation >= 0.0 && flSaturation <= 1.0, typeof(ArgumentOutOfRangeException), nameof(flSaturation));
+            Debug2.Validate(flValue >= 0.0 && flValue <= 1.0, typeof(ArgumentOutOfRangeException), nameof(flValue));
             if (Math2.WithinEpsilon(flSaturation, 0.0f))
                 return new ColorF(flAlpha, flValue, flValue, flValue);
             float num1 = flHue / 60f;
-            int num2 = (int)Math.Floor((double)num1) % 6;
-            float num3 = num1 - (float)num2;
+            int num2 = (int)Math.Floor(num1) % 6;
+            float num3 = num1 - num2;
             float num4 = flValue * (1f - flSaturation);
-            float num5 = flValue * (float)(1.0 - (double)num3 * (double)flSaturation);
-            float num6 = flValue * (float)(1.0 - (1.0 - (double)num3) * (double)flSaturation);
+            float num5 = flValue * (float)(1.0 - num3 * (double)flSaturation);
+            float num6 = flValue * (float)(1.0 - (1.0 - num3) * flSaturation);
             switch (num2)
             {
                 case 0:

@@ -21,7 +21,7 @@ namespace Microsoft.Iris.Render.Common
             this.m_owner = owner;
             if (this.m_owner == null)
                 return;
-            this.m_owner.RegisterUsage((object)this);
+            this.m_owner.RegisterUsage(this);
         }
 
         public void Dispatch()
@@ -29,7 +29,7 @@ namespace Microsoft.Iris.Render.Common
             ((DeferredHandler)this.m_method)(this.m_args);
             if (this.m_owner == null)
                 return;
-            this.m_owner.UnregisterUsage((object)this);
+            this.m_owner.UnregisterUsage(this);
         }
     }
 }

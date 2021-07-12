@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         object IList.this[int index]
         {
-            get => (object)this[index];
+            get => this[index];
             set => Debug2.Validate(false, typeof(InvalidOperationException), "Use Add() and Remove() to modify collection");
         }
 
@@ -45,23 +45,23 @@ namespace Microsoft.Iris.Render.Graphics
                     ++num;
                 }
                 Debug2.Validate(false, typeof(ArgumentOutOfRangeException), "Must have a valid index");
-                return (TreeNode)null;
+                return null;
             }
             set => Debug2.Validate(false, typeof(InvalidOperationException), "Use Add() and Remove() to modify collection");
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => (IEnumerator)this.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         public TreeNodeEnumerator GetEnumerator() => new TreeNodeEnumerator(this.m_nodeSubject);
 
         void ICollection.CopyTo(Array arDest, int idxDest)
         {
-            TreeNodeCollection.PromptCompatibleArray(arDest, idxDest, typeof(TreeNode), this.m_nodeSubject.ChildCount);
+            PromptCompatibleArray(arDest, idxDest, typeof(TreeNode), this.m_nodeSubject.ChildCount);
             foreach (TreeNode treeNode in this)
-                arDest.SetValue((object)treeNode, idxDest++);
+                arDest.SetValue(treeNode, idxDest++);
         }
 
-        public void CopyTo(TreeNode[] arDest, int idxDest) => ((ICollection)this).CopyTo((Array)arDest, idxDest);
+        public void CopyTo(TreeNode[] arDest, int idxDest) => ((ICollection)this).CopyTo(arDest, idxDest);
 
         int IList.Add(object value)
         {
@@ -73,7 +73,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             Debug2.Validate(nodeChild != null, typeof(ArgumentNullException), "Must have a valid child");
             Debug2.Validate(nodeChild.Parent == null, typeof(ArgumentException), "Child must not already be parented");
-            nodeChild.ChangeParent(this.m_nodeSubject, (TreeNode)null, TreeNode.LinkType.Last);
+            nodeChild.ChangeParent(this.m_nodeSubject, null, TreeNode.LinkType.Last);
         }
 
         public void Clear() => this.m_nodeSubject.RemoveAllChildren();
@@ -109,7 +109,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             Debug2.Validate(nodeChild != null, typeof(ArgumentNullException), "Must have a valid child");
             Debug2.Validate(nodeChild.Parent == null, typeof(ArgumentException), "Child must not already be parented");
-            TreeNode nodeSibling = (TreeNode)null;
+            TreeNode nodeSibling = null;
             TreeNode.LinkType lt = TreeNode.LinkType.Last;
             if (idxInsertAt < this.Count)
             {
@@ -124,10 +124,10 @@ namespace Microsoft.Iris.Render.Graphics
         public void Remove(TreeNode nodeChild)
         {
             Debug2.Validate(nodeChild != null, typeof(ArgumentNullException), "must pass a valid TreeNode");
-            nodeChild.ChangeParent((TreeNode)null);
+            nodeChild.ChangeParent(null);
         }
 
-        public void RemoveAt(int idxRemoveAt) => this[idxRemoveAt].ChangeParent((TreeNode)null);
+        public void RemoveAt(int idxRemoveAt) => this[idxRemoveAt].ChangeParent(null);
 
         public static void PromptCompatibleArray(
           Array array,

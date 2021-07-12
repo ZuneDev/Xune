@@ -26,15 +26,15 @@ namespace Microsoft.Iris.Render
 
         public AnimationTypeMask(AnimationTypeChannel channel0)
         {
-            this.m_maskCode = (ushort)0;
-            this.m_channelCount = (byte)1;
+            this.m_maskCode = 0;
+            this.m_channelCount = 1;
             this[0] = channel0;
         }
 
         public AnimationTypeMask(AnimationTypeChannel channel0, AnimationTypeChannel channel1)
         {
-            this.m_maskCode = (ushort)0;
-            this.m_channelCount = (byte)2;
+            this.m_maskCode = 0;
+            this.m_channelCount = 2;
             this[0] = channel0;
             this[1] = channel1;
         }
@@ -44,8 +44,8 @@ namespace Microsoft.Iris.Render
           AnimationTypeChannel channel1,
           AnimationTypeChannel channel2)
         {
-            this.m_maskCode = (ushort)0;
-            this.m_channelCount = (byte)3;
+            this.m_maskCode = 0;
+            this.m_channelCount = 3;
             this[0] = channel0;
             this[1] = channel1;
             this[2] = channel2;
@@ -57,8 +57,8 @@ namespace Microsoft.Iris.Render
           AnimationTypeChannel channel2,
           AnimationTypeChannel channel3)
         {
-            this.m_maskCode = (ushort)0;
-            this.m_channelCount = (byte)4;
+            this.m_maskCode = 0;
+            this.m_channelCount = 4;
             this[0] = channel0;
             this[1] = channel1;
             this[2] = channel2;
@@ -73,14 +73,14 @@ namespace Microsoft.Iris.Render
 
         internal ushort MaskCode => this.m_maskCode;
 
-        public uint ChannelCount => (uint)this.m_channelCount & 7U;
+        public uint ChannelCount => m_channelCount & 7U;
 
         public static AnimationTypeMask FromString(string maskSpec)
         {
             AnimationTypeMask animationTypeMask;
             if (string.IsNullOrEmpty(maskSpec))
             {
-                animationTypeMask = AnimationTypeMask.Default;
+                animationTypeMask = Default;
             }
             else
             {
@@ -91,42 +91,42 @@ namespace Microsoft.Iris.Render
                     switch (maskSpec[index])
                     {
                         case '0':
-                            arrayList.Add((object)AnimationTypeChannel.O);
+                            arrayList.Add(AnimationTypeChannel.O);
                             break;
                         case 'A':
                         case 'a':
-                            arrayList.Add((object)AnimationTypeChannel.W);
+                            arrayList.Add(AnimationTypeChannel.W);
                             break;
                         case 'B':
                         case 'b':
-                            arrayList.Add((object)AnimationTypeChannel.Z);
+                            arrayList.Add(AnimationTypeChannel.Z);
                             break;
                         case 'G':
                         case 'g':
-                            arrayList.Add((object)AnimationTypeChannel.Y);
+                            arrayList.Add(AnimationTypeChannel.Y);
                             break;
                         case 'R':
                         case 'r':
-                            arrayList.Add((object)AnimationTypeChannel.X);
+                            arrayList.Add(AnimationTypeChannel.X);
                             break;
                         case 'W':
                         case 'w':
-                            arrayList.Add((object)AnimationTypeChannel.W);
+                            arrayList.Add(AnimationTypeChannel.W);
                             break;
                         case 'X':
                         case 'x':
-                            arrayList.Add((object)AnimationTypeChannel.X);
+                            arrayList.Add(AnimationTypeChannel.X);
                             break;
                         case 'Y':
                         case 'y':
-                            arrayList.Add((object)AnimationTypeChannel.Y);
+                            arrayList.Add(AnimationTypeChannel.Y);
                             break;
                         case 'Z':
                         case 'z':
-                            arrayList.Add((object)AnimationTypeChannel.Z);
+                            arrayList.Add(AnimationTypeChannel.Z);
                             break;
                         default:
-                            Debug2.Validate(false, typeof(ArgumentException), (object)"Invalid mask spec: {0}", (object)maskSpec[index]);
+                            Debug2.Validate(false, typeof(ArgumentException), "Invalid mask spec: {0}", maskSpec[index]);
                             break;
                     }
                 }
@@ -146,14 +146,14 @@ namespace Microsoft.Iris.Render
                         break;
                     default:
                         Debug2.Throw(false, "Too many channels in mask spec!");
-                        animationTypeMask = AnimationTypeMask.Default;
+                        animationTypeMask = Default;
                         break;
                 }
             }
             return animationTypeMask;
         }
 
-        public override bool Equals(object obj) => obj is AnimationTypeMask animationTypeMask && (int)animationTypeMask.m_channelCount == (int)this.m_channelCount && (int)animationTypeMask.m_maskCode == (int)this.m_maskCode;
+        public override bool Equals(object obj) => obj is AnimationTypeMask animationTypeMask && animationTypeMask.m_channelCount == m_channelCount && animationTypeMask.m_maskCode == m_maskCode;
 
         public override int GetHashCode() => this.m_channelCount.GetHashCode() ^ this.m_maskCode.GetHashCode();
 
@@ -183,7 +183,7 @@ namespace Microsoft.Iris.Render
             }
             if (this.ChannelCount != 0U)
             {
-                for (int channelIndex = 0; (long)channelIndex < (long)this.ChannelCount; ++channelIndex)
+                for (int channelIndex = 0; channelIndex < ChannelCount; ++channelIndex)
                 {
                     if (this[channelIndex] > animationTypeChannel)
                         flag = false;
@@ -222,7 +222,7 @@ namespace Microsoft.Iris.Render
         private AnimationTypeChannel GetChannel(int channelIndex)
         {
             Debug2.Validate(channelIndex >= 0 && channelIndex <= 3, typeof(ArgumentOutOfRangeException), "Channel index must be between 0 and 3");
-            return (AnimationTypeChannel)((int)this.m_maskCode >> channelIndex * 4 & 15);
+            return (AnimationTypeChannel)(m_maskCode >> channelIndex * 4 & 15);
         }
 
         private void SetChannel(int channelIndex, AnimationTypeChannel channel)
@@ -231,7 +231,7 @@ namespace Microsoft.Iris.Render
             Debug2.Validate(channel >= AnimationTypeChannel.O && channel <= AnimationTypeChannel.W, typeof(ArgumentOutOfRangeException), nameof(channel));
             int num1 = (int)channel << channelIndex * 4;
             int num2 = 15 << channelIndex * 4;
-            this.m_maskCode = (ushort)(((int)this.m_maskCode & ~num2 | num1 & num2) & (int)ushort.MaxValue);
+            this.m_maskCode = (ushort)((m_maskCode & ~num2 | num1 & num2) & ushort.MaxValue);
         }
     }
 }

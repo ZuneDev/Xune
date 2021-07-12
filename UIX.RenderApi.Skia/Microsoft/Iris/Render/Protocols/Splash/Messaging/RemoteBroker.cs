@@ -36,7 +36,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             msg0DestroyObjectPtr->idObject = idObject;
             msg0DestroyObjectPtr->_priv_idObjectSubject = brokerClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0DestroyObjectPtr, ref RemoteBroker.s_priv_ByteOrder_Msg0_DestroyObject, typeof(RemoteBroker.Msg0_DestroyObject), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0DestroyObjectPtr, ref s_priv_ByteOrder_Msg0_DestroyObject, typeof(RemoteBroker.Msg0_DestroyObject), 0, 0);
             _priv_pmsgUse = (Message*)msg0DestroyObjectPtr;
         }
 
@@ -46,7 +46,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteBroker.BuildDestroyObject(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idObject);
+            BuildDestroyObject(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idObject);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 
@@ -74,7 +74,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             blobInfo.Attach((Message*)msg1CreateObjectPtr);
             msg1CreateObjectPtr->_priv_idObjectSubject = brokerClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1CreateObjectPtr, ref RemoteBroker.s_priv_ByteOrder_Msg1_CreateObject, typeof(RemoteBroker.Msg1_CreateObject), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg1CreateObjectPtr, ref s_priv_ByteOrder_Msg1_CreateObject, typeof(RemoteBroker.Msg1_CreateObject), 0, 0);
             _priv_pmsgUse = (Message*)msg1CreateObjectPtr;
         }
 
@@ -86,7 +86,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteBroker.BuildCreateObject(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idObjectClass, idObjectNew, msgConstruction);
+            BuildCreateObject(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idObjectClass, idObjectNew, msgConstruction);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 
@@ -112,7 +112,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             blobInfo.Attach((Message*)msg2CreateClassPtr);
             msg2CreateClassPtr->_priv_idObjectSubject = brokerClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg2CreateClassPtr, ref RemoteBroker.s_priv_ByteOrder_Msg2_CreateClass, typeof(RemoteBroker.Msg2_CreateClass), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg2CreateClassPtr, ref s_priv_ByteOrder_Msg2_CreateClass, typeof(RemoteBroker.Msg2_CreateClass), 0, 0);
             _priv_pmsgUse = (Message*)msg2CreateClassPtr;
         }
 
@@ -123,7 +123,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteBroker.BuildCreateClass(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, stClassName, idObjectClass);
+            BuildCreateClass(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, stClassName, idObjectClass);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 

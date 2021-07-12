@@ -27,10 +27,10 @@ namespace Microsoft.Iris.Render
 
         public Rectangle(float x, float y, float width, float height)
         {
-            this.m_x = (int)Math.Round((double)x);
-            this.m_y = (int)Math.Round((double)y);
-            this.m_width = (int)Math.Round((double)width);
-            this.m_height = (int)Math.Round((double)height);
+            this.m_x = (int)Math.Round(x);
+            this.m_y = (int)Math.Round(y);
+            this.m_width = (int)Math.Round(width);
+            this.m_height = (int)Math.Round(height);
         }
 
         public Rectangle(Size extent)
@@ -85,7 +85,7 @@ namespace Microsoft.Iris.Render
             int num1 = Math.Min(left.X + left.Width, right.X + right.Width);
             int y = Math.Max(left.Y, right.Y);
             int num2 = Math.Min(left.Y + left.Height, right.Y + right.Height);
-            return num1 >= x && num2 >= y ? new Rectangle(x, y, num1 - x, num2 - y) : Rectangle.Zero;
+            return num1 >= x && num2 >= y ? new Rectangle(x, y, num1 - x, num2 - y) : Zero;
         }
 
         public static Rectangle Union(Rectangle left, Rectangle right)
@@ -155,11 +155,11 @@ namespace Microsoft.Iris.Render
 
         public void Inflate(Size size) => this.Inflate(size.Width, size.Height);
 
-        public static Rectangle Inflate(Rectangle source, Rectangle offset) => Rectangle.FromLTRB(source.Left - offset.Left, source.Top - offset.Top, source.Right + offset.Right, source.Bottom + offset.Bottom);
+        public static Rectangle Inflate(Rectangle source, Rectangle offset) => FromLTRB(source.Left - offset.Left, source.Top - offset.Top, source.Right + offset.Right, source.Bottom + offset.Bottom);
 
         public void Intersect(Rectangle rect)
         {
-            Rectangle rectangle = Rectangle.Intersect(rect, this);
+            Rectangle rectangle = Intersect(rect, this);
             this.X = rectangle.X;
             this.Y = rectangle.Y;
             this.Width = rectangle.Width;
@@ -170,7 +170,7 @@ namespace Microsoft.Iris.Render
 
         public void Union(Rectangle rect)
         {
-            Rectangle rectangle = Rectangle.Union(rect, this);
+            Rectangle rectangle = Union(rect, this);
             this.X = rectangle.X;
             this.Y = rectangle.Y;
             this.Width = rectangle.Width;

@@ -34,7 +34,7 @@ namespace Microsoft.Iris.Render.Graphics
             session.AssertOwningThread();
             Debug2.Validate(this.m_window != null, typeof(InvalidOperationException), "Parent visual should have saved our render window");
             this.m_fIsRoot = isRoot;
-            this.m_remoteVisual = (RemoteVisual)session.BuildRemoteVisualContainer((Visual)this);
+            this.m_remoteVisual = session.BuildRemoteVisualContainer(this);
             this.m_remoteVisual.SendSetVisible(true);
             remoteVisual = this.m_remoteVisual;
         }
@@ -46,9 +46,9 @@ namespace Microsoft.Iris.Render.Graphics
                 if (!fInDispose)
                     return;
                 this.RemoveAllChildren();
-                if (!this.IsDynamicValueSet(Visual.PropId.Camera))
+                if (!this.IsDynamicValueSet(PropId.Camera))
                     return;
-                this.PropertyManager.RemoveCameraProp((Visual)this);
+                this.PropertyManager.RemoveCameraProp(this);
             }
             finally
             {
@@ -58,12 +58,12 @@ namespace Microsoft.Iris.Render.Graphics
 
         private void SetCamera(ICamera camera)
         {
-            this.PropertyManager.SetCameraProp((Visual)this, (Camera)camera);
+            this.PropertyManager.SetCameraProp(this, (Camera)camera);
             RemoteVisualContainer remoteVisual = (RemoteVisualContainer)this.m_remoteVisual;
             if (camera != null)
                 remoteVisual.SendSetCamera(((Camera)camera).RemoteStub);
             else
-                remoteVisual.SendSetCamera((RemoteCamera)null);
+                remoteVisual.SendSetCamera(null);
         }
 
         bool IVisualContainer.IsRoot => this.m_fIsRoot;
@@ -132,10 +132,10 @@ namespace Microsoft.Iris.Render.Graphics
         {
             get
             {
-                Camera result = (Camera)null;
-                if (this.IsDynamicValueSet(Visual.PropId.Camera))
-                    this.PropertyManager.GetCameraProp((Visual)this, out result);
-                return (ICamera)result;
+                Camera result = null;
+                if (this.IsDynamicValueSet(PropId.Camera))
+                    this.PropertyManager.GetCameraProp(this, out result);
+                return result;
             }
             set => this.SetCamera(value);
         }
@@ -150,13 +150,13 @@ namespace Microsoft.Iris.Render.Graphics
           VisualOrder nOrder)
         {
             Visual visual = (Visual)vChild;
-            Visual visualSibling = (Visual)null;
+            Visual visualSibling = null;
             if (vSibling != null)
                 visualSibling = (Visual)vSibling;
-            visual.ChangeParent((Visual)this, visualSibling, nOrder);
+            visual.ChangeParent(this, visualSibling, nOrder);
         }
 
-        void IVisualContainer.RemoveChild(IVisual vChild) => ((Visual)vChild).ChangeParent((Visual)null, (Visual)null, VisualOrder.First);
+        void IVisualContainer.RemoveChild(IVisual vChild) => ((Visual)vChild).ChangeParent(null, null, VisualOrder.First);
 
         void IVisualContainer.RemoveAllChildren() => this.RemoveAllChildren();
     }

@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render.Graphics
         internal Effect(EffectTemplate effectTemplate)
         {
             this.m_effectTemplate = effectTemplate;
-            this.m_effectTemplate.RegisterUsage((object)this);
+            this.m_effectTemplate.RegisterUsage(this);
         }
 
         protected override void Dispose(bool fInDispose)
@@ -58,10 +58,10 @@ namespace Microsoft.Iris.Render.Graphics
                         effectProperty.Dispose();
                     }
                 }
-                this.m_effectTemplate.UnregisterUsage((object)this);
-                this.m_effectTemplate = (EffectTemplate)null;
-                this.m_propertyCache = (Vector<EffectProperty>)null;
-                this.m_remoteEffect = (Microsoft.Iris.Render.Protocols.Splash.Rendering.RemoteEffect)null;
+                this.m_effectTemplate.UnregisterUsage(this);
+                this.m_effectTemplate = null;
+                this.m_propertyCache = null;
+                this.m_remoteEffect = null;
             }
             finally
             {
@@ -69,7 +69,7 @@ namespace Microsoft.Iris.Render.Graphics
             }
         }
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteEffect = (Microsoft.Iris.Render.Protocols.Splash.Rendering.RemoteEffect)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteEffect = null;
 
         internal Microsoft.Iris.Render.Protocols.Splash.Rendering.RemoteEffect RemoteStub => this.m_remoteEffect;
 
@@ -77,7 +77,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         public string Name => this.m_effectTemplate.Name;
 
-        public IEffectTemplate Template => (IEffectTemplate)this.m_effectTemplate;
+        public IEffectTemplate Template => m_effectTemplate;
 
         void IEffect.SetProperty(string stPropertyName, int nValue) => this.SetProperty(stPropertyName, nValue);
 
@@ -105,7 +105,7 @@ namespace Microsoft.Iris.Render.Graphics
             Map<string, EffectProperty> dynamicProperties = this.m_effectTemplate.DynamicProperties;
             if (dynamicProperties.ContainsKey(propertyName))
                 return this.GenerateAnimationPropertyId(dynamicProperties[propertyName]);
-            Debug2.Validate(false, typeof(ArgumentException), (object)"Unsupported property: ", (object)propertyName);
+            Debug2.Validate(false, typeof(ArgumentException), "Unsupported property: ", propertyName);
             return 0;
         }
 
@@ -116,7 +116,7 @@ namespace Microsoft.Iris.Render.Graphics
             Map<string, EffectProperty> dynamicProperties = this.m_effectTemplate.DynamicProperties;
             if (dynamicProperties.ContainsKey(propertyName))
                 return this.MapEffectPropertyTypeToAnimationType(dynamicProperties[propertyName]);
-            Debug2.Validate(false, typeof(ArgumentException), (object)"Unsupported property: ", (object)propertyName);
+            Debug2.Validate(false, typeof(ArgumentException), "Unsupported property: ", propertyName);
             return AnimationInputType.Float;
         }
 
@@ -124,9 +124,9 @@ namespace Microsoft.Iris.Render.Graphics
         {
             uint num1 = 7;
             uint num2 = 16777215;
-            Debug2.Validate((effectProperty.Type & (EffectPropertyType)~(int)num1) == EffectPropertyType.Integer, typeof(ArgumentException), (object)"Unsupported effect property type: {0}", (object)effectProperty.Type);
-            Debug2.Validate(((int)effectProperty.ID & ~(int)num2) == 0, typeof(ArgumentException), "Only 24-bits of effect property IDs are supported");
-            return (uint)(effectProperty.Type & (EffectPropertyType)num1) << 28 | (uint)effectProperty.ID & num2;
+            Debug2.Validate((effectProperty.Type & (EffectPropertyType)~(int)num1) == EffectPropertyType.Integer, typeof(ArgumentException), "Unsupported effect property type: {0}", effectProperty.Type);
+            Debug2.Validate((effectProperty.ID & ~(int)num2) == 0, typeof(ArgumentException), "Only 24-bits of effect property IDs are supported");
+            return (uint)(effectProperty.Type & (EffectPropertyType)num1) << 28 | effectProperty.ID & num2;
         }
 
         private AnimationInputType MapEffectPropertyTypeToAnimationType(
@@ -152,7 +152,7 @@ namespace Microsoft.Iris.Render.Graphics
                     animationInputType = AnimationInputType.Vector4;
                     break;
                 default:
-                    Debug2.Throw(false, "{0} is not supported as animatable property", (object)effectProperty.Type);
+                    Debug2.Throw(false, "{0} is not supported as animatable property", effectProperty.Type);
                     animationInputType = AnimationInputType.Float;
                     break;
             }
@@ -214,7 +214,7 @@ namespace Microsoft.Iris.Render.Graphics
             Debug2.Validate(propertyFromCache.Type == EffectPropertyType.Image || propertyFromCache.Type == EffectPropertyType.ImageArray, typeof(InvalidOperationException), "Invalid property type");
             if (propertyFromCache.Type == EffectPropertyType.Image)
             {
-                if (propertyFromCache.HasIdenticalValue((object)image))
+                if (propertyFromCache.HasIdenticalValue(image))
                     return;
                 this.SetSharedResourceProperty(propertyFromCache, image);
             }
@@ -222,7 +222,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (propertyFromCache.Value != null && (Image)((SharedResourceArray)propertyFromCache.Value).Resources[0] == image)
                     return;
-                this.SetSharedResourceProperty(propertyFromCache, new SharedResourceArray((SharedResource)image));
+                this.SetSharedResourceProperty(propertyFromCache, new SharedResourceArray(image));
             }
         }
 
@@ -237,15 +237,15 @@ namespace Microsoft.Iris.Render.Graphics
             for (int index = 0; index < images.Length; ++index)
                 rgResources[index] = (SharedResource)images[index];
             SharedResourceArray oValue = new SharedResourceArray(rgResources);
-            oValue.RegisterUsage((object)this);
-            if (propertyFromCache.HasIdenticalValue((object)oValue))
+            oValue.RegisterUsage(this);
+            if (propertyFromCache.HasIdenticalValue(oValue))
             {
-                oValue.UnregisterUsage((object)this);
+                oValue.UnregisterUsage(this);
             }
             else
             {
                 this.SetSharedResourceProperty(propertyFromCache, oValue);
-                oValue.UnregisterUsage((object)this);
+                oValue.UnregisterUsage(this);
             }
         }
 
@@ -256,7 +256,7 @@ namespace Microsoft.Iris.Render.Graphics
             EffectProperty propertyFromCache = this.GetPropertyFromCache(stPropertyName);
             Debug2.Validate(propertyFromCache != null, typeof(InvalidOperationException), "Invalid property name");
             Debug2.Validate(propertyFromCache.Type == EffectPropertyType.Video, typeof(InvalidOperationException), "Invalid property type");
-            if (propertyFromCache.HasIdenticalValue((object)videoStream))
+            if (propertyFromCache.HasIdenticalValue(videoStream))
                 return;
             this.SetSharedResourceProperty(propertyFromCache, videoStream);
         }
@@ -277,47 +277,47 @@ namespace Microsoft.Iris.Render.Graphics
         {
             Debug2.Validate(property.Type == EffectPropertyType.ImageArray || property.Type == EffectPropertyType.Image, typeof(InvalidOperationException), "Not an Image type");
             this.FreeResource(property.Value as SharedResourceArray);
-            property.Value = (object)oValue;
+            property.Value = oValue;
             this.AcquireNewResource(oValue);
-            this.RemoteProperty(property, (object)oValue);
+            this.RemoteProperty(property, oValue);
         }
 
         private void SetSharedResourceProperty(EffectProperty property, Image oValue)
         {
             Debug2.Validate(property.Type == EffectPropertyType.Image, typeof(InvalidOperationException), "Not an Image type");
             this.FreeResource(property.Value as Image);
-            property.Value = (object)oValue;
+            property.Value = oValue;
             this.AcquireNewResource(oValue);
-            this.RemoteProperty(property, (object)oValue);
+            this.RemoteProperty(property, oValue);
         }
 
         private void SetSharedResourceProperty(EffectProperty property, VideoStream oValue)
         {
             Debug2.Validate(property.Type == EffectPropertyType.Video, typeof(InvalidOperationException), "Not a Video type");
             this.FreeResource(property.Value as VideoStream);
-            property.Value = (object)oValue;
+            property.Value = oValue;
             this.AcquireNewResource(oValue);
-            this.RemoteProperty(property, (object)oValue);
+            this.RemoteProperty(property, oValue);
         }
 
         private EffectProperty GetPropertyFromCache(string propertyName)
         {
             Map<string, EffectProperty> dynamicProperties = this.m_effectTemplate.DynamicProperties;
             if (!dynamicProperties.ContainsKey(propertyName))
-                Debug2.Validate(false, typeof(InvalidOperationException), (object)"Invalid property name", (object)propertyName);
+                Debug2.Validate(false, typeof(InvalidOperationException), "Invalid property name", propertyName);
             EffectProperty effectProperty = dynamicProperties[propertyName];
             Debug2.Validate(effectProperty.IsSharedResource, typeof(InvalidOperationException), "Invalid property type");
-            return this.GetPropertyFromCache((int)effectProperty.ID);
+            return this.GetPropertyFromCache(effectProperty.ID);
         }
 
         private EffectProperty GetPropertyFromCache(int nPropertyId)
         {
             foreach (EffectProperty effectProperty in this.m_propertyCache)
             {
-                if ((int)effectProperty.ID == nPropertyId)
+                if (effectProperty.ID == nPropertyId)
                     return effectProperty;
             }
-            return (EffectProperty)null;
+            return null;
         }
 
         private void RemoteProperty(EffectProperty property, object oValue)
@@ -325,29 +325,29 @@ namespace Microsoft.Iris.Render.Graphics
             switch (property.Type)
             {
                 case EffectPropertyType.Integer:
-                    this.m_remoteEffect.SendSetProperty((int)property.ID, (int)oValue);
+                    this.m_remoteEffect.SendSetProperty(property.ID, (int)oValue);
                     break;
                 case EffectPropertyType.Float:
-                    this.m_remoteEffect.SendSetProperty((int)property.ID, (float)oValue);
+                    this.m_remoteEffect.SendSetProperty(property.ID, (float)oValue);
                     break;
                 case EffectPropertyType.Vector2:
-                    this.m_remoteEffect.SendSetProperty((int)property.ID, (Vector2)oValue);
+                    this.m_remoteEffect.SendSetProperty(property.ID, (Vector2)oValue);
                     break;
                 case EffectPropertyType.Vector3:
-                    this.m_remoteEffect.SendSetProperty((int)property.ID, (Vector3)oValue);
+                    this.m_remoteEffect.SendSetProperty(property.ID, (Vector3)oValue);
                     break;
                 case EffectPropertyType.Vector4:
-                    this.m_remoteEffect.SendSetProperty((int)property.ID, (Vector4)oValue);
+                    this.m_remoteEffect.SendSetProperty(property.ID, (Vector4)oValue);
                     break;
                 case EffectPropertyType.Image:
                     Image image = (Image)oValue;
-                    RemoteSurface surface1 = (RemoteSurface)null;
+                    RemoteSurface surface1 = null;
                     if (image != null && image.Surface != null)
                         surface1 = image.Surface.RemoteStub;
-                    this.m_remoteEffect.SendSetProperty((int)property.ID, surface1);
+                    this.m_remoteEffect.SendSetProperty(property.ID, surface1);
                     break;
                 case EffectPropertyType.Color:
-                    this.m_remoteEffect.SendSetProperty((int)property.ID, ((ColorF)oValue).ToVector4());
+                    this.m_remoteEffect.SendSetProperty(property.ID, ((ColorF)oValue).ToVector4());
                     break;
                 case EffectPropertyType.ImageArray:
                     SharedResource[] resources = ((SharedResourceArray)oValue).Resources;
@@ -364,17 +364,17 @@ namespace Microsoft.Iris.Render.Graphics
                     }
                     if (flag)
                     {
-                        this.m_remoteEffect.SendSetProperty((int)property.ID, surfaceArray);
+                        this.m_remoteEffect.SendSetProperty(property.ID, surfaceArray);
                         break;
                     }
-                    this.m_remoteEffect.SendSetProperty((int)property.ID, Effect.s_EmptySurfaceArray);
+                    this.m_remoteEffect.SendSetProperty(property.ID, s_EmptySurfaceArray);
                     break;
                 case EffectPropertyType.Video:
                     VideoStream videoStream = (VideoStream)oValue;
-                    RemoteSurface surface2 = (RemoteSurface)null;
+                    RemoteSurface surface2 = null;
                     if (videoStream != null && videoStream.Surface != null)
                         surface2 = videoStream.Surface.RemoteStub;
-                    this.m_remoteEffect.SendSetProperty((int)property.ID, surface2);
+                    this.m_remoteEffect.SendSetProperty(property.ID, surface2);
                     break;
                 default:
                     Debug2.Throw(false, "Unknown property type");
@@ -382,17 +382,17 @@ namespace Microsoft.Iris.Render.Graphics
             }
         }
 
-        private void RemoteProperty(EffectProperty property, float flValue) => this.m_remoteEffect.SendSetProperty((int)property.ID, flValue);
+        private void RemoteProperty(EffectProperty property, float flValue) => this.m_remoteEffect.SendSetProperty(property.ID, flValue);
 
-        private void RemoteProperty(EffectProperty property, int nValue) => this.m_remoteEffect.SendSetProperty((int)property.ID, nValue);
+        private void RemoteProperty(EffectProperty property, int nValue) => this.m_remoteEffect.SendSetProperty(property.ID, nValue);
 
-        private void RemoteProperty(EffectProperty property, Vector2 vValue) => this.m_remoteEffect.SendSetProperty((int)property.ID, vValue);
+        private void RemoteProperty(EffectProperty property, Vector2 vValue) => this.m_remoteEffect.SendSetProperty(property.ID, vValue);
 
-        private void RemoteProperty(EffectProperty property, Vector3 vValue) => this.m_remoteEffect.SendSetProperty((int)property.ID, vValue);
+        private void RemoteProperty(EffectProperty property, Vector3 vValue) => this.m_remoteEffect.SendSetProperty(property.ID, vValue);
 
-        private void RemoteProperty(EffectProperty property, Vector4 vValue) => this.m_remoteEffect.SendSetProperty((int)property.ID, vValue);
+        private void RemoteProperty(EffectProperty property, Vector4 vValue) => this.m_remoteEffect.SendSetProperty(property.ID, vValue);
 
-        private void RemoteProperty(EffectProperty property, ColorF color) => this.m_remoteEffect.SendSetProperty((int)property.ID, color.ToVector4());
+        private void RemoteProperty(EffectProperty property, ColorF color) => this.m_remoteEffect.SendSetProperty(property.ID, color.ToVector4());
 
         private void AddSharedResourcesToCache()
         {
@@ -440,7 +440,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (fUpdateCache && property.IsSharedResource)
                 {
-                    EffectProperty propertyFromCache = this.GetPropertyFromCache((int)property.ID);
+                    EffectProperty propertyFromCache = this.GetPropertyFromCache(property.ID);
                     switch (property.Type)
                     {
                         case EffectPropertyType.Image:
@@ -462,27 +462,27 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (image == null)
                 return;
-            image.RegisterUsage((object)this);
+            image.RegisterUsage(this);
             image.ContentReloadedEvent += new Image.ContentReloadedHandler(this.ImageContentReloadedHandler);
-            image.AddActiveUser((object)this);
+            image.AddActiveUser(this);
         }
 
         private void AcquireNewResource(SharedResourceArray imageArray)
         {
             if (imageArray == null)
                 return;
-            imageArray.RegisterUsage((object)this);
+            imageArray.RegisterUsage(this);
             foreach (SharedResource resource in imageArray.Resources)
                 (resource as Image).ContentReloadedEvent += new Image.ContentReloadedHandler(this.ImageContentReloadedHandler);
-            imageArray.AddActiveUser((object)this);
+            imageArray.AddActiveUser(this);
         }
 
         private void AcquireNewResource(VideoStream videoStream)
         {
             if (videoStream == null)
                 return;
-            videoStream.RegisterUsage((object)this);
-            videoStream.AddActiveUser((object)this);
+            videoStream.RegisterUsage(this);
+            videoStream.AddActiveUser(this);
         }
 
         internal void FreeResource(Image image)
@@ -490,8 +490,8 @@ namespace Microsoft.Iris.Render.Graphics
             if (image == null)
                 return;
             image.ContentReloadedEvent -= new Image.ContentReloadedHandler(this.ImageContentReloadedHandler);
-            image.RemoveActiveUser((object)this);
-            image.UnregisterUsage((object)this);
+            image.RemoveActiveUser(this);
+            image.UnregisterUsage(this);
         }
 
         internal void FreeResource(SharedResourceArray imageArray)
@@ -500,16 +500,16 @@ namespace Microsoft.Iris.Render.Graphics
                 return;
             foreach (SharedResource resource in imageArray.Resources)
                 (resource as Image).ContentReloadedEvent -= new Image.ContentReloadedHandler(this.ImageContentReloadedHandler);
-            imageArray.RemoveActiveUser((object)this);
-            imageArray.UnregisterUsage((object)this);
+            imageArray.RemoveActiveUser(this);
+            imageArray.UnregisterUsage(this);
         }
 
         internal void FreeResource(VideoStream videoStream)
         {
             if (videoStream == null)
                 return;
-            videoStream.RemoveActiveUser((object)this);
-            videoStream.UnregisterUsage((object)this);
+            videoStream.RemoveActiveUser(this);
+            videoStream.UnregisterUsage(this);
         }
 
         internal void ImageContentReloadedHandler(Image image)

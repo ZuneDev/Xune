@@ -25,7 +25,7 @@ namespace Microsoft.Iris.Render.Graphics
             session.AssertOwningThread();
             Debug2.Validate(remoteDevice != null, typeof(ArgumentNullException), "Must have a valid remoteDevice in-param");
             RenderPort renderingPort = session.RenderingPort;
-            RENDERHANDLE renderhandle = renderingPort.AllocHandle((IRenderHandleOwner)this);
+            RENDERHANDLE renderhandle = renderingPort.AllocHandle(this);
             try
             {
                 remoteDevice.SendCreateGradient(renderhandle);
@@ -44,7 +44,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (fInDispose && this.m_remoteGradient != null)
                     this.m_remoteGradient.Dispose();
-                this.m_remoteGradient = (RemoteGradient)null;
+                this.m_remoteGradient = null;
             }
             finally
             {
@@ -81,7 +81,7 @@ namespace Microsoft.Iris.Render.Graphics
             get => this.m_flOffset;
             set
             {
-                if ((double)this.m_flOffset == (double)value)
+                if (m_flOffset == (double)value)
                     return;
                 this.m_flOffset = value;
                 this.m_remoteGradient.SendSetOffset(this.m_flOffset);
@@ -94,7 +94,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteGradient.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteGradient = (RemoteGradient)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteGradient = null;
 
         internal RemoteGradient RemoteGradient => this.m_remoteGradient;
 

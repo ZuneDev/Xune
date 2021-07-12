@@ -37,7 +37,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg1CreatePtr->_priv_ctxcallback = port.Session.LocalContext;
             msg1CreatePtr->_priv_idObjectSubject = remoteRenderCaps.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteRenderCaps.s_priv_ByteOrder_Msg1_Create, typeof(RemoteRenderCaps.Msg1_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg1_Create, typeof(RemoteRenderCaps.Msg1_Create), 0, 0);
             port.CreateRemoteObject(renderCapsClassHandle, remoteRenderCaps.m_renderHandle, (Message*)msg1CreatePtr);
             return remoteRenderCaps;
         }
@@ -57,7 +57,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0CheckCapsPtr->nCookie = nCookie;
             msg0CheckCapsPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0CheckCapsPtr, ref RemoteRenderCaps.s_priv_ByteOrder_Msg0_CheckCaps, typeof(RemoteRenderCaps.Msg0_CheckCaps), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0CheckCapsPtr, ref s_priv_ByteOrder_Msg0_CheckCaps, typeof(RemoteRenderCaps.Msg0_CheckCaps), 0, 0);
             _priv_pmsgUse = (Message*)msg0CheckCapsPtr;
         }
 

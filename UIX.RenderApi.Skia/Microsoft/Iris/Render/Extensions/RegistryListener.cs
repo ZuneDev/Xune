@@ -68,10 +68,10 @@ namespace Microsoft.Iris.Render.Extensions
                 this.m_hkey = IntPtr.Zero;
                 if (Win32Api.RegOpenKeyExW(Win32Api.HKEY_CURRENT_USER, this.m_stRegKey, 0, 16, out this.m_hkey) != 0)
                     return;
-                this.m_hRegEvent = Win32Api.CreateEvent(IntPtr.Zero, false, false, (string)null);
+                this.m_hRegEvent = Win32Api.CreateEvent(IntPtr.Zero, false, false, null);
                 int num = Win32Api.RegNotifyChangeKeyValue(this.m_hkey, true, 15, this.m_hRegEvent, true);
                 if (num != 0)
-                    throw new Exception(string.Format((IFormatProvider)CultureInfo.InvariantCulture, "Unable to register key change handler: {0} (due to error {1})", (object)this.m_stRegKey, (object)num));
+                    throw new Exception(string.Format(CultureInfo.InvariantCulture, "Unable to register key change handler: {0} (due to error {1})", m_stRegKey, num));
                 IntPtr phNewWaitObject;
                 if (Win32Api.RegisterWaitForSingleObject(out phNewWaitObject, this.m_hRegEvent.h, this.m_RegistryChangeCallback, IntPtr.Zero, uint.MaxValue, 4U) == 0)
                 {
@@ -110,7 +110,7 @@ namespace Microsoft.Iris.Render.Extensions
             this.StopListeningForRegistryChangeNotifications();
             if (this.RegistryChanged == null)
                 return;
-            this.RegistryChanged((object)this, EventArgs.Empty);
+            this.RegistryChanged(this, EventArgs.Empty);
         }
     }
 }

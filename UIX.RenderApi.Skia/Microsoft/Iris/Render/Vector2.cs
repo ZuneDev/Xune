@@ -69,12 +69,12 @@ namespace Microsoft.Iris.Render
 
         internal void Normalize()
         {
-            float flValue1 = (float)((double)this.m_x * (double)this.m_x + (double)this.m_y * (double)this.m_y);
+            float flValue1 = (float)(m_x * (double)this.m_x + m_y * (double)this.m_y);
             if (Math2.WithinEpsilon(flValue1, 1f))
                 return;
-            if ((double)flValue1 > 1.40129846432482E-45)
+            if (flValue1 > 1.40129846432482E-45)
             {
-                float num = (float)Math.Sqrt((double)flValue1);
+                float num = (float)Math.Sqrt(flValue1);
                 this.m_x /= num;
                 this.m_y /= num;
             }
@@ -87,7 +87,7 @@ namespace Microsoft.Iris.Render
 
         public override bool Equals(object obj) => obj is Vector2 vector2 && this == vector2;
 
-        public static bool operator ==(Vector2 left, Vector2 right) => (double)left.X == (double)right.X && (double)left.Y == (double)right.Y;
+        public static bool operator ==(Vector2 left, Vector2 right) => left.X == (double)right.X && left.Y == (double)right.Y;
 
         public static bool operator !=(Vector2 left, Vector2 right) => !(left == right);
 

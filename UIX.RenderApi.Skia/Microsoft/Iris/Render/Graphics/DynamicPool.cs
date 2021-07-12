@@ -43,10 +43,10 @@ namespace Microsoft.Iris.Render.Graphics
         {
             foreach (DynamicRow alRow in this.m_alRows)
                 alRow.Dispose();
-            this.m_alBuckets = (ArrayList)null;
-            this.m_alRows = (ArrayList)null;
+            this.m_alBuckets = null;
+            this.m_alRows = null;
             this.m_poolSurface.Dispose();
-            this.m_poolSurface = (SurfacePool)null;
+            this.m_poolSurface = null;
         }
 
         internal SurfacePool SurfacePool => this.m_poolSurface;
@@ -89,7 +89,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 int height = this.m_sizeTotalPxl.Height;
             }
-            DynamicBucket dynamicBucket = (DynamicBucket)null;
+            DynamicBucket dynamicBucket = null;
             for (int index = 0; index < this.m_alBuckets.Count; ++index)
             {
                 DynamicBucket alBucket = (DynamicBucket)this.m_alBuckets[index];
@@ -102,7 +102,7 @@ namespace Microsoft.Iris.Render.Graphics
             if (dynamicBucket == null)
             {
                 dynamicBucket = new DynamicBucket(this, nHeightPxl);
-                this.m_alBuckets.Add((object)dynamicBucket);
+                this.m_alBuckets.Add(dynamicBucket);
             }
             return dynamicBucket.CreateSurface(surfaceOwner, sizeRequestPxl, sizeContentPxl, sizeGutter, fRotated, allocMethod);
         }
@@ -120,11 +120,11 @@ namespace Microsoft.Iris.Render.Graphics
             if (alItems.Count <= 0)
                 return;
             idxInsert = -1;
-            IDynamicBlock dynamicBlock1 = (IDynamicBlock)null;
+            IDynamicBlock dynamicBlock1 = null;
             int index = 0;
             while (index <= alItems.Count)
             {
-                IDynamicBlock dynamicBlock2 = (IDynamicBlock)null;
+                IDynamicBlock dynamicBlock2 = null;
                 int num2;
                 if (index < alItems.Count)
                 {
@@ -159,7 +159,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 num1 = 0;
                 num2 = 0;
-                IDynamicBlock dynamicBlock1 = (IDynamicBlock)null;
+                IDynamicBlock dynamicBlock1 = null;
                 int index = 0;
                 while (index <= alItems.Count)
                 {
@@ -172,7 +172,7 @@ namespace Microsoft.Iris.Render.Graphics
                     }
                     else
                     {
-                        dynamicBlock2 = (IDynamicBlock)null;
+                        dynamicBlock2 = null;
                         num3 = nTotalPxl;
                     }
                     if (dynamicBlock1 != null)
@@ -198,7 +198,7 @@ namespace Microsoft.Iris.Render.Graphics
             if (alItems.Count <= 0)
                 return;
             int num1 = 0;
-            IDynamicBlock dynamicBlock1 = (IDynamicBlock)null;
+            IDynamicBlock dynamicBlock1 = null;
             int index = 0;
             while (index <= alItems.Count)
             {
@@ -211,7 +211,7 @@ namespace Microsoft.Iris.Render.Graphics
                 }
                 else
                 {
-                    dynamicBlock2 = (IDynamicBlock)null;
+                    dynamicBlock2 = null;
                     num2 = nTotalPxl;
                 }
                 if (dynamicBlock1 != null)
@@ -244,15 +244,15 @@ namespace Microsoft.Iris.Render.Graphics
                     this.FullCompact(alReloadContent);
                     break;
             }
-            DynamicRow dynamicRow = (DynamicRow)null;
+            DynamicRow dynamicRow = null;
             if (rowHeight <= this.m_nLargestFreePxl)
             {
                 int idxInsert;
                 int nOffsetNewPxl;
-                DynamicPool.FindInsertionPoint(this.m_alRows, this.m_sizeTotalPxl.Height, rowHeight, out idxInsert, out nOffsetNewPxl);
+                FindInsertionPoint(this.m_alRows, this.m_sizeTotalPxl.Height, rowHeight, out idxInsert, out nOffsetNewPxl);
                 dynamicRow = new DynamicRow(bktOwner, rowHeight, nOffsetNewPxl);
-                this.m_alRows.Insert(idxInsert, (object)dynamicRow);
-                DynamicPool.RecomputeAvailable(this.m_alRows, this.m_sizeTotalPxl.Height, out this.m_nLargestFreePxl, out this.m_nTotalFreePxl);
+                this.m_alRows.Insert(idxInsert, dynamicRow);
+                RecomputeAvailable(this.m_alRows, this.m_sizeTotalPxl.Height, out this.m_nLargestFreePxl, out this.m_nTotalFreePxl);
             }
             return dynamicRow;
         }
@@ -268,13 +268,13 @@ namespace Microsoft.Iris.Render.Graphics
             if (nRequestedHeight <= this.m_nLargestFreePxl)
             {
                 uAvgTimestampsNoCompact = 0U;
-                return (object)null;
+                return null;
             }
             int count = this.m_alRows.Count;
             int length = 0;
             DynamicRow[] dynamicRowArray = new DynamicRow[count];
             int num1 = 0;
-            DynamicRow dynamicRow1 = (DynamicRow)null;
+            DynamicRow dynamicRow1 = null;
             uint num2 = uint.MaxValue;
             for (int index = 0; index < count; ++index)
             {
@@ -306,16 +306,16 @@ namespace Microsoft.Iris.Render.Graphics
             if (dynamicRow1 != null)
             {
                 uAvgTimestampsNoCompact = num2;
-                return (object)dynamicRow1;
+                return dynamicRow1;
             }
             if (nRequestedHeight <= this.m_nTotalFreePxl)
             {
                 uAvgTimestampsWithCompact = 0U;
-                return (object)null;
+                return null;
             }
             if (nRequestedHeight > num1 + this.m_nTotalFreePxl)
-                return (object)null;
-            Array.Sort((Array)dynamicRowArray, 0, length, (IComparer)this);
+                return null;
+            Array.Sort(dynamicRowArray, 0, length, this);
             int nTotalFreePxl = this.m_nTotalFreePxl;
             int num5 = 0;
             ulong num6 = 0;
@@ -323,14 +323,14 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 DynamicRow dynamicRow2 = dynamicRowArray[num5++];
                 nTotalFreePxl += dynamicRow2.StorageSize.Height;
-                num6 += (ulong)dynamicRow2.LastAvgAge;
+                num6 += dynamicRow2.LastAvgAge;
                 if (nTotalFreePxl >= nRequestedHeight)
                     break;
             }
             uAvgTimestampsWithCompact = (uint)(num6 / (ulong)num5);
             while (num5 < length)
-                dynamicRowArray[num5++] = (DynamicRow)null;
-            return (object)dynamicRowArray;
+                dynamicRowArray[num5++] = null;
+            return dynamicRowArray;
         }
 
         internal bool FinishScavengeRows(
@@ -377,8 +377,8 @@ namespace Microsoft.Iris.Render.Graphics
 
         public void NotifyEmpty(DynamicRow rowEmpty)
         {
-            this.m_alRows.Remove((object)rowEmpty);
-            DynamicPool.RecomputeAvailable(this.m_alRows, this.m_sizeTotalPxl.Height, out this.m_nLargestFreePxl, out this.m_nTotalFreePxl);
+            this.m_alRows.Remove(rowEmpty);
+            RecomputeAvailable(this.m_alRows, this.m_sizeTotalPxl.Height, out this.m_nLargestFreePxl, out this.m_nTotalFreePxl);
         }
 
         public void NotifyEmpty(DynamicBucket bktEmpty)
@@ -394,16 +394,16 @@ namespace Microsoft.Iris.Render.Graphics
         internal IList ExtractAllSurfaces()
         {
             if (this.m_poolSurface == null)
-                return (IList)null;
+                return null;
             IList allSurfaces = this.m_poolSurface.AllSurfaces;
             if (allSurfaces == null)
-                return (IList)null;
-            foreach (Surface surCur in (IEnumerable)allSurfaces)
+                return null;
+            foreach (Surface surCur in allSurfaces)
                 SurfacePool.RemapSurface(surCur, new SurfacePool(this.m_device, surCur.ContentSize, SurfaceFormat.ARGB32)
                 {
                     DestroyWhenEmpty = true
                 });
-            this.m_poolSurface = (SurfacePool)null;
+            this.m_poolSurface = null;
             this.m_alBuckets = new ArrayList();
             this.m_alRows = new ArrayList();
             return allSurfaces;
@@ -483,7 +483,7 @@ namespace Microsoft.Iris.Render.Graphics
                 ;
             foreach (DynamicRow alRow in this.m_alRows)
             {
-                foreach (DynamicBlock block in (IEnumerable)alRow.Blocks)
+                foreach (DynamicBlock block in alRow.Blocks)
                     ;
             }
         }

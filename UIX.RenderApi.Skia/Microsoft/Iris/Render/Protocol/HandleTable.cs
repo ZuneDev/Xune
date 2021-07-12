@@ -26,10 +26,10 @@ namespace Microsoft.Iris.Render.Protocol
         {
             Debug2.Validate(portOwner != null, typeof(ArgumentNullException), nameof(portOwner));
             this.m_portOwner = portOwner;
-            uint maxObjects = 1U << (int)layout.numberOfGroupBits;
-            this.m_MaxObjectsPerGroup = 1U << (int)layout.numberOfObjectBits;
-            this.m_GroupShift = (int)layout.numberOfObjectBits;
-            this.m_UniqueShift = (int)layout.numberOfObjectBits + (int)layout.numberOfGroupBits;
+            uint maxObjects = 1U << layout.numberOfGroupBits;
+            this.m_MaxObjectsPerGroup = 1U << layout.numberOfObjectBits;
+            this.m_GroupShift = layout.numberOfObjectBits;
+            this.m_UniqueShift = layout.numberOfObjectBits + layout.numberOfGroupBits;
             this.m_GroupMask = (uint)((int)maxObjects - 1 << this.m_GroupShift);
             this.m_ObjectMask = this.m_MaxObjectsPerGroup - 1U;
             this.m_UniqueMask = (uint)~((int)this.m_GroupMask | (int)this.m_ObjectMask);
@@ -45,7 +45,7 @@ namespace Microsoft.Iris.Render.Protocol
                 foreach (HandleGroup group in this.m_groups)
                     group?.Dispose();
                 this.m_groups.Clear();
-                this.m_groups = (HandleGroup)null;
+                this.m_groups = null;
             }
             finally
             {
@@ -57,7 +57,7 @@ namespace Microsoft.Iris.Render.Protocol
         {
             uint uint32 = RENDERGROUP.ToUInt32(groupId);
             HandleGroup group = this.m_groups[uint32] as HandleGroup;
-            Debug2.Validate(group != null, typeof(ArgumentException), (object)"Group does not exist", (object)nameof(groupId));
+            Debug2.Validate(group != null, typeof(ArgumentException), "Group does not exist", nameof(groupId));
             uint unique;
             uint num = group.Add(owner, out unique);
             return RENDERHANDLE.FromUInt32((uint)((int)unique << this.m_UniqueShift | (int)uint32 << this.m_GroupShift) | num);
@@ -103,12 +103,12 @@ namespace Microsoft.Iris.Render.Protocol
 
         public RENDERGROUP GetGroup(RENDERHANDLE handle) => RENDERGROUP.FromUInt32((RENDERHANDLE.ToUInt32(handle) & this.m_GroupMask) >> this.m_GroupShift);
 
-        public RENDERGROUP AllocGroup() => RENDERGROUP.FromUInt32(this.m_groups.Add((IRenderHandleOwner)this.CreateNewGroup()));
+        public RENDERGROUP AllocGroup() => RENDERGROUP.FromUInt32(this.m_groups.Add(this.CreateNewGroup()));
 
         public void AllocGroupWithId(RENDERGROUP groupId)
         {
             uint uint32 = RENDERGROUP.ToUInt32(groupId);
-            this.m_groups.AddAtIndex((IRenderHandleOwner)this.CreateNewGroup(), uint32);
+            this.m_groups.AddAtIndex(this.CreateNewGroup(), uint32);
         }
 
         public void FreeGroup(RENDERGROUP groupId) => this.m_groups.Remove(RENDERGROUP.ToUInt32(groupId));
@@ -119,7 +119,7 @@ namespace Microsoft.Iris.Render.Protocol
             HandleGroup group;
             uint index;
             this.MapHandle(handle, false, out unique, out group, out index);
-            Debug2.Validate((object)group.Get(index, unique) != null, typeof(ArgumentException), (object)"Must point to valid object", (object)nameof(handle));
+            Debug2.Validate(group.Get(index, unique) != null, typeof(ArgumentException), "Must point to valid object", nameof(handle));
         }
 
         private HandleGroup CreateNewGroup() => new HandleGroup(GCHandleType.Weak, this.m_portOwner, true, this.m_MaxObjectsPerGroup);
@@ -146,7 +146,7 @@ namespace Microsoft.Iris.Render.Protocol
             uint num1 = (uint32 & this.m_UniqueMask) >> this.m_UniqueShift;
             uint index1 = (uint32 & this.m_GroupMask) >> this.m_GroupShift;
             uint num2 = uint32 & this.m_ObjectMask;
-            group = (HandleGroup)null;
+            group = null;
             if (index1 <= this.m_groups.Count)
                 group = this.m_groups[index1] as HandleGroup;
             if (group == null)
@@ -154,7 +154,7 @@ namespace Microsoft.Iris.Render.Protocol
                 if (fCreateGroup)
                 {
                     group = this.CreateNewGroup();
-                    this.m_groups.AddAtIndex((IRenderHandleOwner)group, index1);
+                    this.m_groups.AddAtIndex(group, index1);
                 }
                 else
                     Debug2.Throw(fAllowInvalid, "Group does not exist");

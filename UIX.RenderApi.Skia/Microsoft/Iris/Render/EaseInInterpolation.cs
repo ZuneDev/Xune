@@ -16,8 +16,8 @@ namespace Microsoft.Iris.Render
 
         public EaseInInterpolation(float weight, float handle)
         {
-            Debug2.Validate((double)weight > 0.0, typeof(ArgumentOutOfRangeException), nameof(weight));
-            Debug2.Validate((double)handle > 0.0 && (double)handle < 1.0, typeof(ArgumentOutOfRangeException), nameof(handle));
+            Debug2.Validate(weight > 0.0, typeof(ArgumentOutOfRangeException), nameof(weight));
+            Debug2.Validate(handle > 0.0 && handle < 1.0, typeof(ArgumentOutOfRangeException), nameof(handle));
             this.m_weight = weight;
             this.m_handle = handle;
         }

@@ -25,21 +25,21 @@ namespace Microsoft.Iris.Render.Extensions
             {
                 this.m_sizeMaximumPxl = value;
                 if (this.m_sizeMaximumPxl.IsZero)
-                    this.m_nMask &= ~ImageRequirements.Fields.MaximumSize;
+                    this.m_nMask &= ~Fields.MaximumSize;
                 else
-                    this.m_nMask |= ImageRequirements.Fields.MaximumSize;
+                    this.m_nMask |= Fields.MaximumSize;
             }
         }
 
         public bool Flippable
         {
-            get => (this.m_nMask & ImageRequirements.Fields.Flippable) != ImageRequirements.Fields.None;
+            get => (this.m_nMask & Fields.Flippable) != Fields.None;
             set
             {
                 if (value)
-                    this.m_nMask |= ImageRequirements.Fields.Flippable;
+                    this.m_nMask |= Fields.Flippable;
                 else
-                    this.m_nMask &= ~ImageRequirements.Fields.Flippable;
+                    this.m_nMask &= ~Fields.Flippable;
             }
         }
 
@@ -50,9 +50,9 @@ namespace Microsoft.Iris.Render.Extensions
             {
                 this.m_nBorderPxl = value;
                 if (this.m_nBorderPxl > 0)
-                    this.m_nMask |= ImageRequirements.Fields.Border;
+                    this.m_nMask |= Fields.Border;
                 else
-                    this.m_nMask &= ~ImageRequirements.Fields.Border;
+                    this.m_nMask &= ~Fields.Border;
             }
         }
 
@@ -64,13 +64,13 @@ namespace Microsoft.Iris.Render.Extensions
 
         public bool AntialiasEdges
         {
-            get => (this.m_nMask & ImageRequirements.Fields.AntialiasEdges) != ImageRequirements.Fields.None;
+            get => (this.m_nMask & Fields.AntialiasEdges) != Fields.None;
             set
             {
                 if (value)
-                    this.m_nMask |= ImageRequirements.Fields.AntialiasEdges;
+                    this.m_nMask |= Fields.AntialiasEdges;
                 else
-                    this.m_nMask &= ~ImageRequirements.Fields.AntialiasEdges;
+                    this.m_nMask &= ~Fields.AntialiasEdges;
             }
         }
 

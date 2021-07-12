@@ -15,7 +15,7 @@ namespace Microsoft.Iris.Render
 
         internal EffectOperationType Type => this.m_typeOperation;
 
-        internal override void AddCacheKey(ByteBuilder cacheKey) => this.GenerateClassCacheKey((byte)1, (byte)this.Type, cacheKey);
+        internal override void AddCacheKey(ByteBuilder cacheKey) => this.GenerateClassCacheKey(1, (byte)this.Type, cacheKey);
 
         internal override int PreProcessProperties(
           Map<string, EffectProperty> dictionary,

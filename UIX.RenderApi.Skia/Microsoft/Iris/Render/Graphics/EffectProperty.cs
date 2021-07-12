@@ -44,7 +44,7 @@ namespace Microsoft.Iris.Render.Graphics
                 if (!fInDispose || this.m_oValue == null)
                     return;
                 this.ModifyUsage(false);
-                this.m_oValue = (object)null;
+                this.m_oValue = null;
             }
             finally
             {
@@ -65,19 +65,19 @@ namespace Microsoft.Iris.Render.Graphics
 
         internal bool IsDynamic
         {
-            get => ((int)this.m_propertyType & 128) == 128;
+            get => (m_propertyType & 128) == 128;
             set
             {
                 if (value)
-                    this.m_propertyType |= (byte)128;
+                    this.m_propertyType |= 128;
                 else
-                    this.m_propertyType &= (byte)127;
+                    this.m_propertyType &= 127;
             }
         }
 
         internal bool IsSharedResource => this.Type == EffectPropertyType.Image || this.Type == EffectPropertyType.ImageArray || this.Type == EffectPropertyType.Video;
 
-        internal EffectPropertyType Type => (EffectPropertyType)((uint)this.m_propertyType & 4294967167U);
+        internal EffectPropertyType Type => (EffectPropertyType)(m_propertyType & 4294967167U);
 
         internal byte ID
         {
@@ -129,13 +129,13 @@ namespace Microsoft.Iris.Render.Graphics
                 return;
             if (fLock)
             {
-                oValue.RegisterUsage((object)this);
-                oValue.AddActiveUser((object)this);
+                oValue.RegisterUsage(this);
+                oValue.AddActiveUser(this);
             }
             else
             {
-                oValue.RemoveActiveUser((object)this);
-                oValue.UnregisterUsage((object)this);
+                oValue.RemoveActiveUser(this);
+                oValue.UnregisterUsage(this);
             }
         }
     }

@@ -14,7 +14,7 @@ public class Vector : IVector
     private object[] _items;
     private int _size;
 
-    public Vector() => this._items = Vector.s_emptyArray;
+    public Vector() => this._items = s_emptyArray;
 
     public Vector(int capacity) => this._items = new object[capacity];
 
@@ -24,7 +24,7 @@ public class Vector : IVector
         {
             int count = collection1.Count;
             this._items = new object[count];
-            collection1.CopyTo((Array)this._items, 0);
+            collection1.CopyTo(_items, 0);
             this._size = count;
         }
         else
@@ -56,11 +56,11 @@ public class Vector : IVector
             {
                 object[] objArray = new object[value];
                 if (this._size > 0)
-                    Array.Copy((Array)this._items, 0, (Array)objArray, 0, this._size);
+                    Array.Copy(_items, 0, objArray, 0, this._size);
                 this._items = objArray;
             }
             else
-                this._items = Vector.s_emptyArray;
+                this._items = s_emptyArray;
         }
     }
 
@@ -83,7 +83,7 @@ public class Vector : IVector
 
     public void Clear()
     {
-        Array.Clear((Array)this._items, 0, this._size);
+        Array.Clear(_items, 0, this._size);
         this._size = 0;
     }
 
@@ -95,11 +95,11 @@ public class Vector : IVector
             return;
         try
         {
-            Array.Copy((Array)this._items, 0, array, index, this._size);
+            Array.Copy(_items, 0, array, index, this._size);
         }
         catch (ArrayTypeMismatchException ex)
         {
-            throw new ArgumentException((string)null);
+            throw new ArgumentException(null);
         }
     }
 
@@ -120,7 +120,7 @@ public class Vector : IVector
         if (this._size == this._items.Length)
             this.EnsureCapacity(this._size + 1);
         if (index < this._size)
-            Array.Copy((Array)this._items, index, (Array)this._items, index + 1, this._size - index);
+            Array.Copy(_items, index, _items, index + 1, this._size - index);
         this._items[index] = item;
         ++this._size;
     }
@@ -138,8 +138,8 @@ public class Vector : IVector
     {
         --this._size;
         if (index < this._size)
-            Array.Copy((Array)this._items, index + 1, (Array)this._items, index, this._size - index);
-        this._items[this._size] = (object)null;
+            Array.Copy(_items, index + 1, _items, index, this._size - index);
+        this._items[this._size] = null;
     }
 
     public void RemoveRange(int index, int count)
@@ -148,26 +148,26 @@ public class Vector : IVector
             return;
         this._size -= count;
         if (index < this._size)
-            Array.Copy((Array)this._items, index + count, (Array)this._items, index, this._size - index);
-        Array.Clear((Array)this._items, this._size, count);
+            Array.Copy(_items, index + count, _items, index, this._size - index);
+        Array.Clear(_items, this._size, count);
     }
 
-    public void Sort() => this.Sort(0, this.Count, (IComparer)null);
+    public void Sort() => this.Sort(0, this.Count, null);
 
     public void Sort(IComparer comparer) => this.Sort(0, this.Count, comparer);
 
-    public void Sort(int index, int count, IComparer comparer) => Array.Sort((Array)this._items, index, count, comparer);
+    public void Sort(int index, int count, IComparer comparer) => Array.Sort(_items, index, count, comparer);
 
     public object[] ToArray()
     {
         object[] objArray = new object[this._size];
-        Array.Copy((Array)this._items, 0, (Array)objArray, 0, this._size);
+        Array.Copy(_items, 0, objArray, 0, this._size);
         return objArray;
     }
 
     public void TrimExcess()
     {
-        if (this._size >= (int)((double)this._items.Length * 0.9))
+        if (this._size >= (int)(_items.Length * 0.9))
             return;
         this.Capacity = this._size;
     }

@@ -31,14 +31,14 @@ namespace Microsoft.Iris.Render
             Debug2.Validate(eventTarget != null, typeof(ArgumentNullException), nameof(eventTarget));
             Debug2.Validate(eventTarget is IActivatableObject, typeof(ArgumentException), nameof(eventTarget));
             Debug2.Validate(eventMethodName != null, typeof(ArgumentNullException), nameof(eventMethodName));
-            this.m_eventId = AnimationEvent.AllocateEventId();
+            this.m_eventId = AllocateEventId();
             this.m_eventTarget = (IActivatableObject)eventTarget;
             this.m_eventMethodName = eventMethodName;
             this.m_eventMethodArg = eventMethodArg;
             this.m_allowRepeat = false;
         }
 
-        ~AnimationEvent() => this.m_eventTarget = (IActivatableObject)null;
+        ~AnimationEvent() => this.m_eventTarget = null;
 
         internal uint EventId => this.m_eventId;
 
@@ -60,6 +60,6 @@ namespace Microsoft.Iris.Render
             set => this.m_initialActivation = value;
         }
 
-        private static uint AllocateEventId() => (uint)AnimationEvent.s_eventIdSeed++;
+        private static uint AllocateEventId() => (uint)s_eventIdSeed++;
     }
 }

@@ -36,7 +36,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             onBatchProcessedPtr->uBatchCompleted = uBatchCompleted;
             onBatchProcessedPtr->_priv_idObjectSubject = callbackInstance;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref LocalRenderPortCallback.s_priv_ByteOrder_Msg0_OnBatchProcessed, typeof(LocalRenderPortCallback.Msg0_OnBatchProcessed), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg0_OnBatchProcessed, typeof(LocalRenderPortCallback.Msg0_OnBatchProcessed), 0, 0);
             port.SendLocalCallbackMessage((Message*)onBatchProcessedPtr);
         }
 
@@ -55,7 +55,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             msg1OnPingReplyPtr->target = target;
             msg1OnPingReplyPtr->_priv_idObjectSubject = callbackInstance;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref LocalRenderPortCallback.s_priv_ByteOrder_Msg1_OnPingReply, typeof(LocalRenderPortCallback.Msg1_OnPingReply), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg1_OnPingReply, typeof(LocalRenderPortCallback.Msg1_OnPingReply), 0, 0);
             port.SendLocalCallbackMessage((Message*)msg1OnPingReplyPtr);
         }
 
@@ -75,7 +75,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
 
         public override int GetHashCode() => base.GetHashCode();
 
-        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(LocalRenderPortCallback.DispatchCallback), out uint _);
+        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
 
         private static unsafe void DispatchCallback(
           RenderPort port,
@@ -87,10 +87,10 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             switch (message->nMsg)
             {
                 case 0:
-                    LocalRenderPortCallback.Dispatch_OnBatchProcessed(port, _priv_target, (LocalRenderPortCallback.Msg0_OnBatchProcessed*)message);
+                    Dispatch_OnBatchProcessed(port, _priv_target, (LocalRenderPortCallback.Msg0_OnBatchProcessed*)message);
                     break;
                 case 1:
-                    LocalRenderPortCallback.Dispatch_OnPingReply(port, _priv_target, (LocalRenderPortCallback.Msg1_OnPingReply*)message);
+                    Dispatch_OnPingReply(port, _priv_target, (LocalRenderPortCallback.Msg1_OnPingReply*)message);
                     break;
             }
         }
@@ -101,7 +101,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
           LocalRenderPortCallback.Msg0_OnBatchProcessed* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalRenderPortCallback.s_priv_ByteOrder_Msg0_OnBatchProcessed, typeof(LocalRenderPortCallback.Msg0_OnBatchProcessed), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg0_OnBatchProcessed, typeof(LocalRenderPortCallback.Msg0_OnBatchProcessed), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             uint uBatchCompleted = _priv_pmsg->uBatchCompleted;
             _priv_target.OnBatchProcessed(target, uBatchCompleted);
@@ -113,7 +113,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
           LocalRenderPortCallback.Msg1_OnPingReply* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalRenderPortCallback.s_priv_ByteOrder_Msg1_OnPingReply, typeof(LocalRenderPortCallback.Msg1_OnPingReply), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg1_OnPingReply, typeof(LocalRenderPortCallback.Msg1_OnPingReply), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnPingReply(target);
         }

@@ -31,16 +31,16 @@ namespace Microsoft.Iris.Render.Internal
         private ContextID m_localContextId;
         private ContextID m_engineContextId;
 
-        static RenderEngine() => RenderEngine.s_contexts = new BitArray((int)RenderEngine.s_maxContextId + 1);
+        static RenderEngine() => s_contexts = new BitArray((int)s_maxContextId + 1);
 
         internal RenderEngine(IrisEngineInfo engineInfo, IRenderHost renderHost)
         {
             Debug2.Validate(engineInfo != null, typeof(ArgumentNullException), nameof(engineInfo));
             Debug2.Validate(renderHost != null, typeof(ArgumentNullException), nameof(renderHost));
             this.m_engineInfo = engineInfo;
-            this.m_engineContextId = RenderEngine.AllocateContextId();
-            this.m_localContextId = RenderEngine.AllocateContextId();
-            this.m_primaryToken = new RenderToken((EngineInfo)engineInfo, this.m_localContextId, this.m_engineContextId, RENDERGROUP.NULL);
+            this.m_engineContextId = AllocateContextId();
+            this.m_localContextId = AllocateContextId();
+            this.m_primaryToken = new RenderToken(engineInfo, this.m_localContextId, this.m_engineContextId, RENDERGROUP.NULL);
             this.m_messagingSession = new MessagingSession(renderHost, this.m_primaryToken);
             this.m_messagingSession.Connect();
             this.m_renderSession = new RenderSession(this);
@@ -76,14 +76,14 @@ namespace Microsoft.Iris.Render.Internal
                             this.m_messagingSession.Disconnect();
                         this.m_messagingSession.Dispose();
                     }
-                    RenderEngine.FreeContextId(this.m_localContextId);
-                    RenderEngine.FreeContextId(this.m_engineContextId);
+                    FreeContextId(this.m_localContextId);
+                    FreeContextId(this.m_engineContextId);
                 }
-                this.m_soundDevice = (SoundDevice)null;
-                this.m_displayManager = (DisplayManager)null;
-                this.m_renderWindow = (RenderWindow)null;
-                this.m_renderSession = (RenderSession)null;
-                this.m_messagingSession = (MessagingSession)null;
+                this.m_soundDevice = null;
+                this.m_displayManager = null;
+                this.m_renderWindow = null;
+                this.m_renderSession = null;
+                this.m_messagingSession = null;
             }
             finally
             {
@@ -112,15 +112,15 @@ namespace Microsoft.Iris.Render.Internal
 
         private MessagingSession MessagingSession => this.m_messagingSession;
 
-        IRenderSession IRenderEngine.Session => (IRenderSession)this.m_renderSession;
+        IRenderSession IRenderEngine.Session => m_renderSession;
 
         internal RenderSession Session => this.m_renderSession;
 
-        IRenderWindow IRenderEngine.Window => (IRenderWindow)this.m_renderWindow;
+        IRenderWindow IRenderEngine.Window => m_renderWindow;
 
         internal RenderWindow Window => this.m_renderWindow;
 
-        IDisplayManager IRenderEngine.DisplayManager => (IDisplayManager)this.m_displayManager;
+        IDisplayManager IRenderEngine.DisplayManager => m_displayManager;
 
         public DisplayManager DisplayManager => this.m_displayManager;
 
@@ -207,14 +207,14 @@ namespace Microsoft.Iris.Render.Internal
 
         private void OnRenderWindowCreated(object sender, EventArgs args)
         {
-            SoundDevice soundDevice = (SoundDevice)null;
+            SoundDevice soundDevice = null;
             switch (this.m_typeSound)
             {
                 case SoundDeviceType.None:
                     this.m_soundDevice = soundDevice;
                     break;
                 case SoundDeviceType.DirectSound8:
-                    soundDevice = (SoundDevice)new Ds8SoundDevice(this.m_renderSession, (IRenderWindow)this.m_renderWindow);
+                    soundDevice = new Ds8SoundDevice(this.m_renderSession, m_renderWindow);
                     goto case SoundDeviceType.None;
                 case SoundDeviceType.WaveAudio:
                 case SoundDeviceType.XAudio:
@@ -229,17 +229,17 @@ namespace Microsoft.Iris.Render.Internal
         internal static ContextID AllocateContextId()
         {
             uint num1 = 0;
-            lock (RenderEngine.s_contexts)
+            lock (s_contexts)
             {
-                for (int index = 0; (long)index < (long)RenderEngine.s_maxContextId; ++index)
+                for (int index = 0; index < s_maxContextId; ++index)
                 {
-                    uint num2 = RenderEngine.s_contextIdSeed++;
-                    if (RenderEngine.s_contextIdSeed > RenderEngine.s_maxContextId)
-                        RenderEngine.s_contextIdSeed = 1U;
-                    if (!RenderEngine.s_contexts[(int)num2])
+                    uint num2 = s_contextIdSeed++;
+                    if (s_contextIdSeed > s_maxContextId)
+                        s_contextIdSeed = 1U;
+                    if (!s_contexts[(int)num2])
                     {
                         num1 = num2;
-                        RenderEngine.s_contexts[(int)num1] = true;
+                        s_contexts[(int)num1] = true;
                         break;
                     }
                 }
@@ -251,9 +251,9 @@ namespace Microsoft.Iris.Render.Internal
         private static void FreeContextId(ContextID contextId)
         {
             uint uint32 = ContextID.ToUInt32(contextId);
-            Debug2.Validate(RenderEngine.s_contexts[(int)uint32], typeof(InvalidOperationException), "ContextID is not in use");
-            lock (RenderEngine.s_contexts)
-                RenderEngine.s_contexts[(int)uint32] = false;
+            Debug2.Validate(s_contexts[(int)uint32], typeof(InvalidOperationException), "ContextID is not in use");
+            lock (s_contexts)
+                s_contexts[(int)uint32] = false;
         }
 
         protected override void Invariant()

@@ -19,8 +19,8 @@ namespace Microsoft.Iris.Render.Animation
         internal AnimationTarget(IAnimatableObject targetObject, string targetPropertyName)
         {
             int propertyType = (int)targetObject.GetPropertyType(targetPropertyName);
-            targetObject.RegisterUsage((object)this);
-            this.m_targetId = Interlocked.Increment(ref AnimationTarget.s_targetIdSeed);
+            targetObject.RegisterUsage(this);
+            this.m_targetId = Interlocked.Increment(ref s_targetIdSeed);
             this.m_object = targetObject;
             this.m_property = targetPropertyName;
         }
@@ -30,8 +30,8 @@ namespace Microsoft.Iris.Render.Animation
             try
             {
                 if (fInDispose)
-                    this.m_object.UnregisterUsage((object)this);
-                this.m_object = (IAnimatableObject)null;
+                    this.m_object.UnregisterUsage(this);
+                this.m_object = null;
             }
             finally
             {

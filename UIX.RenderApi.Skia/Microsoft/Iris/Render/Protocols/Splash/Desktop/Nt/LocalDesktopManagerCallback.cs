@@ -40,7 +40,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
 
         public override int GetHashCode() => base.GetHashCode();
 
-        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(LocalDesktopManagerCallback.DispatchCallback), out uint _);
+        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
 
         private static unsafe void DispatchCallback(
           RenderPort port,
@@ -52,22 +52,22 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             switch (message->nMsg)
             {
                 case 0:
-                    LocalDesktopManagerCallback.Dispatch_OnEndDisplayModes(port, _priv_target, (LocalDesktopManagerCallback.Msg0_OnEndDisplayModes*)message);
+                    Dispatch_OnEndDisplayModes(port, _priv_target, (LocalDesktopManagerCallback.Msg0_OnEndDisplayModes*)message);
                     break;
                 case 1:
-                    LocalDesktopManagerCallback.Dispatch_OnDisplayMode(port, _priv_target, (LocalDesktopManagerCallback.Msg1_OnDisplayMode*)message);
+                    Dispatch_OnDisplayMode(port, _priv_target, (LocalDesktopManagerCallback.Msg1_OnDisplayMode*)message);
                     break;
                 case 2:
-                    LocalDesktopManagerCallback.Dispatch_OnBeginDisplayModes(port, _priv_target, (LocalDesktopManagerCallback.Msg2_OnBeginDisplayModes*)message);
+                    Dispatch_OnBeginDisplayModes(port, _priv_target, (LocalDesktopManagerCallback.Msg2_OnBeginDisplayModes*)message);
                     break;
                 case 3:
-                    LocalDesktopManagerCallback.Dispatch_OnEndEnumMonitorInfo(port, _priv_target, (LocalDesktopManagerCallback.Msg3_OnEndEnumMonitorInfo*)message);
+                    Dispatch_OnEndEnumMonitorInfo(port, _priv_target, (LocalDesktopManagerCallback.Msg3_OnEndEnumMonitorInfo*)message);
                     break;
                 case 4:
-                    LocalDesktopManagerCallback.Dispatch_OnMonitorInfo(port, _priv_target, (LocalDesktopManagerCallback.Msg4_OnMonitorInfo*)message);
+                    Dispatch_OnMonitorInfo(port, _priv_target, (LocalDesktopManagerCallback.Msg4_OnMonitorInfo*)message);
                     break;
                 case 5:
-                    LocalDesktopManagerCallback.Dispatch_OnBeginEnumMonitorInfo(port, _priv_target, (LocalDesktopManagerCallback.Msg5_OnBeginEnumMonitorInfo*)message);
+                    Dispatch_OnBeginEnumMonitorInfo(port, _priv_target, (LocalDesktopManagerCallback.Msg5_OnBeginEnumMonitorInfo*)message);
                     break;
             }
         }
@@ -78,7 +78,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
           LocalDesktopManagerCallback.Msg0_OnEndDisplayModes* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDesktopManagerCallback.s_priv_ByteOrder_Msg0_OnEndDisplayModes, typeof(LocalDesktopManagerCallback.Msg0_OnEndDisplayModes), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg0_OnEndDisplayModes, typeof(LocalDesktopManagerCallback.Msg0_OnEndDisplayModes), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnEndDisplayModes(target);
         }
@@ -89,7 +89,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
           LocalDesktopManagerCallback.Msg1_OnDisplayMode* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDesktopManagerCallback.s_priv_ByteOrder_Msg1_OnDisplayMode, typeof(LocalDesktopManagerCallback.Msg1_OnDisplayMode), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg1_OnDisplayMode, typeof(LocalDesktopManagerCallback.Msg1_OnDisplayMode), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             RenderDisplayMode mode = _priv_pmsg->mode;
             bool fSupported = _priv_pmsg->fSupported != 0U;
@@ -102,7 +102,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
           LocalDesktopManagerCallback.Msg2_OnBeginDisplayModes* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDesktopManagerCallback.s_priv_ByteOrder_Msg2_OnBeginDisplayModes, typeof(LocalDesktopManagerCallback.Msg2_OnBeginDisplayModes), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg2_OnBeginDisplayModes, typeof(LocalDesktopManagerCallback.Msg2_OnBeginDisplayModes), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnBeginDisplayModes(target);
         }
@@ -113,7 +113,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
           LocalDesktopManagerCallback.Msg3_OnEndEnumMonitorInfo* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDesktopManagerCallback.s_priv_ByteOrder_Msg3_OnEndEnumMonitorInfo, typeof(LocalDesktopManagerCallback.Msg3_OnEndEnumMonitorInfo), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg3_OnEndEnumMonitorInfo, typeof(LocalDesktopManagerCallback.Msg3_OnEndEnumMonitorInfo), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnEndEnumMonitorInfo(target);
         }
@@ -124,7 +124,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
           LocalDesktopManagerCallback.Msg4_OnMonitorInfo* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDesktopManagerCallback.s_priv_ByteOrder_Msg4_OnMonitorInfo, typeof(LocalDesktopManagerCallback.Msg4_OnMonitorInfo), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg4_OnMonitorInfo, typeof(LocalDesktopManagerCallback.Msg4_OnMonitorInfo), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             Message* pmsgInner;
             MarshalHelper.Decode(_priv_port, (Message*)_priv_pmsg, _priv_pmsg->info, out pmsgInner);
@@ -137,7 +137,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
           LocalDesktopManagerCallback.Msg5_OnBeginEnumMonitorInfo* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDesktopManagerCallback.s_priv_ByteOrder_Msg5_OnBeginEnumMonitorInfo, typeof(LocalDesktopManagerCallback.Msg5_OnBeginEnumMonitorInfo), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg5_OnBeginEnumMonitorInfo, typeof(LocalDesktopManagerCallback.Msg5_OnBeginEnumMonitorInfo), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnBeginEnumMonitorInfo(target);
         }

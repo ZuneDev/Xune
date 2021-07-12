@@ -24,12 +24,12 @@ namespace Microsoft.Iris.Render
         }
 
         public ColorElement(string stName)
-          : this(stName, ColorElement.DefaultColor)
+          : this(stName, DefaultColor)
         {
         }
 
         public ColorElement()
-          : this("", ColorElement.DefaultColor)
+          : this("", DefaultColor)
         {
         }
 
@@ -41,16 +41,16 @@ namespace Microsoft.Iris.Render
 
         internal byte ColorID => this.m_nColorID;
 
-        internal static ColorF DefaultColor => ColorElement.s_defaultColor;
+        internal static ColorF DefaultColor => s_defaultColor;
 
         internal override int PreProcessProperties(
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Color", (byte)20, ref this.m_nColorID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Color", 20, ref this.m_nColorID, ref nNextUniqueID);
         }
 
-        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Color", EffectPropertyType.Color, (object)this.m_clrColor, this.m_nColorID, dictProperties);
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Color", EffectPropertyType.Color, m_clrColor, this.m_nColorID, dictProperties);
 
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {

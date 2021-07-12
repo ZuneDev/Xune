@@ -24,7 +24,7 @@ namespace Microsoft.Iris.Render
 
         public GaussianBlurElement(GaussianBlurMode blurMode, int nKernalRadius, float flBluriness)
         {
-            Debug2.Validate((double)flBluriness > 0.0 && (double)flBluriness <= 6.0, typeof(ArgumentOutOfRangeException), "Valid range for Bluriness is (0,6]");
+            Debug2.Validate(flBluriness > 0.0 && flBluriness <= 6.0, typeof(ArgumentOutOfRangeException), "Valid range for Bluriness is (0,6]");
             Debug2.Validate(nKernalRadius >= 1 && nKernalRadius <= 6, typeof(ArgumentOutOfRangeException), "Valid range for KernelRadius is [1,6]");
             this.m_blurMode = blurMode;
             this.m_nKernelRadius = nKernalRadius;
@@ -61,7 +61,7 @@ namespace Microsoft.Iris.Render
             get => this.m_flBluriness;
             set
             {
-                Debug2.Validate((double)value > 0.0 && (double)value <= 6.0, typeof(ArgumentOutOfRangeException), "Valid range for Bluriness is (0,6]");
+                Debug2.Validate(value > 0.0 && value <= 6.0, typeof(ArgumentOutOfRangeException), "Valid range for Bluriness is (0,6]");
                 this.m_flBluriness = value;
             }
         }
@@ -70,7 +70,7 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Mode", (byte)5, ref this.m_nModeID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "KernelRadius", (byte)5, ref this.m_nKernelRadiusID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Bluriness", (byte)8, ref this.m_nBlurinessID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Mode", 5, ref this.m_nModeID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "KernelRadius", 5, ref this.m_nKernelRadiusID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Bluriness", 8, ref this.m_nBlurinessID, ref nNextUniqueID);
         }
 
         internal override void AddCacheKey(ByteBuilder cacheKey)

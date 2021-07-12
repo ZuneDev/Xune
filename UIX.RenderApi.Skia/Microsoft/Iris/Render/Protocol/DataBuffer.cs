@@ -19,7 +19,7 @@ namespace Microsoft.Iris.Render.Protocol
         public unsafe DataBuffer(RenderPort port, void* pvData, uint cbSize)
         {
             this.m_port = port;
-            this.m_remoteBuffer = (RemoteDataBuffer)null;
+            this.m_remoteBuffer = null;
             this.m_pvData = pvData;
             this.m_cbSize = cbSize;
         }
@@ -29,7 +29,7 @@ namespace Microsoft.Iris.Render.Protocol
         public void Dispose()
         {
             this.m_port.Session.AssertOwningThread();
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
             this.Dispose(true);
         }
 
@@ -37,7 +37,7 @@ namespace Microsoft.Iris.Render.Protocol
         {
             if (fInDispose && this.m_remoteBuffer != null)
                 this.m_remoteBuffer.Dispose();
-            this.m_remoteBuffer = (RemoteDataBuffer)null;
+            this.m_remoteBuffer = null;
         }
 
         public RenderPort Port => this.m_port;
@@ -50,7 +50,7 @@ namespace Microsoft.Iris.Render.Protocol
 
         public unsafe void Commit()
         {
-            RENDERHANDLE renderhandle = this.m_port.AllocHandle((IRenderHandleOwner)this);
+            RENDERHANDLE renderhandle = this.m_port.AllocHandle(this);
             try
             {
                 this.m_port.SendDataBuffer(this.m_pvData, this.m_cbSize, renderhandle);
@@ -65,7 +65,7 @@ namespace Microsoft.Iris.Render.Protocol
                     if (this.m_remoteBuffer != null)
                     {
                         this.m_remoteBuffer.Dispose();
-                        this.m_remoteBuffer = (RemoteDataBuffer)null;
+                        this.m_remoteBuffer = null;
                     }
                     else
                         this.m_port.FreeHandle(renderhandle);
@@ -83,7 +83,7 @@ namespace Microsoft.Iris.Render.Protocol
             this.DataConsumed(sender, args);
         }
 
-        protected void OnDataConsumed() => this.OnDataConsumed((object)this, EventArgs.Empty);
+        protected void OnDataConsumed() => this.OnDataConsumed(this, EventArgs.Empty);
 
         public event EventHandler ReleaseLocalData;
 
@@ -94,11 +94,11 @@ namespace Microsoft.Iris.Render.Protocol
             this.ReleaseLocalData(sender, args);
         }
 
-        protected void OnReleaseLocalData() => this.OnReleaseLocalData((object)this, EventArgs.Empty);
+        protected void OnReleaseLocalData() => this.OnReleaseLocalData(this, EventArgs.Empty);
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteBuffer.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteBuffer = (RemoteDataBuffer)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteBuffer = null;
 
         void IDataBufferCallback.OnComplete(RENDERHANDLE target) => this.OnDataConsumed();
     }

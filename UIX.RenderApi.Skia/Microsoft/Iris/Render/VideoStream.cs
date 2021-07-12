@@ -38,17 +38,17 @@ namespace Microsoft.Iris.Render
 
         private void Initialize()
         {
-            this.m_nUniqueID = Interlocked.Increment(ref VideoStream.s_idxNextUnique);
-            this.m_poolScene = new VideoPool(this.m_device, (IVideoPoolNotification)this);
-            this.m_surfaceScene = new Surface((SurfacePool)this.m_poolScene, (ISurfaceContentOwner)this, Size.Zero);
-            this.m_surfaceScene.RegisterUsage((object)this);
-            IEffectTemplate effectTemplate = this.m_session.CreateEffectTemplate((object)this, "EmptyVideo");
-            ColorElement colorElement = new ColorElement("ColorFill", ColorF.FromArgb((int)byte.MaxValue, 0, 0, 0));
-            effectTemplate.Build((EffectInput)colorElement);
-            IEffect instance = effectTemplate.CreateInstance((object)this);
+            this.m_nUniqueID = Interlocked.Increment(ref s_idxNextUnique);
+            this.m_poolScene = new VideoPool(this.m_device, this);
+            this.m_surfaceScene = new Surface(m_poolScene, this, Size.Zero);
+            this.m_surfaceScene.RegisterUsage(this);
+            IEffectTemplate effectTemplate = this.m_session.CreateEffectTemplate(this, "EmptyVideo");
+            ColorElement colorElement = new ColorElement("ColorFill", ColorF.FromArgb(byte.MaxValue, 0, 0, 0));
+            effectTemplate.Build(colorElement);
+            IEffect instance = effectTemplate.CreateInstance(this);
             this.m_poolScene.Effect = (Effect)instance;
-            instance.UnregisterUsage((object)this);
-            effectTemplate.UnregisterUsage((object)this);
+            instance.UnregisterUsage(this);
+            effectTemplate.UnregisterUsage(this);
             RemoteDynamicSurfaceFactory.SendCreateVideoInstance(this.m_session.RenderingProtocol, this.m_nUniqueID, this.m_session.RenderingPort.MessagingProtocol.Context_ClassHandle, RemoteDevice.CreateFromHandle(this.m_device.RemoteDevice.Port, this.m_device.RemoteDevice.RenderHandle), this.m_surfaceScene.RemoteStub, this.m_poolScene.RemoteVideoStub);
         }
 
@@ -58,14 +58,14 @@ namespace Microsoft.Iris.Render
             {
                 if (this.m_poolScene != null)
                 {
-                    this.m_surfaceScene.UnregisterUsage((object)this);
-                    this.m_surfaceScene = (Surface)null;
+                    this.m_surfaceScene.UnregisterUsage(this);
+                    this.m_surfaceScene = null;
                     this.m_poolScene.Dispose();
-                    this.m_poolScene = (VideoPool)null;
+                    this.m_poolScene = null;
                 }
                 RemoteDynamicSurfaceFactory.SendCloseInstance(this.m_session.RenderingProtocol, this.m_nUniqueID);
             }
-            this.m_device = (GraphicsDevice)null;
+            this.m_device = null;
             base.Dispose(fInDispose);
         }
 
@@ -98,7 +98,7 @@ namespace Microsoft.Iris.Render
         {
             if (this.m_surfaceScene != surface)
                 return;
-            this.m_surfaceScene = (Surface)null;
+            this.m_surfaceScene = null;
         }
 
         public void OnRestoreContent(Surface surface)
@@ -112,7 +112,7 @@ namespace Microsoft.Iris.Render
             get => this.m_poolScene.ContentOverscan;
             set
             {
-                Debug2.Validate((double)value >= 0.0 && (double)value <= 0.5, typeof(ArgumentException), "Valid range for content overscan is [0, .5]");
+                Debug2.Validate(value >= 0.0 && value <= 0.5, typeof(ArgumentException), "Valid range for content overscan is [0, .5]");
                 if (Math2.WithinEpsilon(this.m_poolScene.ContentOverscan, value))
                     return;
                 this.m_poolScene.ContentOverscan = value;

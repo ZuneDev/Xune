@@ -46,7 +46,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
 
         public override int GetHashCode() => base.GetHashCode();
 
-        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(LocalFormWindowCallback.DispatchCallback), out uint _);
+        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
 
         private static unsafe void DispatchCallback(
           RenderPort port,
@@ -58,46 +58,46 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
             switch (message->nMsg)
             {
                 case 0:
-                    LocalFormWindowCallback.Dispatch_OnRendererSuspended(port, _priv_target, (LocalFormWindowCallback.Msg0_OnRendererSuspended*)message);
+                    Dispatch_OnRendererSuspended(port, _priv_target, (LocalFormWindowCallback.Msg0_OnRendererSuspended*)message);
                     break;
                 case 1:
-                    LocalFormWindowCallback.Dispatch_OnNativeScreensave(port, _priv_target, (LocalFormWindowCallback.Msg1_OnNativeScreensave*)message);
+                    Dispatch_OnNativeScreensave(port, _priv_target, (LocalFormWindowCallback.Msg1_OnNativeScreensave*)message);
                     break;
                 case 2:
-                    LocalFormWindowCallback.Dispatch_OnShellShutdownHook(port, _priv_target, (LocalFormWindowCallback.Msg2_OnShellShutdownHook*)message);
+                    Dispatch_OnShellShutdownHook(port, _priv_target, (LocalFormWindowCallback.Msg2_OnShellShutdownHook*)message);
                     break;
                 case 3:
-                    LocalFormWindowCallback.Dispatch_OnSetFocus(port, _priv_target, (LocalFormWindowCallback.Msg3_OnSetFocus*)message);
+                    Dispatch_OnSetFocus(port, _priv_target, (LocalFormWindowCallback.Msg3_OnSetFocus*)message);
                     break;
                 case 4:
-                    LocalFormWindowCallback.Dispatch_OnDropComplete(port, _priv_target, (LocalFormWindowCallback.Msg4_OnDropComplete*)message);
+                    Dispatch_OnDropComplete(port, _priv_target, (LocalFormWindowCallback.Msg4_OnDropComplete*)message);
                     break;
                 case 5:
-                    LocalFormWindowCallback.Dispatch_OnPartialDrop(port, _priv_target, (LocalFormWindowCallback.Msg5_OnPartialDrop*)message);
+                    Dispatch_OnPartialDrop(port, _priv_target, (LocalFormWindowCallback.Msg5_OnPartialDrop*)message);
                     break;
                 case 6:
-                    LocalFormWindowCallback.Dispatch_OnStateChange(port, _priv_target, (LocalFormWindowCallback.Msg6_OnStateChange*)message);
+                    Dispatch_OnStateChange(port, _priv_target, (LocalFormWindowCallback.Msg6_OnStateChange*)message);
                     break;
                 case 7:
-                    LocalFormWindowCallback.Dispatch_OnTerminalSessionChange(port, _priv_target, (LocalFormWindowCallback.Msg7_OnTerminalSessionChange*)message);
+                    Dispatch_OnTerminalSessionChange(port, _priv_target, (LocalFormWindowCallback.Msg7_OnTerminalSessionChange*)message);
                     break;
                 case 8:
-                    LocalFormWindowCallback.Dispatch_OnPrivateSysCommand(port, _priv_target, (LocalFormWindowCallback.Msg8_OnPrivateSysCommand*)message);
+                    Dispatch_OnPrivateSysCommand(port, _priv_target, (LocalFormWindowCallback.Msg8_OnPrivateSysCommand*)message);
                     break;
                 case 9:
-                    LocalFormWindowCallback.Dispatch_OnMouseIdle(port, _priv_target, (LocalFormWindowCallback.Msg9_OnMouseIdle*)message);
+                    Dispatch_OnMouseIdle(port, _priv_target, (LocalFormWindowCallback.Msg9_OnMouseIdle*)message);
                     break;
                 case 10:
-                    LocalFormWindowCallback.Dispatch_OnCloseRequested(port, _priv_target, (LocalFormWindowCallback.Msg10_OnCloseRequested*)message);
+                    Dispatch_OnCloseRequested(port, _priv_target, (LocalFormWindowCallback.Msg10_OnCloseRequested*)message);
                     break;
                 case 11:
-                    LocalFormWindowCallback.Dispatch_OnLoad(port, _priv_target, (LocalFormWindowCallback.Msg11_OnLoad*)message);
+                    Dispatch_OnLoad(port, _priv_target, (LocalFormWindowCallback.Msg11_OnLoad*)message);
                     break;
                 case 12:
-                    LocalFormWindowCallback.Dispatch_OnWindowDestroyed(port, _priv_target, (LocalFormWindowCallback.Msg12_OnWindowDestroyed*)message);
+                    Dispatch_OnWindowDestroyed(port, _priv_target, (LocalFormWindowCallback.Msg12_OnWindowDestroyed*)message);
                     break;
                 case 13:
-                    LocalFormWindowCallback.Dispatch_OnWindowCreated(port, _priv_target, (LocalFormWindowCallback.Msg13_OnWindowCreated*)message);
+                    Dispatch_OnWindowCreated(port, _priv_target, (LocalFormWindowCallback.Msg13_OnWindowCreated*)message);
                     break;
             }
         }
@@ -108,7 +108,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg0_OnRendererSuspended* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg0_OnRendererSuspended, typeof(LocalFormWindowCallback.Msg0_OnRendererSuspended), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg0_OnRendererSuspended, typeof(LocalFormWindowCallback.Msg0_OnRendererSuspended), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             bool fEnabled = _priv_pmsg->fEnabled != 0U;
             _priv_target.OnRendererSuspended(target, fEnabled);
@@ -120,7 +120,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg1_OnNativeScreensave* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg1_OnNativeScreensave, typeof(LocalFormWindowCallback.Msg1_OnNativeScreensave), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg1_OnNativeScreensave, typeof(LocalFormWindowCallback.Msg1_OnNativeScreensave), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             bool fStartScreensave = _priv_pmsg->fStartScreensave != 0U;
             _priv_target.OnNativeScreensave(target, fStartScreensave);
@@ -132,7 +132,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg2_OnShellShutdownHook* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg2_OnShellShutdownHook, typeof(LocalFormWindowCallback.Msg2_OnShellShutdownHook), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg2_OnShellShutdownHook, typeof(LocalFormWindowCallback.Msg2_OnShellShutdownHook), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             ushort uIdMsg = _priv_pmsg->uIdMsg;
             _priv_target.OnShellShutdownHook(target, uIdMsg);
@@ -155,7 +155,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg4_OnDropComplete* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg4_OnDropComplete, typeof(LocalFormWindowCallback.Msg4_OnDropComplete), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg4_OnDropComplete, typeof(LocalFormWindowCallback.Msg4_OnDropComplete), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnDropComplete(target);
         }
@@ -166,7 +166,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg5_OnPartialDrop* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg5_OnPartialDrop, typeof(LocalFormWindowCallback.Msg5_OnPartialDrop), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg5_OnPartialDrop, typeof(LocalFormWindowCallback.Msg5_OnPartialDrop), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             string file;
             MarshalHelper.Decode(_priv_port, (Message*)_priv_pmsg, _priv_pmsg->file, out file);
@@ -179,7 +179,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg6_OnStateChange* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg6_OnStateChange, typeof(LocalFormWindowCallback.Msg6_OnStateChange), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg6_OnStateChange, typeof(LocalFormWindowCallback.Msg6_OnStateChange), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             Message* pmsgInner;
             MarshalHelper.Decode(_priv_port, (Message*)_priv_pmsg, _priv_pmsg->stateInfo, out pmsgInner);
@@ -192,7 +192,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg7_OnTerminalSessionChange* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg7_OnTerminalSessionChange, typeof(LocalFormWindowCallback.Msg7_OnTerminalSessionChange), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg7_OnTerminalSessionChange, typeof(LocalFormWindowCallback.Msg7_OnTerminalSessionChange), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             IntPtr wParam = _priv_pmsg->wParam;
             IntPtr lParam = _priv_pmsg->lParam;
@@ -205,7 +205,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg8_OnPrivateSysCommand* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg8_OnPrivateSysCommand, typeof(LocalFormWindowCallback.Msg8_OnPrivateSysCommand), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg8_OnPrivateSysCommand, typeof(LocalFormWindowCallback.Msg8_OnPrivateSysCommand), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             IntPtr wParam = _priv_pmsg->wParam;
             IntPtr lParam = _priv_pmsg->lParam;
@@ -218,7 +218,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg9_OnMouseIdle* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg9_OnMouseIdle, typeof(LocalFormWindowCallback.Msg9_OnMouseIdle), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg9_OnMouseIdle, typeof(LocalFormWindowCallback.Msg9_OnMouseIdle), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             bool fNewIdle = _priv_pmsg->fNewIdle != 0U;
             _priv_target.OnMouseIdle(target, fNewIdle);
@@ -230,7 +230,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg10_OnCloseRequested* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg10_OnCloseRequested, typeof(LocalFormWindowCallback.Msg10_OnCloseRequested), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg10_OnCloseRequested, typeof(LocalFormWindowCallback.Msg10_OnCloseRequested), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnCloseRequested(target);
         }
@@ -241,7 +241,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg11_OnLoad* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg11_OnLoad, typeof(LocalFormWindowCallback.Msg11_OnLoad), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg11_OnLoad, typeof(LocalFormWindowCallback.Msg11_OnLoad), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnLoad(target);
         }
@@ -252,7 +252,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
           LocalFormWindowCallback.Msg12_OnWindowDestroyed* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalFormWindowCallback.s_priv_ByteOrder_Msg12_OnWindowDestroyed, typeof(LocalFormWindowCallback.Msg12_OnWindowDestroyed), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg12_OnWindowDestroyed, typeof(LocalFormWindowCallback.Msg12_OnWindowDestroyed), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             uint nFinalShow = _priv_pmsg->nFinalShow;
             Rectangle rcLastPosition = _priv_pmsg->rcLastPosition;

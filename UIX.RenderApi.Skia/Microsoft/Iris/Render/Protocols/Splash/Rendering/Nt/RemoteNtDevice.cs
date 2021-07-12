@@ -41,7 +41,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             msg19CreatePtr->_priv_ctxcb = port.Session.LocalContext;
             msg19CreatePtr->_priv_idObjectSubject = remoteNtDevice.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteNtDevice.s_priv_ByteOrder_Msg19_Create, typeof(RemoteNtDevice.Msg19_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg19_Create, typeof(RemoteNtDevice.Msg19_Create), 0, 0);
             port.CreateRemoteObject(deviceClassHandle, remoteNtDevice.m_renderHandle, (Message*)msg19CreatePtr);
             return remoteNtDevice;
         }
@@ -59,7 +59,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             renderNowIfPossiblePtr->_priv_msgid = 11U;
             renderNowIfPossiblePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)renderNowIfPossiblePtr, ref RemoteNtDevice.s_priv_ByteOrder_Msg11_RenderNowIfPossible, typeof(RemoteNtDevice.Msg11_RenderNowIfPossible), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)renderNowIfPossiblePtr, ref s_priv_ByteOrder_Msg11_RenderNowIfPossible, typeof(RemoteNtDevice.Msg11_RenderNowIfPossible), 0, 0);
             _priv_pmsgUse = (Message*)renderNowIfPossiblePtr;
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             createTransferBufferPtr->nFormat = nFormat;
             createTransferBufferPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)createTransferBufferPtr, ref RemoteNtDevice.s_priv_ByteOrder_Msg12_CreateTransferBuffer, typeof(RemoteNtDevice.Msg12_CreateTransferBuffer), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)createTransferBufferPtr, ref s_priv_ByteOrder_Msg12_CreateTransferBuffer, typeof(RemoteNtDevice.Msg12_CreateTransferBuffer), 0, 0);
             _priv_pmsgUse = (Message*)createTransferBufferPtr;
         }
 
@@ -115,7 +115,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             msg13SetMaxOverscanPtr->flMaxOverscan = flMaxOverscan;
             msg13SetMaxOverscanPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg13SetMaxOverscanPtr, ref RemoteNtDevice.s_priv_ByteOrder_Msg13_SetMaxOverscan, typeof(RemoteNtDevice.Msg13_SetMaxOverscan), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg13SetMaxOverscanPtr, ref s_priv_ByteOrder_Msg13_SetMaxOverscan, typeof(RemoteNtDevice.Msg13_SetMaxOverscan), 0, 0);
             _priv_pmsgUse = (Message*)msg13SetMaxOverscanPtr;
         }
 
@@ -142,7 +142,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             setDisplayOverscanPtr->flDisplayOverscan = flDisplayOverscan;
             setDisplayOverscanPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setDisplayOverscanPtr, ref RemoteNtDevice.s_priv_ByteOrder_Msg15_SetDisplayOverscan, typeof(RemoteNtDevice.Msg15_SetDisplayOverscan), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setDisplayOverscanPtr, ref s_priv_ByteOrder_Msg15_SetDisplayOverscan, typeof(RemoteNtDevice.Msg15_SetDisplayOverscan), 0, 0);
             _priv_pmsgUse = (Message*)setDisplayOverscanPtr;
         }
 
@@ -169,7 +169,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             setEnablePageFlipPtr->fPageFlip = fPageFlip ? uint.MaxValue : 0U;
             setEnablePageFlipPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setEnablePageFlipPtr, ref RemoteNtDevice.s_priv_ByteOrder_Msg17_SetEnablePageFlip, typeof(RemoteNtDevice.Msg17_SetEnablePageFlip), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setEnablePageFlipPtr, ref s_priv_ByteOrder_Msg17_SetEnablePageFlip, typeof(RemoteNtDevice.Msg17_SetEnablePageFlip), 0, 0);
             _priv_pmsgUse = (Message*)setEnablePageFlipPtr;
         }
 

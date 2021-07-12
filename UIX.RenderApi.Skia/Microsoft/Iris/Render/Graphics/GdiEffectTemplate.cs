@@ -23,7 +23,7 @@ namespace Microsoft.Iris.Render.Graphics
         public override IEffect CreateInstance(object objUser)
         {
             Debug2.Validate(this.m_fBuilt, typeof(InvalidOperationException), "Cannot create instance if the template is not built");
-            GdiEffect gdiEffect = (GdiEffect)null;
+            GdiEffect gdiEffect = null;
             if (this.m_cache != null)
                 gdiEffect = (GdiEffect)this.m_cache.Remove(objUser);
             if (gdiEffect == null)
@@ -33,7 +33,7 @@ namespace Microsoft.Iris.Render.Graphics
                 gdiEffect.RegisterUsage(objUser);
                 gdiEffect.RemoteEffect();
             }
-            return (IEffect)gdiEffect;
+            return gdiEffect;
         }
 
         protected override bool Build(EffectInput input)

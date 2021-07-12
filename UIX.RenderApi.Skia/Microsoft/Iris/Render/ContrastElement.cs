@@ -20,7 +20,7 @@ namespace Microsoft.Iris.Render
           : this()
         {
             Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
-            Debug2.Validate((double)flConstrastAdjust >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Contrast [0..)");
+            Debug2.Validate(flConstrastAdjust >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Contrast [0..)");
             this.m_flContrast = flConstrastAdjust;
             this.m_stName = stName;
         }
@@ -39,10 +39,10 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Contrast", (byte)8, ref this.m_nContrastID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Contrast", 8, ref this.m_nContrastID, ref nNextUniqueID);
         }
 
-        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Contrast", EffectPropertyType.Float, (object)this.m_flContrast, this.m_nContrastID, dictProperties);
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Contrast", EffectPropertyType.Float, m_flContrast, this.m_nContrastID, dictProperties);
 
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {

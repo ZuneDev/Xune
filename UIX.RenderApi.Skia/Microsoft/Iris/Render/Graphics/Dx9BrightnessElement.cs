@@ -16,14 +16,14 @@ namespace Microsoft.Iris.Render.Graphics
         {
             VariableInfo variableInfo = new VariableInfo()
             {
-                ID = (int)efoBrightness.BrightnessID,
+                ID = efoBrightness.BrightnessID,
                 Type = Dx9VariableType.Float,
                 IsDynamic = efoBrightness.IsDynamicProperty("Brightness")
             };
             variableInfo.Name = variableInfo.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo.Type, efoBrightness.Name) : effectBuilder.GenerateGlobalConstant(variableInfo.Type, efoBrightness.Name);
-            variableInfo.DefaultValue = (object)efoBrightness.Brightness;
+            variableInfo.DefaultValue = efoBrightness.Brightness;
             effectBuilder.AddPropertyVariable(variableInfo);
-            effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        // adjust brightness based on input\r\n        {0}.rgb += float3({1}, {1}, {1});\r\n    }}\r\n", (object)effectBuilder.PixelShaderOutput, (object)variableInfo.Name));
+            effectBuilder.EmitPixelFragment(InvariantString.Format("    {{\r\n        // adjust brightness based on input\r\n        {0}.rgb += float3({1}, {1}, {1});\r\n    }}\r\n", effectBuilder.PixelShaderOutput, variableInfo.Name));
         }
     }
 }

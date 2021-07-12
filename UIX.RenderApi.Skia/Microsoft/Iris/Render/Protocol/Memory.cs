@@ -30,7 +30,7 @@ namespace Microsoft.Iris.Render.Protocol
             byte* numPtr = (byte*)pointer;
             int num3 = cbZero - num1 * 4;
             while (num3-- > 0)
-                *numPtr++ = (byte)0;
+                *numPtr++ = 0;
         }
 
         public static unsafe void Copy(IntPtr pvDest, IntPtr pvSrc, int cbCopy)
@@ -65,7 +65,7 @@ namespace Microsoft.Iris.Render.Protocol
                     while (num1-- > 0)
                     {
                         uint num2 = *pointer2++;
-                        *pointer1++ = (uint)((int)((num2 & 4278190080U) >> 8) | ((int)num2 & 16711680) << 8 | (int)((num2 & 65280U) >> 8) | ((int)num2 & (int)byte.MaxValue) << 8);
+                        *pointer1++ = (uint)((int)((num2 & 4278190080U) >> 8) | ((int)num2 & 16711680) << 8 | (int)((num2 & 65280U) >> 8) | ((int)num2 & byte.MaxValue) << 8);
                     }
                     if (cbConvert % 4 == 0)
                         break;
@@ -75,7 +75,7 @@ namespace Microsoft.Iris.Render.Protocol
                     ushort num3 = *numPtr2;
                     ushort* numPtr4 = numPtr1;
                     ushort* numPtr5 = (ushort*)((IntPtr)numPtr4 + new IntPtr(2));
-                    int num4 = (int)(ushort)(((int)num3 & 65280) >> 8 | ((int)num3 & (int)byte.MaxValue) << 8);
+                    int num4 = (ushort)((num3 & 65280) >> 8 | (num3 & byte.MaxValue) << 8);
                     *numPtr4 = (ushort)num4;
                     break;
                 case 32:
@@ -85,7 +85,7 @@ namespace Microsoft.Iris.Render.Protocol
                     while (num5-- > 0)
                     {
                         uint num2 = *pointer4++;
-                        *pointer3++ = (uint)((int)((num2 & 4278190080U) >> 24) | (int)((num2 & 16711680U) >> 8) | ((int)num2 & 65280) << 8 | ((int)num2 & (int)byte.MaxValue) << 24);
+                        *pointer3++ = (uint)((int)((num2 & 4278190080U) >> 24) | (int)((num2 & 16711680U) >> 8) | ((int)num2 & 65280) << 8 | ((int)num2 & byte.MaxValue) << 24);
                     }
                     break;
                 default:
@@ -94,6 +94,6 @@ namespace Microsoft.Iris.Render.Protocol
             }
         }
 
-        public static uint ConvertEndian(uint src) => (uint)((int)((src & 4278190080U) >> 24) | (int)((src & 16711680U) >> 8) | ((int)src & 65280) << 8 | ((int)src & (int)byte.MaxValue) << 24);
+        public static uint ConvertEndian(uint src) => (uint)((int)((src & 4278190080U) >> 24) | (int)((src & 16711680U) >> 8) | ((int)src & 65280) << 8 | ((int)src & byte.MaxValue) << 24);
     }
 }

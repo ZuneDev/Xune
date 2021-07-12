@@ -44,7 +44,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0ClearGradientsPtr->_priv_msgid = 0U;
             msg0ClearGradientsPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0ClearGradientsPtr, ref RemoteVisual.s_priv_ByteOrder_Msg0_ClearGradients, typeof(RemoteVisual.Msg0_ClearGradients), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0ClearGradientsPtr, ref s_priv_ByteOrder_Msg0_ClearGradients, typeof(RemoteVisual.Msg0_ClearGradients), 0, 0);
             _priv_pmsgUse = (Message*)msg0ClearGradientsPtr;
         }
 
@@ -73,7 +73,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg1AddGradientPtr->grad = grad != null ? grad.RenderHandle : RENDERHANDLE.NULL;
             msg1AddGradientPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1AddGradientPtr, ref RemoteVisual.s_priv_ByteOrder_Msg1_AddGradient, typeof(RemoteVisual.Msg1_AddGradient), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg1AddGradientPtr, ref s_priv_ByteOrder_Msg1_AddGradient, typeof(RemoteVisual.Msg1_AddGradient), 0, 0);
             _priv_pmsgUse = (Message*)msg1AddGradientPtr;
         }
 
@@ -100,7 +100,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg2SetRelativeSizePtr->fRelative = fRelative ? uint.MaxValue : 0U;
             msg2SetRelativeSizePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg2SetRelativeSizePtr, ref RemoteVisual.s_priv_ByteOrder_Msg2_SetRelativeSize, typeof(RemoteVisual.Msg2_SetRelativeSize), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg2SetRelativeSizePtr, ref s_priv_ByteOrder_Msg2_SetRelativeSize, typeof(RemoteVisual.Msg2_SetRelativeSize), 0, 0);
             _priv_pmsgUse = (Message*)msg2SetRelativeSizePtr;
         }
 
@@ -123,7 +123,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg3ResetPtr->_priv_msgid = 3U;
             msg3ResetPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg3ResetPtr, ref RemoteVisual.s_priv_ByteOrder_Msg3_Reset, typeof(RemoteVisual.Msg3_Reset), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg3ResetPtr, ref s_priv_ByteOrder_Msg3_Reset, typeof(RemoteVisual.Msg3_Reset), 0, 0);
             _priv_pmsgUse = (Message*)msg3ResetPtr;
         }
 
@@ -152,7 +152,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg4ChangeDataBitsPtr->nMask = nMask;
             msg4ChangeDataBitsPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg4ChangeDataBitsPtr, ref RemoteVisual.s_priv_ByteOrder_Msg4_ChangeDataBits, typeof(RemoteVisual.Msg4_ChangeDataBits), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg4ChangeDataBitsPtr, ref s_priv_ByteOrder_Msg4_ChangeDataBits, typeof(RemoteVisual.Msg4_ChangeDataBits), 0, 0);
             _priv_pmsgUse = (Message*)msg4ChangeDataBitsPtr;
         }
 
@@ -187,7 +187,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg5ChangeParentPtr->nOrder = nOrder;
             msg5ChangeParentPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg5ChangeParentPtr, ref RemoteVisual.s_priv_ByteOrder_Msg5_ChangeParent, typeof(RemoteVisual.Msg5_ChangeParent), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg5ChangeParentPtr, ref s_priv_ByteOrder_Msg5_ChangeParent, typeof(RemoteVisual.Msg5_ChangeParent), 0, 0);
             _priv_pmsgUse = (Message*)msg5ChangeParentPtr;
         }
 
@@ -217,7 +217,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             debugOutlineColorPtr->clr = clr;
             debugOutlineColorPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)debugOutlineColorPtr, ref RemoteVisual.s_priv_ByteOrder_Msg6_SetDebugOutlineColor, typeof(RemoteVisual.Msg6_SetDebugOutlineColor), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)debugOutlineColorPtr, ref s_priv_ByteOrder_Msg6_SetDebugOutlineColor, typeof(RemoteVisual.Msg6_SetDebugOutlineColor), 0, 0);
             _priv_pmsgUse = (Message*)debugOutlineColorPtr;
         }
 
@@ -247,7 +247,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)msg7SetDebugIdPtr);
             msg7SetDebugIdPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg7SetDebugIdPtr, ref RemoteVisual.s_priv_ByteOrder_Msg7_SetDebugID, typeof(RemoteVisual.Msg7_SetDebugID), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg7SetDebugIdPtr, ref s_priv_ByteOrder_Msg7_SetDebugID, typeof(RemoteVisual.Msg7_SetDebugID), 0, 0);
             _priv_pmsgUse = (Message*)msg7SetDebugIdPtr;
         }
 
@@ -274,7 +274,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg8SetAlphaPtr->fAlpha = fAlpha;
             msg8SetAlphaPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg8SetAlphaPtr, ref RemoteVisual.s_priv_ByteOrder_Msg8_SetAlpha, typeof(RemoteVisual.Msg8_SetAlpha), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg8SetAlphaPtr, ref s_priv_ByteOrder_Msg8_SetAlpha, typeof(RemoteVisual.Msg8_SetAlpha), 0, 0);
             _priv_pmsgUse = (Message*)msg8SetAlphaPtr;
         }
 
@@ -301,7 +301,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg9SetLayerPtr->layer = layer;
             msg9SetLayerPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg9SetLayerPtr, ref RemoteVisual.s_priv_ByteOrder_Msg9_SetLayer, typeof(RemoteVisual.Msg9_SetLayer), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg9SetLayerPtr, ref s_priv_ByteOrder_Msg9_SetLayer, typeof(RemoteVisual.Msg9_SetLayer), 0, 0);
             _priv_pmsgUse = (Message*)msg9SetLayerPtr;
         }
 
@@ -328,7 +328,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg10SetRotationPtr->aaRotation = aaRotation;
             msg10SetRotationPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg10SetRotationPtr, ref RemoteVisual.s_priv_ByteOrder_Msg10_SetRotation, typeof(RemoteVisual.Msg10_SetRotation), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg10SetRotationPtr, ref s_priv_ByteOrder_Msg10_SetRotation, typeof(RemoteVisual.Msg10_SetRotation), 0, 0);
             _priv_pmsgUse = (Message*)msg10SetRotationPtr;
         }
 
@@ -355,7 +355,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             centerPointScalePtr->vCenterPointScale = vCenterPointScale;
             centerPointScalePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)centerPointScalePtr, ref RemoteVisual.s_priv_ByteOrder_Msg11_SetCenterPointScale, typeof(RemoteVisual.Msg11_SetCenterPointScale), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)centerPointScalePtr, ref s_priv_ByteOrder_Msg11_SetCenterPointScale, typeof(RemoteVisual.Msg11_SetCenterPointScale), 0, 0);
             _priv_pmsgUse = (Message*)centerPointScalePtr;
         }
 
@@ -382,7 +382,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg12SetScalePtr->vScale = vScale;
             msg12SetScalePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg12SetScalePtr, ref RemoteVisual.s_priv_ByteOrder_Msg12_SetScale, typeof(RemoteVisual.Msg12_SetScale), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg12SetScalePtr, ref s_priv_ByteOrder_Msg12_SetScale, typeof(RemoteVisual.Msg12_SetScale), 0, 0);
             _priv_pmsgUse = (Message*)msg12SetScalePtr;
         }
 
@@ -409,7 +409,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg13SetSizePtr->vSizePxl = vSizePxl;
             msg13SetSizePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg13SetSizePtr, ref RemoteVisual.s_priv_ByteOrder_Msg13_SetSize, typeof(RemoteVisual.Msg13_SetSize), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg13SetSizePtr, ref s_priv_ByteOrder_Msg13_SetSize, typeof(RemoteVisual.Msg13_SetSize), 0, 0);
             _priv_pmsgUse = (Message*)msg13SetSizePtr;
         }
 
@@ -436,7 +436,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg14SetPositionPtr->vPositionPxl = vPositionPxl;
             msg14SetPositionPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg14SetPositionPtr, ref RemoteVisual.s_priv_ByteOrder_Msg14_SetPosition, typeof(RemoteVisual.Msg14_SetPosition), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg14SetPositionPtr, ref s_priv_ByteOrder_Msg14_SetPosition, typeof(RemoteVisual.Msg14_SetPosition), 0, 0);
             _priv_pmsgUse = (Message*)msg14SetPositionPtr;
         }
 
@@ -463,7 +463,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg16SetVisiblePtr->fVisible = fVisible ? uint.MaxValue : 0U;
             msg16SetVisiblePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg16SetVisiblePtr, ref RemoteVisual.s_priv_ByteOrder_Msg16_SetVisible, typeof(RemoteVisual.Msg16_SetVisible), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg16SetVisiblePtr, ref s_priv_ByteOrder_Msg16_SetVisible, typeof(RemoteVisual.Msg16_SetVisible), 0, 0);
             _priv_pmsgUse = (Message*)msg16SetVisiblePtr;
         }
 

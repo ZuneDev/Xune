@@ -29,8 +29,8 @@ namespace Microsoft.Iris.Render.Internal
         public HwndHostWindow(RenderWindow winParent)
         {
             ProtocolSplashDesktopNt ntDesktopProtocol = winParent.Session.NtDesktopProtocol;
-            this.m_remoteWindow = ntDesktopProtocol.BuildRemoteHwndHostWindow((IRenderHandleOwner)this, winParent.RemoteStub, ntDesktopProtocol.LocalHwndHostWindowCallbackHandle);
-            this.m_clrBackground = new ColorF((int)byte.MaxValue, (int)byte.MaxValue, (int)byte.MaxValue);
+            this.m_remoteWindow = ntDesktopProtocol.BuildRemoteHwndHostWindow(this, winParent.RemoteStub, ntDesktopProtocol.LocalHwndHostWindowCallbackHandle);
+            this.m_clrBackground = new ColorF(byte.MaxValue, byte.MaxValue, byte.MaxValue);
         }
 
         protected override void Dispose(bool fInDispose)
@@ -38,7 +38,7 @@ namespace Microsoft.Iris.Render.Internal
             if (fInDispose && this.m_remoteWindow != null)
             {
                 this.m_remoteWindow.Dispose();
-                this.m_remoteWindow = (RemoteHwndHostWindow)null;
+                this.m_remoteWindow = null;
             }
             base.Dispose(fInDispose);
         }
@@ -106,11 +106,11 @@ namespace Microsoft.Iris.Render.Internal
             this.m_hwnd = hWnd;
             if (this.m_eventHandleChanged == null)
                 return;
-            this.m_eventHandleChanged((object)this, EventArgs.Empty);
+            this.m_eventHandleChanged(this, EventArgs.Empty);
         }
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteWindow.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteWindow = (RemoteHwndHostWindow)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteWindow = null;
     }
 }

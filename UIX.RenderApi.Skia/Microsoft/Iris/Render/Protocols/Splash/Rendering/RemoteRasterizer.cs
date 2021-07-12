@@ -44,7 +44,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0LoadRawImagePtr->info = info;
             msg0LoadRawImagePtr->_priv_idObjectSubject = rasterizerClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0LoadRawImagePtr, ref RemoteRasterizer.s_priv_ByteOrder_Msg0_LoadRawImage, typeof(RemoteRasterizer.Msg0_LoadRawImage), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0LoadRawImagePtr, ref s_priv_ByteOrder_Msg0_LoadRawImage, typeof(RemoteRasterizer.Msg0_LoadRawImage), 0, 0);
             _priv_pmsgUse = (Message*)msg0LoadRawImagePtr;
         }
 
@@ -56,7 +56,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteRasterizer.BuildLoadRawImage(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, surContent, buffer, info);
+            BuildLoadRawImage(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, surContent, buffer, info);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 

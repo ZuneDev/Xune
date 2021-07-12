@@ -19,7 +19,7 @@ namespace Microsoft.Iris.Render.Common
         {
             this.m_data = new byte[nMaxSize];
             this.m_nCurrentIndex = 0;
-            this.m_nHashCode = (byte)0;
+            this.m_nHashCode = 0;
         }
 
         internal int Capacity => this.m_data.Length;
@@ -34,31 +34,31 @@ namespace Microsoft.Iris.Render.Common
 
         internal unsafe void AppendInt(int nData)
         {
-            Marshal.Copy(new IntPtr((void*)&nData), this.m_data, this.m_nCurrentIndex, 4);
+            Marshal.Copy(new IntPtr(&nData), this.m_data, this.m_nCurrentIndex, 4);
             this.m_nCurrentIndex += 4;
         }
 
         internal unsafe void AppendFloat(float fData)
         {
-            Marshal.Copy(new IntPtr((void*)&fData), this.m_data, this.m_nCurrentIndex, 4);
+            Marshal.Copy(new IntPtr(&fData), this.m_data, this.m_nCurrentIndex, 4);
             this.m_nCurrentIndex += 4;
         }
 
         internal unsafe void AppendVector(Vector2 vData)
         {
-            Marshal.Copy(new IntPtr((void*)&vData), this.m_data, this.m_nCurrentIndex, sizeof(Vector2));
+            Marshal.Copy(new IntPtr(&vData), this.m_data, this.m_nCurrentIndex, sizeof(Vector2));
             this.m_nCurrentIndex += 8;
         }
 
         internal unsafe void AppendVector(Vector3 vData)
         {
-            Marshal.Copy(new IntPtr((void*)&vData), this.m_data, this.m_nCurrentIndex, sizeof(Vector3));
+            Marshal.Copy(new IntPtr(&vData), this.m_data, this.m_nCurrentIndex, sizeof(Vector3));
             this.m_nCurrentIndex += 12;
         }
 
         internal unsafe void AppendVector(Vector4 vData)
         {
-            Marshal.Copy(new IntPtr((void*)&vData), this.m_data, this.m_nCurrentIndex, sizeof(Vector4));
+            Marshal.Copy(new IntPtr(&vData), this.m_data, this.m_nCurrentIndex, sizeof(Vector4));
             this.m_nCurrentIndex += 16;
         }
 
@@ -66,13 +66,13 @@ namespace Microsoft.Iris.Render.Common
 
         public override int GetHashCode()
         {
-            if (this.m_nHashCode != (byte)0)
-                return (int)this.m_nHashCode;
+            if (this.m_nHashCode != 0)
+                return m_nHashCode;
             int num = 0;
             for (int index = 0; index < this.m_nCurrentIndex; ++index)
-                num += (int)this.m_data[index];
+                num += this.m_data[index];
             this.m_nHashCode = (byte)num;
-            return (int)this.m_nHashCode;
+            return m_nHashCode;
         }
 
         public override bool Equals(object obj)
@@ -82,7 +82,7 @@ namespace Microsoft.Iris.Render.Common
                 return false;
             for (int index = 0; index < this.Size; ++index)
             {
-                if ((int)this.m_data[index] != (int)byteBuilder.m_data[index])
+                if (this.m_data[index] != byteBuilder.m_data[index])
                     return false;
             }
             return true;

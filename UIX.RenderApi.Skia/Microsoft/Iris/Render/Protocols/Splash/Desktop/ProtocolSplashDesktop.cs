@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
                 return protocolSplashDesktop;
             }
             ProtocolSplashDesktop protocolSplashDesktop1 = new ProtocolSplashDesktop(port);
-            port.BindProtocol((ProtocolInstance)protocolSplashDesktop1);
+            port.BindProtocol(protocolSplashDesktop1);
             return protocolSplashDesktop1;
         }
 

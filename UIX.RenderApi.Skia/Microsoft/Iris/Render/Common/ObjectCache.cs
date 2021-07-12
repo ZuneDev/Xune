@@ -36,11 +36,11 @@ namespace Microsoft.Iris.Render.Common
                 {
                     foreach (CachedRenderObject listObject in this.m_listObjects)
                     {
-                        listObject.Cache = (ObjectCache)null;
-                        listObject.UnregisterUsage((object)this);
+                        listObject.Cache = null;
+                        listObject.UnregisterUsage(this);
                     }
                 }
-                this.m_listObjects = (Vector<CachedRenderObject>)null;
+                this.m_listObjects = null;
             }
             finally
             {
@@ -54,7 +54,7 @@ namespace Microsoft.Iris.Render.Common
         {
             if (this.m_listObjects.Count < this.m_listObjects.Capacity)
             {
-                obj.RegisterUsage((object)this);
+                obj.RegisterUsage(this);
                 this.m_listObjects.Add(obj);
                 return true;
             }
@@ -71,19 +71,19 @@ namespace Microsoft.Iris.Render.Common
                 CachedRenderObject listObject = this.m_listObjects[index];
                 this.m_listObjects.RemoveAt(index);
                 listObject.RegisterUsage(objUser);
-                listObject.UnregisterUsage((object)this);
+                listObject.UnregisterUsage(this);
                 return listObject;
             }
             ++this.m_cCacheMisses;
-            return (CachedRenderObject)null;
+            return null;
         }
 
         internal void RemoveAll()
         {
             foreach (CachedRenderObject listObject in this.m_listObjects)
             {
-                listObject.Cache = (ObjectCache)null;
-                listObject.UnregisterUsage((object)this);
+                listObject.Cache = null;
+                listObject.UnregisterUsage(this);
             }
             this.m_listObjects.Clear();
         }
@@ -102,8 +102,8 @@ namespace Microsoft.Iris.Render.Common
                         for (int index = this.m_listObjects.Count - 1; index >= num; --index)
                         {
                             CachedRenderObject listObject = this.m_listObjects[index];
-                            listObject.Cache = (ObjectCache)null;
-                            listObject.UnregisterUsage((object)this);
+                            listObject.Cache = null;
+                            listObject.UnregisterUsage(this);
                             this.m_listObjects.RemoveAt(index);
                         }
                     }

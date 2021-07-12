@@ -58,7 +58,7 @@ namespace Microsoft.Iris.Render.Extensions
         protected ImageCacheItem(IRenderSession renderSession, string identifier)
         {
             this.m_stIdentifier = identifier;
-            this.m_image = renderSession.CreateImage((object)this, this.m_stIdentifier, new ContentNotifyHandler(this.ReloadImage));
+            this.m_image = renderSession.CreateImage(this, this.m_stIdentifier, new ContentNotifyHandler(this.ReloadImage));
             this.UpdateLastUsedTime();
         }
 
@@ -67,7 +67,7 @@ namespace Microsoft.Iris.Render.Extensions
         public void Dispose()
         {
             this.Dispose(true);
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
         }
 
         private void Dispose(bool fInDispose)
@@ -81,13 +81,13 @@ namespace Microsoft.Iris.Render.Extensions
         {
             if (this.m_image != null)
             {
-                this.m_image.UnregisterUsage((object)this);
-                this.m_image = (IImage)null;
+                this.m_image.UnregisterUsage(this);
+                this.m_image = null;
             }
             if (this.m_info != null)
             {
                 this.m_info.Dispose();
-                this.m_info = (BitmapInformation)null;
+                this.m_info = null;
             }
             this.m_fObjectDisposed = true;
         }
@@ -96,8 +96,8 @@ namespace Microsoft.Iris.Render.Extensions
         {
             if (this.m_image == null)
                 return;
-            this.m_image.UnregisterUsage((object)this);
-            this.m_image = (IImage)null;
+            this.m_image.UnregisterUsage(this);
+            this.m_image = null;
         }
 
         public int UsageCount => this.m_countUsers;
@@ -140,9 +140,9 @@ namespace Microsoft.Iris.Render.Extensions
             {
                 if (this.m_prevLoadInfos == null)
                     this.m_prevLoadInfos = new ArrayList();
-                this.m_prevLoadInfos.Add((object)this.m_info);
+                this.m_prevLoadInfos.Add(m_info);
                 this.m_size = Size.Zero;
-                this.m_info = (BitmapInformation)null;
+                this.m_info = null;
             }
             else
             {
@@ -150,7 +150,7 @@ namespace Microsoft.Iris.Render.Extensions
                 if (this.m_info == null)
                     return;
                 this.m_info.Dispose();
-                this.m_info = (BitmapInformation)null;
+                this.m_info = null;
             }
         }
 
@@ -211,14 +211,14 @@ namespace Microsoft.Iris.Render.Extensions
                 if (this.m_info != null)
                 {
                     this.m_info.Dispose();
-                    this.m_info = (BitmapInformation)null;
+                    this.m_info = null;
                 }
                 if (this.m_prevLoadInfos != null)
                 {
                     foreach (BitmapInformation prevLoadInfo in this.m_prevLoadInfos)
                         prevLoadInfo?.Dispose();
                     this.m_prevLoadInfos.Clear();
-                    this.m_prevLoadInfos = (ArrayList)null;
+                    this.m_prevLoadInfos = null;
                 }
             }
             this.UpdateLastUsedTime();
@@ -237,7 +237,7 @@ namespace Microsoft.Iris.Render.Extensions
 
         protected virtual bool DoImageLoad()
         {
-            BitmapInformation bitmapInfo = (BitmapInformation)null;
+            BitmapInformation bitmapInfo = null;
             bool flag = false;
             if (this.m_image != null)
                 flag = !(this.m_buffer == IntPtr.Zero) ? ImageLoader.FromBuffer(this.m_image, this.m_buffer, (int)this.m_length, this.m_req.MaximumSize, this.m_req.Flippable, this.m_req.AntialiasEdges, this.m_req.BorderWidth, this.m_req.BorderColor, out bitmapInfo) : ImageLoader.FromFile(this.m_image, this.m_image.Identifier, this.m_req.MaximumSize, this.m_req.Flippable, this.m_req.AntialiasEdges, this.m_req.BorderWidth, this.m_req.BorderColor, out bitmapInfo);
@@ -262,7 +262,7 @@ namespace Microsoft.Iris.Render.Extensions
         protected void UpdateLastUsedTime()
         {
             this.AssertValidState();
-            if (!(DateTime.UtcNow - this.m_dtLastUsed > ImageCacheItem.s_tsUpdateThreshhold))
+            if (!(DateTime.UtcNow - this.m_dtLastUsed > s_tsUpdateThreshhold))
                 return;
             this.m_dtLastUsed = DateTime.UtcNow;
             if (this.m_owner == null)

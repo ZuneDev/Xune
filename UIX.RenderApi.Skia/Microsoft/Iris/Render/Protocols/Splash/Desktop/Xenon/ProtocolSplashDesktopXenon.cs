@@ -25,7 +25,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Xenon
                 return splashDesktopXenon;
             }
             ProtocolSplashDesktopXenon splashDesktopXenon1 = new ProtocolSplashDesktopXenon(port);
-            port.BindProtocol((ProtocolInstance)splashDesktopXenon1);
+            port.BindProtocol(splashDesktopXenon1);
             return splashDesktopXenon1;
         }
 

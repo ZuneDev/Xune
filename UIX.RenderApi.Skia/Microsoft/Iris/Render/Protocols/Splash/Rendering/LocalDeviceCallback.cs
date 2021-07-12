@@ -39,7 +39,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 
         public override int GetHashCode() => base.GetHashCode();
 
-        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(LocalDeviceCallback.DispatchCallback), out uint _);
+        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
 
         private static unsafe void DispatchCallback(
           RenderPort port,
@@ -51,19 +51,19 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             switch (message->nMsg)
             {
                 case 0:
-                    LocalDeviceCallback.Dispatch_OnBackBufferCaptured(port, _priv_target, (LocalDeviceCallback.Msg0_OnBackBufferCaptured*)message);
+                    Dispatch_OnBackBufferCaptured(port, _priv_target, (LocalDeviceCallback.Msg0_OnBackBufferCaptured*)message);
                     break;
                 case 1:
-                    LocalDeviceCallback.Dispatch_OnSurfacePoolAllocation(port, _priv_target, (LocalDeviceCallback.Msg1_OnSurfacePoolAllocation*)message);
+                    Dispatch_OnSurfacePoolAllocation(port, _priv_target, (LocalDeviceCallback.Msg1_OnSurfacePoolAllocation*)message);
                     break;
                 case 2:
-                    LocalDeviceCallback.Dispatch_OnVsaBlock(port, _priv_target, (LocalDeviceCallback.Msg2_OnVsaBlock*)message);
+                    Dispatch_OnVsaBlock(port, _priv_target, (LocalDeviceCallback.Msg2_OnVsaBlock*)message);
                     break;
                 case 3:
-                    LocalDeviceCallback.Dispatch_OnLostDevice(port, _priv_target, (LocalDeviceCallback.Msg3_OnLostDevice*)message);
+                    Dispatch_OnLostDevice(port, _priv_target, (LocalDeviceCallback.Msg3_OnLostDevice*)message);
                     break;
                 case 4:
-                    LocalDeviceCallback.Dispatch_OnCreated(port, _priv_target, (LocalDeviceCallback.Msg4_OnCreated*)message);
+                    Dispatch_OnCreated(port, _priv_target, (LocalDeviceCallback.Msg4_OnCreated*)message);
                     break;
             }
         }
@@ -74,7 +74,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           LocalDeviceCallback.Msg0_OnBackBufferCaptured* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDeviceCallback.s_priv_ByteOrder_Msg0_OnBackBufferCaptured, typeof(LocalDeviceCallback.Msg0_OnBackBufferCaptured), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg0_OnBackBufferCaptured, typeof(LocalDeviceCallback.Msg0_OnBackBufferCaptured), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnBackBufferCaptured(target);
         }
@@ -85,7 +85,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           LocalDeviceCallback.Msg1_OnSurfacePoolAllocation* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDeviceCallback.s_priv_ByteOrder_Msg1_OnSurfacePoolAllocation, typeof(LocalDeviceCallback.Msg1_OnSurfacePoolAllocation), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg1_OnSurfacePoolAllocation, typeof(LocalDeviceCallback.Msg1_OnSurfacePoolAllocation), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             RENDERHANDLE idSurfacePool = _priv_pmsg->idSurfacePool;
             SurfacePoolAllocationResult nResult = _priv_pmsg->nResult;
@@ -98,7 +98,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           LocalDeviceCallback.Msg2_OnVsaBlock* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDeviceCallback.s_priv_ByteOrder_Msg2_OnVsaBlock, typeof(LocalDeviceCallback.Msg2_OnVsaBlock), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg2_OnVsaBlock, typeof(LocalDeviceCallback.Msg2_OnVsaBlock), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             bool fInBlock = _priv_pmsg->fInBlock != 0U;
             _priv_target.OnVsaBlock(target, fInBlock);
@@ -110,7 +110,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           LocalDeviceCallback.Msg3_OnLostDevice* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDeviceCallback.s_priv_ByteOrder_Msg3_OnLostDevice, typeof(LocalDeviceCallback.Msg3_OnLostDevice), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg3_OnLostDevice, typeof(LocalDeviceCallback.Msg3_OnLostDevice), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             uint renderGeneration = _priv_pmsg->cRenderGeneration;
             bool fLost = _priv_pmsg->fLost != 0U;
@@ -123,7 +123,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           LocalDeviceCallback.Msg4_OnCreated* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDeviceCallback.s_priv_ByteOrder_Msg4_OnCreated, typeof(LocalDeviceCallback.Msg4_OnCreated), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg4_OnCreated, typeof(LocalDeviceCallback.Msg4_OnCreated), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             bool fAllowDynamicPool = _priv_pmsg->fAllowDynamicPool != 0U;
             _priv_target.OnCreated(target, fAllowDynamicPool);

@@ -36,7 +36,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0LoadSoundDataPtr->dataBuffer = dataBuffer != null ? dataBuffer.RenderHandle : RENDERHANDLE.NULL;
             msg0LoadSoundDataPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0LoadSoundDataPtr, ref RemoteSoundBuffer.s_priv_ByteOrder_Msg0_LoadSoundData, typeof(RemoteSoundBuffer.Msg0_LoadSoundData), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0LoadSoundDataPtr, ref s_priv_ByteOrder_Msg0_LoadSoundData, typeof(RemoteSoundBuffer.Msg0_LoadSoundData), 0, 0);
             _priv_pmsgUse = (Message*)msg0LoadSoundDataPtr;
         }
 

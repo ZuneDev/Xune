@@ -33,7 +33,7 @@ namespace Microsoft.Iris.Render.Common
             --this.m_cUsers;
             if (this.m_cUsers != 0)
                 return;
-            this.m_uLastUsage = ResourceTracker.s_uNextUsage++;
+            this.m_uLastUsage = s_uNextUsage++;
             this.NotifyUsageChange(false);
         }
 

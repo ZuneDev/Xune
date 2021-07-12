@@ -30,7 +30,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0StopPtr->_priv_msgid = 0U;
             msg0StopPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0StopPtr, ref RemoteSound.s_priv_ByteOrder_Msg0_Stop, typeof(RemoteSound.Msg0_Stop), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0StopPtr, ref s_priv_ByteOrder_Msg0_Stop, typeof(RemoteSound.Msg0_Stop), 0, 0);
             _priv_pmsgUse = (Message*)msg0StopPtr;
         }
 
@@ -53,7 +53,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg1PlayPtr->_priv_msgid = 1U;
             msg1PlayPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1PlayPtr, ref RemoteSound.s_priv_ByteOrder_Msg1_Play, typeof(RemoteSound.Msg1_Play), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg1PlayPtr, ref s_priv_ByteOrder_Msg1_Play, typeof(RemoteSound.Msg1_Play), 0, 0);
             _priv_pmsgUse = (Message*)msg1PlayPtr;
         }
 

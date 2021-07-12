@@ -48,7 +48,7 @@ namespace Microsoft.Iris.Render.Common
             this.m_resourceTracker.RemoveActiveUser(oUser);
             if (this.m_resourceTracker.InUse)
                 return;
-            this.m_resourceTracker = (ResourceTracker)null;
+            this.m_resourceTracker = null;
         }
 
         protected abstract void OnUsageChange(bool fUsed);

@@ -42,7 +42,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0RemapContainerPtr->poolNewContainer = poolNewContainer != null ? poolNewContainer.RenderHandle : RENDERHANDLE.NULL;
             msg0RemapContainerPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0RemapContainerPtr, ref RemoteSurface.s_priv_ByteOrder_Msg0_RemapContainer, typeof(RemoteSurface.Msg0_RemapContainer), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0RemapContainerPtr, ref s_priv_ByteOrder_Msg0_RemapContainer, typeof(RemoteSurface.Msg0_RemapContainer), 0, 0);
             _priv_pmsgUse = (Message*)msg0RemapContainerPtr;
         }
 
@@ -69,7 +69,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg1RemapLocationPtr->rcContentPxl = rcContentPxl;
             msg1RemapLocationPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1RemapLocationPtr, ref RemoteSurface.s_priv_ByteOrder_Msg1_RemapLocation, typeof(RemoteSurface.Msg1_RemapLocation), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg1RemapLocationPtr, ref s_priv_ByteOrder_Msg1_RemapLocation, typeof(RemoteSurface.Msg1_RemapLocation), 0, 0);
             _priv_pmsgUse = (Message*)msg1RemapLocationPtr;
         }
 
@@ -94,7 +94,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             markContentValidPtr->_priv_msgid = 2U;
             markContentValidPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)markContentValidPtr, ref RemoteSurface.s_priv_ByteOrder_Msg2_MarkContentValid, typeof(RemoteSurface.Msg2_MarkContentValid), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)markContentValidPtr, ref s_priv_ByteOrder_Msg2_MarkContentValid, typeof(RemoteSurface.Msg2_MarkContentValid), 0, 0);
             _priv_pmsgUse = (Message*)markContentValidPtr;
         }
 
@@ -117,7 +117,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg3ClearPtr->_priv_msgid = 3U;
             msg3ClearPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg3ClearPtr, ref RemoteSurface.s_priv_ByteOrder_Msg3_Clear, typeof(RemoteSurface.Msg3_Clear), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg3ClearPtr, ref s_priv_ByteOrder_Msg3_Clear, typeof(RemoteSurface.Msg3_Clear), 0, 0);
             _priv_pmsgUse = (Message*)msg3ClearPtr;
         }
 
@@ -144,7 +144,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg5SetGutterPtr->sizeGutter = sizeGutter;
             msg5SetGutterPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg5SetGutterPtr, ref RemoteSurface.s_priv_ByteOrder_Msg5_SetGutter, typeof(RemoteSurface.Msg5_SetGutter), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg5SetGutterPtr, ref s_priv_ByteOrder_Msg5_SetGutter, typeof(RemoteSurface.Msg5_SetGutter), 0, 0);
             _priv_pmsgUse = (Message*)msg5SetGutterPtr;
         }
 
@@ -174,7 +174,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)msg6SetDescriptionPtr);
             msg6SetDescriptionPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg6SetDescriptionPtr, ref RemoteSurface.s_priv_ByteOrder_Msg6_SetDescription, typeof(RemoteSurface.Msg6_SetDescription), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg6SetDescriptionPtr, ref s_priv_ByteOrder_Msg6_SetDescription, typeof(RemoteSurface.Msg6_SetDescription), 0, 0);
             _priv_pmsgUse = (Message*)msg6SetDescriptionPtr;
         }
 
@@ -201,7 +201,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg7SetRotationPtr->fRotated = fRotated ? uint.MaxValue : 0U;
             msg7SetRotationPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg7SetRotationPtr, ref RemoteSurface.s_priv_ByteOrder_Msg7_SetRotation, typeof(RemoteSurface.Msg7_SetRotation), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg7SetRotationPtr, ref s_priv_ByteOrder_Msg7_SetRotation, typeof(RemoteSurface.Msg7_SetRotation), 0, 0);
             _priv_pmsgUse = (Message*)msg7SetRotationPtr;
         }
 
@@ -228,7 +228,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg8SetStorageSizePtr->sizeStoragePxl = sizeStoragePxl;
             msg8SetStorageSizePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg8SetStorageSizePtr, ref RemoteSurface.s_priv_ByteOrder_Msg8_SetStorageSize, typeof(RemoteSurface.Msg8_SetStorageSize), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg8SetStorageSizePtr, ref s_priv_ByteOrder_Msg8_SetStorageSize, typeof(RemoteSurface.Msg8_SetStorageSize), 0, 0);
             _priv_pmsgUse = (Message*)msg8SetStorageSizePtr;
         }
 

@@ -33,10 +33,10 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (fInDispose)
                 {
-                    this.ChangeParent((TreeNode)null);
+                    this.ChangeParent(null);
                     this.RemoveAllChildren();
                 }
-                this.m_treeOwner = (ITreeOwner)null;
+                this.m_treeOwner = null;
             }
             finally
             {
@@ -71,7 +71,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         internal TreeNode FirstChild => this.m_nodeFirstChild;
 
-        internal TreeNode LastChild => this.m_nodeFirstChild != null ? this.m_nodeFirstChild.LastSibling : (TreeNode)null;
+        internal TreeNode LastChild => this.m_nodeFirstChild != null ? this.m_nodeFirstChild.LastSibling : null;
 
         internal TreeNodeCollection Children => new TreeNodeCollection(this);
 
@@ -101,10 +101,10 @@ namespace Microsoft.Iris.Render.Graphics
         internal virtual void RemoveAllChildren()
         {
             while (this.m_nodeFirstChild != null)
-                this.m_nodeFirstChild.ChangeParent((TreeNode)null);
+                this.m_nodeFirstChild.ChangeParent(null);
         }
 
-        internal void ChangeParent(TreeNode nodeNewParent) => this.ChangeParent(nodeNewParent, (TreeNode)null, TreeNode.LinkType.First);
+        internal void ChangeParent(TreeNode nodeNewParent) => this.ChangeParent(nodeNewParent, null, LinkType.First);
 
         internal void ChangeParent(TreeNode nodeNewParent, TreeNode nodeSibling, TreeNode.LinkType lt)
         {
@@ -112,18 +112,18 @@ namespace Microsoft.Iris.Render.Graphics
                 return;
             TreeNode nodeParent = this.m_nodeParent;
             if (this.m_nodeParent != null)
-                TreeNode.DoUnlink(this);
+                DoUnlink(this);
             if (nodeNewParent != null)
-                TreeNode.DoLink(nodeNewParent, this, nodeSibling, lt);
+                DoLink(nodeNewParent, this, nodeSibling, lt);
             if (nodeParent == null && nodeNewParent != null)
             {
-                this.RegisterUsage((object)this);
+                this.RegisterUsage(this);
             }
             else
             {
                 if (nodeParent == null || nodeNewParent != null)
                     return;
-                this.UnregisterUsage((object)this);
+                this.UnregisterUsage(this);
             }
         }
 
@@ -143,7 +143,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 switch (lt)
                 {
-                    case TreeNode.LinkType.Before:
+                    case LinkType.Before:
                         nodeChange.m_nodeNext = nodeSibling;
                         nodeChange.m_nodePrevious = nodeSibling.m_nodePrevious;
                         nodeSibling.m_nodePrevious = nodeChange;
@@ -154,7 +154,7 @@ namespace Microsoft.Iris.Render.Graphics
                         }
                         nodeParent.m_nodeFirstChild = nodeChange;
                         break;
-                    case TreeNode.LinkType.Behind:
+                    case LinkType.Behind:
                         nodeChange.m_nodePrevious = nodeSibling;
                         nodeChange.m_nodeNext = nodeSibling.m_nodeNext;
                         nodeSibling.m_nodeNext = nodeChange;
@@ -162,14 +162,14 @@ namespace Microsoft.Iris.Render.Graphics
                             break;
                         nodeChange.m_nodeNext.m_nodePrevious = nodeChange;
                         break;
-                    case TreeNode.LinkType.First:
+                    case LinkType.First:
                         nodeParent.m_nodeFirstChild = nodeChange;
                         nodeChange.m_nodeNext = nodeFirstChild;
                         if (nodeFirstChild == null)
                             break;
                         nodeFirstChild.m_nodePrevious = nodeChange;
                         break;
-                    case TreeNode.LinkType.Last:
+                    case LinkType.Last:
                         TreeNode lastSibling = nodeFirstChild.LastSibling;
                         lastSibling.m_nodeNext = nodeChange;
                         nodeChange.m_nodePrevious = lastSibling;
@@ -186,9 +186,9 @@ namespace Microsoft.Iris.Render.Graphics
                 nodeChange.m_nodeNext.m_nodePrevious = nodeChange.m_nodePrevious;
             if (nodeChange.m_nodePrevious != null)
                 nodeChange.m_nodePrevious.m_nodeNext = nodeChange.m_nodeNext;
-            nodeChange.m_nodeParent = (TreeNode)null;
-            nodeChange.m_nodeNext = (TreeNode)null;
-            nodeChange.m_nodePrevious = (TreeNode)null;
+            nodeChange.m_nodeParent = null;
+            nodeChange.m_nodeNext = null;
+            nodeChange.m_nodePrevious = null;
         }
 
         internal int InstanceID
@@ -196,27 +196,27 @@ namespace Microsoft.Iris.Render.Graphics
             get
             {
                 if (this.m_idObject == 0)
-                    this.SetInstanceID(TreeNode.GenerateInstanceID());
+                    this.SetInstanceID(GenerateInstanceID());
                 return this.m_idObject;
             }
         }
 
-        private static int GenerateInstanceID() => ++TreeNode.s_idObject;
+        private static int GenerateInstanceID() => ++s_idObject;
 
         private void SetInstanceID(int idObject) => this.m_idObject = idObject;
 
         public override int GetHashCode() => this.InstanceID;
 
-        public override bool Equals(object oRHS) => object.ReferenceEquals((object)this, oRHS);
+        public override bool Equals(object oRHS) => ReferenceEquals(this, oRHS);
 
         public bool TestNodes(
           TreeNode.NodeTest test,
           TreeNode.NodeRelation nScope,
           bool fParentChainsMustGoToRoot)
         {
-            if ((nScope & TreeNode.NodeRelation.FullChain) == TreeNode.NodeRelation.None || (nScope & TreeNode.NodeRelation.Self) != TreeNode.NodeRelation.None && !test(this))
+            if ((nScope & NodeRelation.FullChain) == NodeRelation.None || (nScope & NodeRelation.Self) != NodeRelation.None && !test(this))
                 return false;
-            if ((nScope & TreeNode.NodeRelation.Parents) != TreeNode.NodeRelation.None)
+            if ((nScope & NodeRelation.Parents) != NodeRelation.None)
             {
                 TreeNode node = this;
                 do
@@ -244,10 +244,10 @@ namespace Microsoft.Iris.Render.Graphics
         }
 
         [Conditional("DEBUG")]
-        internal void DEBUG_IncTotalNodes() => ++TreeNode.s_DEBUG_nTotalNodes;
+        internal void DEBUG_IncTotalNodes() => ++s_DEBUG_nTotalNodes;
 
         [Conditional("DEBUG")]
-        internal void DEBUG_DecTotalNodes() => --TreeNode.s_DEBUG_nTotalNodes;
+        internal void DEBUG_DecTotalNodes() => --s_DEBUG_nTotalNodes;
 
         internal enum LinkType
         {

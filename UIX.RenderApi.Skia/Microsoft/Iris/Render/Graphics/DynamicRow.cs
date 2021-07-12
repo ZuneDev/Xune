@@ -32,10 +32,10 @@ namespace Microsoft.Iris.Render.Graphics
         public void Dispose()
         {
             this.m_bktOwner.AssertOwningThread();
-            this.m_bktOwner = (DynamicBucket)null;
+            this.m_bktOwner = null;
             foreach (DynamicBlock alBlock in this.m_alBlocks)
                 alBlock.Dispose();
-            this.m_alBlocks = (ArrayList)null;
+            this.m_alBlocks = null;
         }
 
         public int NearEdge => this.m_nOffsetYPxl;
@@ -50,7 +50,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         public DynamicBucket Bucket => this.m_bktOwner;
 
-        public ICollection Blocks => (ICollection)this.m_alBlocks;
+        public ICollection Blocks => m_alBlocks;
 
         internal bool IsEmpty => this.m_alBlocks.Count == 0;
 
@@ -72,8 +72,8 @@ namespace Microsoft.Iris.Render.Graphics
             DynamicPool.FindInsertionPoint(this.m_alBlocks, this.m_sizeRowPxl.Width, sizeRequestPxl.Width, out idxInsert, out nOffsetNewPxl);
             DynamicBlock dynamicBlock = new DynamicBlock(this, new Rectangle(new Point(nOffsetNewPxl, this.m_nOffsetYPxl), sizeRequestPxl), sizeContentPxl, sizeGutter, fRotated);
             Surface surface = dynamicBlock.Create(surfaceOwner);
-            surface.RegisterUsage((object)this.DynamicPool.SurfacePool);
-            this.m_alBlocks.Insert(idxInsert, (object)dynamicBlock);
+            surface.RegisterUsage(DynamicPool.SurfacePool);
+            this.m_alBlocks.Insert(idxInsert, dynamicBlock);
             this.RecomputeAvailable();
             return surface;
         }
@@ -90,7 +90,7 @@ namespace Microsoft.Iris.Render.Graphics
                     this.m_uLastAvgAge = uint.MaxValue;
                     return;
                 }
-                num += (ulong)surface.LastUsage;
+                num += surface.LastUsage;
             }
             this.m_uLastAvgAge = (uint)(num / (ulong)count);
         }
@@ -105,13 +105,13 @@ namespace Microsoft.Iris.Render.Graphics
             if (nRequestedWidth <= this.m_nLargestFreePxl)
             {
                 uAvgTimestampsNoCompact = 0U;
-                return (object)null;
+                return null;
             }
             int count = this.m_alBlocks.Count;
             int length = 0;
             DynamicBlock[] dynamicBlockArray = new DynamicBlock[count];
             int num1 = 0;
-            DynamicBlock dynamicBlock1 = (DynamicBlock)null;
+            DynamicBlock dynamicBlock1 = null;
             uint num2 = uint.MaxValue;
             for (int index = 0; index < count; ++index)
             {
@@ -140,16 +140,16 @@ namespace Microsoft.Iris.Render.Graphics
             if (dynamicBlock1 != null)
             {
                 uAvgTimestampsNoCompact = num2;
-                return (object)dynamicBlock1;
+                return dynamicBlock1;
             }
             if (nRequestedWidth <= this.m_nTotalFreePxl)
             {
                 uAvgTimestampsWithCompact = 0U;
-                return (object)null;
+                return null;
             }
             if (nRequestedWidth > num1 + this.m_nTotalFreePxl)
-                return (object)null;
-            Array.Sort((Array)dynamicBlockArray, 0, length, (IComparer)this);
+                return null;
+            Array.Sort(dynamicBlockArray, 0, length, this);
             int nTotalFreePxl = this.m_nTotalFreePxl;
             int num5 = 0;
             ulong num6 = 0;
@@ -157,14 +157,14 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 DynamicBlock dynamicBlock2 = dynamicBlockArray[num5++];
                 nTotalFreePxl += dynamicBlock2.StorageSize.Width;
-                num6 += (ulong)dynamicBlock2.Surface.LastUsage;
+                num6 += dynamicBlock2.Surface.LastUsage;
                 if (nTotalFreePxl >= nRequestedWidth)
                     break;
             }
             uAvgTimestampsWithCompact = (uint)(num6 / (ulong)num5);
             while (num5 < length)
-                dynamicBlockArray[num5++] = (DynamicBlock)null;
-            return (object)dynamicBlockArray;
+                dynamicBlockArray[num5++] = null;
+            return dynamicBlockArray;
         }
 
         internal bool FinishScavengeBlocks(
@@ -223,7 +223,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         private void CollectDeadBlockSurface(DynamicBlock blk, Surface sur)
         {
-            sur.UnregisterUsage((object)this.DynamicPool.SurfacePool);
+            sur.UnregisterUsage(DynamicPool.SurfacePool);
             blk.Dispose();
         }
 
@@ -231,7 +231,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (this.m_alBlocks.Count <= 0)
                 return;
-            DynamicBlock dynamicBlock = (DynamicBlock)null;
+            DynamicBlock dynamicBlock = null;
             try
             {
                 if (fCompactToRight)
@@ -285,7 +285,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 int index = fCompactToRight ? rowSrc.m_alBlocks.Count - 1 : 0;
                 DynamicBlock alBlock = (DynamicBlock)rowSrc.m_alBlocks[index];
-                if (!DynamicRow.MoveBlockToEnd(alReloadContent, alBlock, rowDest, rowSrc, fCompactToRight))
+                if (!MoveBlockToEnd(alReloadContent, alBlock, rowDest, rowSrc, fCompactToRight))
                 {
                     flag = false;
                     break;
@@ -322,10 +322,10 @@ namespace Microsoft.Iris.Render.Graphics
             try
             {
                 if (fCompactToRight)
-                    rowDest.m_alBlocks.Insert(0, (object)blkMove);
+                    rowDest.m_alBlocks.Insert(0, blkMove);
                 else
-                    rowDest.m_alBlocks.Add((object)blkMove);
-                int index = rowSrc.m_alBlocks.IndexOf((object)blkMove);
+                    rowDest.m_alBlocks.Add(blkMove);
+                int index = rowSrc.m_alBlocks.IndexOf(blkMove);
                 rowSrc.m_alBlocks.RemoveAt(index);
                 if (fCompactToRight)
                     x -= num1;
@@ -369,7 +369,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (this.m_bktOwner == null)
                 return;
-            this.m_alBlocks.RemoveAt(this.m_alBlocks.IndexOf((object)blkRemove));
+            this.m_alBlocks.RemoveAt(this.m_alBlocks.IndexOf(blkRemove));
             this.RecomputeAvailable();
             if (this.m_nLargestFreePxl != this.m_sizeRowPxl.Width)
                 return;

@@ -64,14 +64,14 @@ namespace Microsoft.Iris.Render
         {
             Debug2.Validate(left != null, typeof(ArgumentNullException), nameof(left));
             Debug2.Validate(right != null, typeof(ArgumentNullException), nameof(right));
-            return (AnimationInput)new BinaryOperation(BinaryOpCode.Add, left, right);
+            return new BinaryOperation(BinaryOpCode.Add, left, right);
         }
 
         public static AnimationInput operator *(AnimationInput left, AnimationInput right)
         {
             Debug2.Validate(left != null, typeof(ArgumentNullException), nameof(left));
             Debug2.Validate(right != null, typeof(ArgumentNullException), nameof(right));
-            return (AnimationInput)new BinaryOperation(BinaryOpCode.Multiply, left, right);
+            return new BinaryOperation(BinaryOpCode.Multiply, left, right);
         }
     }
 }

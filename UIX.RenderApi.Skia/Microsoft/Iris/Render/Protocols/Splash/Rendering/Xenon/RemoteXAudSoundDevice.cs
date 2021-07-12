@@ -35,7 +35,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Xenon
             msg6CreatePtr->_priv_msgid = 6U;
             msg6CreatePtr->_priv_idObjectSubject = remoteXaudSoundDevice.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteXAudSoundDevice.s_priv_ByteOrder_Msg6_Create, typeof(RemoteXAudSoundDevice.Msg6_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg6_Create, typeof(RemoteXAudSoundDevice.Msg6_Create), 0, 0);
             port.CreateRemoteObject(deviceClassHandle, remoteXaudSoundDevice.m_renderHandle, (Message*)msg6CreatePtr);
             return remoteXaudSoundDevice;
         }
@@ -55,7 +55,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Xenon
             msg4SetMutePtr->fMuted = fMuted ? uint.MaxValue : 0U;
             msg4SetMutePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg4SetMutePtr, ref RemoteXAudSoundDevice.s_priv_ByteOrder_Msg4_SetMute, typeof(RemoteXAudSoundDevice.Msg4_SetMute), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg4SetMutePtr, ref s_priv_ByteOrder_Msg4_SetMute, typeof(RemoteXAudSoundDevice.Msg4_SetMute), 0, 0);
             _priv_pmsgUse = (Message*)msg4SetMutePtr;
         }
 
@@ -82,7 +82,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Xenon
             msg5SetVolumePtr->flVolume = flVolume;
             msg5SetVolumePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg5SetVolumePtr, ref RemoteXAudSoundDevice.s_priv_ByteOrder_Msg5_SetVolume, typeof(RemoteXAudSoundDevice.Msg5_SetVolume), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg5SetVolumePtr, ref s_priv_ByteOrder_Msg5_SetVolume, typeof(RemoteXAudSoundDevice.Msg5_SetVolume), 0, 0);
             _priv_pmsgUse = (Message*)msg5SetVolumePtr;
         }
 

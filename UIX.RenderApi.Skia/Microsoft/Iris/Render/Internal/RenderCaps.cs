@@ -27,7 +27,7 @@ namespace Microsoft.Iris.Render.Internal
             this.m_currentRequestId = 0U;
             this.m_graphicsCapsList = new Vector<GraphicsCaps>();
             this.m_soundCapsList = new Vector<SoundCaps>();
-            this.m_remoteObject = ownerSession.RenderingProtocol.BuildRemoteRenderCaps((IRenderHandleOwner)this, ownerSession.RenderingProtocol.LocalRenderCapsCallbackHandle);
+            this.m_remoteObject = ownerSession.RenderingProtocol.BuildRemoteRenderCaps(this, ownerSession.RenderingProtocol.LocalRenderCapsCallbackHandle);
         }
 
         internal bool HasValidCaps => this.m_hasValidCaps;
@@ -51,12 +51,12 @@ namespace Microsoft.Iris.Render.Internal
         {
             if (this.CapsAvailable == null)
                 return;
-            this.CapsAvailable((object)this, EventArgs.Empty);
+            this.CapsAvailable(this, EventArgs.Empty);
         }
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteObject.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = (RemoteRenderCaps)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = null;
 
         void IRenderCapsCallback.OnBeginCapsCheck(RENDERHANDLE target, uint cookie)
         {

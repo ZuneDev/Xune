@@ -19,7 +19,7 @@ namespace Microsoft.Iris.Render.Extensions
         {
             this.m_arbCache = new byte[38];
             for (int index = 0; index < this.m_arbCache.Length; ++index)
-                this.m_arbCache[index] = (byte)0;
+                this.m_arbCache[index] = 0;
             this.m_registryHelper = registryHelper;
             this.m_invalidCache = true;
         }
@@ -39,16 +39,16 @@ namespace Microsoft.Iris.Render.Extensions
 
         public void SetLevel(DebugCategory cat, byte bValue)
         {
-            if ((int)this.m_arbCache[(int)cat] == (int)bValue)
+            if (this.m_arbCache[(int)cat] == bValue)
                 return;
-            DebugCategoryEnabledSet.SetExternalDebugLevel(cat, bValue);
+            SetExternalDebugLevel(cat, bValue);
             this.m_arbCache[(int)cat] = bValue;
         }
 
         public void SetLevel(DebugCategory cat, bool fValue)
         {
             byte bValue = fValue ? (byte)1 : (byte)0;
-            if (bValue != (byte)0 && (int)bValue <= (int)this.GetLevel(cat))
+            if (bValue != 0 && bValue <= this.GetLevel(cat))
                 return;
             this.SetLevel(cat, bValue);
         }
@@ -60,14 +60,14 @@ namespace Microsoft.Iris.Render.Extensions
                 for (int index = 0; index < this.m_arbCache.Length; ++index)
                 {
                     DebugCategory cat = (DebugCategory)index;
-                    byte externalDebugLevel = DebugCategoryEnabledSet.GetExternalDebugLevel(cat);
+                    byte externalDebugLevel = GetExternalDebugLevel(cat);
                     byte level = externalDebugLevel;
                     byte bValue;
                     if (this.m_registryHelper.ReadValuesFromRegistry && this.ReadDebugCategoryValueFromRegistry(cat, out bValue))
                         level = bValue;
-                    if ((int)externalDebugLevel != (int)level)
-                        DebugCategoryEnabledSet.SetExternalDebugLevel(cat, level);
-                    if ((int)this.m_arbCache[index] != (int)level)
+                    if (externalDebugLevel != level)
+                        SetExternalDebugLevel(cat, level);
+                    if (this.m_arbCache[index] != level)
                         this.m_arbCache[index] = level;
                 }
                 this.m_invalidCache = false;
@@ -88,11 +88,11 @@ namespace Microsoft.Iris.Render.Extensions
 
         private bool ReadDebugCategoryValueFromRegistry(DebugCategory cat, out byte bValue) => this.m_registryHelper.ReadValueFromRegistry(cat.ToString(), out bValue);
 
-        private static byte GetExternalDebugLevel(DebugCategory cat) => DebugCategoryEnabledSet.IsExternalCategory(cat) ? eDebugApi.DebugGetCategoryLevel(cat) : (byte)0;
+        private static byte GetExternalDebugLevel(DebugCategory cat) => IsExternalCategory(cat) ? eDebugApi.DebugGetCategoryLevel(cat) : (byte)0;
 
         private static void SetExternalDebugLevel(DebugCategory cat, byte level)
         {
-            if (!DebugCategoryEnabledSet.IsExternalCategory(cat))
+            if (!IsExternalCategory(cat))
                 return;
             eDebugApi.DebugSetCategoryLevel(cat, level);
         }

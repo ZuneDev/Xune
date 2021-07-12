@@ -23,7 +23,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             this.m_remoteSprite = session.BuildRemoteSprite(this, window);
             this.m_remoteSprite.SendSetVisible(true);
-            this.m_remoteVisual = (RemoteVisual)this.m_remoteSprite;
+            this.m_remoteVisual = m_remoteSprite;
         }
 
         protected override void Dispose(bool fInDispose)
@@ -32,12 +32,12 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (fInDispose && this.m_effect != null)
                 {
-                    this.m_effect.UnregisterUsage((object)this);
-                    this.m_effect = (Effect)null;
+                    this.m_effect.UnregisterUsage(this);
+                    this.m_effect = null;
                 }
-                this.PropertyManager.RemoveCoordmapProp((Visual)this);
-                this.m_remoteSprite = (RemoteSprite)null;
-                this.m_effect = (Effect)null;
+                this.PropertyManager.RemoveCoordmapProp(this);
+                this.m_remoteSprite = null;
+                this.m_effect = null;
             }
             finally
             {
@@ -95,7 +95,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         IEffect ISprite.Effect
         {
-            get => (IEffect)this.Effect;
+            get => Effect;
             set => this.Effect = (Effect)value;
         }
 
@@ -108,11 +108,11 @@ namespace Microsoft.Iris.Render.Graphics
                 if (this.m_effect == effect)
                     return;
                 if (this.m_effect != null)
-                    this.m_effect.UnregisterUsage((object)this);
+                    this.m_effect.UnregisterUsage(this);
                 this.m_effect = effect;
                 if (this.m_effect != null)
-                    this.m_effect.RegisterUsage((object)this);
-                this.m_remoteSprite.SendSetEffect(this.m_effect == null ? (RemoteEffect)null : this.m_effect.RemoteStub);
+                    this.m_effect.RegisterUsage(this);
+                this.m_remoteSprite.SendSetEffect(this.m_effect == null ? null : this.m_effect.RemoteStub);
             }
         }
 
@@ -129,27 +129,27 @@ namespace Microsoft.Iris.Render.Graphics
         void ISprite.SetNineGrid(int left, int top, int right, int bottom)
         {
             Debug2.Validate(left >= 0 && right >= 0 && top >= 0 && bottom >= 0, typeof(ArgumentNullException), "invalid nine grid params");
-            this.PropertyManager.RemoveCoordmapProp((Visual)this);
+            this.PropertyManager.RemoveCoordmapProp(this);
             this.m_remoteSprite.SendSetNineGrid(left, top, right, bottom);
-            this.SetPropFlag(Visual.PropId.MaxDynamicProp, true);
+            this.SetPropFlag(PropId.MaxDynamicProp, true);
         }
 
         void ISprite.SetCoordMap(int idxLayer, CoordMap coordMap)
         {
             Debug2.Validate(idxLayer >= 0, typeof(ArgumentOutOfRangeException), "idxLayer must be >= 0");
             Debug2.Validate(idxLayer < 4, typeof(ArgumentOutOfRangeException), "quick-check, currently we only support 4 layers/stages");
-            if (this.IsPropFlagSet(Visual.PropId.MaxDynamicProp))
+            if (this.IsPropFlagSet(PropId.MaxDynamicProp))
             {
                 this.m_remoteSprite.SendClearCoordMaps();
-                this.SetPropFlag(Visual.PropId.MaxDynamicProp, false);
+                this.SetPropFlag(PropId.MaxDynamicProp, false);
             }
             if (!this.UpdateCoordMap(idxLayer, coordMap))
                 return;
             this.m_remoteSprite.SendClearCoordMaps();
-            if (!this.IsDynamicValueSet(Visual.PropId.CoordMap))
+            if (!this.IsDynamicValueSet(PropId.CoordMap))
                 return;
             ArrayList result;
-            this.PropertyManager.GetCoordmapProp((Visual)this, out result);
+            this.PropertyManager.GetCoordmapProp(this, out result);
             foreach (Sprite.CoordMapEntry coordMapEntry in result)
             {
                 foreach (CoordMap.CoordMapSample rampSample in coordMapEntry.coordMap.RampSamples)
@@ -160,18 +160,18 @@ namespace Microsoft.Iris.Render.Graphics
         private bool UpdateCoordMap(int idxLayer, CoordMap coordMap)
         {
             ArrayList result;
-            if (this.IsDynamicValueSet(Visual.PropId.CoordMap))
+            if (this.IsDynamicValueSet(PropId.CoordMap))
             {
-                this.PropertyManager.GetCoordmapProp((Visual)this, out result);
+                this.PropertyManager.GetCoordmapProp(this, out result);
             }
             else
             {
                 if (coordMap == null)
                     return false;
                 result = new ArrayList();
-                this.PropertyManager.SetCoordmapProp((Visual)this, result);
+                this.PropertyManager.SetCoordmapProp(this, result);
             }
-            Sprite.CoordMapEntry coordMapEntry1 = (Sprite.CoordMapEntry)null;
+            Sprite.CoordMapEntry coordMapEntry1 = null;
             foreach (Sprite.CoordMapEntry coordMapEntry2 in result)
             {
                 if (coordMapEntry2.idxLayer == idxLayer)
@@ -184,11 +184,11 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (coordMap == null)
                     return false;
-                result.Add((object)new Sprite.CoordMapEntry(idxLayer, coordMap));
+                result.Add(new Sprite.CoordMapEntry(idxLayer, coordMap));
                 return true;
             }
             if (coordMap == null)
-                result.Remove((object)coordMapEntry1);
+                result.Remove(coordMapEntry1);
             else
                 coordMapEntry1.coordMap = coordMap;
             return true;
@@ -196,19 +196,19 @@ namespace Microsoft.Iris.Render.Graphics
 
         private void ResetCoordmaps()
         {
-            if (this.IsPropFlagSet(Visual.PropId.MaxDynamicProp) || this.IsDynamicValueSet(Visual.PropId.CoordMap))
+            if (this.IsPropFlagSet(PropId.MaxDynamicProp) || this.IsDynamicValueSet(PropId.CoordMap))
             {
                 this.m_remoteSprite.SendClearCoordMaps();
-                this.SetPropFlag(Visual.PropId.MaxDynamicProp, false);
+                this.SetPropFlag(PropId.MaxDynamicProp, false);
             }
-            this.PropertyManager.RemoveCoordmapProp((Visual)this);
+            this.PropertyManager.RemoveCoordmapProp(this);
         }
 
         internal override void Reset()
         {
             base.Reset();
             this.ResetCoordmaps();
-            this.Effect = (Effect)null;
+            this.Effect = null;
         }
 
         private class CoordMapEntry

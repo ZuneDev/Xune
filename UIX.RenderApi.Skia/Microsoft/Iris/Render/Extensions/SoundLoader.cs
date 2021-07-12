@@ -24,7 +24,7 @@ namespace Microsoft.Iris.Render.Extensions
             IntPtr resourceData;
             int resourceSize;
             ModuleManager.Instance.LoadResource(hInstance, resourceId, out resourceData, out resourceSize);
-            SoundLoader.FromMemory(resourceData, resourceSize, out soundDataHandle, out soundDataInfo);
+            FromMemory(resourceData, resourceSize, out soundDataHandle, out soundDataInfo);
         }
 
         public static void FromMemory(

@@ -26,7 +26,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Xenon
                 return splashRenderingXenon;
             }
             ProtocolSplashRenderingXenon splashRenderingXenon1 = new ProtocolSplashRenderingXenon(port);
-            port.BindProtocol((ProtocolInstance)splashRenderingXenon1);
+            port.BindProtocol(splashRenderingXenon1);
             return splashRenderingXenon1;
         }
 

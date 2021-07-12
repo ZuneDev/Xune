@@ -13,7 +13,7 @@ namespace Microsoft.Iris.Render
         private bool m_refreshOnRepeat;
 
         public CapturedAnimationInput(IAnimatable sourceObject, string sourcePropertyName)
-          : this(sourceObject, sourcePropertyName, (string)null)
+          : this(sourceObject, sourcePropertyName, null)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Microsoft.Iris.Render
         }
 
         public CapturedAnimationInput(IAnimation sourceAnimation)
-          : this(sourceAnimation, (string)null)
+          : this(sourceAnimation, null)
         {
         }
 

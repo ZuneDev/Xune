@@ -36,7 +36,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0CloseInstancePtr->nUniqueID = nUniqueID;
             msg0CloseInstancePtr->_priv_idObjectSubject = factoryClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0CloseInstancePtr, ref RemoteDynamicSurfaceFactory.s_priv_ByteOrder_Msg0_CloseInstance, typeof(RemoteDynamicSurfaceFactory.Msg0_CloseInstance), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0CloseInstancePtr, ref s_priv_ByteOrder_Msg0_CloseInstance, typeof(RemoteDynamicSurfaceFactory.Msg0_CloseInstance), 0, 0);
             _priv_pmsgUse = (Message*)msg0CloseInstancePtr;
         }
 
@@ -46,7 +46,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteDynamicSurfaceFactory.BuildCloseInstance(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, nUniqueID);
+            BuildCloseInstance(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, nUniqueID);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 
@@ -81,7 +81,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             createVideoInstancePtr->poolScene = poolScene != null ? poolScene.RenderHandle : RENDERHANDLE.NULL;
             createVideoInstancePtr->_priv_idObjectSubject = factoryClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)createVideoInstancePtr, ref RemoteDynamicSurfaceFactory.s_priv_ByteOrder_Msg1_CreateVideoInstance, typeof(RemoteDynamicSurfaceFactory.Msg1_CreateVideoInstance), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)createVideoInstancePtr, ref s_priv_ByteOrder_Msg1_CreateVideoInstance, typeof(RemoteDynamicSurfaceFactory.Msg1_CreateVideoInstance), 0, 0);
             _priv_pmsgUse = (Message*)createVideoInstancePtr;
         }
 
@@ -95,7 +95,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteDynamicSurfaceFactory.BuildCreateVideoInstance(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, nUniqueID, idClassContext, devOwner, surScene, poolScene);
+            BuildCreateVideoInstance(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, nUniqueID, idClassContext, devOwner, surScene, poolScene);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 
@@ -130,7 +130,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             createSurfaceInstancePtr->poolScene = poolScene != null ? poolScene.RenderHandle : RENDERHANDLE.NULL;
             createSurfaceInstancePtr->_priv_idObjectSubject = factoryClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)createSurfaceInstancePtr, ref RemoteDynamicSurfaceFactory.s_priv_ByteOrder_Msg2_CreateSurfaceInstance, typeof(RemoteDynamicSurfaceFactory.Msg2_CreateSurfaceInstance), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)createSurfaceInstancePtr, ref s_priv_ByteOrder_Msg2_CreateSurfaceInstance, typeof(RemoteDynamicSurfaceFactory.Msg2_CreateSurfaceInstance), 0, 0);
             _priv_pmsgUse = (Message*)createSurfaceInstancePtr;
         }
 
@@ -144,7 +144,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteDynamicSurfaceFactory.BuildCreateSurfaceInstance(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, nUniqueID, idClassContext, devOwner, surScene, poolScene);
+            BuildCreateSurfaceInstance(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, nUniqueID, idClassContext, devOwner, surScene, poolScene);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 

@@ -47,16 +47,16 @@ namespace Microsoft.Iris.Render.Graphics
                     {
                         EffectProperty effectProperty = dynamicProperty.Value;
                         if (effectProperty != null && effectProperty.Value != null && effectProperty.IsSharedResource)
-                            ((SharedRenderObject)effectProperty.Value).UnregisterUsage((object)this);
+                            ((SharedRenderObject)effectProperty.Value).UnregisterUsage(this);
                         effectProperty.Dispose();
                     }
-                    this.m_dynamicProperties = (Map<string, EffectProperty>)null;
+                    this.m_dynamicProperties = null;
                 }
                 if (this.m_cache == null)
                     return;
                 this.m_session.CacheManager.UnregisterCache(this.m_cache);
                 this.m_cache.Dispose();
-                this.m_cache = (ObjectCache)null;
+                this.m_cache = null;
             }
             finally
             {
@@ -85,7 +85,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         public string Name => this.m_stName;
 
-        void IEffectTemplate.AddEffectProperty(string stProp) => this.m_dynamicProperties.Add(stProp, (EffectProperty)null);
+        void IEffectTemplate.AddEffectProperty(string stProp) => this.m_dynamicProperties.Add(stProp, null);
 
         bool IEffectTemplate.Build(EffectInput input)
         {
@@ -105,7 +105,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 EffectProperty effectProperty = dynamicProperty.Value;
                 if (effectProperty != null && effectProperty.Value != null && effectProperty.IsSharedResource)
-                    ((SharedRenderObject)effectProperty.Value).RegisterUsage((object)this);
+                    ((SharedRenderObject)effectProperty.Value).RegisterUsage(this);
             }
             this.m_fBuilt = true;
             return true;

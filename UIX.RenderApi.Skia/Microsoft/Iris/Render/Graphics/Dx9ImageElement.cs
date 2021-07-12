@@ -13,32 +13,32 @@ namespace Microsoft.Iris.Render.Graphics
         internal static void Generate(ImageElement efiImage, ref Dx9EffectBuilder effectBuilder)
         {
             Dx9TextureInfo textureInfo = effectBuilder.AllocateTexture();
-            effectBuilder.AddRequirement(textureInfo, Dx9TextureRequirements.TexelSize, (object)null);
+            effectBuilder.AddRequirement(textureInfo, Dx9TextureRequirements.TexelSize, null);
             TextureVariableInfo textureVariableInfo = new TextureVariableInfo();
-            textureVariableInfo.ID = (int)efiImage.ImageID;
+            textureVariableInfo.ID = efiImage.ImageID;
             textureVariableInfo.Type = Dx9VariableType.Texture;
             textureVariableInfo.Name = effectBuilder.GenerateGlobalVariable(textureVariableInfo.Type, efiImage.Name);
-            textureVariableInfo.DefaultValue = (object)efiImage.Image;
+            textureVariableInfo.DefaultValue = efiImage.Image;
             textureVariableInfo.SamplerName = textureInfo.Sampler;
             textureVariableInfo.MinFilter = "Linear";
             textureVariableInfo.MagFilter = "Linear";
             textureVariableInfo.CoordinateMapID = -1;
             textureVariableInfo.ImageIndexID = -1;
-            effectBuilder.AddPropertyVariable((VariableInfo)textureVariableInfo);
+            effectBuilder.AddPropertyVariable(textureVariableInfo);
             VariableInfo variableInfo = new VariableInfo()
             {
-                ID = (int)efiImage.UVOffsetID,
+                ID = efiImage.UVOffsetID,
                 Type = Dx9VariableType.Vector2,
                 IsDynamic = efiImage.IsDynamicProperty("UVOffset")
             };
             variableInfo.Name = variableInfo.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo.Type, "UVOffset") : effectBuilder.GenerateGlobalConstant(variableInfo.Type, "UVOffset");
-            variableInfo.DefaultValue = (object)efiImage.UVOffset;
+            variableInfo.DefaultValue = efiImage.UVOffset;
             effectBuilder.AddPropertyVariable(variableInfo);
             effectBuilder.PixelShaderOutput = effectBuilder.GenerateLocalVariable(Dx9VariableType.Vector4, efiImage.Name);
             if (variableInfo.IsDynamic || !efiImage.UVOffset.IsApproximate(Vector2.Zero))
-                effectBuilder.EmitPixelFragment(InvariantString.Format("    // Load the image\r\n    float4 {0} = tex2D({1}, {2} + float2({3}.x * {4}.x, {3}.y * {4}.y));\r\n\r\n", (object)effectBuilder.PixelShaderOutput, (object)textureInfo.Sampler, (object)textureInfo.TexCoordInput, (object)textureInfo.TexelSize, (object)variableInfo.Name));
+                effectBuilder.EmitPixelFragment(InvariantString.Format("    // Load the image\r\n    float4 {0} = tex2D({1}, {2} + float2({3}.x * {4}.x, {3}.y * {4}.y));\r\n\r\n", effectBuilder.PixelShaderOutput, textureInfo.Sampler, textureInfo.TexCoordInput, textureInfo.TexelSize, variableInfo.Name));
             else
-                effectBuilder.EmitPixelFragment(InvariantString.Format("    // Load the image\r\n    float4 {0} = tex2D({1}, {2});\r\n\r\n", (object)effectBuilder.PixelShaderOutput, (object)textureInfo.Sampler, (object)textureInfo.TexCoordInput));
+                effectBuilder.EmitPixelFragment(InvariantString.Format("    // Load the image\r\n    float4 {0} = tex2D({1}, {2});\r\n\r\n", effectBuilder.PixelShaderOutput, textureInfo.Sampler, textureInfo.TexCoordInput));
         }
     }
 }

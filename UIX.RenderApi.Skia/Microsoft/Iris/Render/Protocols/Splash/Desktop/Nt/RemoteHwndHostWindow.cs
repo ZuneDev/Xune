@@ -42,7 +42,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             msg4CreatePtr->_priv_ctxcb = port.Session.LocalContext;
             msg4CreatePtr->_priv_idObjectSubject = remoteHwndHostWindow.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteHwndHostWindow.s_priv_ByteOrder_Msg4_Create, typeof(RemoteHwndHostWindow.Msg4_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg4_Create, typeof(RemoteHwndHostWindow.Msg4_Create), 0, 0);
             port.CreateRemoteObject(windowClassHandle, remoteHwndHostWindow.m_renderHandle, (Message*)msg4CreatePtr);
             return remoteHwndHostWindow;
         }
@@ -62,7 +62,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             msg0SetVisiblePtr->fVisible = fVisible ? uint.MaxValue : 0U;
             msg0SetVisiblePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0SetVisiblePtr, ref RemoteHwndHostWindow.s_priv_ByteOrder_Msg0_SetVisible, typeof(RemoteHwndHostWindow.Msg0_SetVisible), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0SetVisiblePtr, ref s_priv_ByteOrder_Msg0_SetVisible, typeof(RemoteHwndHostWindow.Msg0_SetVisible), 0, 0);
             _priv_pmsgUse = (Message*)msg0SetVisiblePtr;
         }
 
@@ -89,7 +89,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             msg1SetSizePtr->sizeWindowPxl = sizeWindowPxl;
             msg1SetSizePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1SetSizePtr, ref RemoteHwndHostWindow.s_priv_ByteOrder_Msg1_SetSize, typeof(RemoteHwndHostWindow.Msg1_SetSize), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg1SetSizePtr, ref s_priv_ByteOrder_Msg1_SetSize, typeof(RemoteHwndHostWindow.Msg1_SetSize), 0, 0);
             _priv_pmsgUse = (Message*)msg1SetSizePtr;
         }
 
@@ -116,7 +116,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             msg2SetPositionPtr->ptClientPxl = ptClientPxl;
             msg2SetPositionPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg2SetPositionPtr, ref RemoteHwndHostWindow.s_priv_ByteOrder_Msg2_SetPosition, typeof(RemoteHwndHostWindow.Msg2_SetPosition), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg2SetPositionPtr, ref s_priv_ByteOrder_Msg2_SetPosition, typeof(RemoteHwndHostWindow.Msg2_SetPosition), 0, 0);
             _priv_pmsgUse = (Message*)msg2SetPositionPtr;
         }
 
@@ -143,7 +143,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             setBackgroundColorPtr->clrBackground = clrBackground;
             setBackgroundColorPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setBackgroundColorPtr, ref RemoteHwndHostWindow.s_priv_ByteOrder_Msg3_SetBackgroundColor, typeof(RemoteHwndHostWindow.Msg3_SetBackgroundColor), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setBackgroundColorPtr, ref s_priv_ByteOrder_Msg3_SetBackgroundColor, typeof(RemoteHwndHostWindow.Msg3_SetBackgroundColor), 0, 0);
             _priv_pmsgUse = (Message*)setBackgroundColorPtr;
         }
 

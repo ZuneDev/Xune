@@ -13,10 +13,10 @@ namespace Microsoft.Iris.Render.Extensions
 {
     public class ImageCache : IDisposable
     {
-        private static readonly ImageCache.ObjectTest s_testCulling = new ImageCache.ObjectTest(ImageCache.CullingTest);
-        private static readonly ImageCache.ObjectTest s_testDisposeAll = new ImageCache.ObjectTest(ImageCache.DisposeAllTest);
-        private static readonly ImageCache.ObjectTest s_testObject = new ImageCache.ObjectTest(ImageCache.SpecificObjectTest);
-        private static readonly ImageCache.ObjectTest s_testDropImages = new ImageCache.ObjectTest(ImageCache.DropImageTest);
+        private static readonly ImageCache.ObjectTest s_testCulling = new ImageCache.ObjectTest(CullingTest);
+        private static readonly ImageCache.ObjectTest s_testDisposeAll = new ImageCache.ObjectTest(DisposeAllTest);
+        private static readonly ImageCache.ObjectTest s_testObject = new ImageCache.ObjectTest(SpecificObjectTest);
+        private static readonly ImageCache.ObjectTest s_testDropImages = new ImageCache.ObjectTest(DropImageTest);
         private Map<object, object> m_objectsTable;
         private Vector<ImageCache.ImageCacheEntry> m_lruList;
         private bool m_fObjectDisposed;
@@ -49,7 +49,7 @@ namespace Microsoft.Iris.Render.Extensions
             if (this.m_fObjectDisposed)
                 return;
             this.Dispose(true);
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
         }
 
         private void Dispose(bool fInDispose)
@@ -68,13 +68,13 @@ namespace Microsoft.Iris.Render.Extensions
         public void DisposeAllObjects()
         {
             this.m_numItemsInCache = 0;
-            this.RemoveObjects(ImageCache.s_testDisposeAll, (object)this);
+            this.RemoveObjects(s_testDisposeAll, this);
         }
 
         public void PrepareToShutdown()
         {
             this.m_numItemsInCache = 0;
-            this.RemoveObjects(ImageCache.s_testDropImages, (object)this);
+            this.RemoveObjects(s_testDropImages, this);
             this.m_fCleanupPending = false;
             this.m_fShuttingDown = true;
         }
@@ -103,29 +103,29 @@ namespace Microsoft.Iris.Render.Extensions
             Debug2.Validate(item.ImageCacheOwner == null, typeof(InvalidOperationException), "The given item is already part of a cache! double-add detected.");
             if (this.m_objectsTable == null)
                 this.SetupObjectTable();
-            this.m_objectsTable[(object)key] = (object)item;
+            this.m_objectsTable[key] = item;
             this.m_lruList.Insert(0, new ImageCache.ImageCacheEntry(key, item));
             item.ImageCacheOwner = this;
             this.ScheduleScavenge();
         }
 
-        public void RemoveData(ImageCacheKey key) => ((ImageCacheItem)this.Find((object)key))?.RemoveData();
+        public void RemoveData(ImageCacheKey key) => ((ImageCacheItem)this.Find(key))?.RemoveData();
 
-        public void RemoveItem(ImageCacheItem item) => this.RemoveObjects(ImageCache.s_testObject, (object)item);
+        public void RemoveItem(ImageCacheItem item) => this.RemoveObjects(s_testObject, item);
 
         public void RemoveObjects(ImageCache.ObjectTest test, object paramObject)
         {
             if (this.m_objectsTable == null)
                 return;
-            ArrayList arrayList = (ArrayList)null;
+            ArrayList arrayList = null;
             foreach (ImageCache.ImageCacheEntry lru in this.m_lruList)
             {
                 ImageCacheItem imageCacheItem = lru.item;
-                if (test((object)imageCacheItem, paramObject))
+                if (test(imageCacheItem, paramObject))
                 {
                     if (arrayList == null)
                         arrayList = new ArrayList();
-                    arrayList.Add((object)lru);
+                    arrayList.Add(lru);
                 }
             }
             if (arrayList == null)
@@ -133,15 +133,15 @@ namespace Microsoft.Iris.Render.Extensions
             foreach (ImageCache.ImageCacheEntry imageCacheEntry in arrayList)
             {
                 this.m_lruList.Remove(imageCacheEntry);
-                this.m_objectsTable.Remove((object)imageCacheEntry.key);
-                imageCacheEntry.item.ImageCacheOwner = (ImageCache)null;
+                this.m_objectsTable.Remove(imageCacheEntry.key);
+                imageCacheEntry.item.ImageCacheOwner = null;
                 imageCacheEntry.item.Dispose();
             }
         }
 
         public ImageCacheItem Lookup(ImageCacheKey key)
         {
-            ImageCacheItem imageCacheItem = (ImageCacheItem)this.Find((object)key);
+            ImageCacheItem imageCacheItem = (ImageCacheItem)this.Find(key);
             if (imageCacheItem == null)
                 this.ScheduleScavenge();
             return imageCacheItem;
@@ -153,7 +153,7 @@ namespace Microsoft.Iris.Render.Extensions
             this.m_numItemsInCache = 0;
             this.m_fUseCutoffTime = !this.m_tsCullingKeepTime.Equals(TimeSpan.Zero);
             this.m_dtCullingCutoff = DateTime.UtcNow - this.m_tsCullingKeepTime;
-            this.RemoveObjects(ImageCache.s_testCulling, (object)this);
+            this.RemoveObjects(s_testCulling, this);
             this.m_fCleanupPending = false;
         }
 
@@ -172,7 +172,7 @@ namespace Microsoft.Iris.Render.Extensions
 
         private object Find(object key)
         {
-            object obj = (object)null;
+            object obj = null;
             if (this.m_objectsTable != null)
                 this.m_objectsTable.TryGetValue(key, out obj);
             return obj;
@@ -263,7 +263,7 @@ namespace Microsoft.Iris.Render.Extensions
                 if (lru.MatchItem(item))
                     return lru;
             }
-            return (ImageCache.ImageCacheEntry)null;
+            return null;
         }
 
         public delegate bool ObjectTest(object subjectObject, object paramObject);

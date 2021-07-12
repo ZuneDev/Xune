@@ -22,16 +22,16 @@ namespace Microsoft.Iris.Render.Extensions
             Map<string, Win32Api.HINSTANCE>.ValueCollection.Enumerator enumerator = this.m_dictModules.Values.GetEnumerator();
             while (enumerator.MoveNext())
                 Win32Api.FreeLibrary(enumerator.Current);
-            this.m_dictModules = (Map<string, Win32Api.HINSTANCE>)null;
+            this.m_dictModules = null;
         }
 
         public static ModuleManager Instance
         {
             get
             {
-                if (ModuleManager.s_singleton == null)
-                    ModuleManager.s_singleton = new ModuleManager();
-                return ModuleManager.s_singleton;
+                if (s_singleton == null)
+                    s_singleton = new ModuleManager();
+                return s_singleton;
             }
         }
 
@@ -47,7 +47,7 @@ namespace Microsoft.Iris.Render.Extensions
             else
             {
                 hinstance = Win32Api.LoadLibraryEx(stModuleName, Win32Api.HANDLE.NULL, 2U);
-                Debug2.Validate(hinstance != Win32Api.HINSTANCE.NULL, typeof(ArgumentException), (object)"Failed to load module {0}", (object)stModuleName);
+                Debug2.Validate(hinstance != Win32Api.HINSTANCE.NULL, typeof(ArgumentException), "Failed to load module {0}", stModuleName);
                 this.m_dictModules[stModuleName] = hinstance;
             }
             return hinstance;
@@ -60,9 +60,9 @@ namespace Microsoft.Iris.Render.Extensions
           out int resourceSize)
         {
             IntPtr resource = Win32Api.FindResource(hInstance.h, resourceId, new IntPtr(10));
-            Debug2.Validate(resource != IntPtr.Zero, typeof(ArgumentException), string.Format("Unable to find resource {0} in the module", (object)resourceId));
+            Debug2.Validate(resource != IntPtr.Zero, typeof(ArgumentException), string.Format("Unable to find resource {0} in the module", resourceId));
             IntPtr i = Win32Api.LoadResource(hInstance.h, resource);
-            Debug2.Validate(i != IntPtr.Zero, typeof(ArgumentException), string.Format("Unable to load resource {0} from the module", (object)resourceId));
+            Debug2.Validate(i != IntPtr.Zero, typeof(ArgumentException), string.Format("Unable to load resource {0} from the module", resourceId));
             IntPtr num1 = Win32Api.LockResource(i);
             Debug2.Validate(num1 != IntPtr.Zero, typeof(InvalidOperationException), "Failed to aquire pointer to resource data");
             int num2 = Win32Api.SizeofResource(hInstance.h, resource);

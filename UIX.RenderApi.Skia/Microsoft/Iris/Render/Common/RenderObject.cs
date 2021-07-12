@@ -27,7 +27,7 @@ namespace Microsoft.Iris.Render.Common
             if (this.m_fObjectDisposed)
                 return;
             this.Dispose(true);
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool fInDispose) => this.m_fObjectDisposed = true;

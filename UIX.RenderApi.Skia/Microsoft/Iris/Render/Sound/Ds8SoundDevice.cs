@@ -33,7 +33,7 @@ namespace Microsoft.Iris.Render.Sound
                 if (this.m_remoteDevice == null)
                     return;
                 this.m_remoteDevice.Dispose();
-                this.m_remoteDevice = (RemoteDs8SoundDevice)null;
+                this.m_remoteDevice = null;
             }
             finally
             {
@@ -43,11 +43,11 @@ namespace Microsoft.Iris.Render.Sound
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteDevice.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = (RemoteDs8SoundDevice)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = null;
 
         protected override SoundDeviceType DeviceType => SoundDeviceType.DirectSound8;
 
-        protected override void CreateRemoteSoundDeviceImpl() => this.m_remoteDevice = this.Session.NtRenderingProtocol.INPROC_BuildRemoteDs8SoundDevice((IRenderHandleOwner)this, this.m_ownerWindow.WindowHandle);
+        protected override void CreateRemoteSoundDeviceImpl() => this.m_remoteDevice = this.Session.NtRenderingProtocol.INPROC_BuildRemoteDs8SoundDevice(this, this.m_ownerWindow.WindowHandle);
 
         protected override void CreateExternalResourcesImpl() => this.m_remoteDevice.SendCreateExternalResources();
 

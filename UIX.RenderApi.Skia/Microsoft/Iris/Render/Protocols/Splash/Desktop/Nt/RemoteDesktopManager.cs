@@ -41,7 +41,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             msg2CreatePtr->fEnumDisplayModes = fEnumDisplayModes ? uint.MaxValue : 0U;
             msg2CreatePtr->_priv_idObjectSubject = remoteDesktopManager.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteDesktopManager.s_priv_ByteOrder_Msg2_Create, typeof(RemoteDesktopManager.Msg2_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg2_Create, typeof(RemoteDesktopManager.Msg2_Create), 0, 0);
             port.CreateRemoteObject(managerClassHandle, remoteDesktopManager.m_renderHandle, (Message*)msg2CreatePtr);
             return remoteDesktopManager;
         }
@@ -59,7 +59,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             rebuildMonitorCachePtr->_priv_msgid = 0U;
             rebuildMonitorCachePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)rebuildMonitorCachePtr, ref RemoteDesktopManager.s_priv_ByteOrder_Msg0_RebuildMonitorCache, typeof(RemoteDesktopManager.Msg0_RebuildMonitorCache), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)rebuildMonitorCachePtr, ref s_priv_ByteOrder_Msg0_RebuildMonitorCache, typeof(RemoteDesktopManager.Msg0_RebuildMonitorCache), 0, 0);
             _priv_pmsgUse = (Message*)rebuildMonitorCachePtr;
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             changeFullScreenModePtr->fTvMode = fTvMode ? uint.MaxValue : 0U;
             changeFullScreenModePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)changeFullScreenModePtr, ref RemoteDesktopManager.s_priv_ByteOrder_Msg1_ChangeFullScreenMode, typeof(RemoteDesktopManager.Msg1_ChangeFullScreenMode), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)changeFullScreenModePtr, ref s_priv_ByteOrder_Msg1_ChangeFullScreenMode, typeof(RemoteDesktopManager.Msg1_ChangeFullScreenMode), 0, 0);
             _priv_pmsgUse = (Message*)changeFullScreenModePtr;
         }
 

@@ -14,16 +14,16 @@ namespace Microsoft.Iris.Render.Graphics
         {
             VariableInfo variableInfo = new VariableInfo()
             {
-                ID = (int)efiColor.ColorID,
+                ID = efiColor.ColorID,
                 Type = Dx9VariableType.Vector4,
                 IsDynamic = efiColor.IsDynamicProperty("Color")
             };
             variableInfo.Name = variableInfo.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo.Type, efiColor.Name) : effectBuilder.GenerateGlobalConstant(variableInfo.Type, efiColor.Name);
-            variableInfo.DefaultValue = (object)efiColor.Color.ToVector4();
+            variableInfo.DefaultValue = efiColor.Color.ToVector4();
             effectBuilder.AddPropertyVariable(variableInfo);
             string name = variableInfo.Name;
             effectBuilder.PixelShaderOutput = effectBuilder.GenerateLocalVariable(Dx9VariableType.Vector4, efiColor.Name);
-            effectBuilder.EmitPixelFragment(InvariantString.Format("    // Load the color\r\n    float4 {0} = {1};\r\n\r\n", (object)effectBuilder.PixelShaderOutput, (object)name));
+            effectBuilder.EmitPixelFragment(InvariantString.Format("    // Load the color\r\n    float4 {0} = {1};\r\n\r\n", effectBuilder.PixelShaderOutput, name));
         }
     }
 }

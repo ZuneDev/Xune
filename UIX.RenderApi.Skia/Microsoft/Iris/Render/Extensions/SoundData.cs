@@ -33,7 +33,7 @@ namespace Microsoft.Iris.Render.Extensions
 
         public void Dispose()
         {
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
             this.Dispose(true);
         }
 
@@ -46,13 +46,13 @@ namespace Microsoft.Iris.Render.Extensions
 
         SoundDataFormat ISoundData.Format => SoundDataFormat.PCM;
 
-        uint ISoundData.ChannelCount => (uint)this.m_soundInfo.Header.nChannels;
+        uint ISoundData.ChannelCount => m_soundInfo.Header.nChannels;
 
         uint ISoundData.SampleRate => this.m_soundInfo.Header.nSamplesPerSec;
 
-        uint ISoundData.SampleSize => (uint)this.m_soundInfo.Header.wBitsPerSample;
+        uint ISoundData.SampleSize => m_soundInfo.Header.wBitsPerSample;
 
-        uint ISoundData.SampleCount => (uint)((ulong)this.m_soundInfo.Header.cbDataSize / (ulong)((int)this.m_soundInfo.Header.wBitsPerSample / 8));
+        uint ISoundData.SampleCount => (uint)(m_soundInfo.Header.cbDataSize / (ulong)(m_soundInfo.Header.wBitsPerSample / 8));
 
         IntPtr ISoundData.AcquireContent()
         {
@@ -70,10 +70,10 @@ namespace Microsoft.Iris.Render.Extensions
             ExtensionsApi.SoundInformation soundDataInfo;
             SoundLoader.FromResource(this.m_moduleName, this.m_resourceId, out soundDataHandle, out soundDataInfo);
             Debug2.Validate(soundDataInfo.Data.rgData != IntPtr.Zero, typeof(InvalidOperationException), "Failed to load data and no exception was thrown");
-            Debug2.Validate(soundDataInfo.Header.wFormatTag == (ushort)1, typeof(ArgumentException), "Only PCM sound data is currently supported");
-            Debug2.Validate(soundDataInfo.Header.nChannels >= (ushort)1 && soundDataInfo.Header.nChannels <= (ushort)2, typeof(ArgumentException), "Only mono/stereo sound data is currently supported");
-            Debug2.Validate(soundDataInfo.Header.wBitsPerSample == (ushort)8 || soundDataInfo.Header.wBitsPerSample == (ushort)16, typeof(ArgumentException), "Only 8bps/16bps sound data is currently supported");
-            Debug2.Validate((uint)((ulong)soundDataInfo.Header.cbDataSize / (ulong)((int)soundDataInfo.Header.wBitsPerSample / 8)) % (uint)soundDataInfo.Header.nChannels == 0U, typeof(ArgumentException), "Insufficient sample data");
+            Debug2.Validate(soundDataInfo.Header.wFormatTag == 1, typeof(ArgumentException), "Only PCM sound data is currently supported");
+            Debug2.Validate(soundDataInfo.Header.nChannels >= 1 && soundDataInfo.Header.nChannels <= 2, typeof(ArgumentException), "Only mono/stereo sound data is currently supported");
+            Debug2.Validate(soundDataInfo.Header.wBitsPerSample == 8 || soundDataInfo.Header.wBitsPerSample == 16, typeof(ArgumentException), "Only 8bps/16bps sound data is currently supported");
+            Debug2.Validate((uint)(soundDataInfo.Header.cbDataSize / (ulong)(soundDataInfo.Header.wBitsPerSample / 8)) % soundDataInfo.Header.nChannels == 0U, typeof(ArgumentException), "Insufficient sample data");
             this.m_soundHandle = soundDataHandle;
             this.m_soundInfo = soundDataInfo;
             this.m_hasContent = true;

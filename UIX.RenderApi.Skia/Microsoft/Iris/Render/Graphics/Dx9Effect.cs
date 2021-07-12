@@ -11,8 +11,8 @@ namespace Microsoft.Iris.Render.Graphics
     internal class Dx9Effect : Effect
     {
         internal Dx9Effect(Dx9EffectTemplate effectTemplate)
-          : base((EffectTemplate)effectTemplate)
-          => this.m_remoteEffect = (Microsoft.Iris.Render.Protocols.Splash.Rendering.RemoteEffect)this.m_effectTemplate.Session.BuildRemoteDx9Effect(this);
+          : base(effectTemplate)
+          => this.m_remoteEffect = this.m_effectTemplate.Session.BuildRemoteDx9Effect(this);
 
         internal Dx9EffectManager EffectManager => ((Dx9GraphicsDevice)this.m_effectTemplate.Device).EffectManager;
 

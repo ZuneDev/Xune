@@ -38,9 +38,9 @@ namespace Microsoft.Iris.Render.Sound
                 if (this.m_remoteSound != null)
                 {
                     this.m_remoteSound.Dispose();
-                    this.m_remoteSound = (RemoteSound)null;
+                    this.m_remoteSound = null;
                 }
-                this.m_bufferOwner = (SoundBuffer)null;
+                this.m_bufferOwner = null;
             }
             finally
             {
@@ -66,8 +66,8 @@ namespace Microsoft.Iris.Render.Sound
 
         private RemoteSound CreateRemoteObject(SoundBuffer buffer)
         {
-            RemoteSound remoteSound = (RemoteSound)null;
-            RENDERHANDLE handle = buffer.Device.Session.AllocateRenderHandle((IRenderHandleOwner)this);
+            RemoteSound remoteSound = null;
+            RENDERHANDLE handle = buffer.Device.Session.AllocateRenderHandle(this);
             try
             {
                 buffer.Device.CreateRemoteSound(handle, buffer);
@@ -83,17 +83,17 @@ namespace Microsoft.Iris.Render.Sound
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteSound.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteSound = (RemoteSound)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteSound = null;
 
         RENDERHANDLE IActivatableObject.GetObjectId() => this.m_remoteSound.RenderHandle;
 
         uint IActivatableObject.GetMethodId(string methodName)
         {
-            if (methodName == Microsoft.Iris.Render.Sound.Sound.PlayMethod)
+            if (methodName == PlayMethod)
                 return 1;
-            if (methodName == Microsoft.Iris.Render.Sound.Sound.StopMethod)
+            if (methodName == StopMethod)
                 return 2;
-            Debug2.Validate(false, typeof(ArgumentException), (object)"Unsupported method: {0}", (object)methodName);
+            Debug2.Validate(false, typeof(ArgumentException), "Unsupported method: {0}", methodName);
             return 0;
         }
 

@@ -23,7 +23,7 @@ namespace Microsoft.Iris.Render.Graphics
             double num4 = Math.Sqrt(2.0 * Math.PI) * flDeviation;
             for (int index = 0; index < num1; ++index)
             {
-                double num5 = (double)(index - nKernelRadius);
+                double num5 = index - nKernelRadius;
                 double num6 = Math.Exp(-(num5 * num5) / num3);
                 arKernel[index] = num6 / num4;
                 num2 += arKernel[index];
@@ -49,8 +49,8 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 for (int index2 = 0; index2 < num2; ++index2)
                 {
-                    double num6 = (double)(index2 - nKernelRadius);
-                    double num7 = (double)(index1 - nKernelRadius);
+                    double num6 = index2 - nKernelRadius;
+                    double num7 = index1 - nKernelRadius;
                     double num8 = Math.Exp(-(num6 * num6 + num7 * num7) / num4);
                     arKernel[index2, index1] = num8 / num5;
                     num1 += arKernel[index2, index1];
@@ -66,13 +66,13 @@ namespace Microsoft.Iris.Render.Graphics
         internal static void Generate(GaussianBlurElement efoBlur, ref Dx9EffectBuilder effectBuilder)
         {
             Dx9TextureInfo textureInfo = effectBuilder.GetTextureInfo(effectBuilder.ImageCount - 1);
-            effectBuilder.AddRequirement(textureInfo, Dx9TextureRequirements.TexelSize, (object)null);
+            effectBuilder.AddRequirement(textureInfo, Dx9TextureRequirements.TexelSize, null);
             switch (efoBlur.Mode)
             {
                 case GaussianBlurMode.Normal:
                     int length1 = 1 + efoBlur.KernelRadius * 2;
                     double[,] arKernel1 = new double[length1, length1];
-                    Dx9GaussianBlurElement.GenerateWeights2D(efoBlur.KernelRadius, (double)efoBlur.Bluriness, arKernel1);
+                    GenerateWeights2D(efoBlur.KernelRadius, efoBlur.Bluriness, arKernel1);
                     effectBuilder.EmitPixelFragment("    {\r\n        // Gaussian filter\r\n        float4 vBlur = 0;\r\n");
                     for (int index1 = 0; index1 < length1; ++index1)
                     {
@@ -81,31 +81,31 @@ namespace Microsoft.Iris.Render.Graphics
                             int num1 = index2 - efoBlur.KernelRadius;
                             int num2 = index1 - efoBlur.KernelRadius;
                             if (num1 == 0 && num2 == 0)
-                                effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += {0} * {1};\r\n", (object)effectBuilder.PixelShaderOutput, (object)arKernel1[index2, index1]));
+                                effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += {0} * {1};\r\n", effectBuilder.PixelShaderOutput, arKernel1[index2, index1]));
                             else
-                                effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += tex2D({0}, {1} + float2({2}.x * {3}, {2}.y * {4})) * {5};\r\n", (object)textureInfo.Sampler, (object)textureInfo.TexCoordInput, (object)textureInfo.TexelSize, (object)num1, (object)num2, (object)arKernel1[index2, index1]));
+                                effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += tex2D({0}, {1} + float2({2}.x * {3}, {2}.y * {4})) * {5};\r\n", textureInfo.Sampler, textureInfo.TexCoordInput, textureInfo.TexelSize, num1, num2, arKernel1[index2, index1]));
                         }
                     }
-                    effectBuilder.EmitPixelFragment(InvariantString.Format("        {0} = vBlur;\r\n    }}\r\n\r\n", (object)effectBuilder.PixelShaderOutput));
+                    effectBuilder.EmitPixelFragment(InvariantString.Format("        {0} = vBlur;\r\n    }}\r\n\r\n", effectBuilder.PixelShaderOutput));
                     break;
                 case GaussianBlurMode.Horizontal:
                 case GaussianBlurMode.Vertical:
                     bool flag = efoBlur.Mode == GaussianBlurMode.Horizontal;
                     int length2 = 1 + efoBlur.KernelRadius * 2;
                     double[] arKernel2 = new double[length2];
-                    Dx9GaussianBlurElement.GenerateWeights1D(efoBlur.KernelRadius, (double)efoBlur.Bluriness, arKernel2);
+                    GenerateWeights1D(efoBlur.KernelRadius, efoBlur.Bluriness, arKernel2);
                     effectBuilder.EmitPixelFragment("    {\r\n        // Gaussian filter\r\n        float4 vBlur = 0;\r\n");
                     for (int index = 0; index < length2; ++index)
                     {
                         int num = index - efoBlur.KernelRadius;
                         if (num == 0)
-                            effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += {0} * {1};\r\n", (object)effectBuilder.PixelShaderOutput, (object)arKernel2[index]));
+                            effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += {0} * {1};\r\n", effectBuilder.PixelShaderOutput, arKernel2[index]));
                         else if (flag)
-                            effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += tex2D({0}, {1} + float2({2}.x * {3}, 0)) * {4};\r\n", (object)textureInfo.Sampler, (object)textureInfo.TexCoordInput, (object)textureInfo.TexelSize, (object)num, (object)arKernel2[index]));
+                            effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += tex2D({0}, {1} + float2({2}.x * {3}, 0)) * {4};\r\n", textureInfo.Sampler, textureInfo.TexCoordInput, textureInfo.TexelSize, num, arKernel2[index]));
                         else
-                            effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += tex2D({0}, {1} + float2(0, {2}.y * {3})) * {4};\r\n", (object)textureInfo.Sampler, (object)textureInfo.TexCoordInput, (object)textureInfo.TexelSize, (object)num, (object)arKernel2[index]));
+                            effectBuilder.EmitPixelFragment(InvariantString.Format("        vBlur += tex2D({0}, {1} + float2(0, {2}.y * {3})) * {4};\r\n", textureInfo.Sampler, textureInfo.TexCoordInput, textureInfo.TexelSize, num, arKernel2[index]));
                     }
-                    effectBuilder.EmitPixelFragment(InvariantString.Format("        {0} = vBlur;\r\n    }}\r\n\r\n", (object)effectBuilder.PixelShaderOutput));
+                    effectBuilder.EmitPixelFragment(InvariantString.Format("        {0} = vBlur;\r\n    }}\r\n\r\n", effectBuilder.PixelShaderOutput));
                     break;
                 default:
                     Debug2.Validate(false, typeof(InvalidOperationException), "Unknown blur mode");

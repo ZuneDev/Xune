@@ -37,7 +37,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Xenon
             msg11CreatePtr->sizeScreenPxl = sizeScreenPxl;
             msg11CreatePtr->_priv_idObjectSubject = remoteXeDevice.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteXeDevice.s_priv_ByteOrder_Msg11_Create, typeof(RemoteXeDevice.Msg11_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg11_Create, typeof(RemoteXeDevice.Msg11_Create), 0, 0);
             port.CreateRemoteObject(deviceClassHandle, remoteXeDevice.m_renderHandle, (Message*)msg11CreatePtr);
             return remoteXeDevice;
         }

@@ -38,7 +38,7 @@ namespace Microsoft.Iris.Render
           : this()
         {
             Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
-            Debug2.Validate((double)flRadius >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for flRadius is [0..)");
+            Debug2.Validate(flRadius >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for flRadius is [0..)");
             this.m_stName = stName;
             this.m_vPosition = vPosition;
             this.m_flRadius = flRadius;
@@ -98,10 +98,10 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Position", (byte)16, ref this.m_nPositionID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Radius", (byte)8, ref this.m_nRadiusID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "LightColor", (byte)20, ref this.m_nLightColorID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "AmbientColor", (byte)20, ref this.m_nAmbientColorID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Attenuation", (byte)16, ref this.m_nAttenuationID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Position", 16, ref this.m_nPositionID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Radius", 8, ref this.m_nRadiusID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "LightColor", 20, ref this.m_nLightColorID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "AmbientColor", 20, ref this.m_nAmbientColorID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Attenuation", 16, ref this.m_nAttenuationID, ref nNextUniqueID);
         }
 
-        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Position", EffectPropertyType.Vector3, (object)this.m_vPosition, this.m_nPositionID, dictProperties) && this.GenerateProperty("Radius", EffectPropertyType.Float, (object)this.m_flRadius, this.m_nRadiusID, dictProperties) && (this.GenerateProperty("LightColor", EffectPropertyType.Color, (object)this.m_clrLight, this.m_nLightColorID, dictProperties) && this.GenerateProperty("AmbientColor", EffectPropertyType.Color, (object)this.m_clrAmbient, this.m_nAmbientColorID, dictProperties)) && this.GenerateProperty("Attenuation", EffectPropertyType.Vector3, (object)this.m_vAttenuation, this.m_nAttenuationID, dictProperties);
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Position", EffectPropertyType.Vector3, m_vPosition, this.m_nPositionID, dictProperties) && this.GenerateProperty("Radius", EffectPropertyType.Float, m_flRadius, this.m_nRadiusID, dictProperties) && (this.GenerateProperty("LightColor", EffectPropertyType.Color, m_clrLight, this.m_nLightColorID, dictProperties) && this.GenerateProperty("AmbientColor", EffectPropertyType.Color, m_clrAmbient, this.m_nAmbientColorID, dictProperties)) && this.GenerateProperty("Attenuation", EffectPropertyType.Vector3, m_vAttenuation, this.m_nAttenuationID, dictProperties);
 
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {

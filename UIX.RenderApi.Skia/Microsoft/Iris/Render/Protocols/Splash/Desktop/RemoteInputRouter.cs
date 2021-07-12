@@ -38,7 +38,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
             msg2CreatePtr->_priv_ctxic = port.Session.LocalContext;
             msg2CreatePtr->_priv_idObjectSubject = remoteInputRouter.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteInputRouter.s_priv_ByteOrder_Msg2_Create, typeof(RemoteInputRouter.Msg2_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg2_Create, typeof(RemoteInputRouter.Msg2_Create), 0, 0);
             port.CreateRemoteObject(routerClassHandle, remoteInputRouter.m_renderHandle, (Message*)msg2CreatePtr);
             return remoteInputRouter;
         }
@@ -56,7 +56,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
             registerWithInputSourcePtr->_priv_msgid = 0U;
             registerWithInputSourcePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)registerWithInputSourcePtr, ref RemoteInputRouter.s_priv_ByteOrder_Msg0_UnRegisterWithInputSource, typeof(RemoteInputRouter.Msg0_UnRegisterWithInputSource), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)registerWithInputSourcePtr, ref s_priv_ByteOrder_Msg0_UnRegisterWithInputSource, typeof(RemoteInputRouter.Msg0_UnRegisterWithInputSource), 0, 0);
             _priv_pmsgUse = (Message*)registerWithInputSourcePtr;
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop
             registerWithInputSourcePtr->idSource = idSource;
             registerWithInputSourcePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)registerWithInputSourcePtr, ref RemoteInputRouter.s_priv_ByteOrder_Msg1_RegisterWithInputSource, typeof(RemoteInputRouter.Msg1_RegisterWithInputSource), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)registerWithInputSourcePtr, ref s_priv_ByteOrder_Msg1_RegisterWithInputSource, typeof(RemoteInputRouter.Msg1_RegisterWithInputSource), 0, 0);
             _priv_pmsgUse = (Message*)registerWithInputSourcePtr;
         }
 

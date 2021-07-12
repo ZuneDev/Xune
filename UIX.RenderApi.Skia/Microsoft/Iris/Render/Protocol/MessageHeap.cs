@@ -27,7 +27,7 @@ namespace Microsoft.Iris.Render.Protocol
             this.blockHeaderSize = headerSize;
             this.allocExtraSize = allocationExtra;
             this.nextBlockId = 1U;
-            this.CreateBlock(MessageHeap.BlockType.First, this.smallBlockSize);
+            this.CreateBlock(BlockType.First, this.smallBlockSize);
         }
 
         protected override void Dispose(bool inDispose)
@@ -54,11 +54,11 @@ namespace Microsoft.Iris.Render.Protocol
             MessageHeap.BlockInfo block = this.tailBlock;
             if (size > block.size - block.used)
             {
-                MessageHeap.BlockType type = MessageHeap.BlockType.Normal;
+                MessageHeap.BlockType type = BlockType.Normal;
                 uint actualSize = this.smallBlockSize;
                 if (size > this.smallBlockSize - this.blockHeaderSize)
                 {
-                    type = MessageHeap.BlockType.Large;
+                    type = BlockType.Large;
                     actualSize = this.blockHeaderSize + size;
                 }
                 block = this.CreateBlock(type, actualSize);
@@ -107,13 +107,13 @@ namespace Microsoft.Iris.Render.Protocol
             block.size = actualSize;
             switch (type)
             {
-                case MessageHeap.BlockType.First:
-                    block.next = (MessageHeap.BlockInfo)null;
+                case BlockType.First:
+                    block.next = null;
                     this.headBlock = block;
                     this.tailBlock = block;
                     break;
-                case MessageHeap.BlockType.Normal:
-                case MessageHeap.BlockType.Large:
+                case BlockType.Normal:
+                case BlockType.Large:
                     block.next = this.tailBlock.next;
                     this.tailBlock.next = block;
                     this.tailBlock = block;
@@ -127,7 +127,7 @@ namespace Microsoft.Iris.Render.Protocol
         private unsafe void DestroyBlock(MessageHeap.BlockInfo block)
         {
             Marshal.FreeCoTaskMem(new IntPtr(block.data));
-            block.data = (void*)null;
+            block.data = null;
         }
 
         private void ReleaseAll(bool finalRelease)
@@ -137,14 +137,14 @@ namespace Microsoft.Iris.Render.Protocol
             if (finalRelease)
             {
                 block = this.headBlock;
-                this.headBlock = (MessageHeap.BlockInfo)null;
-                this.tailBlock = (MessageHeap.BlockInfo)null;
+                this.headBlock = null;
+                this.tailBlock = null;
             }
             else
             {
                 this.ZeroMemoryBlock(this.headBlock, 0U, this.blockHeaderSize);
                 block = this.headBlock.next;
-                this.headBlock.next = (MessageHeap.BlockInfo)null;
+                this.headBlock.next = null;
                 this.headBlock.used = this.blockHeaderSize;
                 this.tailBlock = this.headBlock;
                 this.nextBlockId = 2U;
@@ -155,9 +155,9 @@ namespace Microsoft.Iris.Render.Protocol
                 next = block.next;
                 switch (block.type)
                 {
-                    case MessageHeap.BlockType.First:
-                    case MessageHeap.BlockType.Normal:
-                    case MessageHeap.BlockType.Large:
+                    case BlockType.First:
+                    case BlockType.Normal:
+                    case BlockType.Large:
                         this.DestroyBlock(block);
                         break;
                 }
@@ -183,7 +183,7 @@ namespace Microsoft.Iris.Render.Protocol
             Debug2.Validate(offset + size <= block.size, typeof(ArgumentOutOfRangeException), "Invalid memory range for block");
             byte* numPtr1 = (byte*)((IntPtr)block.data + (int)offset);
             for (byte* numPtr2 = numPtr1 + (int)size; numPtr1 < numPtr2; ++numPtr1)
-                *numPtr1 = (byte)0;
+                *numPtr1 = 0;
         }
 
         protected override void Invariant() => Debug2.Validate(!this.IsDisposed, typeof(InvalidOperationException), "MessageHeap has already been disposed");
@@ -197,7 +197,7 @@ namespace Microsoft.Iris.Render.Protocol
             public Enumerator(MessageHeap heap)
             {
                 this.heap = heap;
-                this.current = (MessageHeap.BlockInfo)null;
+                this.current = null;
                 this.key = heap.key;
             }
 

@@ -30,7 +30,7 @@ namespace Microsoft.Iris.Render.Protocol
             this.m_fFreeOnDispose = fFreeOnDispose;
             if (this.m_fFreeOnDispose)
                 return;
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
         }
 
         protected RemoteObject()
@@ -66,7 +66,7 @@ namespace Microsoft.Iris.Render.Protocol
             if (this.IsValid && this.m_fFreeOnDispose && this.m_renderPort != null)
                 this.m_renderPort.FreeHandle(this.m_renderHandle);
             this.m_renderHandle = RENDERHANDLE.NULL;
-            this.m_renderPort = (RenderPort)null;
+            this.m_renderPort = null;
         }
     }
 }

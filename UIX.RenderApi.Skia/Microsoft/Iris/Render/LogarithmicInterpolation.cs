@@ -15,7 +15,7 @@ namespace Microsoft.Iris.Render
 
         public LogarithmicInterpolation(float weight)
         {
-            Debug2.Validate((double)weight > 0.0, typeof(ArgumentOutOfRangeException), "'weight' must be > 0");
+            Debug2.Validate(weight > 0.0, typeof(ArgumentOutOfRangeException), "'weight' must be > 0");
             this.m_weight = weight;
         }
 

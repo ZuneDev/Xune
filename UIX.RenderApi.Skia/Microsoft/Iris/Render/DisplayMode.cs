@@ -122,12 +122,12 @@ namespace Microsoft.Iris.Render
 
         public class RenderModeComparer : IComparer<DisplayMode>
         {
-            public int Compare(DisplayMode dmA, DisplayMode dmB) => DisplayMode.CompareRenderModes(dmA, dmB);
+            public int Compare(DisplayMode dmA, DisplayMode dmB) => CompareRenderModes(dmA, dmB);
         }
 
         public class SimilarModeComparer : IComparer<DisplayMode>
         {
-            public int Compare(DisplayMode dmA, DisplayMode dmB) => DisplayMode.CompareSimilarModes(dmA, dmB);
+            public int Compare(DisplayMode dmA, DisplayMode dmB) => CompareSimilarModes(dmA, dmB);
         }
     }
 }

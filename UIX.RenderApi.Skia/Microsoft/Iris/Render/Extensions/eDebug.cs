@@ -39,7 +39,7 @@ namespace Microsoft.Iris.Render.Extensions
             this.m_stackIndentStrings = new Stack();
             this.m_dtStart = DateTime.UtcNow;
             this.m_fShowCategories = true;
-            this.m_bTraceLevelAdjustment = (byte)0;
+            this.m_bTraceLevelAdjustment = 0;
         }
 
         internal void Dispose()
@@ -56,31 +56,31 @@ namespace Microsoft.Iris.Render.Extensions
 
         public void Assert(bool fCondition)
         {
-            if (!this.Assert(fCondition, "false", 2, (StackTrace)null))
+            if (!this.Assert(fCondition, "false", 2, null))
                 return;
-            eDebug.Break();
+            Break();
         }
 
         public void Assert(bool fCondition, string stMessage)
         {
-            if (!this.Assert(fCondition, stMessage, 2, (StackTrace)null))
+            if (!this.Assert(fCondition, stMessage, 2, null))
                 return;
-            eDebug.Break();
+            Break();
         }
 
         public void Assert(bool fCondition, string stMessage, StackTrace stack)
         {
             if (!this.Assert(fCondition, stMessage, 0, stack))
                 return;
-            eDebug.Break();
+            Break();
         }
 
         public void Assert(Type type, object obj, string stMessage)
         {
             this.Prompt(type != null, "must pass a valid type", typeof(ArgumentNullException));
-            if (!this.Assert(type.IsInstanceOfType(obj), stMessage, 2, (StackTrace)null))
+            if (!this.Assert(type.IsInstanceOfType(obj), stMessage, 2, null))
                 return;
-            eDebug.Break();
+            Break();
         }
 
         private bool Assert(bool fCondition, string stMessage, int cIgnoreFrames, StackTrace stack)
@@ -92,13 +92,13 @@ namespace Microsoft.Iris.Render.Extensions
             return this.DisplayStackTrace("Iris Assert", stMessage, stack, cIgnoreFrames);
         }
 
-        public void Prompt(string stMessage) => this.Prompt(false, stMessage, (Type)null, (object)null, 1);
+        public void Prompt(string stMessage) => this.Prompt(false, stMessage, null, null, 1);
 
-        public void Prompt(string stMessage, Type type) => this.Prompt(false, stMessage, type, (object)null, 1);
+        public void Prompt(string stMessage, Type type) => this.Prompt(false, stMessage, type, null, 1);
 
-        public void Prompt(bool fCondition, string stMessage) => this.Prompt(fCondition, stMessage, (Type)null, (object)null, 1);
+        public void Prompt(bool fCondition, string stMessage) => this.Prompt(fCondition, stMessage, null, null, 1);
 
-        public void Prompt(bool fCondition, string stMessage, Type type) => this.Prompt(fCondition, stMessage, type, (object)null, 1);
+        public void Prompt(bool fCondition, string stMessage, Type type) => this.Prompt(fCondition, stMessage, type, null, 1);
 
         public void Prompt(bool fCondition, string stMessage, Type type, object objSubject) => this.Prompt(fCondition, stMessage, type, objSubject, 1);
 
@@ -113,11 +113,11 @@ namespace Microsoft.Iris.Render.Extensions
             {
                 StackTrace trace = new StackTrace(true);
                 if (this.DisplayStackTrace("Iris API Validation Error (Application error)", stMessage, trace, cIgnoreFrames + 1))
-                    eDebug.Break();
+                    Break();
                 Exception exception;
                 if (type == null)
                 {
-                    exception = (Exception)new ArgumentException(stMessage);
+                    exception = new ArgumentException(stMessage);
                 }
                 else
                 {
@@ -125,11 +125,11 @@ namespace Microsoft.Iris.Render.Extensions
                     if (objSubject != null)
                         objArray = new object[2]
                         {
-              (object) stMessage,
+               stMessage,
               objSubject
                         };
                     else
-                        objArray = new object[1] { (object)stMessage };
+                        objArray = new object[1] { stMessage };
                     exception = (Exception)Activator.CreateInstance(type, objArray);
                 }
                 throw exception;
@@ -152,7 +152,7 @@ namespace Microsoft.Iris.Render.Extensions
         {
             this.Prompt(list != null, "Must have valid list", typeof(ArgumentNullException));
             this.Prompt(typeExpected != null, "Must have valid Type", typeof(ArgumentNullException));
-            foreach (object obj in (IEnumerable)list)
+            foreach (object obj in list)
                 this.Prompt(obj != null && typeExpected.IsAssignableFrom(obj.GetType()), "List should only contain {0}.", typeExpected);
         }
 
@@ -188,14 +188,14 @@ namespace Microsoft.Iris.Render.Extensions
         {
             if (!this.IsCategoryEnabled(cat))
                 return;
-            this.WriteWorker(cat, (object)stMessage);
+            this.WriteWorker(cat, stMessage);
         }
 
         public void WriteLine(DebugCategory cat, string stMessage)
         {
             if (!this.IsCategoryEnabled(cat))
                 return;
-            this.WriteLineWorker(cat, (object)stMessage);
+            this.WriteLineWorker(cat, stMessage);
         }
 
         public bool TimedWriteLines
@@ -282,7 +282,7 @@ namespace Microsoft.Iris.Render.Extensions
             }
         }
 
-        public void Indent(DebugCategory cat) => this.Indent(cat, (byte)1);
+        public void Indent(DebugCategory cat) => this.Indent(cat, 1);
 
         public void Indent(DebugCategory cat, byte bLevel)
         {
@@ -291,7 +291,7 @@ namespace Microsoft.Iris.Render.Extensions
             this.Indent();
         }
 
-        public void Unindent(DebugCategory cat) => this.Unindent(cat, (byte)1);
+        public void Unindent(DebugCategory cat) => this.Unindent(cat, 1);
 
         public void Unindent(DebugCategory cat, byte bLevel)
         {
@@ -312,9 +312,9 @@ namespace Microsoft.Iris.Render.Extensions
             }
         }
 
-        public void OpenBrace(DebugCategory cat) => this.OpenBrace(cat, (string)null);
+        public void OpenBrace(DebugCategory cat) => this.OpenBrace(cat, null);
 
-        public void OpenBrace(DebugCategory cat, string stComment) => this.OpenBrace(cat, (byte)1, stComment);
+        public void OpenBrace(DebugCategory cat, string stComment) => this.OpenBrace(cat, 1, stComment);
 
         public void OpenBrace(DebugCategory cat, byte bLevel, string stComment)
         {
@@ -323,23 +323,23 @@ namespace Microsoft.Iris.Render.Extensions
             if (this.m_fOpenBracePending)
                 this.FlushBraces();
             if (stComment != null)
-                this.WriteLineWorker(cat, (object)stComment);
+                this.WriteLineWorker(cat, stComment);
             if (!this.m_fAlwaysShowBraces)
             {
                 this.m_fOpenBracePending = true;
                 this.m_pendingBraceCategory = cat;
-                this.m_pendingBraceComment = (string)null;
+                this.m_pendingBraceComment = null;
             }
             else
             {
-                this.WriteLineWorker(cat, (object)"{");
+                this.WriteLineWorker(cat, "{");
                 this.Indent();
             }
         }
 
-        public void DeferOpenBrace(DebugCategory cat) => this.DeferOpenBrace(cat, (string)null);
+        public void DeferOpenBrace(DebugCategory cat) => this.DeferOpenBrace(cat, null);
 
-        public void DeferOpenBrace(DebugCategory cat, string stComment) => this.DeferOpenBrace(cat, (byte)1, stComment);
+        public void DeferOpenBrace(DebugCategory cat, string stComment) => this.DeferOpenBrace(cat, 1, stComment);
 
         public void DeferOpenBrace(DebugCategory cat, byte bLevel, string stComment)
         {
@@ -363,7 +363,7 @@ namespace Microsoft.Iris.Render.Extensions
             this.m_fAlwaysShowBraces = alwaysShowBraces;
         }
 
-        public void CloseBrace(DebugCategory cat) => this.CloseBrace(cat, (byte)1);
+        public void CloseBrace(DebugCategory cat) => this.CloseBrace(cat, 1);
 
         public void CloseBrace(DebugCategory cat, byte bLevel)
         {
@@ -372,12 +372,12 @@ namespace Microsoft.Iris.Render.Extensions
             if (this.m_fOpenBracePending && cat == this.m_pendingBraceCategory)
             {
                 this.m_fOpenBracePending = false;
-                this.m_pendingBraceComment = (string)null;
+                this.m_pendingBraceComment = null;
             }
             else
             {
                 this.Unindent();
-                this.WriteLineWorker(cat, (object)"}");
+                this.WriteLineWorker(cat, "}");
             }
         }
 
@@ -440,11 +440,11 @@ namespace Microsoft.Iris.Render.Extensions
                 stringBuilder.Append("\t");
             }
             string str = stringBuilder.ToString();
-            this.OpenBrace(DebugCategory.Failure, string.Format("Assert: {0}", (object)stMessage));
-            this.WriteLine(DebugCategory.Failure, string.Format("Filename: {0}", (object)filename));
-            this.WriteLine(DebugCategory.Failure, string.Format("Line:     {0}", (object)fileLineNumber));
+            this.OpenBrace(DebugCategory.Failure, string.Format("Assert: {0}", stMessage));
+            this.WriteLine(DebugCategory.Failure, string.Format("Filename: {0}", filename));
+            this.WriteLine(DebugCategory.Failure, string.Format("Line:     {0}", fileLineNumber));
             this.OpenBrace(DebugCategory.Failure, string.Format("Stack trace:"));
-            this.WriteLine(DebugCategory.Failure, string.Format("Frame\tFile Name\tMethod Name\tAssembly", (object)fileLineNumber));
+            this.WriteLine(DebugCategory.Failure, string.Format("Frame\tFile Name\tMethod Name\tAssembly", fileLineNumber));
             this.WriteLine(DebugCategory.Failure, str);
             this.CloseBrace(DebugCategory.Failure);
             this.CloseBrace(DebugCategory.Failure);
@@ -455,7 +455,7 @@ namespace Microsoft.Iris.Render.Extensions
 
         private void WriteWorker(DebugCategory cat, object oValue)
         {
-            string str1 = (string)null;
+            string str1 = null;
             if (oValue != null)
                 str1 = oValue.ToString();
             this.m_stPendingWrite += str1;
@@ -469,15 +469,15 @@ namespace Microsoft.Iris.Render.Extensions
             {
                 string str2 = this.m_stPendingWrite.Substring(0, length1);
                 string str3 = this.m_stPendingWrite.Substring(length1 + 1, length2);
-                this.m_stPendingWrite = (string)null;
-                this.WriteLineWorker(cat, (object)str2);
+                this.m_stPendingWrite = null;
+                this.WriteLineWorker(cat, str2);
                 this.m_stPendingWrite = str3;
             }
             else
             {
                 string str2 = this.m_stPendingWrite.Substring(0, this.m_stPendingWrite.Length - 1);
-                this.m_stPendingWrite = (string)null;
-                this.WriteLineWorker(cat, (object)str2);
+                this.m_stPendingWrite = null;
+                this.WriteLineWorker(cat, str2);
             }
         }
 
@@ -485,10 +485,10 @@ namespace Microsoft.Iris.Render.Extensions
         {
             if (this.m_fOpenBracePending)
                 this.FlushBraces();
-            string str1 = (string)null;
+            string str1 = null;
             if (this.ShowCategories)
             {
-                str1 = string.Format("[{0}] ", (object)cat);
+                str1 = string.Format("[{0}] ", cat);
                 int length = str1.Length;
                 if (this.m_nMaxCategoryLength > length)
                     str1 = str1.PadLeft(this.m_nMaxCategoryLength);
@@ -496,19 +496,19 @@ namespace Microsoft.Iris.Render.Extensions
                     this.m_nMaxCategoryLength = length;
             }
             string str2 = this.m_stPendingWrite + oValue;
-            this.m_stPendingWrite = (string)null;
+            this.m_stPendingWrite = null;
             string str3 = str2;
             char[] chArray = new char[1] { '\n' };
             foreach (string str4 in str3.Split(chArray))
             {
                 string lpOutputString = this.WriteLinePrefix + str1 + this.CurrentIndentString + str4 + "\n";
                 if (this.TimedWriteLines)
-                    lpOutputString = this.PrefixCurrentTime((object)lpOutputString);
+                    lpOutputString = this.PrefixCurrentTime(lpOutputString);
                 Win32Api.OutputDebugString(lpOutputString);
             }
         }
 
-        private void Indent() => this.m_stackIndentStrings.Push((object)(this.CurrentIndentString + this.m_stIndent));
+        private void Indent() => this.m_stackIndentStrings.Push(this.CurrentIndentString + this.m_stIndent);
 
         private void Unindent()
         {

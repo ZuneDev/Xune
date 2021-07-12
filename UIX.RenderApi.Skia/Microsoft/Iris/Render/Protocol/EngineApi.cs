@@ -223,12 +223,12 @@ namespace Microsoft.Iris.Render.Protocol
                 Debug2.Validate(idContextNew != ContextID.NULL, typeof(ArgumentNullException), nameof(idContextNew));
                 this.cbSize = (uint)Marshal.SizeOf(typeof(EngineApi.InitArgs));
                 this.idContext = idContextNew;
-                this.cItemsPerGroupBits = (int)layout.numberOfObjectBits;
-                this.cGroupBits = (int)layout.numberOfGroupBits;
+                this.cItemsPerGroupBits = layout.numberOfObjectBits;
+                this.cGroupBits = layout.numberOfGroupBits;
                 this.pfnProcessBuffer = IntPtr.Zero;
                 this.pvProcessData = IntPtr.Zero;
                 this.idObjectBrokerClass = RENDERHANDLE.FromUInt32(0U);
-                this.pfnTimeout = (EngineApi.TimeoutEventHandler)null;
+                this.pfnTimeout = null;
                 this.pvTimeoutData = IntPtr.Zero;
                 this.nTimeOutSec = 0U;
             }
@@ -242,7 +242,7 @@ namespace Microsoft.Iris.Render.Protocol
                 if (pfnProcessBufferProc == null)
                     return;
                 IntPtr num;
-                EngineApi.IFC(EngineApi.SpWrapBufferProc(pfnProcessBufferProc, &num));
+                IFC(SpWrapBufferProc(pfnProcessBufferProc, &num));
                 this.pfnProcessBuffer = num;
             }
         }

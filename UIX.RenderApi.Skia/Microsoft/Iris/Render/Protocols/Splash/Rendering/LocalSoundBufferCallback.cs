@@ -35,7 +35,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 
         public override int GetHashCode() => base.GetHashCode();
 
-        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(LocalSoundBufferCallback.DispatchCallback), out uint _);
+        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
 
         private static unsafe void DispatchCallback(
           RenderPort port,
@@ -47,10 +47,10 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             switch (message->nMsg)
             {
                 case 0:
-                    LocalSoundBufferCallback.Dispatch_OnSoundBufferReady(port, _priv_target, (LocalSoundBufferCallback.Msg0_OnSoundBufferReady*)message);
+                    Dispatch_OnSoundBufferReady(port, _priv_target, (LocalSoundBufferCallback.Msg0_OnSoundBufferReady*)message);
                     break;
                 case 1:
-                    LocalSoundBufferCallback.Dispatch_OnSoundBufferLost(port, _priv_target, (LocalSoundBufferCallback.Msg1_OnSoundBufferLost*)message);
+                    Dispatch_OnSoundBufferLost(port, _priv_target, (LocalSoundBufferCallback.Msg1_OnSoundBufferLost*)message);
                     break;
             }
         }
@@ -61,7 +61,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           LocalSoundBufferCallback.Msg0_OnSoundBufferReady* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalSoundBufferCallback.s_priv_ByteOrder_Msg0_OnSoundBufferReady, typeof(LocalSoundBufferCallback.Msg0_OnSoundBufferReady), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg0_OnSoundBufferReady, typeof(LocalSoundBufferCallback.Msg0_OnSoundBufferReady), sizeof(CallbackMessage), 0);
             RENDERHANDLE idTarget = _priv_pmsg->idTarget;
             _priv_target.OnSoundBufferReady(idTarget);
         }
@@ -72,7 +72,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           LocalSoundBufferCallback.Msg1_OnSoundBufferLost* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalSoundBufferCallback.s_priv_ByteOrder_Msg1_OnSoundBufferLost, typeof(LocalSoundBufferCallback.Msg1_OnSoundBufferLost), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg1_OnSoundBufferLost, typeof(LocalSoundBufferCallback.Msg1_OnSoundBufferLost), sizeof(CallbackMessage), 0);
             RENDERHANDLE idTarget = _priv_pmsg->idTarget;
             _priv_target.OnSoundBufferLost(idTarget);
         }

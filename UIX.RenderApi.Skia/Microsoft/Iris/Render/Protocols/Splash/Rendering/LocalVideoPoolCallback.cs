@@ -35,7 +35,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 
         public override int GetHashCode() => base.GetHashCode();
 
-        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(LocalVideoPoolCallback.DispatchCallback), out uint _);
+        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
 
         private static unsafe void DispatchCallback(
           RenderPort port,
@@ -47,10 +47,10 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             switch (message->nMsg)
             {
                 case 0:
-                    LocalVideoPoolCallback.Dispatch_OnInvalidate(port, _priv_target, (LocalVideoPoolCallback.Msg0_OnInvalidate*)message);
+                    Dispatch_OnInvalidate(port, _priv_target, (LocalVideoPoolCallback.Msg0_OnInvalidate*)message);
                     break;
                 case 1:
-                    LocalVideoPoolCallback.Dispatch_OnInputChanged(port, _priv_target, (LocalVideoPoolCallback.Msg1_OnInputChanged*)message);
+                    Dispatch_OnInputChanged(port, _priv_target, (LocalVideoPoolCallback.Msg1_OnInputChanged*)message);
                     break;
             }
         }
@@ -61,7 +61,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           LocalVideoPoolCallback.Msg0_OnInvalidate* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalVideoPoolCallback.s_priv_ByteOrder_Msg0_OnInvalidate, typeof(LocalVideoPoolCallback.Msg0_OnInvalidate), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg0_OnInvalidate, typeof(LocalVideoPoolCallback.Msg0_OnInvalidate), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnInvalidate(target);
         }
@@ -72,7 +72,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           LocalVideoPoolCallback.Msg1_OnInputChanged* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalVideoPoolCallback.s_priv_ByteOrder_Msg1_OnInputChanged, typeof(LocalVideoPoolCallback.Msg1_OnInputChanged), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg1_OnInputChanged, typeof(LocalVideoPoolCallback.Msg1_OnInputChanged), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             Size sizeTargetPxl = _priv_pmsg->sizeTargetPxl;
             Size sizeAspectRatioPxl = _priv_pmsg->sizeAspectRatioPxl;

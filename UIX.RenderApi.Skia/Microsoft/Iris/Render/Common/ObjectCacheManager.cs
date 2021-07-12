@@ -43,7 +43,7 @@ namespace Microsoft.Iris.Render.Common
         {
             if (this.m_fPendingUpdateCache || this.m_listCaches.Count <= 0)
                 return;
-            this.m_sesion.DeferredInvoke((Delegate)this.m_cbUpdateCache, (object)null, DeferredInvokePriority.Idle, new TimeSpan(0, 0, 5));
+            this.m_sesion.DeferredInvoke(m_cbUpdateCache, null, DeferredInvokePriority.Idle, new TimeSpan(0, 0, 5));
             this.m_fPendingUpdateCache = true;
         }
     }

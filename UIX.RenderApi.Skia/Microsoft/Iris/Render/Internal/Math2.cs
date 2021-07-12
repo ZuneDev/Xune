@@ -8,7 +8,7 @@ namespace Microsoft.Iris.Render.Internal
 {
     internal class Math2
     {
-        public static int FindPowerOf2(int nValue) => Math2.FindPowerOf2(nValue, 1);
+        public static int FindPowerOf2(int nValue) => FindPowerOf2(nValue, 1);
 
         public static int FindPowerOf2(int nValue, int nStart)
         {
@@ -18,7 +18,7 @@ namespace Microsoft.Iris.Render.Internal
             return num;
         }
 
-        public static int RoundUp(float flValue) => (int)((double)flValue + 0.5);
+        public static int RoundUp(float flValue) => (int)(flValue + 0.5);
 
         public static int Clamp(int nValue, int nMin, int nMax)
         {
@@ -29,15 +29,15 @@ namespace Microsoft.Iris.Render.Internal
 
         public static float Clamp(float flValue, float flMin, float flMax)
         {
-            if ((double)flValue < (double)flMin)
+            if (flValue < (double)flMin)
                 return flMin;
-            return (double)flValue > (double)flMax ? flMax : flValue;
+            return flValue > (double)flMax ? flMax : flValue;
         }
 
         public static bool WithinEpsilon(float flValue1, float flValue2)
         {
             float num = flValue1 - flValue2;
-            return -9.99999974737875E-06 <= (double)num && (double)num <= 9.99999974737875E-06;
+            return -9.99999974737875E-06 <= num && num <= 9.99999974737875E-06;
         }
     }
 }

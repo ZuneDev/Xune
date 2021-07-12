@@ -38,10 +38,10 @@ namespace Microsoft.Iris.Render.Graphics
         private Vector3 m_vecPosition;
         private Vector2 m_vecSize;
         private BitVector32 m_bvDataBits;
-        private static BitVector32.Section s_bvsMouse = BitVector32.CreateSection((short)15);
-        private static BitVector32.Section s_bvsDebug = BitVector32.CreateSection((short)3, Visual.s_bvsMouse);
-        private static BitVector32.Section s_bvsValid = BitVector32.CreateSection((short)1, Visual.s_bvsDebug);
-        private static BitVector32.Section s_bvsVisible = BitVector32.CreateSection((short)1, Visual.s_bvsValid);
+        private static BitVector32.Section s_bvsMouse = BitVector32.CreateSection(15);
+        private static BitVector32.Section s_bvsDebug = BitVector32.CreateSection(3, s_bvsMouse);
+        private static BitVector32.Section s_bvsValid = BitVector32.CreateSection(1, s_bvsDebug);
+        private static BitVector32.Section s_bvsVisible = BitVector32.CreateSection(1, s_bvsValid);
         private static BitVector32.Section s_bvsAlpha;
         private static BitVector32.Section s_bvsCenterPointScale;
         private static BitVector32.Section s_bvsColor;
@@ -50,7 +50,7 @@ namespace Microsoft.Iris.Render.Graphics
         private static BitVector32.Section s_bvsLayer;
         private static BitVector32.Section s_bvsRotation;
         private static BitVector32.Section s_bvsScale;
-        private static BitVector32.Section s_bvsFlush = BitVector32.CreateSection((short)1, Visual.s_bvsVisible);
+        private static BitVector32.Section s_bvsFlush = BitVector32.CreateSection(1, s_bvsVisible);
         private static BitVector32.Section s_bvsRelativeSize;
         private static BitVector32.Section s_bvsCamera;
         private static BitVector32.Section s_bvsNineGrid;
@@ -59,32 +59,32 @@ namespace Microsoft.Iris.Render.Graphics
 
         static Visual()
         {
-            Visual.s_bvsAlpha = BitVector32.CreateSection((short)1, Visual.s_bvsFlush);
-            Visual.s_bvsCenterPointScale = BitVector32.CreateSection((short)1, Visual.s_bvsAlpha);
-            Visual.s_bvsColor = BitVector32.CreateSection((short)1, Visual.s_bvsCenterPointScale);
-            Visual.s_bvsCoordmap = BitVector32.CreateSection((short)1, Visual.s_bvsColor);
-            Visual.s_bvsGradient = BitVector32.CreateSection((short)1, Visual.s_bvsCoordmap);
-            Visual.s_bvsLayer = BitVector32.CreateSection((short)1, Visual.s_bvsGradient);
-            Visual.s_bvsRotation = BitVector32.CreateSection((short)1, Visual.s_bvsLayer);
-            Visual.s_bvsScale = BitVector32.CreateSection((short)1, Visual.s_bvsRotation);
-            Visual.s_bvsRelativeSize = BitVector32.CreateSection((short)1, Visual.s_bvsScale);
-            Visual.s_bvsCamera = BitVector32.CreateSection((short)1, Visual.s_bvsRelativeSize);
-            Visual.s_bvsNineGrid = BitVector32.CreateSection((short)1, Visual.s_bvsCamera);
-            Visual.s_sectionPropIDMap = new BitVector32.Section[10];
-            Visual.s_sectionPropIDMap[0] = Visual.s_bvsAlpha;
-            Visual.s_sectionPropIDMap[1] = Visual.s_bvsScale;
-            Visual.s_sectionPropIDMap[2] = Visual.s_bvsRotation;
-            Visual.s_sectionPropIDMap[3] = Visual.s_bvsCenterPointScale;
-            Visual.s_sectionPropIDMap[4] = Visual.s_bvsLayer;
-            Visual.s_sectionPropIDMap[5] = Visual.s_bvsColor;
-            Visual.s_sectionPropIDMap[6] = Visual.s_bvsCoordmap;
-            Visual.s_sectionPropIDMap[7] = Visual.s_bvsGradient;
-            Visual.s_sectionPropIDMap[8] = Visual.s_bvsCamera;
-            Visual.s_sectionPropIDMap[9] = Visual.s_bvsNineGrid;
+            s_bvsAlpha = BitVector32.CreateSection(1, s_bvsFlush);
+            s_bvsCenterPointScale = BitVector32.CreateSection(1, s_bvsAlpha);
+            s_bvsColor = BitVector32.CreateSection(1, s_bvsCenterPointScale);
+            s_bvsCoordmap = BitVector32.CreateSection(1, s_bvsColor);
+            s_bvsGradient = BitVector32.CreateSection(1, s_bvsCoordmap);
+            s_bvsLayer = BitVector32.CreateSection(1, s_bvsGradient);
+            s_bvsRotation = BitVector32.CreateSection(1, s_bvsLayer);
+            s_bvsScale = BitVector32.CreateSection(1, s_bvsRotation);
+            s_bvsRelativeSize = BitVector32.CreateSection(1, s_bvsScale);
+            s_bvsCamera = BitVector32.CreateSection(1, s_bvsRelativeSize);
+            s_bvsNineGrid = BitVector32.CreateSection(1, s_bvsCamera);
+            s_sectionPropIDMap = new BitVector32.Section[10];
+            s_sectionPropIDMap[0] = s_bvsAlpha;
+            s_sectionPropIDMap[1] = s_bvsScale;
+            s_sectionPropIDMap[2] = s_bvsRotation;
+            s_sectionPropIDMap[3] = s_bvsCenterPointScale;
+            s_sectionPropIDMap[4] = s_bvsLayer;
+            s_sectionPropIDMap[5] = s_bvsColor;
+            s_sectionPropIDMap[6] = s_bvsCoordmap;
+            s_sectionPropIDMap[7] = s_bvsGradient;
+            s_sectionPropIDMap[8] = s_bvsCamera;
+            s_sectionPropIDMap[9] = s_bvsNineGrid;
         }
 
         internal Visual(RenderSession session, RenderWindow window, object objOwnerData)
-          : base((ITreeOwner)window)
+          : base(window)
         {
             Debug2.Validate(session != null, typeof(ArgumentNullException), "Must have valid session");
             Debug2.Validate(window != null, typeof(ArgumentNullException), "Must have valid render window");
@@ -114,8 +114,8 @@ namespace Microsoft.Iris.Render.Graphics
                     if (this.m_remoteVisual != null)
                         this.m_remoteVisual.Dispose();
                 }
-                this.m_remoteVisual = (RemoteVisual)null;
-                this.m_objOwnerData = (object)null;
+                this.m_remoteVisual = null;
+                this.m_objOwnerData = null;
             }
             finally
             {
@@ -163,7 +163,7 @@ namespace Microsoft.Iris.Render.Graphics
         protected void AddGradient(Gradient gradient)
         {
             Vector<Gradient> result;
-            if (this.IsDynamicValueSet(Visual.PropId.Gradients))
+            if (this.IsDynamicValueSet(PropId.Gradients))
             {
                 this.PropertyManager.GetGradientProp(this, out result);
             }
@@ -172,20 +172,20 @@ namespace Microsoft.Iris.Render.Graphics
                 result = new Vector<Gradient>();
                 this.PropertyManager.SetGradientProp(this, result);
             }
-            gradient.RegisterUsage((object)this);
+            gradient.RegisterUsage(this);
             result.Add(gradient);
             this.m_remoteVisual.SendAddGradient(gradient.RemoteGradient);
         }
 
         protected void RemoveAllGradients()
         {
-            if (!this.IsDynamicValueSet(Visual.PropId.Gradients))
+            if (!this.IsDynamicValueSet(PropId.Gradients))
                 return;
             Vector<Gradient> result;
             this.PropertyManager.GetGradientProp(this, out result);
             this.PropertyManager.RemoveGradientProp(this);
             foreach (SharedRenderObject sharedRenderObject in result)
-                sharedRenderObject.UnregisterUsage((object)this);
+                sharedRenderObject.UnregisterUsage(this);
             result.Clear();
             this.m_remoteVisual.SendClearGradients();
         }
@@ -196,25 +196,25 @@ namespace Microsoft.Iris.Render.Graphics
             RemoteVisual remoteVisual2 = this.m_remoteVisual;
             RemoteVisual remoteVisual3 = visualSibling?.m_remoteVisual;
             remoteVisual2.SendChangeParent(remoteVisual1, remoteVisual3, nOrder);
-            this.ChangeParent((TreeNode)visualParent);
+            this.ChangeParent(visualParent);
         }
 
         internal override void RemoveAllChildren()
         {
             for (Visual firstChild = (Visual)this.FirstChild; firstChild != null; firstChild = (Visual)this.FirstChild)
-                firstChild.ChangeParent((Visual)null, (Visual)null, VisualOrder.First);
+                firstChild.ChangeParent(null, null, VisualOrder.First);
             base.RemoveAllChildren();
         }
 
         protected void RemoveFromTree()
         {
             this.RemoveAllChildren();
-            this.ChangeParent((Visual)null, (Visual)null, VisualOrder.First);
+            this.ChangeParent(null, null, VisualOrder.First);
         }
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteVisual.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteVisual = (RemoteVisual)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteVisual = null;
 
         internal RemoteVisual RemoteStub => this.m_remoteVisual;
 
@@ -248,7 +248,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         internal void SetSize(Vector2 value, bool force)
         {
-            Debug2.Validate((double)value.X >= 0.0 && (double)value.Y >= 0.0, typeof(ArgumentOutOfRangeException), "Negative size not allowed");
+            Debug2.Validate(value.X >= 0.0 && value.Y >= 0.0, typeof(ArgumentOutOfRangeException), "Negative size not allowed");
             if (!(this.m_vecSize != value) && !force)
                 return;
             this.m_vecSize = value;
@@ -262,7 +262,7 @@ namespace Microsoft.Iris.Render.Graphics
             get
             {
                 float result = 1f;
-                if (this.IsDynamicValueSet(Visual.PropId.Alpha))
+                if (this.IsDynamicValueSet(PropId.Alpha))
                 {
                     this.PropertyManager.GetAlphaProp(this, out result);
                     Debug2.Validate(!Math2.WithinEpsilon(result, 1f), typeof(InvalidOperationException), "expected non-opaque alpha if HasAlpha flag was set");
@@ -274,9 +274,9 @@ namespace Microsoft.Iris.Render.Graphics
 
         protected void SetAlpha(float value, bool force)
         {
-            if ((double)this.Alpha == (double)value && !force)
+            if (Alpha == (double)value && !force)
                 return;
-            Debug2.Validate((double)value >= 0.0 && (double)value <= 1.0, typeof(ArgumentOutOfRangeException), "Alpha value must be within 0-1 range (incl)");
+            Debug2.Validate(value >= 0.0 && value <= 1.0, typeof(ArgumentOutOfRangeException), "Alpha value must be within 0-1 range (incl)");
             this.PropertyManager.SetAlphaProp(this, value);
             if (!this.FlushValues)
                 return;
@@ -288,7 +288,7 @@ namespace Microsoft.Iris.Render.Graphics
             get
             {
                 Vector3 result = Vector3.UnitVector;
-                if (this.IsDynamicValueSet(Visual.PropId.Scale))
+                if (this.IsDynamicValueSet(PropId.Scale))
                 {
                     this.PropertyManager.GetScaleProp(this, out result);
                     Debug2.Validate(result != Vector3.UnitVector, typeof(InvalidOperationException), "expected non-unit scale if HasScale flag was set");
@@ -313,7 +313,7 @@ namespace Microsoft.Iris.Render.Graphics
             get
             {
                 AxisAngle result = AxisAngle.Identity;
-                if (this.IsDynamicValueSet(Visual.PropId.Rotation))
+                if (this.IsDynamicValueSet(PropId.Rotation))
                 {
                     this.PropertyManager.GetRotationProp(this, out result);
                     Debug2.Validate(result != AxisAngle.Identity, typeof(InvalidOperationException), "expected non-null rotation data if HasRotation flag was set");
@@ -329,7 +329,7 @@ namespace Microsoft.Iris.Render.Graphics
                 return;
             this.PropertyManager.SetRotationProp(this, value);
             AxisAngle aaRotation = value;
-            if (this.m_window.IsRightToLeft && (double)aaRotation.Axis.Y <= 0.0 && (double)aaRotation.Axis.X <= 0.0)
+            if (this.m_window.IsRightToLeft && aaRotation.Axis.Y <= 0.0 && aaRotation.Axis.X <= 0.0)
                 aaRotation.Angle = -aaRotation.Angle;
             if (!this.FlushValues)
                 return;
@@ -341,7 +341,7 @@ namespace Microsoft.Iris.Render.Graphics
             get
             {
                 Vector3 result = Vector3.Zero;
-                if (this.IsDynamicValueSet(Visual.PropId.CenterPointScale))
+                if (this.IsDynamicValueSet(PropId.CenterPointScale))
                 {
                     this.PropertyManager.GetCenterPointScaleProp(this, out result);
                     Debug2.Validate(result != Vector3.Zero, typeof(InvalidOperationException), "expected non-unit scale if HasCenterPointScale flag was set");
@@ -366,7 +366,7 @@ namespace Microsoft.Iris.Render.Graphics
             get
             {
                 uint result = 0;
-                if (this.IsDynamicValueSet(Visual.PropId.Layer))
+                if (this.IsDynamicValueSet(PropId.Layer))
                 {
                     this.PropertyManager.GetLayerProp(this, out result);
                     Debug2.Validate(result != 0U, typeof(InvalidOperationException), "expected non-zero layer if HasLayer flag was set");
@@ -400,13 +400,13 @@ namespace Microsoft.Iris.Render.Graphics
 
         protected bool RelativeSize
         {
-            get => this.m_bvDataBits[Visual.s_bvsRelativeSize] != 0;
+            get => this.m_bvDataBits[s_bvsRelativeSize] != 0;
             set
             {
                 int num = value ? 1 : 0;
-                if (this.m_bvDataBits[Visual.s_bvsRelativeSize] == num)
+                if (this.m_bvDataBits[s_bvsRelativeSize] == num)
                     return;
-                this.m_bvDataBits[Visual.s_bvsRelativeSize] = num;
+                this.m_bvDataBits[s_bvsRelativeSize] = num;
                 this.m_remoteVisual.SendSetRelativeSize(value);
             }
         }
@@ -415,32 +415,32 @@ namespace Microsoft.Iris.Render.Graphics
 
         public MouseOptions MouseOptions
         {
-            get => (MouseOptions)this.m_bvDataBits[Visual.s_bvsMouse];
+            get => (MouseOptions)this.m_bvDataBits[s_bvsMouse];
             set
             {
                 Debug2.Validate((value & ~MouseOptions.ValidMask) == MouseOptions.None, typeof(ArgumentException), "Expected valid mouse bits");
-                uint nMask = (uint)this.m_bvDataBits[Visual.s_bvsMouse] ^ (uint)(short)value;
+                uint nMask = (uint)this.m_bvDataBits[s_bvsMouse] ^ (uint)(short)value;
                 if (nMask != 0U && this.FlushValues)
                     this.m_remoteVisual.SendChangeDataBits((uint)value, nMask);
-                this.m_bvDataBits[Visual.s_bvsMouse] = (int)(short)value;
+                this.m_bvDataBits[s_bvsMouse] = (short)value;
             }
         }
 
         internal Visual.DebugBits DebugOptions
         {
-            get => (Visual.DebugBits)this.m_bvDataBits[Visual.s_bvsDebug];
+            get => (Visual.DebugBits)this.m_bvDataBits[s_bvsDebug];
             set
             {
-                Debug2.Validate((value & ~Visual.DebugBits.Dump) == Visual.DebugBits.None, typeof(ArgumentException), "Expected valid debug bits");
-                Debug2.Validate((uint)value < (uint)byte.MaxValue, typeof(ArgumentException), "Expected valid debug bits");
-                uint nMask = (uint)((Visual.DebugBits)this.m_bvDataBits[Visual.s_bvsDebug] ^ value);
+                Debug2.Validate((value & ~DebugBits.Dump) == DebugBits.None, typeof(ArgumentException), "Expected valid debug bits");
+                Debug2.Validate((uint)value < byte.MaxValue, typeof(ArgumentException), "Expected valid debug bits");
+                uint nMask = (uint)((Visual.DebugBits)this.m_bvDataBits[s_bvsDebug] ^ value);
                 if (nMask != 0U)
                 {
                     uint nValue = (uint)value << 5;
                     if (this.m_remoteVisual.IsValid)
                         this.m_remoteVisual.SendChangeDataBits(nValue, nMask);
                 }
-                this.m_bvDataBits[Visual.s_bvsDebug] = (int)value;
+                this.m_bvDataBits[s_bvsDebug] = (int)value;
             }
         }
 
@@ -448,42 +448,42 @@ namespace Microsoft.Iris.Render.Graphics
 
         internal ColorF DEBUG_OutlineColor
         {
-            get => Visual.s_colorTransparent;
+            get => s_colorTransparent;
             set
             {
             }
         }
 
-        private bool GetValid() => this.m_bvDataBits[Visual.s_bvsValid] != 0;
+        private bool GetValid() => this.m_bvDataBits[s_bvsValid] != 0;
 
-        private void SetValid(bool fValid) => this.m_bvDataBits[Visual.s_bvsValid] = fValid ? 1 : 0;
+        private void SetValid(bool fValid) => this.m_bvDataBits[s_bvsValid] = fValid ? 1 : 0;
 
-        private bool GetVisible() => this.m_bvDataBits[Visual.s_bvsVisible] != 0;
+        private bool GetVisible() => this.m_bvDataBits[s_bvsVisible] != 0;
 
-        private void SetVisible(bool fVisible) => this.m_bvDataBits[Visual.s_bvsVisible] = fVisible ? 1 : 0;
+        private void SetVisible(bool fVisible) => this.m_bvDataBits[s_bvsVisible] = fVisible ? 1 : 0;
 
         internal bool IsDynamicValueSet(Visual.PropId propid)
         {
-            Debug2.Validate(propid < Visual.PropId.MaxDynamicProp, typeof(InvalidOperationException), "Cannot call dynvalue on this propid");
-            return this.m_bvDataBits[Visual.s_sectionPropIDMap[(int)propid]] != 0;
+            Debug2.Validate(propid < PropId.MaxDynamicProp, typeof(InvalidOperationException), "Cannot call dynvalue on this propid");
+            return this.m_bvDataBits[s_sectionPropIDMap[(int)propid]] != 0;
         }
 
         internal void SetDynamicValueSet(Visual.PropId propid, bool fValue)
         {
-            Debug2.Validate(propid < Visual.PropId.MaxDynamicProp, typeof(InvalidOperationException), "Cannot call dynvalue on this propid");
-            this.m_bvDataBits[Visual.s_sectionPropIDMap[(int)propid]] = fValue ? 1 : 0;
+            Debug2.Validate(propid < PropId.MaxDynamicProp, typeof(InvalidOperationException), "Cannot call dynvalue on this propid");
+            this.m_bvDataBits[s_sectionPropIDMap[(int)propid]] = fValue ? 1 : 0;
         }
 
         internal bool IsPropFlagSet(Visual.PropId propid)
         {
-            Debug2.Validate(propid >= Visual.PropId.MaxDynamicProp && propid < Visual.PropId.MaxFlagProp, typeof(InvalidOperationException), "Cannot call IsPropFlagSet on this propid");
-            return this.m_bvDataBits[Visual.s_sectionPropIDMap[(int)propid]] != 0;
+            Debug2.Validate(propid >= PropId.MaxDynamicProp && propid < PropId.MaxFlagProp, typeof(InvalidOperationException), "Cannot call IsPropFlagSet on this propid");
+            return this.m_bvDataBits[s_sectionPropIDMap[(int)propid]] != 0;
         }
 
         internal void SetPropFlag(Visual.PropId propid, bool fValue)
         {
-            Debug2.Validate(propid >= Visual.PropId.MaxDynamicProp && propid < Visual.PropId.MaxFlagProp, typeof(InvalidOperationException), "Cannot call SetPropFlag on this propid");
-            this.m_bvDataBits[Visual.s_sectionPropIDMap[(int)propid]] = fValue ? 1 : 0;
+            Debug2.Validate(propid >= PropId.MaxDynamicProp && propid < PropId.MaxFlagProp, typeof(InvalidOperationException), "Cannot call SetPropFlag on this propid");
+            this.m_bvDataBits[s_sectionPropIDMap[(int)propid]] = fValue ? 1 : 0;
         }
 
         internal override void Reset()
@@ -500,7 +500,7 @@ namespace Microsoft.Iris.Render.Graphics
             this.Rotation = AxisAngle.Identity;
             this.Visible = true;
             this.CenterPointScale = Vector3.Zero;
-            this.OwnerData = (object)null;
+            this.OwnerData = null;
             this.MouseOptions = MouseOptions.None;
             this.FlushValues = flushValues;
             this.m_remoteVisual.SendReset();
@@ -508,23 +508,23 @@ namespace Microsoft.Iris.Render.Graphics
 
         private bool FlushValues
         {
-            get => this.m_bvDataBits[Visual.s_bvsFlush] != 0;
-            set => this.m_bvDataBits[Visual.s_bvsFlush] = value ? 1 : 0;
+            get => this.m_bvDataBits[s_bvsFlush] != 0;
+            set => this.m_bvDataBits[s_bvsFlush] = value ? 1 : 0;
         }
 
         RENDERHANDLE IAnimatableObject.GetObjectId() => ((IRenderHandleOwner)this).RenderHandle;
 
         uint IAnimatableObject.GetPropertyId(string propertyName)
         {
-            if (propertyName == Visual.PositionProperty)
+            if (propertyName == PositionProperty)
                 return 1;
-            if (propertyName == Visual.AlphaProperty)
+            if (propertyName == AlphaProperty)
                 return 2;
-            if (propertyName == Visual.RotationProperty || propertyName == Visual.OrientationProperty)
+            if (propertyName == RotationProperty || propertyName == OrientationProperty)
                 return 3;
-            if (propertyName == Visual.ScaleProperty)
+            if (propertyName == ScaleProperty)
                 return 4;
-            if (propertyName == Visual.SizeProperty)
+            if (propertyName == SizeProperty)
                 return 5;
             Debug2.Validate(false, typeof(ArgumentException), "Unsupported property");
             return 0;
@@ -533,17 +533,17 @@ namespace Microsoft.Iris.Render.Graphics
         AnimationInputType IAnimatableObject.GetPropertyType(
           string propertyName)
         {
-            if (propertyName == Visual.PositionProperty)
+            if (propertyName == PositionProperty)
                 return AnimationInputType.Vector3;
-            if (propertyName == Visual.AlphaProperty)
+            if (propertyName == AlphaProperty)
                 return AnimationInputType.Float;
-            if (propertyName == Visual.RotationProperty)
+            if (propertyName == RotationProperty)
                 return AnimationInputType.Vector4;
-            if (propertyName == Visual.OrientationProperty)
+            if (propertyName == OrientationProperty)
                 return AnimationInputType.Quaternion;
-            if (propertyName == Visual.ScaleProperty)
+            if (propertyName == ScaleProperty)
                 return AnimationInputType.Vector3;
-            if (propertyName == Visual.SizeProperty)
+            if (propertyName == SizeProperty)
                 return AnimationInputType.Vector2;
             Debug2.Validate(false, typeof(ArgumentException), "Unsupported property");
             return AnimationInputType.Float;

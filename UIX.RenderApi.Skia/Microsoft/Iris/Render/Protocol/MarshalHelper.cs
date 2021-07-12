@@ -22,12 +22,12 @@ namespace Microsoft.Iris.Render.Protocol
           out string param)
         {
             uint uint32 = BLOBREF.ToUInt32(refParam);
-            uint num1 = uint32 & (uint)ushort.MaxValue;
+            uint num1 = uint32 & ushort.MaxValue;
             uint num2 = (uint32 & 4294901760U) >> 16;
             byte* numPtr = (byte*)((IntPtr)pmsg + (int)num1);
             int length = (int)num2 - 2;
             byte[] numArray = new byte[length];
-            Marshal.Copy(new IntPtr((void*)numPtr), numArray, 0, length);
+            Marshal.Copy(new IntPtr(numPtr), numArray, 0, length);
             Encoding encoding = Encoding.Unicode;
             if (port.AlwaysBigEndian)
                 encoding = Encoding.BigEndianUnicode;
@@ -41,21 +41,21 @@ namespace Microsoft.Iris.Render.Protocol
           out Message* pmsgInner)
         {
             byte* numPtr = (byte*)pmsgOuter;
-            uint num = (uint)ushort.MaxValue & BLOBREF.ToUInt32(refMsgInner);
+            uint num = ushort.MaxValue & BLOBREF.ToUInt32(refMsgInner);
             pmsgInner = (Message*)(numPtr + (int)num);
         }
 
         private static ushort[] ComputeByteOrderMap(Type targetType, bool fCompact)
         {
             ushort[] fieldMap = new ushort[10];
-            MarshalHelper.ComputeByteOrderMapWorker(ref fieldMap, targetType, 0);
+            ComputeByteOrderMapWorker(ref fieldMap, targetType, 0);
             if (fCompact)
             {
-                int length = (int)fieldMap[0] + 1;
+                int length = fieldMap[0] + 1;
                 if (fieldMap.Length > length)
                 {
                     ushort[] numArray = new ushort[length];
-                    Array.Copy((Array)fieldMap, (Array)numArray, length);
+                    Array.Copy(fieldMap, numArray, length);
                     fieldMap = numArray;
                 }
             }
@@ -70,20 +70,20 @@ namespace Microsoft.Iris.Render.Protocol
           int stopOffset)
         {
             if (fieldMapByRef == null)
-                fieldMapByRef = MarshalHelper.ComputeByteOrderMap(type, true);
+                fieldMapByRef = ComputeByteOrderMap(type, true);
             ushort[] numArray = fieldMapByRef;
             if (stopOffset <= 0)
                 stopOffset = int.MaxValue;
-            int num1 = (int)numArray[0] + 1;
+            int num1 = numArray[0] + 1;
             for (int index1 = 1; index1 < num1; ++index1)
             {
                 ushort num2 = numArray[index1];
-                int num3 = (int)num2 >> 2;
+                int num3 = num2 >> 2;
                 if (num3 >= startOffset)
                 {
                     if (num3 >= stopOffset)
                         break;
-                    int num4 = 1 << ((int)num2 & 3);
+                    int num4 = 1 << (num2 & 3);
                     byte* numPtr = pMem + num3;
                     int num5 = num4 / 2;
                     for (int index2 = 0; index2 < num5; ++index2)
@@ -97,11 +97,11 @@ namespace Microsoft.Iris.Render.Protocol
             }
         }
 
-        public static object MakeDumpable(string value) => (object)value;
+        public static object MakeDumpable(string value) => value;
 
         public static object MakeDumpable(object value) => value;
 
-        public static unsafe object MakeDumpable(void* value) => (object)new IntPtr(value);
+        public static unsafe object MakeDumpable(void* value) => new IntPtr(value);
 
         private static void ComputeByteOrderMapWorker(
           ref ushort[] fieldMap,
@@ -110,7 +110,7 @@ namespace Microsoft.Iris.Render.Protocol
         {
             if (targetType.IsPrimitive)
                 return;
-            int packingForType = MarshalHelper.GetPackingForType(targetType);
+            int packingForType = GetPackingForType(targetType);
             int num1 = 0;
             foreach (FieldInfo field in targetType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
@@ -130,9 +130,9 @@ namespace Microsoft.Iris.Render.Protocol
                 int num4 = num1 + num3 & ~num3;
                 int num5 = num4 + parentOffset;
                 if (type.IsPrimitive)
-                    MarshalHelper.AddByteOrderEntry(ref fieldMap, num5, size);
+                    AddByteOrderEntry(ref fieldMap, num5, size);
                 else
-                    MarshalHelper.ComputeByteOrderMapWorker(ref fieldMap, type, num5);
+                    ComputeByteOrderMapWorker(ref fieldMap, type, num5);
                 num1 = num4 + size;
             }
         }
@@ -147,30 +147,30 @@ namespace Microsoft.Iris.Render.Protocol
                 case 1:
                     return;
                 case 2:
-                    num = (ushort)1;
+                    num = 1;
                     break;
                 case 3:
                     return;
                 case 4:
-                    num = (ushort)2;
+                    num = 2;
                     break;
                 case 8:
-                    num = (ushort)3;
+                    num = 3;
                     break;
                 default:
                     return;
             }
-            int index = (int)fieldMap[0] + 1;
+            int index = fieldMap[0] + 1;
             if (index >= fieldMap.Length)
             {
                 ushort[] numArray = new ushort[2 * fieldMap.Length];
-                Array.Copy((Array)fieldMap, (Array)numArray, fieldMap.Length);
+                Array.Copy(fieldMap, numArray, fieldMap.Length);
                 fieldMap = numArray;
             }
             fieldMap[0] = (ushort)index;
-            fieldMap[index] = (ushort)((uint)(offset << 2) | (uint)num);
+            fieldMap[index] = (ushort)((uint)(offset << 2) | num);
         }
 
-        public static RENDERHANDLE[] CreateRenderHandleArray(int length) => length == 0 ? MarshalHelper.s_EmptyRenderHandleArray : new RENDERHANDLE[length];
+        public static RENDERHANDLE[] CreateRenderHandleArray(int length) => length == 0 ? s_EmptyRenderHandleArray : new RENDERHANDLE[length];
     }
 }

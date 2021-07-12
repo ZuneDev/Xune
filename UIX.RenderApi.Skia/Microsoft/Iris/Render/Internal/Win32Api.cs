@@ -74,13 +74,13 @@ namespace Microsoft.Iris.Render.Internal
         public static IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
         private static readonly string[] s_rgsMessageNames = new string[0];
 
-        public static Win32Api.COLORREF ARGB(byte a, byte r, byte g, byte b) => new Win32Api.COLORREF((uint)((int)a << 24 | (int)b << 16 | (int)g << 8) | (uint)r);
+        public static Win32Api.COLORREF ARGB(byte a, byte r, byte g, byte b) => new Win32Api.COLORREF((uint)(a << 24 | b << 16 | g << 8) | r);
 
-        public static Win32Api.COLORREF RGB(byte r, byte g, byte b) => new Win32Api.COLORREF((uint)((int)b << 16 | (int)g << 8) | (uint)r);
+        public static Win32Api.COLORREF RGB(byte r, byte g, byte b) => new Win32Api.COLORREF((uint)(b << 16 | g << 8) | r);
 
-        public static Win32Api.COLORREF RGB(int r, int g, int b) => Win32Api.RGB((byte)r, (byte)g, (byte)b);
+        public static Win32Api.COLORREF RGB(int r, int g, int b) => RGB((byte)r, (byte)g, (byte)b);
 
-        public static int GetRValue(Win32Api.COLORREF cr) => (int)cr.cr & (int)byte.MaxValue;
+        public static int GetRValue(Win32Api.COLORREF cr) => (int)cr.cr & byte.MaxValue;
 
         public static int GetGValue(Win32Api.COLORREF cr) => (int)((cr.cr & 65280U) >> 8);
 
@@ -202,31 +202,31 @@ namespace Microsoft.Iris.Render.Internal
         internal static uint GetSystemPageSize()
         {
             Win32Api.SYSTEM_INFO info;
-            Win32Api.GetSystemInfo(out info);
+            GetSystemInfo(out info);
             return info.dwPageSize;
         }
 
-        internal static string DumpMessage(uint uMsg) => Win32Api.DumpMessageWorker(uMsg) ?? "UNKNOWN MESSAGE";
+        internal static string DumpMessage(uint uMsg) => DumpMessageWorker(uMsg) ?? "UNKNOWN MESSAGE";
 
         private static string DumpMessageWorker(uint uMsg)
         {
-            Win32Api.InitMessageDump();
-            if ((long)uMsg >= (long)Win32Api.s_rgsMessageNames.Length)
-                return (string)null;
-            string rgsMessageName = Win32Api.s_rgsMessageNames[(IntPtr)uMsg];
+            InitMessageDump();
+            if (uMsg >= s_rgsMessageNames.Length)
+                return null;
+            string rgsMessageName = s_rgsMessageNames[(IntPtr)uMsg];
             if (rgsMessageName != null)
                 return rgsMessageName;
             uint num = uMsg;
             while (uMsg > 0U)
             {
                 --num;
-                rgsMessageName = Win32Api.s_rgsMessageNames[(IntPtr)num];
+                rgsMessageName = s_rgsMessageNames[(IntPtr)num];
                 if (rgsMessageName != null)
                     break;
             }
             if (rgsMessageName == null)
-                return (string)null;
-            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, "{0} + {1}", (object)rgsMessageName, (object)(uint)((int)uMsg - (int)num));
+                return null;
+            return string.Format(CultureInfo.InvariantCulture, "{0} + {1}", rgsMessageName, (uint)((int)uMsg - (int)num));
         }
 
         private static void InitMessageDump()
@@ -249,7 +249,7 @@ namespace Microsoft.Iris.Render.Internal
         {
             public IntPtr h;
 
-            public bool IsValid => this.h != Win32Api.INVALID_HANDLE_VALUE;
+            public bool IsValid => this.h != INVALID_HANDLE_VALUE;
 
             public static Win32Api.HANDLE NULL => new Win32Api.HANDLE()
             {
@@ -258,7 +258,7 @@ namespace Microsoft.Iris.Render.Internal
 
             public static Win32Api.HANDLE INVALID => new Win32Api.HANDLE()
             {
-                h = Win32Api.INVALID_HANDLE_VALUE
+                h = INVALID_HANDLE_VALUE
             };
 
             public static bool operator ==(Win32Api.HANDLE hl, Win32Api.HANDLE hr) => hl.h == hr.h;

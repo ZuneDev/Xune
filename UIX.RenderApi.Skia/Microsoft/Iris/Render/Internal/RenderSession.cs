@@ -45,7 +45,7 @@ namespace Microsoft.Iris.Render.Internal
                 this.m_protocolRenderingLocal = ProtocolSplashRendering.Bind(this.Messaging.WindowingPort);
             this.m_renderEngine = renderEngine;
             this.m_visPropManager = new VisualPropertyManager();
-            this.m_cacheManager = (ObjectCacheManager)null;
+            this.m_cacheManager = null;
         }
 
         internal void Initialize() => this.m_animationSystem = new AnimationSystem(this);
@@ -55,9 +55,9 @@ namespace Microsoft.Iris.Render.Internal
             try
             {
                 if (fInDispose && this.m_animationSystem != null)
-                    this.m_animationSystem.UnregisterUsage((object)this);
+                    this.m_animationSystem.UnregisterUsage(this);
                 this.UnregisterOwningThread();
-                this.m_animationSystem = (AnimationSystem)null;
+                this.m_animationSystem = null;
                 this.m_visPropManager.Dispose();
             }
             finally
@@ -66,15 +66,15 @@ namespace Microsoft.Iris.Render.Internal
             }
         }
 
-        IGraphicsDevice IRenderSession.GraphicsDevice => (IGraphicsDevice)this.m_renderEngine.Window.GraphicsDevice;
+        IGraphicsDevice IRenderSession.GraphicsDevice => m_renderEngine.Window.GraphicsDevice;
 
-        ISoundDevice IRenderSession.SoundDevice => (ISoundDevice)this.m_renderEngine.SoundDevice;
+        ISoundDevice IRenderSession.SoundDevice => m_renderEngine.SoundDevice;
 
         internal SoundDevice SoundDevice => this.m_renderEngine.SoundDevice;
 
-        IAnimationSystem IRenderSession.AnimationSystem => (IAnimationSystem)this.m_animationSystem;
+        IAnimationSystem IRenderSession.AnimationSystem => m_animationSystem;
 
-        IInputSystem IRenderSession.InputSystem => (IInputSystem)this.m_renderEngine.InputSystem;
+        IInputSystem IRenderSession.InputSystem => m_renderEngine.InputSystem;
 
         internal MessagingSession Messaging => this.m_owningSession;
 
@@ -105,7 +105,7 @@ namespace Microsoft.Iris.Render.Internal
             Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
             EffectTemplate effectTemplate = this.m_renderEngine.Window.GraphicsDevice.CreateEffectTemplate(stName);
             effectTemplate.RegisterUsage(objUser);
-            return (IEffectTemplate)effectTemplate;
+            return effectTemplate;
         }
 
         public IVideoStream CreateVideoStream(object objUser)
@@ -113,7 +113,7 @@ namespace Microsoft.Iris.Render.Internal
             Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
             VideoStream videoStream = new VideoStream(this, this.m_renderEngine.Window.GraphicsDevice);
             videoStream.RegisterUsage(objUser);
-            return (IVideoStream)videoStream;
+            return videoStream;
         }
 
         public IVisualContainer CreateVisualContainer(
@@ -121,7 +121,7 @@ namespace Microsoft.Iris.Render.Internal
           object objOwnerData)
         {
             Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
-            VisualContainer visualContainer = (VisualContainer)null;
+            VisualContainer visualContainer = null;
             if (this.m_cacheContainer != null)
             {
                 visualContainer = (VisualContainer)this.m_cacheContainer.Remove(objUser);
@@ -135,7 +135,7 @@ namespace Microsoft.Iris.Render.Internal
                 visualContainer.RegisterUsage(objUser);
                 visualContainer.Cache = this.m_cacheContainer;
             }
-            return (IVisualContainer)visualContainer;
+            return visualContainer;
         }
 
         public ICamera CreateCamera(object objUser)
@@ -143,7 +143,7 @@ namespace Microsoft.Iris.Render.Internal
             Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
             Camera camera = new Camera(this);
             camera.RegisterUsage(objUser);
-            return (ICamera)camera;
+            return camera;
         }
 
         public IGradient CreateGradient(object objUser)
@@ -151,13 +151,13 @@ namespace Microsoft.Iris.Render.Internal
             Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
             Gradient gradient = new Gradient(this, this.m_renderEngine.Window.GraphicsDevice.RemoteDevice);
             gradient.RegisterUsage(objUser);
-            return (IGradient)gradient;
+            return gradient;
         }
 
         public ISprite CreateSprite(object objUser, object objOwnerData)
         {
             Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
-            Sprite sprite = (Sprite)null;
+            Sprite sprite = null;
             if (this.m_cacheSprite != null)
             {
                 sprite = (Sprite)this.m_cacheSprite.Remove(objUser);
@@ -170,7 +170,7 @@ namespace Microsoft.Iris.Render.Internal
                 sprite.RegisterUsage(objUser);
                 sprite.Cache = this.m_cacheSprite;
             }
-            return (ISprite)sprite;
+            return sprite;
         }
 
         public IImage CreateImage(
@@ -182,7 +182,7 @@ namespace Microsoft.Iris.Render.Internal
             Debug2.Validate(handler != null, typeof(InvalidOperationException), "Invalid handler");
             Image image = this.m_renderEngine.Window.GraphicsDevice.CreateImage(identifier, handler);
             image.RegisterUsage(objUser);
-            return (IImage)image;
+            return image;
         }
 
         internal GraphicsCaps GetGraphicsCaps(GraphicsDeviceType type)
@@ -197,7 +197,7 @@ namespace Microsoft.Iris.Render.Internal
 
         private void RegisterOwningThread() => this.m_owningSession = MessagingSession.Current;
 
-        private void UnregisterOwningThread() => this.m_owningSession = (MessagingSession)null;
+        private void UnregisterOwningThread() => this.m_owningSession = null;
 
         internal void AssertOwningThread()
         {
@@ -240,13 +240,13 @@ namespace Microsoft.Iris.Render.Internal
             {
                 this.m_cacheManager.UnregisterCache(this.m_cacheSprite);
                 this.m_cacheSprite.Dispose();
-                this.m_cacheSprite = (Microsoft.Iris.Render.Common.ObjectCache)null;
+                this.m_cacheSprite = null;
             }
             if (this.m_cacheContainer == null)
                 return;
             this.m_cacheManager.UnregisterCache(this.m_cacheContainer);
             this.m_cacheContainer.Dispose();
-            this.m_cacheContainer = (Microsoft.Iris.Render.Common.ObjectCache)null;
+            this.m_cacheContainer = null;
         }
 
         internal RENDERHANDLE AllocateRenderHandle(IRenderHandleOwner owner) => this.RenderingPort.AllocHandle(owner);
@@ -260,7 +260,7 @@ namespace Microsoft.Iris.Render.Internal
           bool fEnumDisplayModes)
         {
             Debug2.Validate(this.IsOwningThread(), typeof(InvalidOperationException), "Must be called on the session's owning client thread");
-            return this.NtDesktopProtocol.BuildRemoteDesktopManager((IRenderHandleOwner)owner, this.NtDesktopProtocol.LocalDesktopManagerCallbackHandle, fEnumDisplayModes);
+            return this.NtDesktopProtocol.BuildRemoteDesktopManager(owner, this.NtDesktopProtocol.LocalDesktopManagerCallbackHandle, fEnumDisplayModes);
         }
 
         internal RemoteFormWindow BuildRemoteFormWindow(
@@ -268,7 +268,7 @@ namespace Microsoft.Iris.Render.Internal
           DisplayManager displayManager)
         {
             Debug2.Validate(this.IsOwningThread(), typeof(InvalidOperationException), "Must be called on the session's owning client thread");
-            return this.NtDesktopProtocol.BuildRemoteFormWindow((IRenderHandleOwner)window, displayManager.RemoteStub, this.DesktopProtocol.LocalFormWindowCallbackHandle);
+            return this.NtDesktopProtocol.BuildRemoteFormWindow(window, displayManager.RemoteStub, this.DesktopProtocol.LocalFormWindowCallbackHandle);
         }
 
         internal RemoteInputRouter BuildRemoteInputRouter(
@@ -276,20 +276,20 @@ namespace Microsoft.Iris.Render.Internal
           RenderWindow window)
         {
             Debug2.Validate(this.IsOwningThread(), typeof(InvalidOperationException), "Must be called on the session's owning client thread");
-            RemoteInputRouter remoteInputRouter = this.DesktopProtocol.BuildRemoteInputRouter((IRenderHandleOwner)inputSystem, this.DesktopProtocol.LocalInputCallbackHandle);
+            RemoteInputRouter remoteInputRouter = this.DesktopProtocol.BuildRemoteInputRouter(inputSystem, this.DesktopProtocol.LocalInputCallbackHandle);
             remoteInputRouter?.SendRegisterWithInputSource(this.WindowingPort.DefaultGroupID, ((IRenderHandleOwner)window).RenderHandle);
             return remoteInputRouter;
         }
 
-        internal RemoteNtDevice BuildRemoteNtDevice(NtGraphicsDevice device) => this.NtRenderingProtocol.BuildRemoteNtDevice((IRenderHandleOwner)device, this.RenderingProtocol.LocalDeviceCallbackHandle);
+        internal RemoteNtDevice BuildRemoteNtDevice(NtGraphicsDevice device) => this.NtRenderingProtocol.BuildRemoteNtDevice(device, this.RenderingProtocol.LocalDeviceCallbackHandle);
 
-        internal RemoteGdiDevice BuildRemoteGdiDevice(GdiGraphicsDevice device) => this.NtRenderingProtocol.BuildRemoteGdiDevice((IRenderHandleOwner)device, this.RenderingProtocol.LocalDeviceCallbackHandle);
+        internal RemoteGdiDevice BuildRemoteGdiDevice(GdiGraphicsDevice device) => this.NtRenderingProtocol.BuildRemoteGdiDevice(device, this.RenderingProtocol.LocalDeviceCallbackHandle);
 
         internal RemoteNullDevice BuildRemoteNullDevice(
           NullGraphicsDevice device,
           bool fUseSplitWindowingPort)
         {
-            return fUseSplitWindowingPort ? this.LocalRenderingProtocol.BuildRemoteNullDevice((IRenderHandleOwner)device, this.LocalRenderingProtocol.LocalDeviceCallbackHandle) : this.RenderingProtocol.BuildRemoteNullDevice((IRenderHandleOwner)device, this.RenderingProtocol.LocalDeviceCallbackHandle);
+            return fUseSplitWindowingPort ? this.LocalRenderingProtocol.BuildRemoteNullDevice(device, this.LocalRenderingProtocol.LocalDeviceCallbackHandle) : this.RenderingProtocol.BuildRemoteNullDevice(device, this.RenderingProtocol.LocalDeviceCallbackHandle);
         }
 
         internal unsafe DataBuffer BuildDataBuffer(IntPtr pData, uint cbSize) => new DataBuffer(this.RenderingPort, pData.ToPointer(), cbSize);
@@ -301,29 +301,29 @@ namespace Microsoft.Iris.Render.Internal
           Dx9GraphicsDevice dx9Device,
           DataBuffer dataBuffer)
         {
-            return this.RenderingProtocol.BuildRemoteDx9EffectResource((IRenderHandleOwner)effectResource, dx9Device.RemoteDevice, dataBuffer.RemoteStub);
+            return this.RenderingProtocol.BuildRemoteDx9EffectResource(effectResource, dx9Device.RemoteDevice, dataBuffer.RemoteStub);
         }
 
-        internal RemoteDx9Effect BuildRemoteDx9Effect(Dx9Effect effect) => RemoteDx9Effect.Create(this.RenderingProtocol, (IRenderHandleOwner)effect);
+        internal RemoteDx9Effect BuildRemoteDx9Effect(Dx9Effect effect) => RemoteDx9Effect.Create(this.RenderingProtocol, effect);
 
-        internal RemoteGdiEffect BuildRemoteGdiEffect(GdiEffect effect) => RemoteGdiEffect.Create(this.NtRenderingProtocol, (IRenderHandleOwner)effect);
+        internal RemoteGdiEffect BuildRemoteGdiEffect(GdiEffect effect) => RemoteGdiEffect.Create(this.NtRenderingProtocol, effect);
 
-        internal RemoteCamera BuildRemoteCamera(Camera camera) => this.RenderingProtocol.BuildRemoteCamera((IRenderHandleOwner)camera);
+        internal RemoteCamera BuildRemoteCamera(Camera camera) => this.RenderingProtocol.BuildRemoteCamera(camera);
 
-        internal RemoteVisualContainer BuildRemoteVisualContainer(Visual visual) => this.RenderingProtocol.BuildRemoteVisualContainer((IRenderHandleOwner)visual);
+        internal RemoteVisualContainer BuildRemoteVisualContainer(Visual visual) => this.RenderingProtocol.BuildRemoteVisualContainer(visual);
 
         internal RemoteSprite BuildRemoteSprite(Sprite sprite, RenderWindow window)
         {
             switch (window.GraphicsDeviceType)
             {
                 case GraphicsDeviceType.Gdi:
-                    return (RemoteSprite)this.NtRenderingProtocol.BuildRemoteGdiSprite((IRenderHandleOwner)sprite);
+                    return this.NtRenderingProtocol.BuildRemoteGdiSprite(sprite);
                 case GraphicsDeviceType.Direct3D9:
                 case GraphicsDeviceType.XeDirectX9:
-                    return (RemoteSprite)this.RenderingProtocol.BuildRemoteDx9Sprite((IRenderHandleOwner)sprite);
+                    return this.RenderingProtocol.BuildRemoteDx9Sprite(sprite);
                 default:
-                    Debug2.Throw(false, "Unrecognized device type: {0}", (object)window.GraphicsDeviceType);
-                    return (RemoteSprite)null;
+                    Debug2.Throw(false, "Unrecognized device type: {0}", window.GraphicsDeviceType);
+                    return null;
             }
         }
 
@@ -335,7 +335,7 @@ namespace Microsoft.Iris.Render.Internal
           AnimationSystem owner)
         {
             Debug2.Validate(this.IsOwningThread(), typeof(InvalidOperationException), "Must be called on the session's owning client thread");
-            return this.RenderingProtocol.BuildRemoteAnimationManager((IRenderHandleOwner)owner);
+            return this.RenderingProtocol.BuildRemoteAnimationManager(owner);
         }
 
         public RemoteAnimation BuildRemoteAnimation(
@@ -343,7 +343,7 @@ namespace Microsoft.Iris.Render.Internal
           AnimationInputType animationType)
         {
             Debug2.Validate(this.IsOwningThread(), typeof(InvalidOperationException), "Must be called on the session's owning client thread");
-            return this.RenderingProtocol.BuildRemoteAnimation((IRenderHandleOwner)owner, animationType, this.RenderingProtocol.LocalAnimationCallbackHandle);
+            return this.RenderingProtocol.BuildRemoteAnimation(owner, animationType, this.RenderingProtocol.LocalAnimationCallbackHandle);
         }
 
         public RemoteExternalAnimationInput BuildRemoteExternalAnimationInput(
@@ -351,7 +351,7 @@ namespace Microsoft.Iris.Render.Internal
           uint uniqueId)
         {
             Debug2.Validate(this.IsOwningThread(), typeof(InvalidOperationException), "Must be called on the session's owning client thread");
-            return this.RenderingProtocol.BuildRemoteExternalAnimationInput((IRenderHandleOwner)owner, uniqueId);
+            return this.RenderingProtocol.BuildRemoteExternalAnimationInput(owner, uniqueId);
         }
 
         public RemoteAnimationInputProvider BuildRemoteAnimationInputProvider(
@@ -359,7 +359,7 @@ namespace Microsoft.Iris.Render.Internal
           uint externalAnimationInputId)
         {
             Debug2.Validate(this.IsOwningThread(), typeof(InvalidOperationException), "Must be called on the session's owning client thread");
-            return this.RenderingProtocol.BuildRemoteAnimationInputProvider((IRenderHandleOwner)owner, externalAnimationInputId);
+            return this.RenderingProtocol.BuildRemoteAnimationInputProvider(owner, externalAnimationInputId);
         }
 
         protected override void Invariant()

@@ -11,8 +11,8 @@ namespace Microsoft.Iris.Render.Graphics
     internal class GdiEffect : Effect
     {
         internal GdiEffect(GdiEffectTemplate effectTemplate)
-          : base((EffectTemplate)effectTemplate)
-          => this.m_remoteEffect = (Microsoft.Iris.Render.Protocols.Splash.Rendering.RemoteEffect)this.m_effectTemplate.Session.BuildRemoteGdiEffect(this);
+          : base(effectTemplate)
+          => this.m_remoteEffect = this.m_effectTemplate.Session.BuildRemoteGdiEffect(this);
 
         internal override void RemoteEffect()
         {

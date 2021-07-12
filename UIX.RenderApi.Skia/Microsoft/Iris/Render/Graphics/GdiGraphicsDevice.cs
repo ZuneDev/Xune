@@ -31,7 +31,7 @@ namespace Microsoft.Iris.Render.Graphics
             this.m_fAllowAnimations = true;
             this.m_fEnableBackBuffer = true;
             this.m_fSystemMemoryBitmaps = false;
-            this.m_clrBackground = new ColorF((int)byte.MaxValue, (int)byte.MaxValue, (int)byte.MaxValue, (int)byte.MaxValue);
+            this.m_clrBackground = new ColorF(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
             this.m_deviceType = GraphicsDeviceType.Gdi;
             this.m_graphicsCaps = session.GetGraphicsCaps(this.m_deviceType);
             this.m_renderingQuality = GraphicsRenderingQuality.MinQuality;
@@ -41,17 +41,17 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (fInDispose && this.m_remoteDevice != null)
                 this.m_remoteDevice.Dispose();
-            this.m_remoteDevice = (RemoteGdiDevice)null;
+            this.m_remoteDevice = null;
             base.Dispose(fInDispose);
         }
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteDevice.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = (RemoteGdiDevice)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = null;
 
         public override bool IsVideoComposited => false;
 
-        internal override RemoteDevice RemoteDevice => (RemoteDevice)this.m_remoteDevice;
+        internal override RemoteDevice RemoteDevice => m_remoteDevice;
 
         public override bool CanPlayAnimations => this.AllowAnimations;
 
@@ -178,6 +178,6 @@ namespace Microsoft.Iris.Render.Graphics
 
         public override bool CanPlayAnimationType(AnimationInputType type) => false;
 
-        internal override EffectTemplate CreateEffectTemplate(string stName) => (EffectTemplate)new GdiEffectTemplate(this.m_session, (GraphicsDevice)this, stName);
+        internal override EffectTemplate CreateEffectTemplate(string stName) => new GdiEffectTemplate(this.m_session, this, stName);
     }
 }

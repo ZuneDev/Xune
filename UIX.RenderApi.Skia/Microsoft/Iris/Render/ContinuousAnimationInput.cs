@@ -11,7 +11,7 @@ namespace Microsoft.Iris.Render
     public sealed class ContinuousAnimationInput : ObjectAnimationInput
     {
         public ContinuousAnimationInput(IAnimatable sourceObject, string sourcePropertyName)
-          : this(sourceObject, sourcePropertyName, (string)null)
+          : this(sourceObject, sourcePropertyName, null)
         {
         }
 
@@ -24,7 +24,7 @@ namespace Microsoft.Iris.Render
         }
 
         public ContinuousAnimationInput(IAnimation sourceAnimation)
-          : this(sourceAnimation, (string)null)
+          : this(sourceAnimation, null)
         {
         }
 

@@ -34,7 +34,7 @@ namespace Microsoft.Iris.Render.Graphics
             this.m_session = session;
             this.m_stName = stName;
             this.m_effectManager = effectManager;
-            this.m_tracker = MessagingSession.Current.CreateDataBufferTracker((object)this);
+            this.m_tracker = MessagingSession.Current.CreateDataBufferTracker(this);
         }
 
         protected override void Dispose(bool fInDispose)
@@ -48,8 +48,8 @@ namespace Microsoft.Iris.Render.Graphics
                     if (this.m_remoteEffect != null)
                         this.m_remoteEffect.Dispose();
                 }
-                this.m_tracker = (DataBufferTracker)null;
-                this.m_remoteEffect = (RemoteDx9EffectResource)null;
+                this.m_tracker = null;
+                this.m_remoteEffect = null;
             }
             finally
             {
@@ -67,7 +67,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteEffect.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteEffect = (RemoteDx9EffectResource)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteEffect = null;
 
         internal bool Create(EffectInput element)
         {
@@ -111,7 +111,7 @@ namespace Microsoft.Iris.Render.Graphics
             nBlobSize = 0U;
             try
             {
-                EngineApi.IFC(EngineApi.SpDx9CompileEffect(effectBuilder.EffectDefinition, (string)null, out pErrorString, out pErrorBuffer, out pEffectBlob, out nBlobSize, out pBlobBuffer));
+                EngineApi.IFC(EngineApi.SpDx9CompileEffect(effectBuilder.EffectDefinition, null, out pErrorString, out pErrorBuffer, out pEffectBlob, out nBlobSize, out pBlobBuffer));
                 flag = true;
             }
             catch (Exception ex)
@@ -134,7 +134,7 @@ namespace Microsoft.Iris.Render.Graphics
           uint nBlobSize)
         {
             DataBuffer dataBuffer = this.m_session.BuildDataBuffer(pEffectBlob, nBlobSize);
-            this.m_tracker.Track(dataBuffer, new DataBufferTracker.CleanupEventHandler(Dx9EffectResource.OnReleaseLocalData), (object)pBlobBuffer);
+            this.m_tracker.Track(dataBuffer, new DataBufferTracker.CleanupEventHandler(OnReleaseLocalData), pBlobBuffer);
             dataBuffer.Commit();
             this.m_remoteEffect = this.m_session.BuildRemoteDx9EffectResource(this, this.m_effectManager.Device, dataBuffer);
             Vector<VariableInfo> propertyVariables = effectBuilder.PropertyVariables;
@@ -212,47 +212,47 @@ namespace Microsoft.Iris.Render.Graphics
                                 case Dx9VariableType.Integer:
                                     if (variableInfo.IsDynamic)
                                     {
-                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name));
+                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name));
                                         continue;
                                     }
-                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name, (object)(int)variableInfo.DefaultValue));
+                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name, (int)variableInfo.DefaultValue));
                                     continue;
                                 case Dx9VariableType.Float:
                                     if (variableInfo.IsDynamic)
                                     {
-                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name));
+                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name));
                                         continue;
                                     }
-                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name, (object)(float)variableInfo.DefaultValue));
+                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name, (float)variableInfo.DefaultValue));
                                     continue;
                                 case Dx9VariableType.Vector2:
                                     if (variableInfo.IsDynamic)
                                     {
-                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name));
+                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name));
                                         continue;
                                     }
-                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name, (object)((Vector2)variableInfo.DefaultValue).ToDxShaderString()));
+                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name, ((Vector2)variableInfo.DefaultValue).ToDxShaderString()));
                                     continue;
                                 case Dx9VariableType.Vector3:
                                     if (variableInfo.IsDynamic)
                                     {
-                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name));
+                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name));
                                         continue;
                                     }
-                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name, (object)((Vector3)variableInfo.DefaultValue).ToDxShaderString()));
+                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name, ((Vector3)variableInfo.DefaultValue).ToDxShaderString()));
                                     continue;
                                 case Dx9VariableType.Vector4:
                                     if (variableInfo.IsDynamic)
                                     {
-                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name));
+                                        effectBuilder.EmitEffectFragment(InvariantString.Format("{0} {1};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name));
                                         continue;
                                     }
-                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", (object)effectBuilder.ConvertToString(variableInfo.Type), (object)variableInfo.Name, (object)((Vector4)variableInfo.DefaultValue).ToDxShaderString()));
+                                    effectBuilder.EmitEffectFragment(InvariantString.Format("static const {0} {1} = {2};\r\n", effectBuilder.ConvertToString(variableInfo.Type), variableInfo.Name, ((Vector4)variableInfo.DefaultValue).ToDxShaderString()));
                                     continue;
                                 case Dx9VariableType.Texture:
                                     TextureVariableInfo textureVariableInfo = (TextureVariableInfo)variableInfo;
-                                    effectBuilder.EmitEffectFragment(InvariantString.Format("\r\n{0} {1};\r\n", (object)effectBuilder.ConvertToString(textureVariableInfo.Type), (object)textureVariableInfo.Name));
-                                    effectBuilder.EmitEffectFragment(InvariantString.Format("sampler {0} = \r\n    sampler_state\r\n    {{\r\n        Texture   = <{1}>;\r\n        MinFilter = {2};\r\n        MagFilter = {3};\r\n        AddressU  = Clamp;\r\n        AddressV  = Clamp;\r\n    }};\r\n\r\n", (object)textureVariableInfo.SamplerName, (object)textureVariableInfo.Name, (object)textureVariableInfo.MinFilter, (object)textureVariableInfo.MagFilter));
+                                    effectBuilder.EmitEffectFragment(InvariantString.Format("\r\n{0} {1};\r\n", effectBuilder.ConvertToString(textureVariableInfo.Type), textureVariableInfo.Name));
+                                    effectBuilder.EmitEffectFragment(InvariantString.Format("sampler {0} = \r\n    sampler_state\r\n    {{\r\n        Texture   = <{1}>;\r\n        MinFilter = {2};\r\n        MagFilter = {3};\r\n        AddressU  = Clamp;\r\n        AddressV  = Clamp;\r\n    }};\r\n\r\n", textureVariableInfo.SamplerName, textureVariableInfo.Name, textureVariableInfo.MinFilter, textureVariableInfo.MagFilter));
                                     continue;
                                 default:
                                     continue;
@@ -267,11 +267,11 @@ namespace Microsoft.Iris.Render.Graphics
         protected void EmitShaders(Dx9EffectBuilder effectBuilder)
         {
             effectBuilder.EmitEffectFragment(effectBuilder.ShaderDeclarations);
-            effectBuilder.EmitEffectFragment(InvariantString.Format("VS_OUTPUT {0}(VS_INPUT Input)\r\n{{\r\n    VS_OUTPUT Output;\r\n\r\n{1}\r\n    return Output;\r\n}}\r\n\r\n", (object)Dx9EffectResource.k_stVertexShaderName, (object)effectBuilder.VertexShader));
-            effectBuilder.EmitEffectFragment(InvariantString.Format("PS_OUTPUT {0}(VS_OUTPUT Input)\r\n{{\r\n    PS_OUTPUT Output;\r\n\r\n{1}    // Include Vertex color contribution\r\n    Output.Color = {2} * Input.Color;\r\n\r\n    // Return the final result\r\n    return Output;\r\n}}\r\n\r\n", (object)Dx9EffectResource.k_stPixelShaderName, (object)effectBuilder.PixelShader, (object)effectBuilder.PixelShaderOutput));
+            effectBuilder.EmitEffectFragment(InvariantString.Format("VS_OUTPUT {0}(VS_INPUT Input)\r\n{{\r\n    VS_OUTPUT Output;\r\n\r\n{1}\r\n    return Output;\r\n}}\r\n\r\n", k_stVertexShaderName, effectBuilder.VertexShader));
+            effectBuilder.EmitEffectFragment(InvariantString.Format("PS_OUTPUT {0}(VS_OUTPUT Input)\r\n{{\r\n    PS_OUTPUT Output;\r\n\r\n{1}    // Include Vertex color contribution\r\n    Output.Color = {2} * Input.Color;\r\n\r\n    // Return the final result\r\n    return Output;\r\n}}\r\n\r\n", k_stPixelShaderName, effectBuilder.PixelShader, effectBuilder.PixelShaderOutput));
         }
 
-        protected void EmitTechnique(Dx9EffectBuilder effectBuilder) => effectBuilder.EmitEffectFragment(InvariantString.Format("technique GeneratedTechnique\r\n{{\r\n    pass P0\r\n    {{\r\n        // Shaders\r\n        PixelShader   = compile {0} {1}();\r\n        VertexShader  = compile {2} {3}();\r\n    }}\r\n}}\r\n", (object)this.PixelShaderVersion, (object)Dx9EffectResource.k_stPixelShaderName, (object)this.VertexShaderVersion, (object)Dx9EffectResource.k_stVertexShaderName));
+        protected void EmitTechnique(Dx9EffectBuilder effectBuilder) => effectBuilder.EmitEffectFragment(InvariantString.Format("technique GeneratedTechnique\r\n{{\r\n    pass P0\r\n    {{\r\n        // Shaders\r\n        PixelShader   = compile {0} {1}();\r\n        VertexShader  = compile {2} {3}();\r\n    }}\r\n}}\r\n", PixelShaderVersion, k_stPixelShaderName, VertexShaderVersion, k_stVertexShaderName));
 
         private void GenerateEffect(Dx9EffectBuilder effectBuilder)
         {
@@ -337,7 +337,7 @@ namespace Microsoft.Iris.Render.Graphics
                 return false;
             if (eflCurrent.Operations != null)
             {
-                foreach (EffectOperation operation in (IEnumerable)eflCurrent.Operations)
+                foreach (EffectOperation operation in eflCurrent.Operations)
                 {
                     switch (operation.Type)
                     {

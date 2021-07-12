@@ -34,7 +34,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             msg0RegisterOwnerPtr->_priv_ctxcb = _priv_portUse.Session.LocalContext;
             msg0RegisterOwnerPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0RegisterOwnerPtr, ref RemoteDataBuffer.s_priv_ByteOrder_Msg0_RegisterOwner, typeof(RemoteDataBuffer.Msg0_RegisterOwner), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0RegisterOwnerPtr, ref s_priv_ByteOrder_Msg0_RegisterOwner, typeof(RemoteDataBuffer.Msg0_RegisterOwner), 0, 0);
             _priv_pmsgUse = (Message*)msg0RegisterOwnerPtr;
         }
 

@@ -14,7 +14,7 @@ namespace Microsoft.Iris.Input
         public static readonly Cursor Arrow = new Cursor(32512, CursorID.Arrow);
         public static readonly Cursor AppStarting = new Cursor(32550, CursorID.AppStarting);
         public static readonly Cursor Crosshair = new Cursor(32515, CursorID.Crosshair);
-        public static readonly Cursor Default = Cursor.Arrow;
+        public static readonly Cursor Default = Arrow;
         public static readonly Cursor Hand = new Cursor(32649, CursorID.Hand);
         public static readonly Cursor Help = new Cursor(32651, CursorID.Help);
         public static readonly Cursor IBeam = new Cursor(32513, CursorID.IBeam);
@@ -48,39 +48,39 @@ namespace Microsoft.Iris.Input
             switch (cursor)
             {
                 case CursorID.Arrow:
-                    return Cursor.Arrow;
+                    return Arrow;
                 case CursorID.Cancel:
-                    return Cursor.Cancel;
+                    return Cancel;
                 case CursorID.Copy:
-                    return Cursor.Copy;
+                    return Copy;
                 case CursorID.Crosshair:
-                    return Cursor.Crosshair;
+                    return Crosshair;
                 case CursorID.IBeam:
-                    return Cursor.IBeam;
+                    return IBeam;
                 case CursorID.Hand:
-                    return Cursor.Hand;
+                    return Hand;
                 case CursorID.Move:
-                    return Cursor.Move;
+                    return Move;
                 case CursorID.No:
-                    return Cursor.No;
+                    return No;
                 case CursorID.None:
-                    return Cursor.NullCursor;
+                    return NullCursor;
                 case CursorID.Size:
-                    return Cursor.Size;
+                    return Size;
                 case CursorID.SizeNS:
-                    return Cursor.SizeNS;
+                    return SizeNS;
                 case CursorID.SizeWE:
-                    return Cursor.SizeWE;
+                    return SizeWE;
                 case CursorID.SizeNWSE:
-                    return Cursor.SizeNWSE;
+                    return SizeNWSE;
                 case CursorID.SizeNESW:
-                    return Cursor.SizeNESW;
+                    return SizeNESW;
                 case CursorID.UpArrow:
-                    return Cursor.UpArrow;
+                    return UpArrow;
                 case CursorID.Wait:
-                    return Cursor.WaitCursor;
+                    return WaitCursor;
                 default:
-                    return (Cursor)null;
+                    return null;
             }
         }
     }

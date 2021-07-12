@@ -35,7 +35,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg8CreatePtr->_priv_ctxcb = port.Session.LocalContext;
             msg8CreatePtr->_priv_idObjectSubject = remoteNullDevice.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteNullDevice.s_priv_ByteOrder_Msg8_Create, typeof(RemoteNullDevice.Msg8_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg8_Create, typeof(RemoteNullDevice.Msg8_Create), 0, 0);
             port.CreateRemoteObject(deviceClassHandle, remoteNullDevice.m_renderHandle, (Message*)msg8CreatePtr);
             return remoteNullDevice;
         }

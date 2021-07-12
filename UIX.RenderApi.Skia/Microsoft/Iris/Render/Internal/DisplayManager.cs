@@ -56,11 +56,11 @@ namespace Microsoft.Iris.Render.Internal
         {
             if (fInDispose && this.m_remoteManager != null)
                 this.m_remoteManager.Dispose();
-            this.m_remoteManager = (RemoteDesktopManager)null;
+            this.m_remoteManager = null;
             base.Dispose(fInDispose);
         }
 
-        public IDisplay PrimaryDisplay => (IDisplay)this.m_info.primaryDisplay;
+        public IDisplay PrimaryDisplay => m_info.primaryDisplay;
 
         public DisplayMode[] ExtraModes
         {
@@ -75,11 +75,11 @@ namespace Microsoft.Iris.Render.Internal
 
         internal RemoteDesktopManager RemoteStub => this.m_remoteManager;
 
-        public IDisplay DisplayFromDeviceName(string stDeviceName) => (IDisplay)this.DisplayFromName(stDeviceName);
+        public IDisplay DisplayFromDeviceName(string stDeviceName) => this.DisplayFromName(stDeviceName);
 
         private Display DisplayFromName(string stDeviceName)
         {
-            Display display1 = (Display)null;
+            Display display1 = null;
             if (!string.IsNullOrEmpty(stDeviceName))
             {
                 foreach (Display display2 in this.m_info.displays)
@@ -101,17 +101,17 @@ namespace Microsoft.Iris.Render.Internal
                 if ((int)idDisplay == (int)display.UniqueId)
                     return display;
             }
-            return (Display)null;
+            return null;
         }
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteManager.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteManager = (RemoteDesktopManager)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteManager = null;
 
         void IDesktopManagerCallback.OnBeginEnumMonitorInfo(RENDERHANDLE target)
         {
             this.m_infoRebuilding = new DisplayManager.DisplayInfo();
-            this.m_dispRebuildLastAdded = (Display)null;
+            this.m_dispRebuildLastAdded = null;
             this.m_alRebuildSupportedModes = new ArrayList();
             this.m_alRebuildAllModes = new ArrayList();
         }
@@ -124,13 +124,13 @@ namespace Microsoft.Iris.Render.Internal
                     this.m_infoRebuilding.primaryDisplay = display;
             }
             this.m_info = this.m_infoRebuilding;
-            this.m_infoRebuilding = (DisplayManager.DisplayInfo)null;
-            this.m_dispRebuildLastAdded = (Display)null;
-            this.m_alRebuildSupportedModes = (ArrayList)null;
-            this.m_alRebuildAllModes = (ArrayList)null;
+            this.m_infoRebuilding = null;
+            this.m_dispRebuildLastAdded = null;
+            this.m_alRebuildSupportedModes = null;
+            this.m_alRebuildAllModes = null;
             if (this.DisplayChange == null || this.m_fPendingChangeNotification)
                 return;
-            this.m_session.DeferredInvoke((Delegate)new DeferredHandler(this.DeliverDisplayChangeNotification), (object)null, DeferredInvokePriority.Normal);
+            this.m_session.DeferredInvoke(new DeferredHandler(this.DeliverDisplayChangeNotification), null, DeferredInvokePriority.Normal);
             this.m_fPendingChangeNotification = true;
         }
 
@@ -139,12 +139,12 @@ namespace Microsoft.Iris.Render.Internal
           Message* pmsgRaw)
         {
             if (this.m_session.IsForeignByteOrderOnWindowing)
-                MarshalHelper.SwapByteOrder((byte*)pmsgRaw, ref DisplayManager.s_ByteOrder_MonitorInfoCallbackMsg, typeof(DisplayManager.MonitorInfoCallbackMsg), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)pmsgRaw, ref s_ByteOrder_MonitorInfoCallbackMsg, typeof(DisplayManager.MonitorInfoCallbackMsg), 0, 0);
             Display display = this.ConvertMonitorInfo((DisplayManager.MonitorInfoCallbackMsg*)pmsgRaw);
             this.m_dispRebuildLastAdded = display;
             this.m_alRebuildSupportedModes.Clear();
             this.m_alRebuildAllModes.Clear();
-            this.m_infoRebuilding.displays.Add((object)display);
+            this.m_infoRebuilding.displays.Add(display);
         }
 
         void IDesktopManagerCallback.OnBeginDisplayModes(RENDERHANDLE target)
@@ -164,9 +164,9 @@ namespace Microsoft.Iris.Render.Internal
             displayMode.fInterlaced = rmodeAdd.Interlaced;
             displayMode.fTvMode = false;
             if (fSupported)
-                this.m_alRebuildSupportedModes.Add((object)displayMode);
+                this.m_alRebuildSupportedModes.Add(displayMode);
             else
-                this.m_alRebuildAllModes.Add((object)displayMode);
+                this.m_alRebuildAllModes.Add(displayMode);
         }
 
         void IDesktopManagerCallback.OnEndDisplayModes(RENDERHANDLE target)
@@ -191,13 +191,13 @@ namespace Microsoft.Iris.Render.Internal
             this.m_fPendingChangeNotification = false;
             if (this.DisplayChange == null)
                 return;
-            this.DisplayChange((object)this, EventArgs.Empty);
+            this.DisplayChange(this, EventArgs.Empty);
         }
 
         private unsafe Display ConvertMonitorInfo(DisplayManager.MonitorInfoCallbackMsg* pmsg)
         {
-            string stringUni1 = Marshal.PtrToStringUni(new IntPtr((void*)&pmsg->pad_szDevice1));
-            Display display = (Display)null;
+            string stringUni1 = Marshal.PtrToStringUni(new IntPtr(&pmsg->pad_szDevice1));
+            Display display = null;
             if (this.m_info != null)
                 display = this.DisplayFromName(stringUni1);
             if (display == null)
@@ -215,7 +215,7 @@ namespace Microsoft.Iris.Render.Internal
             modeDesktop.nRefreshRate = pmsg->nRefreshRate;
             modeDesktop.fInterlaced = pmsg->fInterlaced != 0U;
             modeDesktop.fTvMode = false;
-            string stringUni2 = Marshal.PtrToStringUni(new IntPtr((void*)&pmsg->pad_szMonitorPnP1));
+            string stringUni2 = Marshal.PtrToStringUni(new IntPtr(&pmsg->pad_szMonitorPnP1));
             display.UpdateMonitorInfo(rcMonitor, rcWork, fPrimary, nTvFormat, stringUni2, modeDesktop);
             return display;
         }
@@ -227,9 +227,9 @@ namespace Microsoft.Iris.Render.Internal
         {
             DisplayMode.RenderModeComparer renderModeComparer = new DisplayMode.RenderModeComparer();
             arSupportedModes = (DisplayMode[])this.m_alRebuildSupportedModes.ToArray(typeof(DisplayMode));
-            Array.Sort<DisplayMode>(arSupportedModes, (IComparer<DisplayMode>)renderModeComparer);
+            Array.Sort<DisplayMode>(arSupportedModes, renderModeComparer);
             arAllModes = (DisplayMode[])this.m_alRebuildAllModes.ToArray(typeof(DisplayMode));
-            Array.Sort<DisplayMode>(arAllModes, (IComparer<DisplayMode>)renderModeComparer);
+            Array.Sort<DisplayMode>(arAllModes, renderModeComparer);
             Vector<DisplayMode> vector = new Vector<DisplayMode>();
             int length = this.m_arExtraModes.Length;
             List<int>[] intListArray = new List<int>[length];
@@ -238,7 +238,7 @@ namespace Microsoft.Iris.Render.Internal
             for (int index1 = 0; index1 < this.m_alRebuildAllModes.Count; ++index1)
             {
                 DisplayMode alRebuildAllMode = (DisplayMode)this.m_alRebuildAllModes[index1];
-                if (Array.BinarySearch<DisplayMode>(arSupportedModes, alRebuildAllMode, (IComparer<DisplayMode>)renderModeComparer) < 0)
+                if (Array.BinarySearch<DisplayMode>(arSupportedModes, alRebuildAllMode, renderModeComparer) < 0)
                 {
                     for (int index2 = 0; index2 < this.m_arExtraModes.Length; ++index2)
                     {
@@ -246,7 +246,7 @@ namespace Microsoft.Iris.Render.Internal
                         if (DisplayMode.CompareRenderModes(alRebuildAllMode, arExtraMode) == 0)
                         {
                             vector.Add(alRebuildAllMode);
-                            intListArray[index2] = (List<int>)null;
+                            intListArray[index2] = null;
                         }
                         else if (DisplayMode.CompareSimilarModes(alRebuildAllMode, arExtraMode) == 0)
                             intListArray[index2]?.Add(index1);
@@ -262,7 +262,7 @@ namespace Microsoft.Iris.Render.Internal
                 }
             }
             arExtraModes = vector.ToArray();
-            Array.Sort<DisplayMode>(arExtraModes, (IComparer<DisplayMode>)renderModeComparer);
+            Array.Sort<DisplayMode>(arExtraModes, renderModeComparer);
         }
 
         private class DisplayInfo

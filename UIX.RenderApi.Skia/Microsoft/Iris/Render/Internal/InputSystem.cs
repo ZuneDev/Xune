@@ -44,7 +44,7 @@ namespace Microsoft.Iris.Render.Internal
             {
                 if (fInDispose && this.m_remoteInputRouter != null)
                     this.m_remoteInputRouter.Dispose();
-                this.m_remoteInputRouter = (RemoteInputRouter)null;
+                this.m_remoteInputRouter = null;
             }
             finally
             {
@@ -54,38 +54,38 @@ namespace Microsoft.Iris.Render.Internal
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteInputRouter.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteInputRouter = (RemoteInputRouter)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteInputRouter = null;
 
         unsafe void IInputCallback.OnInput(RENDERHANDLE target, Message* inputInfoPtr)
         {
             InputSystem.RemoteCallbackMessage* remoteCallbackMessagePtr = (InputSystem.RemoteCallbackMessage*)inputInfoPtr;
             if (this.m_session.IsForeignByteOrderOnWindowing)
-                MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref InputSystem.s_ByteOrder_RemoteCallbackMessage, typeof(InputSystem.RemoteCallbackMessage), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref s_ByteOrder_RemoteCallbackMessage, typeof(InputSystem.RemoteCallbackMessage), 0, 0);
             switch (remoteCallbackMessagePtr->ownerMessage)
             {
                 case 1:
                     if (this.m_session.IsForeignByteOrderOnWindowing)
-                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref InputSystem.s_ByteOrder_KeyboardCommandMessage, typeof(InputSystem.KeyboardCommandMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
+                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref s_ByteOrder_KeyboardCommandMessage, typeof(InputSystem.KeyboardCommandMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
                     this.HandleKeyboardInput((InputSystem.KeyboardCommandMessage*)remoteCallbackMessagePtr);
                     break;
                 case 2:
                     if (this.m_session.IsForeignByteOrderOnWindowing)
-                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref InputSystem.s_ByteOrder_HIDCommandMessage, typeof(InputSystem.HIDCommandMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
+                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref s_ByteOrder_HIDCommandMessage, typeof(InputSystem.HIDCommandMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
                     this.HandleHIDCommandInput((InputSystem.HIDCommandMessage*)remoteCallbackMessagePtr);
                     break;
                 case 3:
                     if (this.m_session.IsForeignByteOrderOnWindowing)
-                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref InputSystem.s_ByteOrder_AppCommandMessage, typeof(InputSystem.AppCommandMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
+                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref s_ByteOrder_AppCommandMessage, typeof(InputSystem.AppCommandMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
                     this.HandleAppCommandInput((InputSystem.AppCommandMessage*)remoteCallbackMessagePtr);
                     break;
                 case 4:
                     if (this.m_session.IsForeignByteOrderOnWindowing)
-                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref InputSystem.s_ByteOrder_WindowInputCallbackMessage, typeof(InputSystem.WindowInputCallbackMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
+                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref s_ByteOrder_WindowInputCallbackMessage, typeof(InputSystem.WindowInputCallbackMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
                     this.HandleWindowInput((InputSystem.WindowInputCallbackMessage*)remoteCallbackMessagePtr);
                     break;
                 case 5:
                     if (this.m_session.IsForeignByteOrderOnWindowing)
-                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref InputSystem.s_ByteOrder_DragInputCallbackMessage, typeof(InputSystem.DragInputCallbackMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
+                        MarshalHelper.SwapByteOrder((byte*)remoteCallbackMessagePtr, ref s_ByteOrder_DragInputCallbackMessage, typeof(InputSystem.DragInputCallbackMessage), sizeof(InputSystem.RemoteCallbackMessage), 0);
                     this.HandleDragInput((InputSystem.DragInputCallbackMessage*)remoteCallbackMessagePtr);
                     break;
                 default:
@@ -105,7 +105,7 @@ namespace Microsoft.Iris.Render.Internal
 
         public void UnregisterRawInputCallbacks()
         {
-            this.m_inputHandlers = (IRawInputCallbacks)null;
+            this.m_inputHandlers = null;
             this.m_maskInputHandlers = InputHandlerFlags.None;
         }
 
@@ -139,7 +139,7 @@ namespace Microsoft.Iris.Render.Internal
         {
             if (!this.IsRegisteredForInputType(InputHandlerFlags.Mouse))
                 return;
-            RawMouseData args = new RawMouseData(this.m_session.TryGetHandleOwner(msg->subjectValue), this.m_session.TryGetHandleOwner(msg->naturalValue), msg->positionXOffset, msg->positionYOffset, msg->naturalXOffset, msg->naturalYOffset, msg->physicalXOffset, msg->physicalYOffset, msg->screenXOffset, msg->screenYOffset, (MouseButtons)msg->buttonFlag, (int)msg->wheelDelta);
+            RawMouseData args = new RawMouseData(this.m_session.TryGetHandleOwner(msg->subjectValue), this.m_session.TryGetHandleOwner(msg->naturalValue), msg->positionXOffset, msg->positionYOffset, msg->naturalXOffset, msg->naturalYOffset, msg->physicalXOffset, msg->physicalYOffset, msg->screenXOffset, msg->screenYOffset, (MouseButtons)msg->buttonFlag, msg->wheelDelta);
             this.m_inputHandlers.HandleRawMouseInput(msg->messageValue, (InputModifiers)msg->modifiersValue, ref args);
         }
 

@@ -13,16 +13,16 @@ namespace Microsoft.Iris.Render
     {
         private ConnectionInfo m_connectionInfo;
 
-        public static EngineInfo CreateLocal() => (EngineInfo)new IrisEngineInfo(true);
+        public static EngineInfo CreateLocal() => new IrisEngineInfo(true);
 
-        public static EngineInfo CreateRemote() => (EngineInfo)new IrisEngineInfo(true, TransportProtocol.TCP, "127.0.0.1", false);
+        public static EngineInfo CreateRemote() => new IrisEngineInfo(true, TransportProtocol.TCP, "127.0.0.1", false);
 
         internal IrisEngineInfo(bool isPrimary)
           : base(EngineType.Iris)
         {
             if (!isPrimary)
                 throw new NotImplementedException("Local connections to an existing engine are not supported yet");
-            this.m_connectionInfo = (ConnectionInfo)new LocalConnectionInfo();
+            this.m_connectionInfo = new LocalConnectionInfo();
         }
 
         internal IrisEngineInfo(
@@ -34,7 +34,7 @@ namespace Microsoft.Iris.Render
         {
             if (!isPrimary)
                 throw new NotImplementedException("Local connections to an existing engine are not supported yet");
-            this.m_connectionInfo = (ConnectionInfo)new RemoteConnectionInfo(protocol, sessionName, swapByteOrder);
+            this.m_connectionInfo = new RemoteConnectionInfo(protocol, sessionName, swapByteOrder);
         }
 
         internal ConnectionInfo ConnectionInfo => this.m_connectionInfo;

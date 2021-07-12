@@ -33,8 +33,8 @@ namespace Microsoft.Iris.Render
           float flTone)
         {
             Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
-            Debug2.Validate((double)flDesat >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Desat is >= 0");
-            Debug2.Validate((double)flTone >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Tone is >= 0");
+            Debug2.Validate(flDesat >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Desat is >= 0");
+            Debug2.Validate(flTone >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for Tone is >= 0");
             this.m_typeOperation = EffectOperationType.Sepia;
             this.m_lightColor = lightColor;
             this.m_darkColor = darkColor;
@@ -54,7 +54,7 @@ namespace Microsoft.Iris.Render
         }
 
         public SepiaElement()
-          : this((string)null)
+          : this(null)
         {
         }
 
@@ -94,10 +94,10 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "LightColor", (byte)20, ref this.m_nLightColorID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "DarkColor", (byte)20, ref this.m_nDarkColorID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Desaturate", (byte)8, ref this.m_nDesaturateID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Tone", (byte)8, ref this.m_nToneID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "LightColor", 20, ref this.m_nLightColorID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "DarkColor", 20, ref this.m_nDarkColorID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Desaturate", 8, ref this.m_nDesaturateID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Tone", 8, ref this.m_nToneID, ref nNextUniqueID);
         }
 
-        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("LightColor", EffectPropertyType.Color, (object)this.m_lightColor, this.m_nLightColorID, dictProperties) && this.GenerateProperty("DarkColor", EffectPropertyType.Color, (object)this.m_darkColor, this.m_nDarkColorID, dictProperties) && this.GenerateProperty("Desaturate", EffectPropertyType.Float, (object)this.m_flDesaturate, this.m_nDesaturateID, dictProperties) && this.GenerateProperty("Tone", EffectPropertyType.Float, (object)this.m_flTone, this.m_nToneID, dictProperties);
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("LightColor", EffectPropertyType.Color, m_lightColor, this.m_nLightColorID, dictProperties) && this.GenerateProperty("DarkColor", EffectPropertyType.Color, m_darkColor, this.m_nDarkColorID, dictProperties) && this.GenerateProperty("Desaturate", EffectPropertyType.Float, m_flDesaturate, this.m_nDesaturateID, dictProperties) && this.GenerateProperty("Tone", EffectPropertyType.Float, m_flTone, this.m_nToneID, dictProperties);
 
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {

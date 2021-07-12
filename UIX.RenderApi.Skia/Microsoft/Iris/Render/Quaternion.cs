@@ -30,8 +30,8 @@ namespace Microsoft.Iris.Render
         public Quaternion(Vector3 vAxis, float flAngle)
         {
             vAxis.Normalize();
-            float num1 = (float)Math.Sin(0.5 * (double)flAngle);
-            float num2 = (float)Math.Cos(0.5 * (double)flAngle);
+            float num1 = (float)Math.Sin(0.5 * flAngle);
+            float num2 = (float)Math.Cos(0.5 * flAngle);
             this.m_x = vAxis.X * num1;
             this.m_y = vAxis.Y * num1;
             this.m_z = vAxis.Z * num1;
@@ -67,14 +67,14 @@ namespace Microsoft.Iris.Render
             set => this.m_w = value;
         }
 
-        public bool IsIdentity => object.Equals((object)this, (object)Quaternion.Identity);
+        public bool IsIdentity => Equals(this, Identity);
 
         public static Quaternion operator *(Quaternion q1, Quaternion q2) => new Quaternion()
         {
-            m_x = (float)((double)q2.m_w * (double)q1.m_x + (double)q2.m_x * (double)q1.m_w + (double)q2.m_y * (double)q1.m_z - (double)q2.m_z * (double)q1.m_y),
-            m_y = (float)((double)q2.m_w * (double)q1.m_y - (double)q2.m_x * (double)q1.m_z + (double)q2.m_y * (double)q1.m_w + (double)q2.m_z * (double)q1.m_x),
-            m_z = (float)((double)q2.m_w * (double)q1.m_z + (double)q2.m_x * (double)q1.m_y - (double)q2.m_y * (double)q1.m_x + (double)q2.m_z * (double)q1.m_w),
-            m_w = (float)((double)q2.m_w * (double)q1.m_w - (double)q2.m_x * (double)q1.m_x - (double)q2.m_y * (double)q1.m_y - (double)q2.m_z * (double)q1.m_z)
+            m_x = (float)(q2.m_w * (double)q1.m_x + q2.m_x * (double)q1.m_w + q2.m_y * (double)q1.m_z - q2.m_z * (double)q1.m_y),
+            m_y = (float)(q2.m_w * (double)q1.m_y - q2.m_x * (double)q1.m_z + q2.m_y * (double)q1.m_w + q2.m_z * (double)q1.m_x),
+            m_z = (float)(q2.m_w * (double)q1.m_z + q2.m_x * (double)q1.m_y - q2.m_y * (double)q1.m_x + q2.m_z * (double)q1.m_w),
+            m_w = (float)(q2.m_w * (double)q1.m_w - q2.m_x * (double)q1.m_x - q2.m_y * (double)q1.m_y - q2.m_z * (double)q1.m_z)
         };
 
         public static Quaternion Multiply(Quaternion qLeft, Quaternion qRight) => qLeft * qRight;
@@ -96,12 +96,12 @@ namespace Microsoft.Iris.Render
 
         internal void Normalize()
         {
-            float flValue1 = (float)((double)this.m_x * (double)this.m_x + (double)this.m_y * (double)this.m_y + (double)this.m_z * (double)this.m_z + (double)this.m_w * (double)this.m_w);
+            float flValue1 = (float)(m_x * (double)this.m_x + m_y * (double)this.m_y + m_z * (double)this.m_z + m_w * (double)this.m_w);
             if (Math2.WithinEpsilon(flValue1, 1f))
                 return;
-            if ((double)flValue1 > 1.40129846432482E-45)
+            if (flValue1 > 1.40129846432482E-45)
             {
-                float num = (float)Math.Sqrt((double)flValue1);
+                float num = (float)Math.Sqrt(flValue1);
                 this.m_x /= num;
                 this.m_y /= num;
                 this.m_z /= num;
@@ -123,7 +123,7 @@ namespace Microsoft.Iris.Render
         public void ToAxisAngle(out Vector3 vAxis, out float flAngle)
         {
             vAxis = new Vector3(this.m_x, this.m_y, this.m_z);
-            flAngle = (float)(2.0 * Math.Acos((double)this.m_w));
+            flAngle = (float)(2.0 * Math.Acos(m_w));
         }
 
         public bool IsApproximate(Quaternion q) => Math2.WithinEpsilon(this.m_x, q.m_x) && Math2.WithinEpsilon(this.m_y, q.m_y) && Math2.WithinEpsilon(this.m_z, q.m_z) && Math2.WithinEpsilon(this.m_w, q.m_w);

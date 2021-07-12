@@ -45,7 +45,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             msg23CreatePtr->_priv_ctxcb = port.Session.LocalContext;
             msg23CreatePtr->_priv_idObjectSubject = remoteGdiDevice.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteGdiDevice.s_priv_ByteOrder_Msg23_Create, typeof(RemoteGdiDevice.Msg23_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg23_Create, typeof(RemoteGdiDevice.Msg23_Create), 0, 0);
             port.CreateRemoteObject(deviceClassHandle, remoteGdiDevice.m_renderHandle, (Message*)msg23CreatePtr);
             return remoteGdiDevice;
         }
@@ -65,7 +65,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             secureDesktopModePtr->fEnabled = fEnabled ? uint.MaxValue : 0U;
             secureDesktopModePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)secureDesktopModePtr, ref RemoteGdiDevice.s_priv_ByteOrder_Msg8_SecureDesktopMode, typeof(RemoteGdiDevice.Msg8_SecureDesktopMode), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)secureDesktopModePtr, ref s_priv_ByteOrder_Msg8_SecureDesktopMode, typeof(RemoteGdiDevice.Msg8_SecureDesktopMode), 0, 0);
             _priv_pmsgUse = (Message*)secureDesktopModePtr;
         }
 
@@ -92,7 +92,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             msg9SetZoomModePtr->vzmZoomMode = vzmZoomMode;
             msg9SetZoomModePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg9SetZoomModePtr, ref RemoteGdiDevice.s_priv_ByteOrder_Msg9_SetZoomMode, typeof(RemoteGdiDevice.Msg9_SetZoomMode), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg9SetZoomModePtr, ref s_priv_ByteOrder_Msg9_SetZoomMode, typeof(RemoteGdiDevice.Msg9_SetZoomMode), 0, 0);
             _priv_pmsgUse = (Message*)msg9SetZoomModePtr;
         }
 
@@ -119,7 +119,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             enableAlphaTrackingPtr->fEnableAlphaTracking = fEnableAlphaTracking ? uint.MaxValue : 0U;
             enableAlphaTrackingPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)enableAlphaTrackingPtr, ref RemoteGdiDevice.s_priv_ByteOrder_Msg11_SetEnableAlphaTracking, typeof(RemoteGdiDevice.Msg11_SetEnableAlphaTracking), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)enableAlphaTrackingPtr, ref s_priv_ByteOrder_Msg11_SetEnableAlphaTracking, typeof(RemoteGdiDevice.Msg11_SetEnableAlphaTracking), 0, 0);
             _priv_pmsgUse = (Message*)enableAlphaTrackingPtr;
         }
 
@@ -146,7 +146,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             setBackgroundColorPtr->clrBackground = clrBackground;
             setBackgroundColorPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setBackgroundColorPtr, ref RemoteGdiDevice.s_priv_ByteOrder_Msg13_SetBackgroundColor, typeof(RemoteGdiDevice.Msg13_SetBackgroundColor), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setBackgroundColorPtr, ref s_priv_ByteOrder_Msg13_SetBackgroundColor, typeof(RemoteGdiDevice.Msg13_SetBackgroundColor), 0, 0);
             _priv_pmsgUse = (Message*)setBackgroundColorPtr;
         }
 
@@ -173,7 +173,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             systemMemoryBitmapsPtr->fSystemMemoryBitmaps = fSystemMemoryBitmaps ? uint.MaxValue : 0U;
             systemMemoryBitmapsPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)systemMemoryBitmapsPtr, ref RemoteGdiDevice.s_priv_ByteOrder_Msg15_SetUseSystemMemoryBitmaps, typeof(RemoteGdiDevice.Msg15_SetUseSystemMemoryBitmaps), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)systemMemoryBitmapsPtr, ref s_priv_ByteOrder_Msg15_SetUseSystemMemoryBitmaps, typeof(RemoteGdiDevice.Msg15_SetUseSystemMemoryBitmaps), 0, 0);
             _priv_pmsgUse = (Message*)systemMemoryBitmapsPtr;
         }
 
@@ -200,7 +200,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             enableBackBufferPtr->fEnableBackBuffer = fEnableBackBuffer ? uint.MaxValue : 0U;
             enableBackBufferPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)enableBackBufferPtr, ref RemoteGdiDevice.s_priv_ByteOrder_Msg17_SetEnableBackBuffer, typeof(RemoteGdiDevice.Msg17_SetEnableBackBuffer), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)enableBackBufferPtr, ref s_priv_ByteOrder_Msg17_SetEnableBackBuffer, typeof(RemoteGdiDevice.Msg17_SetEnableBackBuffer), 0, 0);
             _priv_pmsgUse = (Message*)enableBackBufferPtr;
         }
 
@@ -227,7 +227,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             setAllowAnimationsPtr->fAllowAnimations = fAllowAnimations ? uint.MaxValue : 0U;
             setAllowAnimationsPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setAllowAnimationsPtr, ref RemoteGdiDevice.s_priv_ByteOrder_Msg19_SetAllowAnimations, typeof(RemoteGdiDevice.Msg19_SetAllowAnimations), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setAllowAnimationsPtr, ref s_priv_ByteOrder_Msg19_SetAllowAnimations, typeof(RemoteGdiDevice.Msg19_SetAllowAnimations), 0, 0);
             _priv_pmsgUse = (Message*)setAllowAnimationsPtr;
         }
 
@@ -254,7 +254,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             msg21SetAllowAlphaPtr->fAllowAlpha = fAllowAlpha ? uint.MaxValue : 0U;
             msg21SetAllowAlphaPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg21SetAllowAlphaPtr, ref RemoteGdiDevice.s_priv_ByteOrder_Msg21_SetAllowAlpha, typeof(RemoteGdiDevice.Msg21_SetAllowAlpha), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg21SetAllowAlphaPtr, ref s_priv_ByteOrder_Msg21_SetAllowAlpha, typeof(RemoteGdiDevice.Msg21_SetAllowAlpha), 0, 0);
             _priv_pmsgUse = (Message*)msg21SetAllowAlphaPtr;
         }
 

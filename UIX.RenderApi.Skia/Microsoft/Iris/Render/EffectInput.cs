@@ -14,6 +14,6 @@ namespace Microsoft.Iris.Render
 
         internal EffectInputType Type => this.m_typeInput;
 
-        internal override void AddCacheKey(ByteBuilder cacheKey) => this.GenerateClassCacheKey((byte)0, (byte)this.m_typeInput, cacheKey);
+        internal override void AddCacheKey(ByteBuilder cacheKey) => this.GenerateClassCacheKey(0, (byte)this.m_typeInput, cacheKey);
     }
 }

@@ -38,7 +38,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             msg0ReleaseObjectPtr->punkObj = punkObj;
             msg0ReleaseObjectPtr->_priv_idObjectSubject = contextClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0ReleaseObjectPtr, ref RemoteContext.s_priv_ByteOrder_Msg0_ReleaseObject, typeof(RemoteContext.Msg0_ReleaseObject), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0ReleaseObjectPtr, ref s_priv_ByteOrder_Msg0_ReleaseObject, typeof(RemoteContext.Msg0_ReleaseObject), 0, 0);
             _priv_pmsgUse = (Message*)msg0ReleaseObjectPtr;
         }
 
@@ -48,7 +48,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteContext.BuildReleaseObject(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, punkObj);
+            BuildReleaseObject(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, punkObj);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 
@@ -74,7 +74,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             blobInfo.Attach((Message*)msg2ForwardMessagePtr);
             msg2ForwardMessagePtr->_priv_idObjectSubject = contextClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg2ForwardMessagePtr, ref RemoteContext.s_priv_ByteOrder_Msg2_ForwardMessage, typeof(RemoteContext.Msg2_ForwardMessage), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg2ForwardMessagePtr, ref s_priv_ByteOrder_Msg2_ForwardMessage, typeof(RemoteContext.Msg2_ForwardMessage), 0, 0);
             _priv_pmsgUse = (Message*)msg2ForwardMessagePtr;
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteContext.BuildForwardMessage(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idContextDest, msgReturn);
+            BuildForwardMessage(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idContextDest, msgReturn);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 
@@ -106,7 +106,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             msg3DestroyGroupPtr->idxGroup = idxGroup;
             msg3DestroyGroupPtr->_priv_idObjectSubject = contextClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg3DestroyGroupPtr, ref RemoteContext.s_priv_ByteOrder_Msg3_DestroyGroup, typeof(RemoteContext.Msg3_DestroyGroup), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg3DestroyGroupPtr, ref s_priv_ByteOrder_Msg3_DestroyGroup, typeof(RemoteContext.Msg3_DestroyGroup), 0, 0);
             _priv_pmsgUse = (Message*)msg3DestroyGroupPtr;
         }
 
@@ -116,7 +116,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteContext.BuildDestroyGroup(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idxGroup);
+            BuildDestroyGroup(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idxGroup);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 
@@ -139,7 +139,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
             msg4CreateGroupPtr->idContextOwner = idContextOwner;
             msg4CreateGroupPtr->_priv_idObjectSubject = contextClassHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg4CreateGroupPtr, ref RemoteContext.s_priv_ByteOrder_Msg4_CreateGroup, typeof(RemoteContext.Msg4_CreateGroup), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg4CreateGroupPtr, ref s_priv_ByteOrder_Msg4_CreateGroup, typeof(RemoteContext.Msg4_CreateGroup), 0, 0);
             _priv_pmsgUse = (Message*)msg4CreateGroupPtr;
         }
 
@@ -150,7 +150,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
-            RemoteContext.BuildCreateGroup(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idxGroup, idContextOwner);
+            BuildCreateGroup(out _priv_portUse, out _priv_pmsgUse, _priv_protocolInstance, idxGroup, idContextOwner);
             _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
         }
 

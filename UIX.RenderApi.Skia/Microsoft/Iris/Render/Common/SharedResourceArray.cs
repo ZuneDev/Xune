@@ -13,14 +13,14 @@ namespace Microsoft.Iris.Render.Common
         private SharedResource[] m_rgResources;
 
         internal SharedResourceArray(SharedResource resource)
-          : base((RenderSession)null)
+          : base(null)
         {
             this.m_rgResources = new SharedResource[1];
             this.m_rgResources[0] = resource;
         }
 
         internal SharedResourceArray(SharedResource[] rgResources)
-          : base((RenderSession)null)
+          : base(null)
           => this.m_rgResources = rgResources;
 
         protected override void OnUsageChange(bool fUsed)
@@ -30,9 +30,9 @@ namespace Microsoft.Iris.Render.Common
                 if (this.m_rgResources[index] != null)
                 {
                     if (fUsed)
-                        this.m_rgResources[index].AddActiveUser((object)this);
+                        this.m_rgResources[index].AddActiveUser(this);
                     else
-                        this.m_rgResources[index].RemoveActiveUser((object)this);
+                        this.m_rgResources[index].RemoveActiveUser(this);
                 }
             }
         }

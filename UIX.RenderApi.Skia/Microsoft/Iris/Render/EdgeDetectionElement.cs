@@ -38,10 +38,10 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "EdgeLimit", (byte)8, ref this.m_nEdgeLimitID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "EdgeLimit", 8, ref this.m_nEdgeLimitID, ref nNextUniqueID);
         }
 
-        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("EdgeLimit", EffectPropertyType.Float, (object)this.m_flEdgeLimit, this.m_nEdgeLimitID, dictProperties);
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("EdgeLimit", EffectPropertyType.Float, m_flEdgeLimit, this.m_nEdgeLimitID, dictProperties);
 
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {

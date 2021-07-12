@@ -39,8 +39,8 @@ namespace Microsoft.Iris.Render.Animation
             {
                 if (inDispose && this.m_remoteObject != null)
                     this.m_remoteObject.Dispose();
-                this.m_remoteObject = (RemoteAnimationInputProvider)null;
-                this.m_externalInput = (ExternalAnimationInput)null;
+                this.m_remoteObject = null;
+                this.m_externalInput = null;
             }
             finally
             {
@@ -50,7 +50,7 @@ namespace Microsoft.Iris.Render.Animation
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteObject.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = (RemoteAnimationInputProvider)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = null;
 
         void IAnimationInputProvider.PublishFloat(
           string propertyName,

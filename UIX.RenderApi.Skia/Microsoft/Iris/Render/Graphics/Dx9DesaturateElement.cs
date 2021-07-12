@@ -16,15 +16,15 @@ namespace Microsoft.Iris.Render.Graphics
         {
             VariableInfo variableInfo = new VariableInfo()
             {
-                ID = (int)efoDesaturate.DesaturateID,
+                ID = efoDesaturate.DesaturateID,
                 Type = Dx9VariableType.Float,
-                DefaultValue = (object)efoDesaturate.Desaturate,
+                DefaultValue = efoDesaturate.Desaturate,
                 IsDynamic = efoDesaturate.IsDynamicProperty("Desaturate")
             };
             variableInfo.Name = variableInfo.IsDynamic ? effectBuilder.GenerateGlobalVariable(variableInfo.Type, efoDesaturate.Name) : effectBuilder.GenerateGlobalConstant(variableInfo.Type, efoDesaturate.Name);
             effectBuilder.AddPropertyVariable(variableInfo);
             string name = variableInfo.Name;
-            effectBuilder.EmitPixelFragment(InvariantString.Format("    // Desaturate the value\r\n    {{\r\n        float3 vGray = {{.15, .55, .30}};\r\n        float fLuminance = dot({0}.rgb, vGray);\r\n        {0}.rgb = lerp({0}.rgb, fLuminance.rrr, {1});\r\n\r\n    }}\r\n", (object)effectBuilder.PixelShaderOutput, (object)name));
+            effectBuilder.EmitPixelFragment(InvariantString.Format("    // Desaturate the value\r\n    {{\r\n        float3 vGray = {{.15, .55, .30}};\r\n        float fLuminance = dot({0}.rgb, vGray);\r\n        {0}.rgb = lerp({0}.rgb, fLuminance.rrr, {1});\r\n\r\n    }}\r\n", effectBuilder.PixelShaderOutput, name));
         }
     }
 }

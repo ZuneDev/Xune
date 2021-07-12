@@ -34,8 +34,8 @@ namespace Microsoft.Iris.Render.Graphics
                     foreach (DynamicPool alPool in this.m_alPools)
                         alPool.Dispose();
                 }
-                this.m_alPools = (ArrayList)null;
-                this.m_device = (GraphicsDevice)null;
+                this.m_alPools = null;
+                this.m_device = null;
             }
             finally
             {
@@ -56,7 +56,7 @@ namespace Microsoft.Iris.Render.Graphics
             poolSurface.DestroyWhenEmpty = false;
             poolSurface.RemoteStub.SendSetPriority(-10);
             DynamicPool dynamicPool = new DynamicPool(poolSurface, nMinHeightPxl, nMaxHeightPxl);
-            this.m_alPools.Add((object)dynamicPool);
+            this.m_alPools.Add(dynamicPool);
             return dynamicPool;
         }
 
@@ -71,7 +71,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             Debug2.Validate(surfaceOwner != null, typeof(ArgumentNullException), "Must provide valid surface owner");
             Debug2.Validate(sizeContentPxl.Width > 0 && sizeContentPxl.Height > 0, typeof(ArgumentOutOfRangeException), "Must provide positive area for surface");
-            Surface surface = (Surface)null;
+            Surface surface = null;
             for (int index1 = 0; index1 < this.m_alPools.Count; ++index1)
             {
                 for (int index2 = (int)minAllocMethod; (PoolAllocMethod)index2 <= maxAllocMethod; ++index2)

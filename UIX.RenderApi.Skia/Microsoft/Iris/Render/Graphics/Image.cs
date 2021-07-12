@@ -48,11 +48,11 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (fInDispose && this.m_dataTracker != null)
                     MessagingSession.Current.ReturnDataBufferTracker(this.m_dataTracker);
-                this.m_surface = (Surface)null;
-                this.m_surfaceManager = (SurfaceManager)null;
-                this.m_dataTracker = (DataBufferTracker)null;
-                this.m_handlerContent = (ContentNotifyHandler)null;
-                this.m_session = (RenderSession)null;
+                this.m_surface = null;
+                this.m_surfaceManager = null;
+                this.m_dataTracker = null;
+                this.m_handlerContent = null;
+                this.m_session = null;
             }
             finally
             {
@@ -87,7 +87,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (this.m_surface != surface)
                 return;
-            this.m_surface = (Surface)null;
+            this.m_surface = null;
         }
 
         void ISurfaceContentOwner.OnRestoreContent(Surface surface)
@@ -112,7 +112,7 @@ namespace Microsoft.Iris.Render.Graphics
             this.m_session.AssertOwningThread();
             bool flag1 = false;
             bool flag2 = false;
-            DataBuffer buffer = (DataBuffer)null;
+            DataBuffer buffer = null;
             try
             {
                 SurfaceFormat nFormat = SurfaceFormatInfo.FromImageFormat(imageFormat);
@@ -121,15 +121,15 @@ namespace Microsoft.Iris.Render.Graphics
                 if (this.m_surface != null && (this.m_imageFormat != imageFormat || this.m_sizeImage != sizeImage || this.m_sizeGutterPxl != this.m_surface.GutterSize))
                 {
                     if (this.InUse)
-                        this.m_surface.RemoveActiveUser((object)this);
-                    this.m_surface = (Surface)null;
+                        this.m_surface.RemoveActiveUser(this);
+                    this.m_surface = null;
                 }
                 if (this.m_surface == null)
                 {
-                    this.m_surface = this.m_surfaceManager.RequestSurface((ISurfaceContentOwner)this, nFormat, sizeImage, this.m_sizeGutterPxl);
+                    this.m_surface = this.m_surfaceManager.RequestSurface(this, nFormat, sizeImage, this.m_sizeGutterPxl);
                     flag2 = true;
                     if (this.InUse)
-                        this.m_surface.AddActiveUser((object)this);
+                        this.m_surface.AddActiveUser(this);
                 }
                 IntPtr num1 = IntPtr.Zero;
                 if (this.m_session.IsForeignByteOrderOnWindowing)
@@ -163,7 +163,7 @@ namespace Microsoft.Iris.Render.Graphics
                 {
                     if (buffer != null)
                         this.StopTracking(buffer);
-                    this.m_surface = (Surface)null;
+                    this.m_surface = null;
                 }
             }
         }
@@ -182,7 +182,7 @@ namespace Microsoft.Iris.Render.Graphics
                     ((IImage)this).LoadContent(this.m_imageFormat, this.m_sizeImage, this.m_loadInfo.nStride, this.m_loadInfo.rgAppData);
                 }
                 else
-                    this.m_handlerContent(ContentNotification.Acquire, (IImage)this, IntPtr.Zero);
+                    this.m_handlerContent(ContentNotification.Acquire, this, IntPtr.Zero);
             }
             Surface surface = this.m_surface;
         }
@@ -194,13 +194,13 @@ namespace Microsoft.Iris.Render.Graphics
                 if (this.m_surface == null)
                     this.AcquireContent();
                 else
-                    this.m_surface.AddActiveUser((object)this);
+                    this.m_surface.AddActiveUser(this);
             }
             else
             {
                 if (this.m_surface == null)
                     return;
-                this.m_surface.RemoveActiveUser((object)this);
+                this.m_surface.RemoveActiveUser(this);
             }
         }
 
@@ -223,15 +223,15 @@ namespace Microsoft.Iris.Render.Graphics
                 if (this.m_dataTracker != null)
                 {
                     MessagingSession.Current.ReturnDataBufferTracker(this.m_dataTracker);
-                    this.m_dataTracker = (DataBufferTracker)null;
+                    this.m_dataTracker = null;
                 }
-                this.m_dataTracker = MessagingSession.Current.CreateDataBufferTracker((object)this);
+                this.m_dataTracker = MessagingSession.Current.CreateDataBufferTracker(this);
             }
             DataBufferCleanupInfo bufferCleanupInfo = new DataBufferCleanupInfo();
             bufferCleanupInfo.rgConvertData = rgConvertData;
             bufferCleanupInfo.imageLoadInfo = imageLoadInfo;
-            DataBufferTracker.CleanupEventHandler handler = new DataBufferTracker.CleanupEventHandler(Image.OnDataBufferConsumed);
-            this.m_dataTracker.Track(buffer, handler, (object)bufferCleanupInfo);
+            DataBufferTracker.CleanupEventHandler handler = new DataBufferTracker.CleanupEventHandler(OnDataBufferConsumed);
+            this.m_dataTracker.Track(buffer, handler, bufferCleanupInfo);
             this.m_loadInfo = imageLoadInfo;
         }
 
@@ -256,12 +256,12 @@ namespace Microsoft.Iris.Render.Graphics
                 if (imageLoadInfo.handlerNotify != null)
                 {
                     imageLoadInfo.imageOwner.m_insideReleaseCallback = true;
-                    imageLoadInfo.handlerNotify(ContentNotification.Release, (IImage)imageLoadInfo.imageOwner, imageLoadInfo.rgAppData);
+                    imageLoadInfo.handlerNotify(ContentNotification.Release, imageLoadInfo.imageOwner, imageLoadInfo.rgAppData);
                     imageLoadInfo.imageOwner.m_insideReleaseCallback = false;
                 }
                 imageLoadInfo.rgAppData = IntPtr.Zero;
-                imageLoadInfo.handlerNotify = (ContentNotifyHandler)null;
-                imageLoadInfo.imageOwner = (Image)null;
+                imageLoadInfo.handlerNotify = null;
+                imageLoadInfo.imageOwner = null;
             }
             if (!(contextData.rgConvertData != IntPtr.Zero))
                 return;

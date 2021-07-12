@@ -33,7 +33,7 @@ namespace Microsoft.Iris.Render.Animation
         {
             Debug2.Validate(objUser != null, typeof(ArgumentNullException), nameof(objUser));
             Debug2.Validate(propertyMap != null, typeof(ArgumentNullException), nameof(propertyMap));
-            this.m_uniqueId = ExternalAnimationInput.s_uniqueIdSeed++;
+            this.m_uniqueId = s_uniqueIdSeed++;
             this.m_propertyMap = propertyMap;
             this.m_session = session;
             this.m_remoteObject = session.BuildRemoteExternalAnimationInput(this, this.m_uniqueId);
@@ -46,9 +46,9 @@ namespace Microsoft.Iris.Render.Animation
             {
                 if (inDispose && this.m_remoteObject != null)
                     this.m_remoteObject.Dispose();
-                this.m_remoteObject = (RemoteExternalAnimationInput)null;
-                this.m_propertyMap = (IAnimationPropertyMap)null;
-                this.m_session = (RenderSession)null;
+                this.m_remoteObject = null;
+                this.m_propertyMap = null;
+                this.m_session = null;
             }
             finally
             {
@@ -63,7 +63,7 @@ namespace Microsoft.Iris.Render.Animation
         void IRenderHandleOwner.OnDisconnect()
         {
             this.m_uniqueId = 0U;
-            this.m_remoteObject = (RemoteExternalAnimationInput)null;
+            this.m_remoteObject = null;
         }
 
         RENDERHANDLE IAnimatableObject.GetObjectId() => this.m_remoteObject.RenderHandle;
@@ -79,7 +79,7 @@ namespace Microsoft.Iris.Render.Animation
         IAnimationInputProvider IExternalAnimationInput.CreateProvider(
           object objUser)
         {
-            return (IAnimationInputProvider)new AnimationInputProvider(objUser, this.m_session, this);
+            return new AnimationInputProvider(objUser, this.m_session, this);
         }
     }
 }

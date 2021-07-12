@@ -38,7 +38,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg8CreateVideoPoolPtr->idNewSurface = idNewSurface;
             msg8CreateVideoPoolPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg8CreateVideoPoolPtr, ref RemoteDx9Device.s_priv_ByteOrder_Msg8_CreateVideoPool, typeof(RemoteDx9Device.Msg8_CreateVideoPool), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg8CreateVideoPoolPtr, ref s_priv_ByteOrder_Msg8_CreateVideoPool, typeof(RemoteDx9Device.Msg8_CreateVideoPool), 0, 0);
             _priv_pmsgUse = (Message*)msg8CreateVideoPoolPtr;
         }
 
@@ -65,7 +65,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             surfaceAllocationPtr->_priv_msgid = 9U;
             surfaceAllocationPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)surfaceAllocationPtr, ref RemoteDx9Device.s_priv_ByteOrder_Msg9_EndVideoSurfaceAllocation, typeof(RemoteDx9Device.Msg9_EndVideoSurfaceAllocation), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)surfaceAllocationPtr, ref s_priv_ByteOrder_Msg9_EndVideoSurfaceAllocation, typeof(RemoteDx9Device.Msg9_EndVideoSurfaceAllocation), 0, 0);
             _priv_pmsgUse = (Message*)surfaceAllocationPtr;
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             surfaceAllocationPtr->_priv_msgid = 10U;
             surfaceAllocationPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)surfaceAllocationPtr, ref RemoteDx9Device.s_priv_ByteOrder_Msg10_BeginVideoSurfaceAllocation, typeof(RemoteDx9Device.Msg10_BeginVideoSurfaceAllocation), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)surfaceAllocationPtr, ref s_priv_ByteOrder_Msg10_BeginVideoSurfaceAllocation, typeof(RemoteDx9Device.Msg10_BeginVideoSurfaceAllocation), 0, 0);
             _priv_pmsgUse = (Message*)surfaceAllocationPtr;
         }
 

@@ -23,7 +23,7 @@ namespace Microsoft.Iris.Render
           : this()
         {
             Debug2.Validate(!string.IsNullOrEmpty(stName), typeof(ArgumentException), nameof(stName));
-            Debug2.Validate((double)flGrayLevel >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for GrayLevel is >= 0");
+            Debug2.Validate(flGrayLevel >= 0.0, typeof(ArgumentOutOfRangeException), "Valid range for GrayLevel is >= 0");
             this.m_stName = stName;
             this.m_direction = direction;
             this.m_flGrayLevel = flGrayLevel;
@@ -51,10 +51,10 @@ namespace Microsoft.Iris.Render
           Map<string, EffectProperty> dictionary,
           ref byte nNextUniqueID)
         {
-            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Direction", (byte)5, ref this.m_nDirectionID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "GrayLevel", (byte)8, ref this.m_nGrayLevelID, ref nNextUniqueID);
+            return base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "Direction", 5, ref this.m_nDirectionID, ref nNextUniqueID) + this.PreProcessProperty(dictionary, "GrayLevel", 8, ref this.m_nGrayLevelID, ref nNextUniqueID);
         }
 
-        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Direction", EffectPropertyType.Integer, (object)this.m_direction, this.m_nDirectionID, dictProperties) && this.GenerateProperty("GrayLevel", EffectPropertyType.Float, (object)this.m_flGrayLevel, this.m_nGrayLevelID, dictProperties);
+        internal override bool Process(Map<string, EffectProperty> dictProperties) => this.GenerateProperty("Direction", EffectPropertyType.Integer, m_direction, this.m_nDirectionID, dictProperties) && this.GenerateProperty("GrayLevel", EffectPropertyType.Float, m_flGrayLevel, this.m_nGrayLevelID, dictProperties);
 
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {

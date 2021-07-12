@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render
 
         public DestinationElement(float flDownsample)
         {
-            Debug2.Validate((double)flDownsample >= 0.0 && (double)flDownsample <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for downsample is [0,1]");
+            Debug2.Validate(flDownsample >= 0.0 && flDownsample <= 1.0, typeof(ArgumentOutOfRangeException), "Valid range for downsample is [0,1]");
             this.m_stName = "Destination";
             this.m_typeInput = EffectInputType.Destination;
             this.m_flDownsample = flDownsample;
@@ -61,15 +61,15 @@ namespace Microsoft.Iris.Render
             this.m_nDestinationID = nNextUniqueID++;
             this.AddEffectProperty(dictionary, "Downsample");
             this.m_nDownsampleID = nNextUniqueID++;
-            return num + this.PreProcessProperty(dictionary, "UVOffset", (byte)12, ref this.m_nUVOffsetID, ref nNextUniqueID);
+            return num + this.PreProcessProperty(dictionary, "UVOffset", 12, ref this.m_nUVOffsetID, ref nNextUniqueID);
         }
 
         internal override bool Process(Map<string, EffectProperty> dictProperties)
         {
-            if (!this.GenerateProperty("Destination", EffectPropertyType.Image, (object)null, this.m_nDestinationID, dictProperties))
+            if (!this.GenerateProperty("Destination", EffectPropertyType.Image, null, this.m_nDestinationID, dictProperties))
                 return false;
             dictProperties[this.GeneratePropertyPath("Destination")].IsDynamic = true;
-            return this.GenerateProperty("Downsample", EffectPropertyType.Float, (object)this.m_flDownsample, this.m_nDownsampleID, dictProperties) && this.GenerateProperty("UVOffset", EffectPropertyType.Vector2, (object)this.m_UVOffset, this.m_nUVOffsetID, dictProperties);
+            return this.GenerateProperty("Downsample", EffectPropertyType.Float, m_flDownsample, this.m_nDownsampleID, dictProperties) && this.GenerateProperty("UVOffset", EffectPropertyType.Vector2, m_UVOffset, this.m_nUVOffsetID, dictProperties);
         }
 
         internal override void AddCacheKey(ByteBuilder cacheKey)

@@ -37,6 +37,6 @@ namespace Microsoft.Iris.Render.Internal
 
         internal static uint ToUInt32(DataCookie handle) => handle.m_value;
 
-        public static DataCookie ReserveSlot() => DataCookie.FromUInt32(KeyAllocator.ReserveSlot());
+        public static DataCookie ReserveSlot() => FromUInt32(KeyAllocator.ReserveSlot());
     }
 }

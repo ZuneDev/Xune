@@ -116,18 +116,18 @@ namespace Microsoft.Iris.Render.Graphics
             }
             else
                 stringBuilder.Append("Temp");
-            return stringBuilder.ToString() + (object)this.m_nUniqueVariableID++;
+            return stringBuilder.ToString() + this.m_nUniqueVariableID++;
         }
 
         internal void Clear()
         {
-            this.m_stPixelOutput = (string)null;
+            this.m_stPixelOutput = null;
             this.m_nUniqueVariableID = 0;
             this.m_nRequirements = 0;
-            this.m_sbPixelShader = (StringBuilder)null;
-            this.m_sbVertexShader = (StringBuilder)null;
-            this.m_sbDeclarations = (StringBuilder)null;
-            this.m_sbEffect = (StringBuilder)null;
+            this.m_sbPixelShader = null;
+            this.m_sbVertexShader = null;
+            this.m_sbDeclarations = null;
+            this.m_sbEffect = null;
             if (this.m_alPropertyVariables != null)
                 this.m_alPropertyVariables.Clear();
             if (this.m_alGlobalVariables != null)
@@ -181,8 +181,8 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 ImageIndex = this.ImageCount
             };
-            dx9TextureInfo.TexCoordInput = InvariantString.Format("{0}{1}", (object)"vTexCoord", (object)dx9TextureInfo.ImageIndex);
-            dx9TextureInfo.Sampler = InvariantString.Format("{0}{1}", (object)"Sampler", (object)dx9TextureInfo.ImageIndex);
+            dx9TextureInfo.TexCoordInput = InvariantString.Format("{0}{1}", "vTexCoord", dx9TextureInfo.ImageIndex);
+            dx9TextureInfo.Sampler = InvariantString.Format("{0}{1}", "Sampler", dx9TextureInfo.ImageIndex);
             dx9TextureInfo.DownsamplePropertyID = -1;
             if (this.m_alTextureInfos == null)
                 this.m_alTextureInfos = new Vector<Dx9TextureInfo>();
@@ -201,7 +201,7 @@ namespace Microsoft.Iris.Render.Graphics
                 case Dx9TextureRequirements.TexelSize:
                     if (textureInfo.TexelSize != null)
                         break;
-                    string stName1 = InvariantString.Format("{0}{1}", (object)"TexelSize", (object)textureInfo.ImageIndex);
+                    string stName1 = InvariantString.Format("{0}{1}", "TexelSize", textureInfo.ImageIndex);
                     VariableInfo variableInfo1 = new VariableInfo()
                     {
                         IsDynamic = true,
@@ -209,7 +209,7 @@ namespace Microsoft.Iris.Render.Graphics
                         Type = Dx9VariableType.Vector2
                     };
                     variableInfo1.Name = this.GenerateGlobalVariable(variableInfo1.Type, stName1);
-                    variableInfo1.DefaultValue = (object)new Vector2(0.0f, 0.0f);
+                    variableInfo1.DefaultValue = new Vector2(0.0f, 0.0f);
                     this.AddGlobalVariable(variableInfo1);
                     textureInfo.TexelSize = variableInfo1.Name;
                     break;
@@ -219,7 +219,7 @@ namespace Microsoft.Iris.Render.Graphics
                 case Dx9TextureRequirements.TexUVSize:
                     if (textureInfo.TexUVSize != null)
                         break;
-                    string stName2 = InvariantString.Format("{0}{1}", (object)"TexUVSize", (object)textureInfo.ImageIndex);
+                    string stName2 = InvariantString.Format("{0}{1}", "TexUVSize", textureInfo.ImageIndex);
                     VariableInfo variableInfo2 = new VariableInfo()
                     {
                         IsDynamic = true,
@@ -227,14 +227,14 @@ namespace Microsoft.Iris.Render.Graphics
                         Type = Dx9VariableType.Vector2
                     };
                     variableInfo2.Name = this.GenerateGlobalVariable(variableInfo2.Type, stName2);
-                    variableInfo2.DefaultValue = (object)new Vector2(0.0f, 0.0f);
+                    variableInfo2.DefaultValue = new Vector2(0.0f, 0.0f);
                     this.AddGlobalVariable(variableInfo2);
                     textureInfo.TexUVSize = variableInfo2.Name;
                     break;
                 case Dx9TextureRequirements.TexUVRefPoint:
                     if (textureInfo.TexUVRefPoint != null)
                         break;
-                    string stName3 = InvariantString.Format("{0}{1}", (object)"TexUVRefPoint", (object)textureInfo.ImageIndex);
+                    string stName3 = InvariantString.Format("{0}{1}", "TexUVRefPoint", textureInfo.ImageIndex);
                     VariableInfo variableInfo3 = new VariableInfo()
                     {
                         IsDynamic = true,
@@ -242,7 +242,7 @@ namespace Microsoft.Iris.Render.Graphics
                         Type = Dx9VariableType.Vector2
                     };
                     variableInfo3.Name = this.GenerateGlobalVariable(variableInfo3.Type, stName3);
-                    variableInfo3.DefaultValue = (object)new Vector2(0.0f, 0.0f);
+                    variableInfo3.DefaultValue = new Vector2(0.0f, 0.0f);
                     this.AddGlobalVariable(variableInfo3);
                     textureInfo.TexUVRefPoint = variableInfo3.Name;
                     break;
@@ -269,7 +269,7 @@ namespace Microsoft.Iris.Render.Graphics
                     return "";
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int index = 0; index < this.m_alIncludes.Count; ++index)
-                    stringBuilder.AppendFormat("#include {0}\r\n", (object)this.m_alIncludes[index]);
+                    stringBuilder.AppendFormat("#include {0}\r\n", this.m_alIncludes[index]);
                 return stringBuilder.ToString();
             }
         }
@@ -304,7 +304,7 @@ namespace Microsoft.Iris.Render.Graphics
                 this.m_sbDeclarations.Append("struct PS_OUTPUT\r\n{\r\n    float4 Color       : COLOR;             // Object space position\r\n};\r\n\r\n");
                 this.m_sbDeclarations.Append("struct VS_INPUT\r\n{\r\n    float4 ObjPos       : POSITION;         // Object space position\r\n    float4 Color        : COLOR;            // Vertex color\r\n");
                 for (int index = 0; index < this.ImageCount; ++index)
-                    this.m_sbDeclarations.AppendFormat("    float2 TexCoord{0}    : TEXCOORD{0};        // Texture {0} UV coordinates\r\n", (object)index);
+                    this.m_sbDeclarations.AppendFormat("    float2 TexCoord{0}    : TEXCOORD{0};        // Texture {0} UV coordinates\r\n", index);
                 this.m_sbDeclarations.Append("};\r\n\r\n");
                 this.m_sbDeclarations.Append("struct VS_OUTPUT\r\n{\r\n    float4 ProjPos      : POSITION;         // Projected space position\r\n    float4 Color        : COLOR;            // Vertex color\r\n");
                 if (Bits.TestFlag(this.m_nRequirements, 1))
@@ -312,9 +312,9 @@ namespace Microsoft.Iris.Render.Graphics
                 for (int index = 0; index < this.ImageCount; ++index)
                 {
                     if (Bits.TestFlag(this.m_alTextureInfos[index].Requirements, 16))
-                        this.m_sbDeclarations.AppendFormat("    float3 TexCoord{0}    : TEXCOORD{0};        // Texture {0} UVW coordinates\r\n", (object)index);
+                        this.m_sbDeclarations.AppendFormat("    float3 TexCoord{0}    : TEXCOORD{0};        // Texture {0} UVW coordinates\r\n", index);
                     else
-                        this.m_sbDeclarations.AppendFormat("    float2 TexCoord{0}    : TEXCOORD{0};        // Texture {0} UV coordinates\r\n", (object)index);
+                        this.m_sbDeclarations.AppendFormat("    float2 TexCoord{0}    : TEXCOORD{0};        // Texture {0} UV coordinates\r\n", index);
                 }
                 this.m_sbDeclarations.Append("};\r\n\r\n");
             }
@@ -333,9 +333,9 @@ namespace Microsoft.Iris.Render.Graphics
                 for (int index = 0; index < this.ImageCount; ++index)
                 {
                     if (Bits.TestFlag(this.m_alTextureInfos[index].Requirements, 16))
-                        this.m_sbVertexShader.AppendFormat("    Output.TexCoord{0}   = float3(Input.TexCoord{0}.x * Output.ProjPos.w, Input.TexCoord{0}.y * Output.ProjPos.w, Output.ProjPos.w);\r\n", (object)index);
+                        this.m_sbVertexShader.AppendFormat("    Output.TexCoord{0}   = float3(Input.TexCoord{0}.x * Output.ProjPos.w, Input.TexCoord{0}.y * Output.ProjPos.w, Output.ProjPos.w);\r\n", index);
                     else
-                        this.m_sbVertexShader.AppendFormat("    Output.TexCoord{0}   = Input.TexCoord{0};\r\n", (object)index);
+                        this.m_sbVertexShader.AppendFormat("    Output.TexCoord{0}   = Input.TexCoord{0};\r\n", index);
                 }
             }
             return this.m_sbVertexShader.ToString();
@@ -348,9 +348,9 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 Dx9TextureInfo alTextureInfo = this.m_alTextureInfos[index];
                 if (Bits.TestFlag(alTextureInfo.Requirements, 16))
-                    stringBuilder.AppendFormat("    float2 {0}   = Input.TexCoord{1}.xy / Input.TexCoord{1}.z;\r\n", (object)alTextureInfo.TexCoordInput, (object)index);
+                    stringBuilder.AppendFormat("    float2 {0}   = Input.TexCoord{1}.xy / Input.TexCoord{1}.z;\r\n", alTextureInfo.TexCoordInput, index);
                 else
-                    stringBuilder.AppendFormat("    float2 {0}   = Input.TexCoord{1};\r\n", (object)alTextureInfo.TexCoordInput, (object)index);
+                    stringBuilder.AppendFormat("    float2 {0}   = Input.TexCoord{1};\r\n", alTextureInfo.TexCoordInput, index);
             }
             stringBuilder.Append("\r\n");
             stringBuilder.Append(this.m_sbPixelShader.ToString());

@@ -30,7 +30,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
                 return splashRenderingNt;
             }
             ProtocolSplashRenderingNt splashRenderingNt1 = new ProtocolSplashRenderingNt(port);
-            port.BindProtocol((ProtocolInstance)splashRenderingNt1);
+            port.BindProtocol(splashRenderingNt1);
             return splashRenderingNt1;
         }
 

@@ -35,7 +35,7 @@ namespace Microsoft.Iris.Render.Protocol
         private EngineApi.TimeoutEventHandler m_internalTimeoutHandler;
 
         internal MessagingSession(IRenderHost renderHost, RenderToken token)
-          : this(renderHost, token, (TimeoutHandler)null, 0U)
+          : this(renderHost, token, null, 0U)
         {
         }
 
@@ -53,11 +53,11 @@ namespace Microsoft.Iris.Render.Protocol
             this.m_renderHost = renderHost;
             this.m_ports = new Vector(2);
             this.m_localContextId = token.LocalContextId;
-            this.m_batchFlushInvokeItem = new DeferredInvokeItem((SharedRenderObject)null, (Delegate)new DeferredHandler(this.ProcessDeferredFlushBatch), (object)null);
+            this.m_batchFlushInvokeItem = new DeferredInvokeItem(null, new DeferredHandler(this.ProcessDeferredFlushBatch), null);
             this.m_batchFillCallback = new BatchCallback(this.OnBatchFirstMessage);
             this.InitializeLocalMessaging(this.m_localContextId, new EngineApi.MessageBufferEventHandler(this.OnIncomingMessageBuffer), nTimeoutSec, handlerTimeout);
             this.m_portRendering = this.CreatePort((token.EngineInfo as IrisEngineInfo).ConnectionInfo, token.DestinationContextId, token.RenderGroupId);
-            this.m_portWindowing = (RenderPort)null;
+            this.m_portWindowing = null;
             this.m_activeTrackers = new Vector();
         }
 
@@ -75,11 +75,11 @@ namespace Microsoft.Iris.Render.Protocol
                     this.m_ports.Clear();
                     this.ShutdownLocalMessaging();
                 }
-                this.m_activeTrackers = (Vector)null;
-                this.m_portWindowing = (RenderPort)null;
-                this.m_portRendering = (RenderPort)null;
-                this.m_ports = (Vector)null;
-                this.m_renderHost = (IRenderHost)null;
+                this.m_activeTrackers = null;
+                this.m_portWindowing = null;
+                this.m_portRendering = null;
+                this.m_ports = null;
+                this.m_renderHost = null;
             }
             finally
             {
@@ -91,8 +91,8 @@ namespace Microsoft.Iris.Render.Protocol
         {
             get
             {
-                lock (MessagingSession.s_sessions)
-                    return MessagingSession.s_sessions.ContainsKey(Thread.CurrentThread) ? MessagingSession.s_sessions[Thread.CurrentThread] : (MessagingSession)null;
+                lock (s_sessions)
+                    return s_sessions.ContainsKey(Thread.CurrentThread) ? s_sessions[Thread.CurrentThread] : null;
             }
         }
 
@@ -122,24 +122,24 @@ namespace Microsoft.Iris.Render.Protocol
                 args.nTimeOutSec = timeoutInSeconds;
             }
             EngineApi.IFC(EngineApi.SpInit(ref args));
-            lock (MessagingSession.s_sessions)
+            lock (s_sessions)
             {
                 this.m_owningThread = Thread.CurrentThread;
-                MessagingSession.s_sessions[this.m_owningThread] = this;
+                s_sessions[this.m_owningThread] = this;
             }
         }
 
         private void ShutdownLocalMessaging()
         {
-            lock (MessagingSession.s_sessions)
+            lock (s_sessions)
             {
-                MessagingSession.s_sessions.Remove(this.m_owningThread);
-                this.m_owningThread = (Thread)null;
+                s_sessions.Remove(this.m_owningThread);
+                this.m_owningThread = null;
             }
             EngineApi.IFC(EngineApi.SpUninit());
-            this.m_messageBufferHandler = (EngineApi.MessageBufferEventHandler)null;
-            this.m_externalTimeoutHandler = (TimeoutHandler)null;
-            this.m_internalTimeoutHandler = (EngineApi.TimeoutEventHandler)null;
+            this.m_messageBufferHandler = null;
+            this.m_externalTimeoutHandler = null;
+            this.m_internalTimeoutHandler = null;
         }
 
         internal static void DoEvents(uint nTimeoutInMsecs)
@@ -160,20 +160,20 @@ namespace Microsoft.Iris.Render.Protocol
             switch (connectionInfo)
             {
                 case LocalConnectionInfo _:
-                    channel = (IChannel)new LocalChannel((LocalConnectionInfo)connectionInfo);
+                    channel = new LocalChannel((LocalConnectionInfo)connectionInfo);
                     break;
                 case RemoteConnectionInfo _:
                     RemoteConnectionInfo connectionInfo1 = (RemoteConnectionInfo)connectionInfo;
-                    channel = (IChannel)new RemoteChannel(connectionInfo1);
+                    channel = new RemoteChannel(connectionInfo1);
                     foreignByteOrder = connectionInfo1.SwapByteOrder;
                     break;
                 default:
-                    return (RenderPort)null;
+                    return null;
             }
             RenderPort renderPort = new RenderPort(this, channel, destinationContextId, grpObjects, MessageCookieLayout.Default, foreignByteOrder);
             if (this.m_isConnected)
                 renderPort.Connect();
-            this.m_ports.Add((object)renderPort);
+            this.m_ports.Add(renderPort);
             return renderPort;
         }
 
@@ -184,7 +184,7 @@ namespace Microsoft.Iris.Render.Protocol
             if (tracker.Count != 0)
             {
                 tracker.TrackerEmpty += new EventHandler(this.OnDataBufferTrackerEmpty);
-                this.m_activeTrackers.Add((object)tracker);
+                this.m_activeTrackers.Add(tracker);
             }
             else
                 tracker.Dispose();
@@ -193,7 +193,7 @@ namespace Microsoft.Iris.Render.Protocol
         private void OnDataBufferTrackerEmpty(object objSender, EventArgs args)
         {
             DataBufferTracker dataBufferTracker = (DataBufferTracker)objSender;
-            this.m_activeTrackers.Remove((object)dataBufferTracker);
+            this.m_activeTrackers.Remove(dataBufferTracker);
             dataBufferTracker.TrackerEmpty -= new EventHandler(this.OnDataBufferTrackerEmpty);
             dataBufferTracker.Dispose();
         }
@@ -241,7 +241,7 @@ namespace Microsoft.Iris.Render.Protocol
             if (this.m_isBatchingMessages)
                 this.FlushBatch();
             while (this.m_pingRequestCount > 0)
-                MessagingSession.DoEvents(uint.MaxValue);
+                DoEvents(uint.MaxValue);
         }
 
         private void OnPingReply(object sender, EventArgs args)
@@ -260,7 +260,7 @@ namespace Microsoft.Iris.Render.Protocol
             if (this.m_batchBeginCallbacks == null)
                 return;
             this.m_batchBeginCallbacks();
-            this.m_batchBeginCallbacks = (BatchCallback)null;
+            this.m_batchBeginCallbacks = null;
         }
 
         internal void FlushBatch() => this.FlushCurrentBatch(false);
@@ -272,11 +272,11 @@ namespace Microsoft.Iris.Render.Protocol
             if (this.m_batchEndCallbacks != null)
             {
                 this.m_batchEndCallbacks();
-                this.m_batchEndCallbacks = (BatchCallback)null;
+                this.m_batchEndCallbacks = null;
             }
             this.m_isBatchingMessages = false;
             BatchCallback deliveryCallbacks = this.m_batchDeliveryCallbacks;
-            this.m_batchDeliveryCallbacks = (BatchCallback)null;
+            this.m_batchDeliveryCallbacks = null;
             foreach (RenderPort port in this.m_ports)
                 port.EndMessageBatch(deliveryCallbacks);
             if (stopBatching)
@@ -333,7 +333,7 @@ namespace Microsoft.Iris.Render.Protocol
           EngineApi.BufferInfo* pBufferInfo,
           void* pvBufferData)
         {
-            RenderPort renderPort = (RenderPort)null;
+            RenderPort renderPort = null;
             for (int index = 0; index < this.m_ports.Count; ++index)
             {
                 RenderPort port = (RenderPort)this.m_ports[index];
@@ -378,7 +378,7 @@ namespace Microsoft.Iris.Render.Protocol
           DeferredInvokePriority priority,
           TimeSpan delay)
         {
-            this.DeferredInvoke((SharedRenderObject)null, method, args, priority, delay);
+            this.DeferredInvoke(null, method, args, priority, delay);
         }
 
         internal void DeferredInvoke(
@@ -391,14 +391,14 @@ namespace Microsoft.Iris.Render.Protocol
             if (this.m_owningThread == null)
                 return;
             DeferredInvokeItem deferredInvokeItem = new DeferredInvokeItem(instanceOwner, method, args);
-            this.m_renderHost.DeferredInvoke(priority, (IDeferredInvokeItem)deferredInvokeItem, delay);
+            this.m_renderHost.DeferredInvoke(priority, deferredInvokeItem, delay);
         }
 
         private void DeferredInvoke(DeferredInvokeItem item, DeferredInvokePriority priority)
         {
             if (this.m_owningThread == null)
                 return;
-            this.m_renderHost.DeferredInvoke(priority, (IDeferredInvokeItem)item, TimeSpan.FromMilliseconds(0.0));
+            this.m_renderHost.DeferredInvoke(priority, item, TimeSpan.FromMilliseconds(0.0));
         }
 
         protected override void Invariant()

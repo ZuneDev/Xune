@@ -41,7 +41,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg0CreateSoundPtr->soundBuffer = soundBuffer != null ? soundBuffer.RenderHandle : RENDERHANDLE.NULL;
             msg0CreateSoundPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0CreateSoundPtr, ref RemoteSoundDevice.s_priv_ByteOrder_Msg0_CreateSound, typeof(RemoteSoundDevice.Msg0_CreateSound), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg0CreateSoundPtr, ref s_priv_ByteOrder_Msg0_CreateSound, typeof(RemoteSoundDevice.Msg0_CreateSound), 0, 0);
             _priv_pmsgUse = (Message*)msg0CreateSoundPtr;
         }
 
@@ -73,7 +73,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             createSoundBufferPtr->_priv_ctxcb = _priv_portUse.Session.LocalContext;
             createSoundBufferPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)createSoundBufferPtr, ref RemoteSoundDevice.s_priv_ByteOrder_Msg1_CreateSoundBuffer, typeof(RemoteSoundDevice.Msg1_CreateSoundBuffer), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)createSoundBufferPtr, ref s_priv_ByteOrder_Msg1_CreateSoundBuffer, typeof(RemoteSoundDevice.Msg1_CreateSoundBuffer), 0, 0);
             _priv_pmsgUse = (Message*)createSoundBufferPtr;
         }
 
@@ -101,7 +101,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             externalResourcesPtr->_priv_msgid = 2U;
             externalResourcesPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)externalResourcesPtr, ref RemoteSoundDevice.s_priv_ByteOrder_Msg2_EvictExternalResources, typeof(RemoteSoundDevice.Msg2_EvictExternalResources), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)externalResourcesPtr, ref s_priv_ByteOrder_Msg2_EvictExternalResources, typeof(RemoteSoundDevice.Msg2_EvictExternalResources), 0, 0);
             _priv_pmsgUse = (Message*)externalResourcesPtr;
         }
 
@@ -126,7 +126,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             externalResourcesPtr->_priv_msgid = 3U;
             externalResourcesPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)externalResourcesPtr, ref RemoteSoundDevice.s_priv_ByteOrder_Msg3_CreateExternalResources, typeof(RemoteSoundDevice.Msg3_CreateExternalResources), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)externalResourcesPtr, ref s_priv_ByteOrder_Msg3_CreateExternalResources, typeof(RemoteSoundDevice.Msg3_CreateExternalResources), 0, 0);
             _priv_pmsgUse = (Message*)externalResourcesPtr;
         }
 

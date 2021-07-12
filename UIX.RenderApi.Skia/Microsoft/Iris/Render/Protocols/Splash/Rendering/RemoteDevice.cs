@@ -37,7 +37,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             triggerDeviceResetPtr->_priv_msgid = 0U;
             triggerDeviceResetPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)triggerDeviceResetPtr, ref RemoteDevice.s_priv_ByteOrder_Msg0_TriggerDeviceReset, typeof(RemoteDevice.Msg0_TriggerDeviceReset), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)triggerDeviceResetPtr, ref s_priv_ByteOrder_Msg0_TriggerDeviceReset, typeof(RemoteDevice.Msg0_TriggerDeviceReset), 0, 0);
             _priv_pmsgUse = (Message*)triggerDeviceResetPtr;
         }
 
@@ -62,7 +62,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             captureBackBufferPtr->_priv_msgid = 1U;
             captureBackBufferPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)captureBackBufferPtr, ref RemoteDevice.s_priv_ByteOrder_Msg1_EndCaptureBackBuffer, typeof(RemoteDevice.Msg1_EndCaptureBackBuffer), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)captureBackBufferPtr, ref s_priv_ByteOrder_Msg1_EndCaptureBackBuffer, typeof(RemoteDevice.Msg1_EndCaptureBackBuffer), 0, 0);
             _priv_pmsgUse = (Message*)captureBackBufferPtr;
         }
 
@@ -92,7 +92,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             blobInfo.Attach((Message*)captureBackBufferPtr);
             captureBackBufferPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)captureBackBufferPtr, ref RemoteDevice.s_priv_ByteOrder_Msg2_BeginCaptureBackBuffer, typeof(RemoteDevice.Msg2_BeginCaptureBackBuffer), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)captureBackBufferPtr, ref s_priv_ByteOrder_Msg2_BeginCaptureBackBuffer, typeof(RemoteDevice.Msg2_BeginCaptureBackBuffer), 0, 0);
             _priv_pmsgUse = (Message*)captureBackBufferPtr;
         }
 
@@ -119,7 +119,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg3CreateGradientPtr->idNewGradient = idNewGradient;
             msg3CreateGradientPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg3CreateGradientPtr, ref RemoteDevice.s_priv_ByteOrder_Msg3_CreateGradient, typeof(RemoteDevice.Msg3_CreateGradient), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg3CreateGradientPtr, ref s_priv_ByteOrder_Msg3_CreateGradient, typeof(RemoteDevice.Msg3_CreateGradient), 0, 0);
             _priv_pmsgUse = (Message*)msg3CreateGradientPtr;
         }
 
@@ -142,7 +142,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg4StopPtr->_priv_msgid = 4U;
             msg4StopPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg4StopPtr, ref RemoteDevice.s_priv_ByteOrder_Msg4_Stop, typeof(RemoteDevice.Msg4_Stop), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg4StopPtr, ref s_priv_ByteOrder_Msg4_Stop, typeof(RemoteDevice.Msg4_Stop), 0, 0);
             _priv_pmsgUse = (Message*)msg4StopPtr;
         }
 
@@ -169,7 +169,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             msg5RestartPtr->nRenderGeneration = nRenderGeneration;
             msg5RestartPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg5RestartPtr, ref RemoteDevice.s_priv_ByteOrder_Msg5_Restart, typeof(RemoteDevice.Msg5_Restart), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)msg5RestartPtr, ref s_priv_ByteOrder_Msg5_Restart, typeof(RemoteDevice.Msg5_Restart), 0, 0);
             _priv_pmsgUse = (Message*)msg5RestartPtr;
         }
 
@@ -198,7 +198,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             createSurfacePoolPtr->nFormat = nFormat;
             createSurfacePoolPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)createSurfacePoolPtr, ref RemoteDevice.s_priv_ByteOrder_Msg6_CreateSurfacePool, typeof(RemoteDevice.Msg6_CreateSurfacePool), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)createSurfacePoolPtr, ref s_priv_ByteOrder_Msg6_CreateSurfacePool, typeof(RemoteDevice.Msg6_CreateSurfacePool), 0, 0);
             _priv_pmsgUse = (Message*)createSurfacePoolPtr;
         }
 

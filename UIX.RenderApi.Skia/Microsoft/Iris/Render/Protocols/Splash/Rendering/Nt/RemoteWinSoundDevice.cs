@@ -32,7 +32,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering.Nt
             msg4CreatePtr->_priv_msgid = 4U;
             msg4CreatePtr->_priv_idObjectSubject = remoteWinSoundDevice.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteWinSoundDevice.s_priv_ByteOrder_Msg4_Create, typeof(RemoteWinSoundDevice.Msg4_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg4_Create, typeof(RemoteWinSoundDevice.Msg4_Create), 0, 0);
             port.CreateRemoteObject(deviceClassHandle, remoteWinSoundDevice.m_renderHandle, (Message*)msg4CreatePtr);
             return remoteWinSoundDevice;
         }

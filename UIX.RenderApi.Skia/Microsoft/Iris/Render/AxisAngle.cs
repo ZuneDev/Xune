@@ -40,7 +40,7 @@ namespace Microsoft.Iris.Render
 
         public override bool Equals(object obj) => obj is AxisAngle axisAngle && this == axisAngle;
 
-        public static bool operator ==(AxisAngle left, AxisAngle right) => left.Axis == right.Axis && (double)left.Angle == (double)right.Angle;
+        public static bool operator ==(AxisAngle left, AxisAngle right) => left.Axis == right.Axis && left.Angle == (double)right.Angle;
 
         public static bool operator !=(AxisAngle left, AxisAngle right) => !(left == right);
 

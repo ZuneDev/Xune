@@ -32,7 +32,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
 
         public override int GetHashCode() => base.GetHashCode();
 
-        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(LocalHwndHostWindowCallback.DispatchCallback), out uint _);
+        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
 
         private static unsafe void DispatchCallback(
           RenderPort port,
@@ -41,7 +41,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
         {
             if (!(owner is IHwndHostWindowCallback _priv_target) || message->nMsg != 0U)
                 return;
-            LocalHwndHostWindowCallback.Dispatch_OnHandleChanged(port, _priv_target, (LocalHwndHostWindowCallback.Msg0_OnHandleChanged*)message);
+            Dispatch_OnHandleChanged(port, _priv_target, (LocalHwndHostWindowCallback.Msg0_OnHandleChanged*)message);
         }
 
         private static unsafe void Dispatch_OnHandleChanged(

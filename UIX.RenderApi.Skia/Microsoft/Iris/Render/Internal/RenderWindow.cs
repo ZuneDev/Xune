@@ -113,10 +113,10 @@ namespace Microsoft.Iris.Render.Internal
             this.m_fSessionHasDisplay = true;
             this.m_fSessionLocked = false;
             this.m_szDefault = new Size(640, 480);
-            this.m_clrOutlineAllColor = new ColorF((int)byte.MaxValue, 0, (int)byte.MaxValue, 0);
-            this.m_clrOutlineMarkedColor = new ColorF((int)byte.MaxValue, (int)byte.MaxValue, 0, 0);
+            this.m_clrOutlineAllColor = new ColorF(byte.MaxValue, 0, byte.MaxValue, 0);
+            this.m_clrOutlineMarkedColor = new ColorF(byte.MaxValue, byte.MaxValue, 0, 0);
             this.m_mapShutdownHooks = new SmartMap<RenderWindow.ShutdownHookInfo>();
-            this.m_nextShutdownHookId = (ushort)1;
+            this.m_nextShutdownHookId = 1;
             this.m_nMouseLockCount = 0;
             this.SetFullScreenExclusive(false);
         }
@@ -128,16 +128,16 @@ namespace Microsoft.Iris.Render.Internal
           GraphicsDeviceType graphicsDeviceType,
           GraphicsRenderingQuality renderingQuality)
         {
-            GraphicsDevice graphicsDevice = (GraphicsDevice)null;
+            GraphicsDevice graphicsDevice = null;
             EngineApi.IFC(FormApi.SpGdiplusInit());
             this.m_graphicsDeviceType = graphicsDeviceType;
             switch (this.m_graphicsDeviceType)
             {
                 case GraphicsDeviceType.Gdi:
-                    this.m_device = (GraphicsDevice)new GdiGraphicsDevice(session);
+                    this.m_device = new GdiGraphicsDevice(session);
                     break;
                 case GraphicsDeviceType.Direct3D9:
-                    this.m_device = (GraphicsDevice)new NtGraphicsDevice(session, renderingQuality);
+                    this.m_device = new NtGraphicsDevice(session, renderingQuality);
                     break;
             }
             return graphicsDevice;
@@ -146,8 +146,8 @@ namespace Microsoft.Iris.Render.Internal
         internal void Dispose()
         {
             this.Visible = false;
-            this.m_remoteWindow.SendSetRoot((RemoteVisual)null);
-            this.m_rootVisual.UnregisterUsage((object)this);
+            this.m_remoteWindow.SendSetRoot(null);
+            this.m_rootVisual.UnregisterUsage(this);
             this.StopRendering();
         }
 
@@ -156,19 +156,19 @@ namespace Microsoft.Iris.Render.Internal
             if (this.m_device != null)
             {
                 this.m_device.Dispose();
-                this.m_device = (GraphicsDevice)null;
+                this.m_device = null;
             }
             if (this.m_remoteWindow != null)
             {
                 this.m_remoteWindow.Dispose();
-                this.m_remoteWindow = (RemoteFormWindow)null;
+                this.m_remoteWindow = null;
             }
             EngineApi.IFC(FormApi.SpGdiplusUninit());
         }
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteWindow.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteWindow = (RemoteFormWindow)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteWindow = null;
 
         internal RemoteFormWindow RemoteStub => this.m_remoteWindow;
 
@@ -312,13 +312,13 @@ namespace Microsoft.Iris.Render.Internal
 
         IDisplay IRenderWindow.CurrentDisplay
         {
-            get => this.m_currentDisplay == null ? this.m_displayManager.PrimaryDisplay : (IDisplay)this.m_currentDisplay;
+            get => this.m_currentDisplay == null ? this.m_displayManager.PrimaryDisplay : m_currentDisplay;
             set => this.SetCurrentDisplay(value);
         }
 
         private void SetCurrentDisplay(IDisplay inputIDisplay)
         {
-            Debug2.Validate(inputIDisplay is Display, (Type)null, "CurrentDisplay.set param MUST be a valid Display object");
+            Debug2.Validate(inputIDisplay is Display, null, "CurrentDisplay.set param MUST be a valid Display object");
             Display display = this.m_displayManager.DisplayFromUniqueId((inputIDisplay as Display).UniqueId);
             if (display == null)
                 return;
@@ -380,9 +380,9 @@ namespace Microsoft.Iris.Render.Internal
             set => this.m_remoteWindow.INPROC_SendSetAppNotifyWindow(value);
         }
 
-        IVisualContainer IRenderWindow.VisualRoot => (IVisualContainer)this.m_rootVisual;
+        IVisualContainer IRenderWindow.VisualRoot => m_rootVisual;
 
-        TreeNode ITreeOwner.Root => (TreeNode)this.m_rootVisual;
+        TreeNode ITreeOwner.Root => m_rootVisual;
 
         internal bool IsClosing => this.m_fClosing;
 
@@ -464,7 +464,7 @@ namespace Microsoft.Iris.Render.Internal
         {
             if (this.WindowCreatedEvent == null)
                 return;
-            this.WindowCreatedEvent((object)this, EventArgs.Empty);
+            this.WindowCreatedEvent(this, EventArgs.Empty);
         }
 
         private void OnForwardWndMsg(uint msg, IntPtr wParam, IntPtr lParam)
@@ -617,11 +617,11 @@ namespace Microsoft.Iris.Render.Internal
             if (fCanAdd)
             {
                 ushort uIdMsg = this.m_nextShutdownHookId++;
-                this.m_mapShutdownHooks.SetValue((uint)uIdMsg, desired);
+                this.m_mapShutdownHooks.SetValue(uIdMsg, desired);
                 this.m_remoteWindow.SendEnableShellShutdownHook(hookName, uIdMsg);
             }
             else
-                desired = (RenderWindow.ShutdownHookInfo)null;
+                desired = null;
             return desired;
         }
 
@@ -683,7 +683,7 @@ namespace Microsoft.Iris.Render.Internal
         {
             RenderWindow.FormStateCallbackMsg* stateCallbackMsgPtr = (RenderWindow.FormStateCallbackMsg*)pmsgRaw;
             if (this.m_session.IsForeignByteOrderOnWindowing)
-                MarshalHelper.SwapByteOrder((byte*)stateCallbackMsgPtr, ref RenderWindow.s_ByteOrder_FormStateCallbackMsg, typeof(RenderWindow.FormStateCallbackMsg), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)stateCallbackMsgPtr, ref s_ByteOrder_FormStateCallbackMsg, typeof(RenderWindow.FormStateCallbackMsg), 0, 0);
             uint num = 0;
             if (this.m_currentDisplay != null)
                 num = this.m_currentDisplay.UniqueId;
@@ -713,7 +713,7 @@ namespace Microsoft.Iris.Render.Internal
                 this.OnLocationChanged();
             if (flag5)
             {
-                this.m_rootVisual.Size = new Vector2((float)this.m_nWidth, (float)this.m_nHeight);
+                this.m_rootVisual.Size = new Vector2(m_nWidth, m_nHeight);
                 this.OnSizeChanged();
             }
             if (((int)stateCallbackMsgPtr->uRecentlyChanged & 1) != 0)
@@ -734,15 +734,15 @@ namespace Microsoft.Iris.Render.Internal
         {
             if (this.m_partialDropData == null)
                 this.m_partialDropData = new ArrayList();
-            this.m_partialDropData.Add((object)file);
+            this.m_partialDropData.Add(file);
         }
 
         void IFormWindowCallback.OnDropComplete(RENDERHANDLE target)
         {
             if (this.m_partialDropData == null || this.m_partialDropData.Count <= 0)
                 return;
-            IEnumerable partialDropData = (IEnumerable)this.m_partialDropData;
-            this.m_partialDropData = (ArrayList)null;
+            IEnumerable partialDropData = m_partialDropData;
+            this.m_partialDropData = null;
             this.OnDroppedFiles(partialDropData);
         }
 
@@ -763,16 +763,16 @@ namespace Microsoft.Iris.Render.Internal
           ushort hookId)
         {
             RenderWindow.ShutdownHookInfo shutdownHookInfo;
-            if (!this.m_mapShutdownHooks.TryGetValue((uint)hookId, out shutdownHookInfo))
+            if (!this.m_mapShutdownHooks.TryGetValue(hookId, out shutdownHookInfo))
                 return;
-            shutdownHookInfo.OnHook((object)this, EventArgs.Empty);
+            shutdownHookInfo.OnHook(this, EventArgs.Empty);
         }
 
         void IFormWindowCallback.OnNativeScreensave(
           RENDERHANDLE target,
           bool fStartScreensave)
         {
-            this.m_session.DeferredInvoke((Delegate)new DeferredHandler(this.DoNativeScreensave), (object)fStartScreensave, DeferredInvokePriority.Idle);
+            this.m_session.DeferredInvoke(new DeferredHandler(this.DoNativeScreensave), fStartScreensave, DeferredInvokePriority.Idle);
         }
 
         private void DoNativeScreensave(object objParam) => this.OnNativeScreensave((bool)objParam);
@@ -792,13 +792,13 @@ namespace Microsoft.Iris.Render.Internal
         {
             if (this.RendererSuspendedEvent == null)
                 return;
-            this.RendererSuspendedEvent((object)this.m_device, new RenderWindow.RendererSuspendedArgs(fSuspended));
+            this.RendererSuspendedEvent(m_device, new RenderWindow.RendererSuspendedArgs(fSuspended));
         }
 
         internal RenderWindow.RenderFlags GlobalRenderFlags
         {
             get => this.m_renderFlags;
-            set => this.SetGlobalRenderFlags(value, RenderWindow.RenderFlags.All);
+            set => this.SetGlobalRenderFlags(value, RenderFlags.All);
         }
 
         internal bool SetGlobalRenderFlags(
@@ -843,10 +843,10 @@ namespace Microsoft.Iris.Render.Internal
             this.m_remoteWindow.SendCreateRootContainer();
             this.m_remoteWindow.SendSetHitMasks(1U, 2U, 4U, 8U);
             RemoteVisual remoteVisual;
-            this.m_rootVisual = new VisualContainer(true, this.m_session, this, (object)null, out remoteVisual);
-            this.m_rootVisual.RegisterUsage((object)this);
+            this.m_rootVisual = new VisualContainer(true, this.m_session, this, null, out remoteVisual);
+            this.m_rootVisual.RegisterUsage(this);
             this.m_remoteWindow.SendSetRoot(remoteVisual);
-            this.m_rootVisual.Size = new Vector2((float)this.m_nWidth, (float)this.m_nHeight);
+            this.m_rootVisual.Size = new Vector2(m_nWidth, m_nHeight);
         }
 
         void IRenderWindow.ClientToScreen(ref Point point)
@@ -930,7 +930,7 @@ namespace Microsoft.Iris.Render.Internal
         {
             if (this.m_stkWaitCursors == null)
                 this.m_stkWaitCursors = new Stack();
-            this.m_stkWaitCursors.Push((object)cursor);
+            this.m_stkWaitCursors.Push(cursor);
             this.UpdateCursors();
         }
 
@@ -975,18 +975,18 @@ namespace Microsoft.Iris.Render.Internal
         {
             if (!this.m_session.IsValid)
                 return;
-            Debug2.Validate(edges != null, (Type)null, "Must pass non-null edges set");
-            Debug2.Validate(edges.Length == 4, (Type)null, "Must pass exactly 4 edges, LTRB");
+            Debug2.Validate(edges != null, null, "Must pass non-null edges set");
+            Debug2.Validate(edges.Length == 4, null, "Must pass exactly 4 edges, LTRB");
             for (int index = 0; index < 4; ++index)
             {
-                Debug2.Validate(edges[index].ModuleName != null, (Type)null, "Must pass non-null ModuleName:" + index.ToString());
-                Debug2.Validate(edges[index].ResourceName != null, (Type)null, "Must pass non-null ResourceName:" + index.ToString());
+                Debug2.Validate(edges[index].ModuleName != null, null, "Must pass non-null ModuleName:" + index.ToString());
+                Debug2.Validate(edges[index].ResourceName != null, null, "Must pass non-null ResourceName:" + index.ToString());
             }
-            Debug2.Validate(string.Equals(edges[0].ModuleName, edges[1].ModuleName), (Type)null, "Module names differ - not supported");
-            Debug2.Validate(string.Equals(edges[0].ModuleName, edges[2].ModuleName), (Type)null, "Module names differ - not supported");
-            Debug2.Validate(string.Equals(edges[0].ModuleName, edges[3].ModuleName), (Type)null, "Module names differ - not supported");
-            Debug2.Validate(edges[0].SplitPoints == edges[2].SplitPoints, (Type)null, "L+R splits differ - not supported");
-            Debug2.Validate(edges[1].SplitPoints == edges[3].SplitPoints, (Type)null, "T+B splits differ - not supported");
+            Debug2.Validate(string.Equals(edges[0].ModuleName, edges[1].ModuleName), null, "Module names differ - not supported");
+            Debug2.Validate(string.Equals(edges[0].ModuleName, edges[2].ModuleName), null, "Module names differ - not supported");
+            Debug2.Validate(string.Equals(edges[0].ModuleName, edges[3].ModuleName), null, "Module names differ - not supported");
+            Debug2.Validate(edges[0].SplitPoints == edges[2].SplitPoints, null, "L+R splits differ - not supported");
+            Debug2.Validate(edges[1].SplitPoints == edges[3].SplitPoints, null, "T+B splits differ - not supported");
             Inset insetSplits = new Inset(edges[1].SplitPoints.Left, edges[0].SplitPoints.Top, edges[1].SplitPoints.Right, edges[0].SplitPoints.Bottom);
             this.m_remoteWindow.SendSetEdgeImageParts(fActiveEdges, edges[0].ModuleName, edges[0].ResourceName, edges[1].ResourceName, edges[2].ResourceName, edges[3].ResourceName, insetSplits);
         }
@@ -1047,7 +1047,7 @@ namespace Microsoft.Iris.Render.Internal
             this.m_remoteWindow.SendTemporarilyExitExclusiveMode();
         }
 
-        public IHwndHostWindow CreateHwndHostWindow() => (IHwndHostWindow)new HwndHostWindow(this);
+        public IHwndHostWindow CreateHwndHostWindow() => new HwndHostWindow(this);
 
         public void UnlockForegroundWindow()
         {
@@ -1092,7 +1092,7 @@ namespace Microsoft.Iris.Render.Internal
         {
             Cursor cursor1 = Cursor.NullCursor;
             Cursor nullCursor = Cursor.NullCursor;
-            Cursor cursor2 = (Cursor)null;
+            Cursor cursor2 = null;
             if (this.m_stkWaitCursors != null && this.m_stkWaitCursors.Count > 0)
                 cursor2 = this.m_stkWaitCursors.Peek() as Cursor;
             Cursor cursor3;

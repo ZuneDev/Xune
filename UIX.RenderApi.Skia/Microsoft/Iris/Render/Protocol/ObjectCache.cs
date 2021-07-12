@@ -18,14 +18,14 @@ namespace Microsoft.Iris.Render.Protocol
         public ObjectCache(ObjectCache.Callback callback, int cFreeItems, bool fPrePopulate)
         {
             Debug2.Validate(callback != null, typeof(ArgumentNullException), "calback");
-            Debug2.Validate(cFreeItems > 0, typeof(ArgumentException), (object)"Free list must have at least one entry", (object)nameof(cFreeItems));
+            Debug2.Validate(cFreeItems > 0, typeof(ArgumentException), "Free list must have at least one entry", nameof(cFreeItems));
             this.m_callback = callback;
             this.m_arFreeObjs = new object[cFreeItems];
             this.m_idxFree = -1;
             if (!fPrePopulate)
                 return;
             for (int index = 0; index < cFreeItems; ++index)
-                this.Push(this.DoCallback(ObjectCache.Operation.Alloc, (object)null));
+                this.Push(this.DoCallback(Operation.Alloc, null));
         }
 
         public void Dispose()
@@ -35,18 +35,18 @@ namespace Microsoft.Iris.Render.Protocol
                 return;
             int idxFree = this.m_idxFree;
             this.m_idxFree = -1;
-            this.m_arFreeObjs = (object[])null;
+            this.m_arFreeObjs = null;
             for (; idxFree >= 0; --idxFree)
-                this.DoCallback(ObjectCache.Operation.Free, arFreeObjs[idxFree]);
+                this.DoCallback(Operation.Free, arFreeObjs[idxFree]);
         }
 
         public object Pop()
         {
-            ObjectCache.Operation operation = ObjectCache.Operation.Alloc;
-            object data = (object)null;
+            ObjectCache.Operation operation = Operation.Alloc;
+            object data = null;
             if (this.m_idxFree >= 0)
             {
-                operation = ObjectCache.Operation.Thaw;
+                operation = Operation.Thaw;
                 data = this.m_arFreeObjs[this.m_idxFree--];
             }
             return this.DoCallback(operation, data);
@@ -56,11 +56,11 @@ namespace Microsoft.Iris.Render.Protocol
         {
             if (this.m_idxFree + 1 >= this.m_arFreeObjs.Length)
             {
-                this.DoCallback(ObjectCache.Operation.Free, data);
+                this.DoCallback(Operation.Free, data);
             }
             else
             {
-                data = this.DoCallback(ObjectCache.Operation.Freeze, data);
+                data = this.DoCallback(Operation.Freeze, data);
                 this.m_arFreeObjs[++this.m_idxFree] = data;
             }
         }

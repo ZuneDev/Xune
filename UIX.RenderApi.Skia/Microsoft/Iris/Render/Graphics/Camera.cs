@@ -53,7 +53,7 @@ namespace Microsoft.Iris.Render.Graphics
                 if (!fInDispose || this.m_remoteCamera == null)
                     return;
                 this.m_remoteCamera.Dispose();
-                this.m_remoteCamera = (RemoteCamera)null;
+                this.m_remoteCamera = null;
             }
             finally
             {
@@ -63,7 +63,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteCamera.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteCamera = (RemoteCamera)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteCamera = null;
 
         internal RemoteCamera RemoteStub => this.m_remoteCamera;
 
@@ -129,7 +129,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         private void SetZn(float flZn)
         {
-            if ((double)this.m_flZn == (double)flZn)
+            if (m_flZn == (double)flZn)
                 return;
             this.m_flZn = flZn;
             if (!this.m_session.IsValid || !this.m_remoteCamera.IsValid)
@@ -151,13 +151,13 @@ namespace Microsoft.Iris.Render.Graphics
 
         uint IAnimatableObject.GetPropertyId(string propertyName)
         {
-            if (propertyName == Camera.EyeProperty)
+            if (propertyName == EyeProperty)
                 return 1;
-            if (propertyName == Camera.AtProperty)
+            if (propertyName == AtProperty)
                 return 2;
-            if (propertyName == Camera.UpProperty)
+            if (propertyName == UpProperty)
                 return 3;
-            if (propertyName == Camera.ZnProperty)
+            if (propertyName == ZnProperty)
                 return 4;
             Debug2.Validate(false, typeof(ArgumentException), "Unsupported property");
             return 0;
@@ -166,9 +166,9 @@ namespace Microsoft.Iris.Render.Graphics
         AnimationInputType IAnimatableObject.GetPropertyType(
           string propertyName)
         {
-            if (propertyName == Camera.EyeProperty || propertyName == Camera.AtProperty || propertyName == Camera.UpProperty)
+            if (propertyName == EyeProperty || propertyName == AtProperty || propertyName == UpProperty)
                 return AnimationInputType.Vector3;
-            if (propertyName == Camera.ZnProperty)
+            if (propertyName == ZnProperty)
                 return AnimationInputType.Float;
             Debug2.Validate(false, typeof(ArgumentException), "Unsupported property");
             return AnimationInputType.Float;

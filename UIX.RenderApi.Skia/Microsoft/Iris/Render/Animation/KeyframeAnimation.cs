@@ -39,18 +39,18 @@ namespace Microsoft.Iris.Render.Animation
         internal KeyframeAnimation(AnimationSystem owner, AnimationInput initialValue)
         {
             this.m_animationSystem = owner;
-            this.m_reference = (AnimationInput)null;
-            this.m_scale = (AnimationInput)null;
+            this.m_reference = null;
+            this.m_scale = null;
             this.m_animationType = initialValue.InputType;
             this.m_keyframeList = new Vector();
             this.m_repeatCount = 0;
             this.m_autoReset = false;
             this.m_resetBehavior = AnimationResetBehavior.LeaveCurrent;
-            this.m_animationSystem.RegisterUsage((object)this);
+            this.m_animationSystem.RegisterUsage(this);
             this.m_remoteObject = owner.Session.BuildRemoteAnimation(this, this.m_animationType);
             if (this.m_animationSystem.BackCompat)
                 return;
-            this.AddKeyframe(new AnimationKeyframe(0.0f, initialValue, (AnimationInterpolation)KeyframeAnimation.s_defaultInterpolation));
+            this.AddKeyframe(new AnimationKeyframe(0.0f, initialValue, s_defaultInterpolation));
         }
 
         protected override void Dispose(bool inDispose)
@@ -64,18 +64,18 @@ namespace Microsoft.Iris.Render.Animation
                     if (this.m_keyframeList != null)
                     {
                         foreach (AnimationKeyframe keyframe in this.m_keyframeList)
-                            keyframe.Value.UnregisterUsage((object)this);
+                            keyframe.Value.UnregisterUsage(this);
                         this.m_keyframeList.Clear();
                     }
                     if (this.m_remoteObject != null)
                         this.m_remoteObject.Dispose();
-                    this.m_animationSystem.UnregisterUsage((object)this);
+                    this.m_animationSystem.UnregisterUsage(this);
                 }
-                this.m_remoteObject = (RemoteAnimation)null;
-                this.m_reference = (AnimationInput)null;
-                this.m_keyframeList = (Vector)null;
-                this.m_targetList = (Vector)null;
-                this.m_animationSystem = (AnimationSystem)null;
+                this.m_remoteObject = null;
+                this.m_reference = null;
+                this.m_keyframeList = null;
+                this.m_targetList = null;
+                this.m_animationSystem = null;
             }
             finally
             {
@@ -146,7 +146,7 @@ namespace Microsoft.Iris.Render.Animation
 
         public override void InstantAdvance(float advanceTime)
         {
-            Debug2.Validate((double)advanceTime >= 0.0, typeof(ArgumentOutOfRangeException), nameof(advanceTime));
+            Debug2.Validate(advanceTime >= 0.0, typeof(ArgumentOutOfRangeException), nameof(advanceTime));
             this.m_remoteObject.SendInstantAdvance(advanceTime);
         }
 
@@ -186,7 +186,7 @@ namespace Microsoft.Iris.Render.Animation
 
         internal void AddKeyframe(AnimationKeyframe keyframe)
         {
-            this.m_keyframeList.Add((object)keyframe);
+            this.m_keyframeList.Add(keyframe);
             this.m_remoteObject.SendAddKeyframe(this.m_keyframeList.Count - 1, keyframe.Time);
             this.SetKeyframe(this.m_keyframeList.Count - 1, keyframe, false);
         }
@@ -207,19 +207,19 @@ namespace Microsoft.Iris.Render.Animation
             Debug2.Validate(keyframe != null, typeof(ArgumentNullException), nameof(keyframe));
             Debug2.Validate(keyframeIndex >= 0 || keyframeIndex < this.m_keyframeList.Count, typeof(ArgumentOutOfRangeException), nameof(keyframeIndex));
             if (keyframeIndex == 0 && !this.m_animationSystem.BackCompat)
-                Debug2.Validate((double)keyframe.Time == 0.0, typeof(ArgumentException), "Cannot change the time for keyframe 0");
+                Debug2.Validate(keyframe.Time == 0.0, typeof(ArgumentException), "Cannot change the time for keyframe 0");
             this.SetKeyframe(keyframeIndex, keyframe, true);
         }
 
         internal void SetKeyframe(int keyframeIndex, AnimationKeyframe keyframe, bool replaceKeyframe)
         {
-            keyframe.Value.RegisterUsage((object)this);
+            keyframe.Value.RegisterUsage(this);
             if (replaceKeyframe)
             {
                 AnimationKeyframe keyframe1 = (AnimationKeyframe)this.m_keyframeList[keyframeIndex];
                 this.m_keyframeList.RemoveAt(keyframeIndex);
-                this.m_keyframeList.Insert(keyframeIndex, (object)keyframe);
-                keyframe1.Value.UnregisterUsage((object)this);
+                this.m_keyframeList.Insert(keyframeIndex, keyframe);
+                keyframe1.Value.UnregisterUsage(this);
             }
             this.m_remoteObject.SendSetKeyframeTime(keyframeIndex, keyframe.Time);
             this.SendInput(keyframeIndex, keyframe.Value);
@@ -231,7 +231,7 @@ namespace Microsoft.Iris.Render.Animation
           string targetPropertyName)
         {
             Debug2.Validate(targetObject is IAnimatableObject, typeof(ArgumentException), nameof(targetObject));
-            this.AddTarget((IAnimatableObject)targetObject, targetPropertyName, (string)null);
+            this.AddTarget((IAnimatableObject)targetObject, targetPropertyName, null);
         }
 
         void IKeyframeAnimation.AddTarget(
@@ -254,14 +254,14 @@ namespace Microsoft.Iris.Render.Animation
             AnimationTarget target = new AnimationTarget(targetObject, targetPropertyName);
             AnimationTypeMask sourceMask = AnimationTypeMask.FromString(targetMaskSpec);
             if (!sourceMask.CanMapFromType(this.m_animationType))
-                throw new ArgumentException(string.Format("Mask cannot be applied to a {0} animation", (object)this.m_animationType));
+                throw new ArgumentException(string.Format("Mask cannot be applied to a {0} animation", m_animationType));
             if (!sourceMask.CanMapToType(target.TargetPropertyType))
-                throw new ArgumentException(string.Format("Mask cannot be applied to a property of type {0}", (object)target.TargetPropertyType));
+                throw new ArgumentException(string.Format("Mask cannot be applied to a property of type {0}", target.TargetPropertyType));
             uint propertyInfo = this.GeneratePropertyInfo(target.TargetPropertyType, sourceMask);
             this.m_remoteObject.SendAddTarget(target.TargetId, target.TargetObject.GetObjectId(), target.TargetObject.GetPropertyId(target.TargetPropertyName), propertyInfo);
             if (this.m_targetList == null)
                 this.m_targetList = new Vector();
-            this.m_targetList.Add((object)new KeyframeAnimation.AnimationTargetInfo(target, targetMaskSpec));
+            this.m_targetList.Add(new KeyframeAnimation.AnimationTargetInfo(target, targetMaskSpec));
         }
 
         void IKeyframeAnimation.RemoveTarget(
@@ -271,7 +271,7 @@ namespace Microsoft.Iris.Render.Animation
         {
             Debug2.Validate(targetObject != null, typeof(ArgumentNullException), nameof(targetObject));
             Debug2.Validate(targetPropertyName != null, typeof(ArgumentNullException), nameof(targetPropertyName));
-            KeyframeAnimation.AnimationTargetInfo animationTargetInfo = (KeyframeAnimation.AnimationTargetInfo)null;
+            KeyframeAnimation.AnimationTargetInfo animationTargetInfo = null;
             if (this.m_targetList != null)
             {
                 foreach (KeyframeAnimation.AnimationTargetInfo target in this.m_targetList)
@@ -286,7 +286,7 @@ namespace Microsoft.Iris.Render.Animation
             if (animationTargetInfo == null)
                 return;
             this.m_remoteObject.SendRemoveTarget(animationTargetInfo.Target.TargetId);
-            this.m_targetList.Remove((object)animationTargetInfo);
+            this.m_targetList.Remove(animationTargetInfo);
             animationTargetInfo.Target.Dispose();
         }
 
@@ -321,7 +321,7 @@ namespace Microsoft.Iris.Render.Animation
           AnimationEvent animationEvent)
         {
             Debug2.Validate(animationEvent != null, typeof(ArgumentNullException), nameof(animationEvent));
-            Debug2.Validate((double)absoluteTime >= 0.0, typeof(ArgumentException), "absoluteTime value must be >= 0.0f");
+            Debug2.Validate(absoluteTime >= 0.0, typeof(ArgumentException), "absoluteTime value must be >= 0.0f");
             RENDERHANDLE targetObjectId = animationEvent.TargetObjectId;
             if (!(targetObjectId != RENDERHANDLE.NULL))
                 return;
@@ -333,7 +333,7 @@ namespace Microsoft.Iris.Render.Animation
           AnimationEvent animationEvent)
         {
             Debug2.Validate(animationEvent != null, typeof(ArgumentNullException), nameof(animationEvent));
-            Debug2.Validate((double)progress >= 0.0 && (double)progress <= 1.0, typeof(ArgumentException), "'progress' value must be between 0.0f and 1.0f");
+            Debug2.Validate(progress >= 0.0 && progress <= 1.0, typeof(ArgumentException), "'progress' value must be between 0.0f and 1.0f");
             RENDERHANDLE targetObjectId = animationEvent.TargetObjectId;
             if (!(targetObjectId != RENDERHANDLE.NULL))
                 return;
@@ -369,18 +369,18 @@ namespace Microsoft.Iris.Render.Animation
 
         uint IAnimatableObject.GetPropertyId(string propertyName)
         {
-            if (string.Compare(propertyName, Microsoft.Iris.Render.Animation.Animation.OutputProperty, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(propertyName, OutputProperty, StringComparison.OrdinalIgnoreCase) == 0)
                 return 1;
-            Debug2.Validate(false, typeof(ArgumentException), (object)"Unsupported property: {0}", (object)propertyName);
+            Debug2.Validate(false, typeof(ArgumentException), "Unsupported property: {0}", propertyName);
             return 0;
         }
 
         AnimationInputType IAnimatableObject.GetPropertyType(
           string propertyName)
         {
-            if (string.Compare(propertyName, Microsoft.Iris.Render.Animation.Animation.OutputProperty, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(propertyName, OutputProperty, StringComparison.OrdinalIgnoreCase) == 0)
                 return this.Type;
-            Debug2.Validate(false, typeof(ArgumentException), (object)"Unsupported property: {0}", (object)propertyName);
+            Debug2.Validate(false, typeof(ArgumentException), "Unsupported property: {0}", propertyName);
             return AnimationInputType.Float;
         }
 
@@ -388,23 +388,23 @@ namespace Microsoft.Iris.Render.Animation
 
         uint IActivatableObject.GetMethodId(string methodName)
         {
-            if (string.Compare(methodName, Microsoft.Iris.Render.Animation.Animation.PlayMethod, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(methodName, PlayMethod, StringComparison.OrdinalIgnoreCase) == 0)
                 return 1;
-            if (string.Compare(methodName, Microsoft.Iris.Render.Animation.Animation.PauseMethod, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(methodName, PauseMethod, StringComparison.OrdinalIgnoreCase) == 0)
                 return 2;
-            if (string.Compare(methodName, Microsoft.Iris.Render.Animation.Animation.ResetMethod, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(methodName, ResetMethod, StringComparison.OrdinalIgnoreCase) == 0)
                 return 3;
-            if (string.Compare(methodName, Microsoft.Iris.Render.Animation.Animation.FinishMethod, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(methodName, FinishMethod, StringComparison.OrdinalIgnoreCase) == 0)
                 return 4;
-            if (string.Compare(methodName, Microsoft.Iris.Render.Animation.Animation.NotifyMethod, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(methodName, NotifyMethod, StringComparison.OrdinalIgnoreCase) == 0)
                 return 5;
-            Debug2.Validate(false, typeof(ArgumentException), (object)"Unsupported method: {0}", (object)methodName);
+            Debug2.Validate(false, typeof(ArgumentException), "Unsupported method: {0}", methodName);
             return 0;
         }
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteObject.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = (RemoteAnimation)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = null;
 
         private void SendInput(int keyframeIndex, AnimationInput input)
         {
@@ -542,7 +542,7 @@ namespace Microsoft.Iris.Render.Animation
             }
         }
 
-        private uint GeneratePropertyInfo(AnimationInputType sourceType, AnimationTypeMask sourceMask) => (uint)((int)(sourceType & (AnimationInputType.Vector4 | AnimationInputType.Quaternion)) << 19 | ((int)sourceMask.ChannelCount & 7) << 16 | (int)sourceMask.MaskCode & (int)ushort.MaxValue);
+        private uint GeneratePropertyInfo(AnimationInputType sourceType, AnimationTypeMask sourceMask) => (uint)((int)(sourceType & (AnimationInputType.Vector4 | AnimationInputType.Quaternion)) << 19 | ((int)sourceMask.ChannelCount & 7) << 16 | sourceMask.MaskCode & ushort.MaxValue);
 
         private enum KeyframeSlots
         {

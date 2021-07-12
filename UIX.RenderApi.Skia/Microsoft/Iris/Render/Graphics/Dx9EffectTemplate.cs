@@ -25,8 +25,8 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (!fInDispose || this.m_effectResource == null)
                     return;
-                this.m_effectResource.UnregisterUsage((object)this);
-                this.m_effectResource = (Dx9EffectResource)null;
+                this.m_effectResource.UnregisterUsage(this);
+                this.m_effectResource = null;
             }
             finally
             {
@@ -59,7 +59,7 @@ namespace Microsoft.Iris.Render.Graphics
         public override IEffect CreateInstance(object objUser)
         {
             Debug2.Validate(this.m_fBuilt, typeof(InvalidOperationException), "Cannot create instance if the template is not built");
-            Dx9Effect dx9Effect = (Dx9Effect)null;
+            Dx9Effect dx9Effect = null;
             if (this.m_cache != null)
                 dx9Effect = (Dx9Effect)this.m_cache.Remove(objUser);
             if (dx9Effect == null)
@@ -69,7 +69,7 @@ namespace Microsoft.Iris.Render.Graphics
                 dx9Effect.RegisterUsage(objUser);
                 dx9Effect.RemoteEffect();
             }
-            return (IEffect)dx9Effect;
+            return dx9Effect;
         }
 
         private bool ProcessEffectElement(
@@ -79,7 +79,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (!(this.m_graphicsDevice as Dx9GraphicsDevice).EffectManager.CreateEffectResource(this.m_stName, element, nPropCacheSize, out this.m_effectResource))
                 return false;
-            this.m_effectResource.RegisterUsage((object)this);
+            this.m_effectResource.RegisterUsage(this);
             foreach (KeyValueEntry<string, EffectProperty> allProp in allProps)
             {
                 EffectProperty effectProperty = allProp.Value;

@@ -33,7 +33,7 @@ namespace Microsoft.Iris.Render.Sound
         {
             try
             {
-                this.m_ownerSession = (RenderSession)null;
+                this.m_ownerSession = null;
             }
             finally
             {
@@ -75,7 +75,7 @@ namespace Microsoft.Iris.Render.Sound
             Debug2.Validate(soundData != null, typeof(ArgumentNullException), nameof(soundData));
             SoundBuffer soundBuffer = new SoundBuffer(this, soundData);
             soundBuffer.RegisterUsage(objUser);
-            return (ISoundBuffer)soundBuffer;
+            return soundBuffer;
         }
 
         internal void Rebuild()

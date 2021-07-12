@@ -79,8 +79,8 @@ namespace Microsoft.Iris.Render
         internal override void AddCacheKey(ByteBuilder cacheKey)
         {
             base.AddCacheKey(cacheKey);
-            this.GenerateClassCacheKey((byte)2, (byte)this.m_colorOperation, cacheKey);
-            this.GenerateClassCacheKey((byte)2, (byte)this.m_alphaOperation, cacheKey);
+            this.GenerateClassCacheKey(2, (byte)this.m_colorOperation, cacheKey);
+            this.GenerateClassCacheKey(2, (byte)this.m_alphaOperation, cacheKey);
             this.m_effectInput1.AddCacheKey(cacheKey);
             this.m_effectInput2.AddCacheKey(cacheKey);
         }

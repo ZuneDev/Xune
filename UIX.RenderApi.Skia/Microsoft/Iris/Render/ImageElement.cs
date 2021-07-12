@@ -56,15 +56,15 @@ namespace Microsoft.Iris.Render
             int num = base.PreProcessProperties(dictionary, ref nNextUniqueID);
             this.AddEffectProperty(dictionary, "Image");
             this.m_nImageID = nNextUniqueID++;
-            return num + this.PreProcessProperty(dictionary, "UVOffset", (byte)12, ref this.m_nUVOffsetID, ref nNextUniqueID);
+            return num + this.PreProcessProperty(dictionary, "UVOffset", 12, ref this.m_nUVOffsetID, ref nNextUniqueID);
         }
 
         internal override bool Process(Map<string, EffectProperty> dictProperties)
         {
-            if (!this.GenerateProperty("Image", EffectPropertyType.Image, (object)this.m_image, this.m_nImageID, dictProperties))
+            if (!this.GenerateProperty("Image", EffectPropertyType.Image, m_image, this.m_nImageID, dictProperties))
                 return false;
             dictProperties[this.GeneratePropertyPath("Image")].IsDynamic = true;
-            return this.GenerateProperty("UVOffset", EffectPropertyType.Vector2, (object)this.m_UVOffset, this.m_nUVOffsetID, dictProperties);
+            return this.GenerateProperty("UVOffset", EffectPropertyType.Vector2, m_UVOffset, this.m_nUVOffsetID, dictProperties);
         }
 
         internal override void AddCacheKey(ByteBuilder cacheKey)

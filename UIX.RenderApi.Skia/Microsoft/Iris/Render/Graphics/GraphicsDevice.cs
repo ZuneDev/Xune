@@ -31,7 +31,7 @@ namespace Microsoft.Iris.Render.Graphics
         private readonly DeferredHandler m_cbTrackerUpdate;
         private bool m_fQueuedTrackerUpdate;
         protected Size m_sizeGutterPxl;
-        private static readonly TrackerBase.ObjectTest s_testUnused = new TrackerBase.ObjectTest(GraphicsDevice.TestIsUnused);
+        private static readonly TrackerBase.ObjectTest s_testUnused = new TrackerBase.ObjectTest(TestIsUnused);
         private bool m_fBeginCaptureBackBuffer;
         private bool m_fEndCaptureBackBuffer;
 
@@ -39,8 +39,8 @@ namespace Microsoft.Iris.Render.Graphics
         {
             this.m_session = session;
             this.m_stDisplayName = stDisplayName;
-            this.m_trackerSurfacePools = new ObjectTracker(session, (object)this);
-            this.m_trackerWindows = new ObjectTracker(session, (object)this);
+            this.m_trackerSurfacePools = new ObjectTracker(session, this);
+            this.m_trackerWindows = new ObjectTracker(session, this);
             this.m_cRenderGeneration = 1U;
             this.m_cbRestartRenderer = new DeferredHandler(this.OnRestartRenderer);
             this.m_cbTrackerUpdate = new DeferredHandler(this.OnTrackerUpdate);
@@ -62,10 +62,10 @@ namespace Microsoft.Iris.Render.Graphics
                     if (this.m_trackerWindows != null)
                         this.m_trackerWindows.Dispose();
                 }
-                this.m_trackerWindows = (ObjectTracker)null;
-                this.m_trackerSurfacePools = (ObjectTracker)null;
-                this.m_manSurfaces = (SurfaceManager)null;
-                this.m_session = (RenderSession)null;
+                this.m_trackerWindows = null;
+                this.m_trackerSurfacePools = null;
+                this.m_manSurfaces = null;
+                this.m_session = null;
             }
             finally
             {
@@ -101,21 +101,21 @@ namespace Microsoft.Iris.Render.Graphics
 
         internal void CreateSurfacePool(SurfacePool spNew, RENDERHANDLE handle, SurfaceFormat nFormat)
         {
-            this.CreateSurfacePoolWorker((object)spNew, (object)handle, nFormat);
-            this.m_trackerSurfacePools.AddObject((object)spNew);
+            this.CreateSurfacePoolWorker(spNew, handle, nFormat);
+            this.m_trackerSurfacePools.AddObject(spNew);
         }
 
         internal void OnSurfacePoolDispose()
         {
             if (this.m_fQueuedTrackerUpdate)
                 return;
-            this.m_session.DeferredInvoke((Delegate)this.m_cbTrackerUpdate, (object)null, DeferredInvokePriority.Idle, new TimeSpan(0, 0, 10));
+            this.m_session.DeferredInvoke(m_cbTrackerUpdate, null, DeferredInvokePriority.Idle, new TimeSpan(0, 0, 10));
             this.m_fQueuedTrackerUpdate = true;
         }
 
         private void OnTrackerUpdate(object args)
         {
-            this.m_trackerSurfacePools.RemoveObjects(GraphicsDevice.s_testUnused);
+            this.m_trackerSurfacePools.RemoveObjects(s_testUnused);
             this.m_fQueuedTrackerUpdate = false;
         }
 
@@ -132,13 +132,13 @@ namespace Microsoft.Iris.Render.Graphics
 
         internal void CreateVideoPool(VideoPool spNew, RENDERHANDLE handle)
         {
-            this.CreateVideoPoolWorker((object)spNew, (object)handle);
-            this.m_trackerSurfacePools.AddObject((object)spNew);
+            this.CreateVideoPoolWorker(spNew, handle);
+            this.m_trackerSurfacePools.AddObject(spNew);
         }
 
-        internal virtual void CreateVideoPoolWorker(object oSurfacePool, object oHandle) => Debug2.Validate(false, (Type)null, "GraphicsDevice type does not support Video Pool");
+        internal virtual void CreateVideoPoolWorker(object oSurfacePool, object oHandle) => Debug2.Validate(false, null, "GraphicsDevice type does not support Video Pool");
 
-        internal void RegisterWindow(RenderWindow win) => this.m_trackerWindows.AddObject((object)win);
+        internal void RegisterWindow(RenderWindow win) => this.m_trackerWindows.AddObject(win);
 
         public virtual bool CanPlayAnimationType(AnimationInputType type) => false;
 
@@ -148,7 +148,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         internal Image CreateImage(string identifier, ContentNotifyHandler handler) => new Image(this.m_session, this.m_manSurfaces, identifier, handler, this.m_sizeGutterPxl);
 
-        protected virtual object InternalComputeBreakdown() => (object)new SurfaceManager.VideoMemoryBreakdown();
+        protected virtual object InternalComputeBreakdown() => new SurfaceManager.VideoMemoryBreakdown();
 
         private void RestoreAllSurfaces()
         {
@@ -179,7 +179,7 @@ namespace Microsoft.Iris.Render.Graphics
                 this.ResetDeviceContent();
                 if (this.m_fQueuedRestart)
                     return;
-                this.m_session.DeferredInvoke((Delegate)this.m_cbRestartRenderer, (object)null, DeferredInvokePriority.Low);
+                this.m_session.DeferredInvoke(m_cbRestartRenderer, null, DeferredInvokePriority.Low);
                 this.m_fQueuedRestart = true;
             }
         }
@@ -229,7 +229,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             Debug2.Validate(this.m_fBeginCaptureBackBuffer, typeof(InvalidOperationException), "BeginCaptureBackBuffer() called but m_fBeginCaptureBackBuffer = false");
             Debug2.Validate(!this.m_fEndCaptureBackBuffer, typeof(InvalidOperationException), "EndCaptureBackBuffer() called but m_fEndCaptureBackBuffer = true");
-            this.m_session.DeferredInvoke((Delegate)new DeferredHandler(this.DeferredEndCaptureBackBuffer), (object)null, DeferredInvokePriority.VisualUpdate);
+            this.m_session.DeferredInvoke(new DeferredHandler(this.DeferredEndCaptureBackBuffer), null, DeferredInvokePriority.VisualUpdate);
         }
 
         private void DeferredEndCaptureBackBuffer(object args)

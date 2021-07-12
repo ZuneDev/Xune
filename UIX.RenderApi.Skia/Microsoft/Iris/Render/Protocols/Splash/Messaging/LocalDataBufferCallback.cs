@@ -34,7 +34,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
 
         public override int GetHashCode() => base.GetHashCode();
 
-        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(LocalDataBufferCallback.DispatchCallback), out uint _);
+        internal static RENDERHANDLE BindCallback(RenderPort port) => port.RegisterCallback(new PortCallback(DispatchCallback), out uint _);
 
         private static unsafe void DispatchCallback(
           RenderPort port,
@@ -43,7 +43,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
         {
             if (!(owner is IDataBufferCallback _priv_target) || message->nMsg != 0U)
                 return;
-            LocalDataBufferCallback.Dispatch_OnComplete(port, _priv_target, (LocalDataBufferCallback.Msg0_OnComplete*)message);
+            Dispatch_OnComplete(port, _priv_target, (LocalDataBufferCallback.Msg0_OnComplete*)message);
         }
 
         private static unsafe void Dispatch_OnComplete(
@@ -52,7 +52,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Messaging
           LocalDataBufferCallback.Msg0_OnComplete* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref LocalDataBufferCallback.s_priv_ByteOrder_Msg0_OnComplete, typeof(LocalDataBufferCallback.Msg0_OnComplete), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg0_OnComplete, typeof(LocalDataBufferCallback.Msg0_OnComplete), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             _priv_target.OnComplete(target);
         }

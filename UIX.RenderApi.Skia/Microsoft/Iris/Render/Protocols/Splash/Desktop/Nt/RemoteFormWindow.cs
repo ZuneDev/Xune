@@ -37,7 +37,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Desktop.Nt
             msg41CreatePtr->_priv_ctxcb = port.Session.LocalContext;
             msg41CreatePtr->_priv_idObjectSubject = remoteFormWindow.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref RemoteFormWindow.s_priv_ByteOrder_Msg41_Create, typeof(RemoteFormWindow.Msg41_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg41_Create, typeof(RemoteFormWindow.Msg41_Create), 0, 0);
             port.CreateRemoteObject(windowClassHandle, remoteFormWindow.m_renderHandle, (Message*)msg41CreatePtr);
             return remoteFormWindow;
         }

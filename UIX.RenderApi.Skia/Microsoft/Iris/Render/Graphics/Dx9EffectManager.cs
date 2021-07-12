@@ -36,8 +36,8 @@ namespace Microsoft.Iris.Render.Graphics
                     return;
                 Map<ByteBuilder, Dx9EffectResource>.ValueCollection.Enumerator enumerator = this.m_mapEffectCache.Values.GetEnumerator();
                 while (enumerator.MoveNext())
-                    enumerator.Current?.UnregisterUsage((object)this);
-                this.m_mapEffectCache = (Map<ByteBuilder, Dx9EffectResource>)null;
+                    enumerator.Current?.UnregisterUsage(this);
+                this.m_mapEffectCache = null;
             }
             finally
             {
@@ -53,11 +53,11 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (this.m_mapEffectCache == null)
             {
-                resource = (Dx9EffectResource)null;
+                resource = null;
                 return false;
             }
             bool flag = this.m_mapEffectCache.ContainsKey(cacheKey);
-            resource = !flag ? (Dx9EffectResource)null : this.m_mapEffectCache[cacheKey];
+            resource = !flag ? null : this.m_mapEffectCache[cacheKey];
             return flag;
         }
 
@@ -77,18 +77,18 @@ namespace Microsoft.Iris.Render.Graphics
           int nPropCacheSize,
           out Dx9EffectResource dxEffectResource)
         {
-            Dx9EffectResource resource = (Dx9EffectResource)null;
+            Dx9EffectResource resource = null;
             ByteBuilder byteBuilder = new ByteBuilder(nPropCacheSize);
             element.AddCacheKey(byteBuilder);
             if (!this.CacheLookup(byteBuilder, out resource))
             {
                 resource = new Dx9EffectResource(this.m_session, stName, this);
-                resource.RegisterUsage((object)this);
+                resource.RegisterUsage(this);
                 if (!resource.Create(element))
                 {
-                    resource.UnregisterUsage((object)this);
-                    dxEffectResource = (Dx9EffectResource)null;
-                    this.AddCachedEffect(byteBuilder, (Dx9EffectResource)null);
+                    resource.UnregisterUsage(this);
+                    dxEffectResource = null;
+                    this.AddCachedEffect(byteBuilder, null);
                     return false;
                 }
                 this.AddCachedEffect(byteBuilder, resource);
@@ -107,7 +107,7 @@ namespace Microsoft.Iris.Render.Graphics
                     if (keyValueEntry.Value != null)
                     {
                         if (keyValueEntry.Value.UsageCount == 1)
-                            keyValueEntry.Value.UnregisterUsage((object)this);
+                            keyValueEntry.Value.UnregisterUsage(this);
                         else
                             map.Add(keyValueEntry.Key, keyValueEntry.Value);
                     }
@@ -122,7 +122,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (this.m_fPendingCacheUpdate || this.m_mapEffectCache.Count < 50)
                 return;
-            this.m_session.DeferredInvoke((Delegate)this.m_cbUpdateCache, (object)null, DeferredInvokePriority.Idle, new TimeSpan(0, 0, 5));
+            this.m_session.DeferredInvoke(m_cbUpdateCache, null, DeferredInvokePriority.Idle, new TimeSpan(0, 0, 5));
             this.m_fPendingCacheUpdate = true;
         }
     }

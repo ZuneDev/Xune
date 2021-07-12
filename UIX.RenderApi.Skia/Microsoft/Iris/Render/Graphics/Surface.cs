@@ -45,14 +45,14 @@ namespace Microsoft.Iris.Render.Graphics
         {
             this.m_surfaceOwner = surfaceOwner;
             this.m_poolOwner = poolOwner;
-            this.m_remoteSurface = (RemoteSurface)null;
+            this.m_remoteSurface = null;
             this.m_sizeContentPxl = new Size();
             this.m_sizeGutterPxl = sizeGutterPxl;
             RenderPort renderingPort = this.m_poolOwner.Device.Session.RenderingPort;
             RENDERHANDLE handle = rhExternal;
             if (handle == RENDERHANDLE.NULL)
             {
-                handle = renderingPort.AllocHandle((IRenderHandleOwner)this);
+                handle = renderingPort.AllocHandle(this);
                 this.m_fPrimaryOwner = true;
             }
             try
@@ -65,7 +65,7 @@ namespace Microsoft.Iris.Render.Graphics
                 else
                 {
                     this.m_nInstanceID = this.m_poolOwner.AttachSurface(this);
-                    this.m_remoteSurface = RemoteSurface.CreateFromExternalHandle(renderingPort, handle, (IRenderHandleOwner)this);
+                    this.m_remoteSurface = RemoteSurface.CreateFromExternalHandle(renderingPort, handle, this);
                 }
                 this.m_sizeContentPxl = sizeContentPxl;
                 Size sizeStoragePxl = new Size(sizeContentPxl.Width + this.m_sizeGutterPxl.Width * 2, sizeContentPxl.Height + this.m_sizeGutterPxl.Height * 2);
@@ -77,7 +77,7 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 if (this.m_remoteSurface == null)
                 {
-                    GC.SuppressFinalize((object)this);
+                    GC.SuppressFinalize(this);
                     if (this.m_fPrimaryOwner)
                         renderingPort.FreeHandle(handle);
                 }
@@ -102,7 +102,7 @@ namespace Microsoft.Iris.Render.Graphics
                         this.m_nInstanceID = 0;
                     }
                 }
-                this.m_remoteSurface = (RemoteSurface)null;
+                this.m_remoteSurface = null;
             }
             finally
             {
@@ -112,7 +112,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteSurface.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteSurface = (RemoteSurface)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteSurface = null;
 
         internal RemoteSurface RemoteStub => this.m_remoteSurface;
 

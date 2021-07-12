@@ -52,7 +52,7 @@ public class Map<K, V>
             return;
         for (int index = 0; index < this._buckets.Length; ++index)
             this._buckets[index] = -1;
-        Array.Clear((Array)this._entries, 0, this._count);
+        Array.Clear(_entries, 0, this._count);
         this._freeList = -1;
         this._count = 0;
         this._freeCount = 0;
@@ -132,7 +132,7 @@ public class Map<K, V>
         for (int index = 0; index < numArray.Length; ++index)
             numArray[index] = -1;
         Map<K, V>.Entry[] entryArray = new Map<K, V>.Entry[prime];
-        Array.Copy((Array)this._entries, 0, (Array)entryArray, 0, this._count);
+        Array.Copy(_entries, 0, entryArray, 0, this._count);
         for (int index1 = 0; index1 < this._count; ++index1)
         {
             int index2 = entryArray[index1].hashCode % prime;
@@ -185,7 +185,7 @@ public class Map<K, V>
         return false;
     }
 
-    private bool KeyEquals(K x, K y) => x.Equals((object)y);
+    private bool KeyEquals(K x, K y) => x.Equals(y);
 
     private int GetKeyHashCode(K obj) => obj.GetHashCode();
 

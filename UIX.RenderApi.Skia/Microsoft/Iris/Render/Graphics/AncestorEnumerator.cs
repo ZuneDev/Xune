@@ -17,21 +17,21 @@ namespace Microsoft.Iris.Render.Graphics
         internal AncestorEnumerator(TreeNode nodeStart)
         {
             this.m_nodeStart = nodeStart;
-            this.m_nodeCurrent = (TreeNode)null;
+            this.m_nodeCurrent = null;
             this.m_nodeNext = this.m_nodeStart;
         }
 
-        object IEnumerator.Current => (object)this.m_nodeCurrent;
+        object IEnumerator.Current => m_nodeCurrent;
 
         public TreeNode Current => this.m_nodeCurrent;
 
-        IEnumerator IEnumerable.GetEnumerator() => (IEnumerator)this;
+        IEnumerator IEnumerable.GetEnumerator() => this;
 
         public AncestorEnumerator GetEnumerator() => this;
 
         public void Reset()
         {
-            this.m_nodeCurrent = (TreeNode)null;
+            this.m_nodeCurrent = null;
             this.m_nodeNext = this.m_nodeStart;
         }
 

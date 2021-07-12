@@ -23,7 +23,7 @@ namespace Microsoft.Iris.Render
             Debug2.Validate(inputElement != null, typeof(ArgumentNullException), nameof(inputElement));
             Debug2.Validate(listOperations != null, typeof(ArgumentNullException), nameof(listOperations));
             this.m_input = inputElement;
-            this.m_listOperations = (IList)listOperations;
+            this.m_listOperations = listOperations;
         }
 
         public EffectLayer(EffectInput inputElement, EffectOperation efoOperation)
@@ -32,8 +32,8 @@ namespace Microsoft.Iris.Render
             Debug2.Validate(inputElement != null, typeof(ArgumentNullException), nameof(inputElement));
             Debug2.Validate(efoOperation != null, typeof(ArgumentNullException), nameof(efoOperation));
             this.m_input = inputElement;
-            this.m_listOperations = (IList)new List<EffectOperation>(1);
-            this.m_listOperations.Add((object)efoOperation);
+            this.m_listOperations = new List<EffectOperation>(1);
+            this.m_listOperations.Add(efoOperation);
         }
 
         public EffectLayer() => this.m_typeInput = EffectInputType.Layer;
@@ -54,7 +54,7 @@ namespace Microsoft.Iris.Render
         {
             if (!this.m_input.Process(dictProperties))
                 return false;
-            foreach (EffectElement listOperation in (IEnumerable)this.m_listOperations)
+            foreach (EffectElement listOperation in m_listOperations)
             {
                 if (!listOperation.Process(dictProperties))
                     return false;
@@ -67,7 +67,7 @@ namespace Microsoft.Iris.Render
           ref byte nNextUniqueID)
         {
             int num = base.PreProcessProperties(dictionary, ref nNextUniqueID) + this.m_input.PreProcessProperties(dictionary, ref nNextUniqueID);
-            foreach (EffectOperation listOperation in (IEnumerable)this.m_listOperations)
+            foreach (EffectOperation listOperation in m_listOperations)
                 num += listOperation.PreProcessProperties(dictionary, ref nNextUniqueID);
             return num;
         }
@@ -76,7 +76,7 @@ namespace Microsoft.Iris.Render
         {
             base.AddCacheKey(cacheKey);
             this.m_input.AddCacheKey(cacheKey);
-            foreach (EffectElement listOperation in (IEnumerable)this.m_listOperations)
+            foreach (EffectElement listOperation in m_listOperations)
                 listOperation.AddCacheKey(cacheKey);
         }
     }

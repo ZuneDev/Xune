@@ -26,17 +26,17 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (fInDispose && this.m_remoteDevice != null)
                 this.m_remoteDevice.Dispose();
-            this.m_remoteDevice = (RemoteNullDevice)null;
+            this.m_remoteDevice = null;
             base.Dispose(fInDispose);
         }
 
         RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteDevice.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = (RemoteNullDevice)null;
+        void IRenderHandleOwner.OnDisconnect() => this.m_remoteDevice = null;
 
         public override bool IsVideoComposited => false;
 
-        internal override RemoteDevice RemoteDevice => (RemoteDevice)this.m_remoteDevice;
+        internal override RemoteDevice RemoteDevice => m_remoteDevice;
 
         public override bool CanPlayAnimations => false;
 
@@ -57,7 +57,7 @@ namespace Microsoft.Iris.Render.Graphics
         internal override EffectTemplate CreateEffectTemplate(string stName)
         {
             Debug2.Throw(false, "Not yet implemented");
-            return (EffectTemplate)null;
+            return null;
         }
     }
 }

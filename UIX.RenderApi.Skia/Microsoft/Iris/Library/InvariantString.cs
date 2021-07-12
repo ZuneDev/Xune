@@ -12,13 +12,13 @@ namespace Microsoft.Iris.Library
 {
     public static class InvariantString
     {
-        public static string Format(string format, object param) => string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param);
+        public static string Format(string format, object param) => string.Format(CultureInfo.InvariantCulture, format, param);
 
         public static string Format(string format, object[] param) => throw new Exception("Should never format with object array. Use one of the dedicated format methods");
 
-        public static string Format(string format, object param1, object param2) => string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2);
+        public static string Format(string format, object param1, object param2) => string.Format(CultureInfo.InvariantCulture, format, param1, param2);
 
-        public static string Format(string format, object param1, object param2, object param3) => string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3);
+        public static string Format(string format, object param1, object param2, object param3) => string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3);
 
         public static string Format(
           string format,
@@ -27,7 +27,7 @@ namespace Microsoft.Iris.Library
           object param3,
           object param4)
         {
-            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4);
+            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4);
         }
 
         public static string Format(
@@ -38,7 +38,7 @@ namespace Microsoft.Iris.Library
           object param4,
           object param5)
         {
-            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5);
+            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5);
         }
 
         public static string Format(
@@ -50,7 +50,7 @@ namespace Microsoft.Iris.Library
           object param5,
           object param6)
         {
-            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6);
+            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6);
         }
 
         public static string Format(
@@ -63,7 +63,7 @@ namespace Microsoft.Iris.Library
           object param6,
           object param7)
         {
-            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7);
+            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7);
         }
 
         public static string Format(
@@ -77,7 +77,7 @@ namespace Microsoft.Iris.Library
           object param7,
           object param8)
         {
-            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8);
+            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8);
         }
 
         public static string Format(
@@ -92,7 +92,7 @@ namespace Microsoft.Iris.Library
           object param8,
           object param9)
         {
-            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9);
+            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9);
         }
 
         public static string Format(
@@ -108,7 +108,7 @@ namespace Microsoft.Iris.Library
           object param9,
           object param10)
         {
-            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
         }
 
         public static string Format(
@@ -125,7 +125,7 @@ namespace Microsoft.Iris.Library
           object param10,
           object param11)
         {
-            return string.Format((IFormatProvider)CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
+            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
         }
 
         public static bool Equals(string leftName, string rightName) => string.Compare(leftName, rightName, StringComparison.Ordinal) == 0;
@@ -140,11 +140,11 @@ namespace Microsoft.Iris.Library
 
         public static bool EndsWithI(string valueName, string suffixName) => valueName.EndsWith(suffixName, StringComparison.OrdinalIgnoreCase);
 
-        public static string ValueToString(ushort v, string formatName) => v.ToString(formatName, (IFormatProvider)CultureInfo.InvariantCulture);
+        public static string ValueToString(ushort v, string formatName) => v.ToString(formatName, CultureInfo.InvariantCulture);
 
-        public static IEqualityComparer<string> OrdinalIgnoreCaseComparer => (IEqualityComparer<string>)InvariantString.OrdinalIgnoreCaseStringComparer.Instance;
+        public static IEqualityComparer<string> OrdinalIgnoreCaseComparer => OrdinalIgnoreCaseStringComparer.Instance;
 
-        public static IEqualityComparer<string> OrdinalComparer => (IEqualityComparer<string>)InvariantString.OrdinalStringComparer.Instance;
+        public static IEqualityComparer<string> OrdinalComparer => OrdinalStringComparer.Instance;
 
         public class OrdinalStringComparer : IEqualityComparer<string>
         {
@@ -158,9 +158,9 @@ namespace Microsoft.Iris.Library
             {
                 get
                 {
-                    if (InvariantString.OrdinalStringComparer._instance == null)
-                        InvariantString.OrdinalStringComparer._instance = new InvariantString.OrdinalStringComparer();
-                    return InvariantString.OrdinalStringComparer._instance;
+                    if (_instance == null)
+                        _instance = new InvariantString.OrdinalStringComparer();
+                    return _instance;
                 }
             }
 
@@ -183,9 +183,9 @@ namespace Microsoft.Iris.Library
             {
                 get
                 {
-                    if (InvariantString.OrdinalIgnoreCaseStringComparer._instance == null)
-                        InvariantString.OrdinalIgnoreCaseStringComparer._instance = new InvariantString.OrdinalIgnoreCaseStringComparer();
-                    return InvariantString.OrdinalIgnoreCaseStringComparer._instance;
+                    if (_instance == null)
+                        _instance = new InvariantString.OrdinalIgnoreCaseStringComparer();
+                    return _instance;
                 }
             }
 

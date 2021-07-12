@@ -19,7 +19,7 @@ namespace Microsoft.Iris.Render.Protocol
 
         internal void Dispose()
         {
-            GC.SuppressFinalize((object)this);
+            GC.SuppressFinalize(this);
             this.Dispose(true);
         }
 
@@ -31,7 +31,7 @@ namespace Microsoft.Iris.Render.Protocol
                     trackingInfo.DataBuffer.Dispose();
                 this.m_alTracking.Clear();
             }
-            this.m_alTracking = (Vector)null;
+            this.m_alTracking = null;
         }
 
         internal int Count => this.m_alTracking.Count;
@@ -49,22 +49,22 @@ namespace Microsoft.Iris.Render.Protocol
             this.TrackerEmpty(sender, args);
         }
 
-        internal void Track(DataBuffer dataBuffer) => this.Track(dataBuffer, (DataBufferTracker.CleanupEventHandler)null, (object)null);
+        internal void Track(DataBuffer dataBuffer) => this.Track(dataBuffer, null, null);
 
         internal void Track(
           DataBuffer dataBuffer,
           DataBufferTracker.CleanupEventHandler handler,
           object contextData)
         {
-            DataBufferTracker.TrackingInfo trackingInfo = new DataBufferTracker.TrackingInfo(dataBuffer, DataBufferTracker.Users.Valid, handler, contextData);
+            DataBufferTracker.TrackingInfo trackingInfo = new DataBufferTracker.TrackingInfo(dataBuffer, Users.Valid, handler, contextData);
             dataBuffer.DataConsumed += new EventHandler(this.OnDataConsumed);
             dataBuffer.ReleaseLocalData += new EventHandler(this.OnReleaseLocalData);
-            this.m_alTracking.Add((object)trackingInfo);
+            this.m_alTracking.Add(trackingInfo);
         }
 
         internal void Release(DataBuffer dataBuffer, DataBufferTracker.Users userFlags)
         {
-            DataBufferTracker.TrackingInfo trackingInfo1 = (DataBufferTracker.TrackingInfo)null;
+            DataBufferTracker.TrackingInfo trackingInfo1 = null;
             foreach (DataBufferTracker.TrackingInfo trackingInfo2 in this.m_alTracking)
             {
                 if (trackingInfo2.DataBuffer == dataBuffer)
@@ -81,22 +81,22 @@ namespace Microsoft.Iris.Render.Protocol
             if (userFlags1 != 0U)
                 return;
             if (trackingInfo1.CleanupHandler != null)
-                trackingInfo1.CleanupHandler((object)this, new DataBufferTracker.CleanupEventArgs(trackingInfo1.CleanupHandlerData));
-            this.m_alTracking.Remove((object)trackingInfo1);
+                trackingInfo1.CleanupHandler(this, new DataBufferTracker.CleanupEventArgs(trackingInfo1.CleanupHandlerData));
+            this.m_alTracking.Remove(trackingInfo1);
             trackingInfo1.DataBuffer.DataConsumed -= new EventHandler(this.OnDataConsumed);
             trackingInfo1.DataBuffer.ReleaseLocalData -= new EventHandler(this.OnReleaseLocalData);
             trackingInfo1.DataBuffer.Dispose();
-            trackingInfo1.DataBuffer = (DataBuffer)null;
-            trackingInfo1.CleanupHandler = (DataBufferTracker.CleanupEventHandler)null;
-            trackingInfo1.CleanupHandlerData = (object)null;
+            trackingInfo1.DataBuffer = null;
+            trackingInfo1.CleanupHandler = null;
+            trackingInfo1.CleanupHandlerData = null;
             if (this.m_alTracking.Count != 0)
                 return;
-            this.OnTrackerEmpty((object)this, EventArgs.Empty);
+            this.OnTrackerEmpty(this, EventArgs.Empty);
         }
 
-        private void OnDataConsumed(object oSender, EventArgs args) => this.Release(oSender as DataBuffer, DataBufferTracker.Users.Consumed);
+        private void OnDataConsumed(object oSender, EventArgs args) => this.Release(oSender as DataBuffer, Users.Consumed);
 
-        private void OnReleaseLocalData(object oSender, EventArgs args) => this.Release(oSender as DataBuffer, DataBufferTracker.Users.LocalData);
+        private void OnReleaseLocalData(object oSender, EventArgs args) => this.Release(oSender as DataBuffer, Users.LocalData);
 
         internal void DEBUG_SetDescription(string stDescription)
         {
@@ -142,7 +142,7 @@ namespace Microsoft.Iris.Render.Protocol
             {
                 this.DataBuffer = dataBuffer;
                 this.UserFlags = userFlags;
-                this.Id = DataBufferTracker.TrackingInfo.s_idSeed++;
+                this.Id = s_idSeed++;
                 this.CleanupHandler = handler;
                 this.CleanupHandlerData = contextData;
             }
