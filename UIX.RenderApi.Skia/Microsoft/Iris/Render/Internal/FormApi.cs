@@ -4,18 +4,21 @@
 // MVID: D47658B8-A8EA-43D6-8837-ECE823BFFFC1
 // Assembly location: C:\Program Files\Zune\UIX.RenderApi.dll
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Internal
 {
     internal static class FormApi
     {
-        private const string s_stEhRenderDll = "UIXRender.dll";
+        public static HRESULT SpGdiplusInit()
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpGdiplusInit();
-
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpGdiplusUninit();
+        public static HRESULT SpGdiplusUninit()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

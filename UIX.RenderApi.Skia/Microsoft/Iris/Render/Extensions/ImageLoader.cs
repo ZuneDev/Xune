@@ -285,16 +285,16 @@ namespace Microsoft.Iris.Render.Extensions
             GradientInformation gradientInformation = new GradientInformation()
             {
                 imageInfo = {
-          Header = {
-            sizeActualPxl = sizeImage,
-            sizeOriginalPxl = sizeImage,
-            nStride = num2,
-            nFormat = nFormat
-          }
-        },
-                gcData = GCHandle.Alloc(numArray, GCHandleType.Pinned)
+                    Header = {
+                        sizeActualPxl = sizeImage,
+                        sizeOriginalPxl = sizeImage,
+                        nStride = num2,
+                        nFormat = nFormat
+                    }
+                },
+                Data = numArray
             };
-            gradientInformation.imageInfo.Data.rgData = gradientInformation.gcData.AddrOfPinnedObject();
+            gradientInformation.imageInfo.Data.rgData = gradientInformation.Data;
             bool flag = image.LoadContent(SurfaceFormatInfo.ToImageFormat(gradientInformation.imageInfo.Header.nFormat), gradientInformation.imageInfo.Header.sizeActualPxl, gradientInformation.imageInfo.Header.nStride, gradientInformation.imageInfo.Data.rgData);
             if (flag)
             {

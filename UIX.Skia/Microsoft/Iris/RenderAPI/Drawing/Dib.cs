@@ -10,13 +10,16 @@ using System;
 
 namespace Microsoft.Iris.RenderAPI.Drawing
 {
+    /// <summary>
+    /// Represents a device-independent bitmap
+    /// </summary>
     internal sealed class Dib : IDisposable
     {
         private IntPtr m_hdib;
-        private IntPtr m_prgbData;
+        private byte[] m_prgbData;
         private Size m_sizePxl;
 
-        public Dib(IntPtr hdib, IntPtr prgbData, Size sizePxl)
+        public Dib(IntPtr hdib, byte[] prgbData, Size sizePxl)
         {
             m_hdib = hdib;
             m_prgbData = prgbData;
@@ -37,7 +40,7 @@ namespace Microsoft.Iris.RenderAPI.Drawing
                 return;
             NativeApi.SpFreeDib(m_hdib);
             m_hdib = IntPtr.Zero;
-            m_prgbData = IntPtr.Zero;
+            m_prgbData = null;
         }
 
         public Size ContentSize => m_sizePxl;
@@ -46,6 +49,6 @@ namespace Microsoft.Iris.RenderAPI.Drawing
 
         public ImageFormat ImageFormat => ImageFormat.A8R8G8B8;
 
-        internal IntPtr Data => m_prgbData;
+        internal byte[] Data => m_prgbData;
     }
 }

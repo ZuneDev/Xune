@@ -11,7 +11,7 @@ namespace Microsoft.Iris.Render.Graphics
     internal class ImageLoadInfo
     {
         public Image imageOwner;
-        public IntPtr rgAppData;
+        public byte[] rgAppData;
         public int nStride;
         public int nLoadsInProgress;
         public int nSystemLoadRequests;

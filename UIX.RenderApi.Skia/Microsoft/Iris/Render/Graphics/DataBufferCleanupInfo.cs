@@ -10,7 +10,7 @@ namespace Microsoft.Iris.Render.Graphics
 {
     internal class DataBufferCleanupInfo
     {
-        public IntPtr rgConvertData;
+        public byte[] rgConvertData;
         public ImageLoadInfo imageLoadInfo;
     }
 }

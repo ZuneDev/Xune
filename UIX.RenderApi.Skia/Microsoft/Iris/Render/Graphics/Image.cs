@@ -107,7 +107,7 @@ namespace Microsoft.Iris.Render.Graphics
           ImageFormat imageFormat,
           Size sizeImage,
           int nStride,
-          IntPtr rgData)
+          byte[] rgData)
         {
             this.m_session.AssertOwningThread();
             bool flag1 = false;
@@ -131,18 +131,20 @@ namespace Microsoft.Iris.Render.Graphics
                     if (this.InUse)
                         this.m_surface.AddActiveUser(this);
                 }
-                IntPtr num1 = IntPtr.Zero;
+                byte[] num1 = null;
                 if (this.m_session.IsForeignByteOrderOnWindowing)
                 {
                     int bitsPerPixel = SurfaceFormatInfo.GetBitsPerPixel(nFormat);
                     int num2 = sizeImage.Height * nStride;
-                    num1 = Marshal.AllocHGlobal(num2);
-                    Memory.ConvertEndian(num1, rgData, num2, bitsPerPixel);
+                    num1 = new byte[num2];
+                    // TODO: Does this need to be re-implemented?
+                    throw new NotImplementedException();
+                    //Memory.ConvertEndian(num1, rgData, num2, bitsPerPixel);
                 }
                 this.m_imageFormat = imageFormat;
                 this.m_sizeImage = sizeImage;
                 uint cbSize = (uint)(nStride * this.m_sizeImage.Height);
-                buffer = this.m_session.BuildDataBuffer(num1 == IntPtr.Zero ? rgData : num1, cbSize);
+                buffer = this.m_session.BuildDataBuffer(num1 == null ? rgData : num1, cbSize);
                 this.Track(buffer, num1, rgData, nStride);
                 buffer.Commit();
                 ++this.m_loadInfo.nLoadsInProgress;
@@ -182,7 +184,7 @@ namespace Microsoft.Iris.Render.Graphics
                     ((IImage)this).LoadContent(this.m_imageFormat, this.m_sizeImage, this.m_loadInfo.nStride, this.m_loadInfo.rgAppData);
                 }
                 else
-                    this.m_handlerContent(ContentNotification.Acquire, this, IntPtr.Zero);
+                    this.m_handlerContent(ContentNotification.Acquire, this, null);
             }
             Surface surface = this.m_surface;
         }
@@ -204,7 +206,7 @@ namespace Microsoft.Iris.Render.Graphics
             }
         }
 
-        private void Track(DataBuffer buffer, IntPtr rgConvertData, IntPtr rgAppData, int nStride)
+        private void Track(DataBuffer buffer, byte[] rgConvertData, byte[] rgAppData, int nStride)
         {
             ImageLoadInfo imageLoadInfo;
             if (this.m_loadInfo != null && this.m_loadInfo.rgAppData == rgAppData && this.m_loadInfo.nStride == nStride)
@@ -259,14 +261,13 @@ namespace Microsoft.Iris.Render.Graphics
                     imageLoadInfo.handlerNotify(ContentNotification.Release, imageLoadInfo.imageOwner, imageLoadInfo.rgAppData);
                     imageLoadInfo.imageOwner.m_insideReleaseCallback = false;
                 }
-                imageLoadInfo.rgAppData = IntPtr.Zero;
+                imageLoadInfo.rgAppData = null;
                 imageLoadInfo.handlerNotify = null;
                 imageLoadInfo.imageOwner = null;
             }
-            if (!(contextData.rgConvertData != IntPtr.Zero))
+            if (!(contextData.rgConvertData != null))
                 return;
-            Marshal.FreeHGlobal(contextData.rgConvertData);
-            contextData.rgConvertData = IntPtr.Zero;
+            contextData.rgConvertData = null;
         }
 
         internal delegate void ContentReloadedHandler(Image image);

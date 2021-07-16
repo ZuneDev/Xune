@@ -94,6 +94,60 @@ namespace Microsoft.Iris.Render.Protocol
             }
         }
 
+        public static unsafe void ConvertEndian(
+          uint[] pvDest,
+          uint[] pvSrc,
+          int cbConvert,
+          int cUnitBits)
+        {
+            switch (cUnitBits)
+            {
+                case 8:
+                    break;
+                case 16:
+                    int count16 = cbConvert / 4;
+                    int i16 = 0;
+                    while (count16-- > 0)
+                    {
+                        i16++;
+                        uint valSrc = pvSrc[i16];
+                        pvDest[i16] = (uint)((int)((valSrc & 4278190080U) >> 8) | ((int)valSrc & 16711680) << 8 | (int)((valSrc & 65280U) >> 8) | ((int)valSrc & byte.MaxValue) << 8);
+                    }
+                    if (cbConvert % 4 == 0)
+                        break;
+                    
+                    // Convert uint to ushort array
+                    ushort[] destUInt16 = new ushort[pvSrc.Length * (sizeof(uint) / sizeof(ushort))];
+
+                    ushort lastVal = (ushort)pvDest[i16];
+                    int lastValConv = (ushort)((lastVal & 65280) >> 8 | (lastVal & byte.MaxValue) << 8);
+                    pvDest[i16] = (ushort)lastValConv;
+                    break;
+                case 32:
+                    int count32 = cbConvert / 4;
+                    int i32 = 0;
+                    while (count32-- > 0)
+                    {
+                        i32++;
+                        pvDest[i32] = ConvertEndian(pvSrc[i32]);
+                    }
+                    break;
+                default:
+                    Debug2.Throw(false, "Unsupported data format");
+                    break;
+            }
+        }
+
         public static uint ConvertEndian(uint src) => (uint)((int)((src & 4278190080U) >> 24) | (int)((src & 16711680U) >> 8) | ((int)src & 65280) << 8 | ((int)src & byte.MaxValue) << 24);
+    
+        public static uint[] ReinterpretAsUInt16(byte[] src)
+        {
+            uint[] dest = new uint[src.Length * (sizeof(uint) / sizeof(byte))];
+            for (int s = 0; s < src.Length; s++)
+            {
+                
+            }
+            return dest;
+        }
     }
 }

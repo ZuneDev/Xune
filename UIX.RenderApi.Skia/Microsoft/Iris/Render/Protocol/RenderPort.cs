@@ -211,8 +211,9 @@ namespace Microsoft.Iris.Render.Protocol
             this._individualMessageMode = true;
         }
 
-        public unsafe void SendDataBuffer(void* pvData, uint cbSize, RENDERHANDLE idRemoteBuffer)
+        public unsafe void SendDataBuffer(byte[] pvData, uint cbSize, RENDERHANDLE idRemoteBuffer)
         {
+            return;
             Debug2.Validate(idRemoteBuffer != RENDERHANDLE.NULL, typeof(ArgumentNullException), nameof(idRemoteBuffer));
             this.UpdateTraffic(0U, cbSize);
             var info = new EngineApi.BufferInfo
@@ -223,11 +224,12 @@ namespace Microsoft.Iris.Render.Protocol
                 nFlags = 0,
                 cbSizeBuffer = cbSize
             };
-            EngineApi.IFC(EngineApi.SpBufferOpen(&info, pvData));
+            //EngineApi.IFC(EngineApi.SpBufferOpen(&info, pvData));
         }
 
         public unsafe void SendBatchBuffer(void* pvData, uint cbSize, RENDERHANDLE idRemoteBuffer)
         {
+            return;
             int num = idRemoteBuffer != RENDERHANDLE.NULL ? 1 : 0;
             this.UpdateTraffic(cbSize, 0U);
             var info = new EngineApi.BufferInfo()
@@ -243,6 +245,7 @@ namespace Microsoft.Iris.Render.Protocol
 
         public unsafe void SendMessageBuffer(Message* pmsg)
         {
+            return;
             this.UpdateTraffic(pmsg->cbSize, 0U);
             uint src = pmsg->cbSize;
             if (this.ForeignByteOrder)

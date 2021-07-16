@@ -16,6 +16,6 @@ namespace Microsoft.Iris.Render
 
         string Identifier { get; }
 
-        bool LoadContent(ImageFormat format, Size size, int Stride, IntPtr Data);
+        bool LoadContent(ImageFormat format, Size size, int Stride, byte[] Data);
     }
 }

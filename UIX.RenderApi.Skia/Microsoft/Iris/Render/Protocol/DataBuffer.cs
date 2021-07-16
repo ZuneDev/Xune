@@ -13,10 +13,10 @@ namespace Microsoft.Iris.Render.Protocol
     {
         private RenderPort m_port;
         private RemoteDataBuffer m_remoteBuffer;
-        private unsafe void* m_pvData;
+        private byte[] m_pvData;
         private uint m_cbSize;
 
-        public unsafe DataBuffer(RenderPort port, void* pvData, uint cbSize)
+        public unsafe DataBuffer(RenderPort port, byte[] pvData, uint cbSize)
         {
             this.m_port = port;
             this.m_remoteBuffer = null;
@@ -44,7 +44,7 @@ namespace Microsoft.Iris.Render.Protocol
 
         public uint DataSize => this.m_cbSize;
 
-        public unsafe void* Data => this.m_pvData;
+        public byte[] Data => this.m_pvData;
 
         public RemoteDataBuffer RemoteStub => this.m_remoteBuffer;
 

@@ -292,7 +292,7 @@ namespace Microsoft.Iris.Render.Internal
             return fUseSplitWindowingPort ? this.LocalRenderingProtocol.BuildRemoteNullDevice(device, this.LocalRenderingProtocol.LocalDeviceCallbackHandle) : this.RenderingProtocol.BuildRemoteNullDevice(device, this.RenderingProtocol.LocalDeviceCallbackHandle);
         }
 
-        internal unsafe DataBuffer BuildDataBuffer(IntPtr pData, uint cbSize) => new DataBuffer(this.RenderingPort, pData.ToPointer(), cbSize);
+        internal unsafe DataBuffer BuildDataBuffer(byte[] pData, uint cbSize) => new DataBuffer(this.RenderingPort, pData, cbSize);
 
         internal void LoadSurface(DataBuffer buffer, Surface surface, ImageHeader header) => RemoteRasterizer.SendLoadRawImage(this.RenderingProtocol, surface.RemoteStub, buffer.RemoteStub, header);
 

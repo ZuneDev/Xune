@@ -164,7 +164,7 @@ namespace Microsoft.Iris.Render.Extensions
 
         protected void SetSize(Size size) => this.m_size = size;
 
-        internal void ReloadImage(ContentNotification notification, IImage image, IntPtr data)
+        internal void ReloadImage(ContentNotification notification, IImage image, byte[] data)
         {
             switch (notification)
             {

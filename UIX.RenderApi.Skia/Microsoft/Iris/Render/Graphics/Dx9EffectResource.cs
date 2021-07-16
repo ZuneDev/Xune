@@ -93,7 +93,8 @@ namespace Microsoft.Iris.Render.Graphics
                         ++index;
                 }
             }
-            this.RemoteEffect(effectBuilder, pEffectBlob, pBlobBuffer, nBlobSize);
+            // TODO: Re-implement
+            //this.RemoteEffect(effectBuilder, pEffectBlob.ToPointer(), pBlobBuffer, nBlobSize);
             return true;
         }
 
@@ -129,7 +130,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         private void RemoteEffect(
           Dx9EffectBuilder effectBuilder,
-          IntPtr pEffectBlob,
+          byte[] pEffectBlob,
           IntPtr pBlobBuffer,
           uint nBlobSize)
         {

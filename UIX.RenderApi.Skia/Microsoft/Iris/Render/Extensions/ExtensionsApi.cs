@@ -14,64 +14,77 @@ namespace Microsoft.Iris.Render.Extensions
     [SuppressUnmanagedCodeSecurity]
     public static class ExtensionsApi
     {
-        private const string s_stExtensionsDll = "UIXRender.dll";
         internal const ushort WAVE_FORMAT_PCM = 1;
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Auto)]
-        internal static extern HRESULT SpBitmapLoadFile(
+        internal static HRESULT SpBitmapLoadFile(
           string stFileName,
           [MarshalAs(UnmanagedType.LPStruct), In] ImageRequirements req,
-          ExtensionsApi.BitmapOptions nOptions,
+          BitmapOptions nOptions,
           out HSpBitmap hBmp,
-          out ImageInformation info);
+          out ImageInformation info)
+        {
+            throw new NotImplementedException();
+        } 
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Auto)]
-        internal static extern HRESULT SpBitmapLoadRaw(
+        internal static HRESULT SpBitmapLoadRaw(
           Size sizeActualPxl,
           int nStride,
           SurfaceFormat nFormat,
           IntPtr pvData,
           [MarshalAs(UnmanagedType.LPStruct), In] ImageRequirements req,
-          ExtensionsApi.BitmapOptions nOptions,
+          BitmapOptions nOptions,
           out HSpBitmap hBmp,
-          out ImageInformation info);
+          out ImageInformation info)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Auto)]
-        internal static extern HRESULT SpBitmapLoadResource(
+        internal static HRESULT SpBitmapLoadResource(
           Win32Api.HINSTANCE hinst,
           string stName,
           int nType,
           [MarshalAs(UnmanagedType.LPStruct), In] ImageRequirements req,
-          ExtensionsApi.BitmapOptions nOptions,
+          BitmapOptions nOptions,
           out HSpBitmap hBmp,
-          out ImageInformation info);
+          out ImageInformation info)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Auto)]
-        internal static extern HRESULT SpBitmapLoadBuffer(
+        internal static HRESULT SpBitmapLoadBuffer(
           IntPtr pvSrc,
           uint cbSize,
           [MarshalAs(UnmanagedType.LPStruct), In] ImageRequirements req,
-          ExtensionsApi.BitmapOptions nOptions,
+          BitmapOptions nOptions,
           out HSpBitmap hBmp,
-          out ImageInformation info);
+          out ImageInformation info)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        internal static extern HRESULT SpBitmapDelete(HSpBitmap hBmp);
+        internal static HRESULT SpBitmapDelete(HSpBitmap hBmp)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Auto)]
-        internal static extern HRESULT SpSoundLoadBuffer(
+        internal static HRESULT SpSoundLoadBuffer(
           IntPtr pBuffer,
           int dwSize,
-          ExtensionsApi.SoundOptions options,
-          out ExtensionsApi.HSpSound hSound,
-          out ExtensionsApi.SoundInformation info);
+          SoundOptions options,
+          out HSpSound hSound,
+          out SoundInformation info)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        internal static extern HRESULT SpSoundDispose(
-          ExtensionsApi.HSpSound hSound,
-          ExtensionsApi.SoundInformation info);
+        internal static HRESULT SpSoundDispose(
+          HSpSound hSound,
+          SoundInformation info)
+        {
+            throw new NotImplementedException();
+        }
 
-        [System.Flags]
+        [Flags]
         internal enum BitmapOptions
         {
             None = 0,
@@ -80,7 +93,7 @@ namespace Microsoft.Iris.Render.Extensions
             Valid = Flip | Decode, // 0x00000003
         }
 
-        [System.Flags]
+        [Flags]
         internal enum SoundOptions
         {
             None = 0,
@@ -105,28 +118,28 @@ namespace Microsoft.Iris.Render.Extensions
         [ComVisible(false)]
         public struct SoundData
         {
-            public IntPtr rgData;
+            public byte[] rgData;
         }
 
         [ComVisible(false)]
         public struct SoundInformation
         {
-            public ExtensionsApi.SoundHeader Header;
-            public ExtensionsApi.SoundData Data;
-            public static ExtensionsApi.SoundInformation NULL = new ExtensionsApi.SoundInformation();
+            public SoundHeader Header;
+            public SoundData Data;
+            public static SoundInformation NULL = new SoundInformation();
         }
 
         [ComVisible(false)]
         public struct HSpSound
         {
             public IntPtr h;
-            public static readonly ExtensionsApi.HSpSound NULL = new ExtensionsApi.HSpSound();
+            public static readonly HSpSound NULL = new HSpSound();
 
-            public static bool operator ==(ExtensionsApi.HSpSound hA, ExtensionsApi.HSpSound hB) => hA.h == hB.h;
+            public static bool operator ==(HSpSound hA, HSpSound hB) => hA.h == hB.h;
 
-            public static bool operator !=(ExtensionsApi.HSpSound hA, ExtensionsApi.HSpSound hB) => hA.h != hB.h;
+            public static bool operator !=(HSpSound hA, HSpSound hB) => hA.h != hB.h;
 
-            public override bool Equals(object oCompare) => oCompare is ExtensionsApi.HSpSound hspSound && this.h == hspSound.h;
+            public override bool Equals(object oCompare) => oCompare is HSpSound hspSound && this.h == hspSound.h;
 
             public override int GetHashCode() => (int)this.h.ToInt64();
         }

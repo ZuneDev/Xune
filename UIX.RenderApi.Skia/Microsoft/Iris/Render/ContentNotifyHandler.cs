@@ -11,5 +11,5 @@ namespace Microsoft.Iris.Render
     public delegate void ContentNotifyHandler(
       ContentNotification Notification,
       IImage image,
-      IntPtr data);
+      byte[] data);
 }

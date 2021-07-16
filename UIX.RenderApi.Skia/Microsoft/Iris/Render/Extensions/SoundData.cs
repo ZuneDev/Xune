@@ -54,7 +54,7 @@ namespace Microsoft.Iris.Render.Extensions
 
         uint ISoundData.SampleCount => (uint)(m_soundInfo.Header.cbDataSize / (ulong)(m_soundInfo.Header.wBitsPerSample / 8));
 
-        IntPtr ISoundData.AcquireContent()
+        byte[] ISoundData.AcquireContent()
         {
             ++this.m_usageCount;
             return this.m_soundInfo.Data.rgData;
@@ -69,7 +69,7 @@ namespace Microsoft.Iris.Render.Extensions
             ExtensionsApi.HSpSound soundDataHandle;
             ExtensionsApi.SoundInformation soundDataInfo;
             SoundLoader.FromResource(this.m_moduleName, this.m_resourceId, out soundDataHandle, out soundDataInfo);
-            Debug2.Validate(soundDataInfo.Data.rgData != IntPtr.Zero, typeof(InvalidOperationException), "Failed to load data and no exception was thrown");
+            Debug2.Validate(soundDataInfo.Data.rgData != null, typeof(InvalidOperationException), "Failed to load data and no exception was thrown");
             Debug2.Validate(soundDataInfo.Header.wFormatTag == 1, typeof(ArgumentException), "Only PCM sound data is currently supported");
             Debug2.Validate(soundDataInfo.Header.nChannels >= 1 && soundDataInfo.Header.nChannels <= 2, typeof(ArgumentException), "Only mono/stereo sound data is currently supported");
             Debug2.Validate(soundDataInfo.Header.wBitsPerSample == 8 || soundDataInfo.Header.wBitsPerSample == 16, typeof(ArgumentException), "Only 8bps/16bps sound data is currently supported");

@@ -10,14 +10,13 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Threading;
 
 namespace Microsoft.Iris.Render.Protocol
 {
     [SuppressUnmanagedCodeSecurity]
     internal static class EngineApi
     {
-        private const string s_stEhRenderDll = "UIXRender.dll";
-
         public static void IFC(HRESULT hr)
         {
             if (hr.Int >= 0)
@@ -102,89 +101,127 @@ namespace Microsoft.Iris.Render.Protocol
             }
         }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpInit(ref EngineApi.InitArgs args);
+        public static HRESULT SpInit(ref InitArgs args)
+        {
+            return 0;
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpUninit();
+        public static HRESULT SpUninit()
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern unsafe HRESULT SpBufferOpen(
-          EngineApi.BufferInfo* phdrData,
-          void* pvData);
+        public static unsafe HRESULT SpBufferOpen(
+          BufferInfo* phdrData,
+          void* pvData)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern unsafe HRESULT SpWrapBufferProc(
-          EngineApi.MessageBufferEventHandler pfnProcessBufferProc,
-          IntPtr* ppNativeProc);
+        public static unsafe HRESULT SpWrapBufferProc(
+          MessageBufferEventHandler pfnProcessBufferProc,
+          IntPtr* ppNativeProc)
+        {
+            *ppNativeProc = Marshal.GetFunctionPointerForDelegate(pfnProcessBufferProc);
+            return 0;
+        }
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Auto)]
-        public static extern HRESULT SpPeekMessage(
+        public static HRESULT SpPeekMessage(
           out Win32Api.MSG msg,
           HWND hwnd,
           uint nMsgFilterMin,
           uint nMsgFilterMax,
           uint wRemoveMsg,
-          out EngineApi.WorkResult nResult);
+          out WorkResult nResult)
+        {
+            nResult = WorkResult.ProcessedMessage;
+            msg = new Win32Api.MSG
+            {
+                message = 1
+            };
+            return 0;
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpWaitMessage(uint nTimeOutMs, IntPtr _unused);
+        public static HRESULT SpWaitMessage(uint nTimeOutMs, IntPtr _unused)
+        {
+            return 0;
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpInvoke(
+        public static HRESULT SpInvoke(
           ContextID idContext,
           IntPtr pfnInvoke,
           IntPtr pvArgs,
-          bool synchronous);
+          bool synchronous)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpRenderThreadInit(
-          ref EngineApi.InitArgs argsRender,
-          out IntPtr pThread);
+        public static HRESULT SpRenderThreadInit(
+          ref InitArgs argsRender,
+          out Thread pThread)
+        {
+            pThread = new Thread(new ThreadStart(() => Console.WriteLine("nan")));
+            pThread.Start();
+            return 0;
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpRenderThreadUninit(IntPtr pThread);
+        public static HRESULT SpRenderThreadUninit(Thread pThread)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Unicode)]
-        public static extern HRESULT SpRemoteCreateServerStreams(
+        public static HRESULT SpRemoteCreateServerStreams(
           string stSession,
           TransportProtocol nProtocol,
           out IntPtr pSendStream,
-          out IntPtr pReceiveStream);
+          out IntPtr pReceiveStream)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpRemoteWaitServerStreamsConnected(
+        public static HRESULT SpRemoteWaitServerStreamsConnected(
           TransportProtocol nProtocol,
           IntPtr pSendStream,
-          IntPtr pReceiveStream);
+          IntPtr pReceiveStream)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpRemoteServerInit(
+        public static HRESULT SpRemoteServerInit(
           IntPtr pSendStream,
           IntPtr pReceiveStream,
-          EngineApi.InitArgs argsSend,
-          out IntPtr pSession);
+          InitArgs argsSend,
+          out IntPtr pSession)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpRemoteServerUninit(
+        public static HRESULT SpRemoteServerUninit(
           IntPtr pSession,
           bool fForceShutdown,
-          out ShutdownReason nShutdownReason);
+          out ShutdownReason nShutdownReason)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Ansi)]
-        public static extern HRESULT SpDx9CompileEffect(
+        public static HRESULT SpDx9CompileEffect(
           string stEffect,
           string stDefines,
           out IntPtr pErrorString,
           out IntPtr pErrorBuffer,
           out IntPtr pEffectBlob,
           out uint EffectBlobSize,
-          out IntPtr pEffectBlobBuffer);
+          out IntPtr pEffectBlobBuffer)
+        {
+            throw new NotImplementedException();
+        }
 
-        [DllImport("UIXRender.dll")]
-        public static extern void SpObjectRelease(IntPtr pUnknown);
+        public static void SpObjectRelease(IntPtr pUnknown)
+        {
+            throw new NotImplementedException();
+        }
 
-        [System.Flags]
+        [Flags]
         public enum BufferFlags
         {
             IsBatch = 1,
@@ -195,11 +232,11 @@ namespace Microsoft.Iris.Render.Protocol
         [ComVisible(false)]
         public struct BufferInfo
         {
-            public ContextID idContextSrc;
-            public ContextID idContextDest;
-            public RENDERHANDLE idBuffer;
-            public EngineApi.BufferFlags nFlags;
-            public uint cbSizeBuffer;
+            public ContextID idContextSrc;  // 0x00
+            public ContextID idContextDest; // 0x04
+            public RENDERHANDLE idBuffer;   // 0x08
+            public BufferFlags nFlags;      // 0x0C
+            public uint cbSizeBuffer;       // 0x10
         }
 
         internal delegate void TimeoutEventHandler(IntPtr pData);
@@ -207,21 +244,21 @@ namespace Microsoft.Iris.Render.Protocol
         [ComVisible(false)]
         internal struct InitArgs
         {
-            public uint cbSize;
-            public ContextID idContext;
-            public int cItemsPerGroupBits;
-            public int cGroupBits;
-            public IntPtr pfnProcessBuffer;
-            public IntPtr pvProcessData;
-            public RENDERHANDLE idObjectBrokerClass;
-            public EngineApi.TimeoutEventHandler pfnTimeout;
-            public IntPtr pvTimeoutData;
-            public uint nTimeOutSec;
+            public uint cbSize;                         // 0x00
+            public ContextID idContext;                 // 0x04
+            public int cItemsPerGroupBits;              // 0x08
+            public int cGroupBits;                      // 0x0C
+            public IntPtr pfnProcessBuffer;             // 0x10
+            public IntPtr pvProcessData;                // 0x14
+            public RENDERHANDLE idObjectBrokerClass;    // 0x18 
+            public TimeoutEventHandler pfnTimeout;      // 0x1C
+            public IntPtr pvTimeoutData;                // 0x24
+            public uint nTimeOutSec;                    // 0x28
 
             public InitArgs(MessageCookieLayout layout, ContextID idContextNew)
             {
                 Debug2.Validate(idContextNew != ContextID.NULL, typeof(ArgumentNullException), nameof(idContextNew));
-                this.cbSize = (uint)Marshal.SizeOf(typeof(EngineApi.InitArgs));
+                this.cbSize = (uint)Marshal.SizeOf(typeof(InitArgs));
                 this.idContext = idContextNew;
                 this.cItemsPerGroupBits = layout.numberOfObjectBits;
                 this.cGroupBits = layout.numberOfGroupBits;
@@ -236,7 +273,7 @@ namespace Microsoft.Iris.Render.Protocol
             public unsafe InitArgs(
               MessageCookieLayout layout,
               ContextID idContextNew,
-              EngineApi.MessageBufferEventHandler pfnProcessBufferProc)
+              MessageBufferEventHandler pfnProcessBufferProc)
               : this(layout, idContextNew)
             {
                 if (pfnProcessBufferProc == null)
@@ -250,10 +287,10 @@ namespace Microsoft.Iris.Render.Protocol
         internal unsafe delegate int MessageBufferEventHandler(
           IntPtr pData,
           uint hContext,
-          EngineApi.BufferInfo* pBufferInfo,
+          BufferInfo* pBufferInfo,
           void* pvBufferData);
 
-        [System.Flags]
+        [Flags]
         public enum WorkResult : uint
         {
             ProcessedMessage = 1,

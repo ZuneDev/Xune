@@ -110,7 +110,7 @@ namespace Microsoft.Iris.Render.Sound
         {
             if (this.m_contentLoaded)
                 return;
-            IntPtr pData = this.m_soundData.AcquireContent();
+            byte[] pData = this.m_soundData.AcquireContent();
             DataBuffer dataBuffer = null;
             try
             {

@@ -20,7 +20,7 @@ namespace Microsoft.Iris.Render
 
         uint SampleCount { get; }
 
-        IntPtr AcquireContent();
+        byte[] AcquireContent();
 
         void ReleaseContent();
     }

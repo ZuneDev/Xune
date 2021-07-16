@@ -12,6 +12,6 @@ namespace Microsoft.Iris.Render.Extensions
     [ComVisible(false)]
     public struct ImageData
     {
-        public IntPtr rgData;
+        public byte[] rgData;
     }
 }

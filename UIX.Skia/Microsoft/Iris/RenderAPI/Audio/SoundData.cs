@@ -105,7 +105,7 @@ namespace Microsoft.Iris.RenderAPI.Audio
 
         uint ISoundData.SampleCount => _soundInfo.Header.cbDataSize * 8U / _soundInfo.Header.wBitsPerSample;
 
-        IntPtr ISoundData.AcquireContent()
+        byte[] ISoundData.AcquireContent()
         {
             if (Load())
                 return _soundInfo.Data.rgData;

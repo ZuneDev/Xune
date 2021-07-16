@@ -6,18 +6,19 @@
 
 using Microsoft.Iris.Render.Common;
 using System;
+using System.Threading;
 
 namespace Microsoft.Iris.Render.Protocol
 {
     internal class LocalChannel : RenderObject, IChannel
     {
-        private IntPtr m_renderThread;
+        private Thread m_renderThread;
 
         public LocalChannel(LocalConnectionInfo connectionInfo)
         {
         }
 
-        public bool IsConnected => this.m_renderThread != IntPtr.Zero;
+        public bool IsConnected => m_renderThread != null;
 
         public void Connect(
           ContextID remoteContextId,
@@ -29,17 +30,17 @@ namespace Microsoft.Iris.Render.Protocol
             {
                 idObjectBrokerClass = brokerClassHandle
             };
-            EngineApi.IFC(EngineApi.SpRenderThreadInit(ref args, out this.m_renderThread));
+            EngineApi.IFC(EngineApi.SpRenderThreadInit(ref args, out m_renderThread));
         }
 
         protected override void Dispose(bool inDispose)
         {
             try
             {
-                if (!(this.m_renderThread != IntPtr.Zero))
+                if (m_renderThread == null)
                     return;
-                EngineApi.IFC(EngineApi.SpRenderThreadUninit(this.m_renderThread));
-                this.m_renderThread = IntPtr.Zero;
+                EngineApi.IFC(EngineApi.SpRenderThreadUninit(m_renderThread));
+                m_renderThread = null;
             }
             finally
             {

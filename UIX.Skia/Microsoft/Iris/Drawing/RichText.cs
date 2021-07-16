@@ -378,10 +378,13 @@ namespace Microsoft.Iris.Drawing
           Color textColor,
           bool shadowMode)
         {
+            throw new NotImplementedException();
+
             IntPtr phTextBitmap = IntPtr.Zero;
-            IntPtr ppvBits;
-            Size psizeBitmap;
-            RendererApi.IFC(NativeApi.SpRichTextRasterize(hGlyphRunInfo, outlineMode ? 1 : 0, textColor, shadowMode ? 1 : 0, out phTextBitmap, out ppvBits, out psizeBitmap));
+            byte[] ppvBits = null;
+            Size psizeBitmap = default(Size);
+            // TODO: Re-implement using SkiaSharp and/or ImageSharp
+            //RendererApi.IFC(NativeApi.SpRichTextRasterize(hGlyphRunInfo, outlineMode ? 1 : 0, textColor, shadowMode ? 1 : 0, out phTextBitmap, out ppvBits, out psizeBitmap));
             return new Dib(phTextBitmap, ppvBits, psizeBitmap);
         }
 

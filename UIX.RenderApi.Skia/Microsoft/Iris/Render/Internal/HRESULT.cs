@@ -34,5 +34,8 @@ namespace Microsoft.Iris.Render.Internal
         }
 
         public int Int => this.hr;
+
+        public static implicit operator HRESULT(int i) => new(i);
+        public static implicit operator int(HRESULT hr) => hr.Int;
     }
 }
