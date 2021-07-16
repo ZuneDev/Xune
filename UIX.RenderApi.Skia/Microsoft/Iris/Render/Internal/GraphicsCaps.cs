@@ -13,7 +13,7 @@ namespace Microsoft.Iris.Render.Internal
     [Serializable]
     internal struct GraphicsCaps
     {
-        internal uint DeviceType;
+        internal GraphicsDeviceType DeviceType;
         internal int MaxSimultaneousTextures;
         internal int MaxTextureWidth;
         internal int MaxTextureHeight;

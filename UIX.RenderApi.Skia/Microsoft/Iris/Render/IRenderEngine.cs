@@ -11,9 +11,10 @@ namespace Microsoft.Iris.Render
     public interface IRenderEngine : IRenderObject, IDisposable
     {
         void Initialize(
-          GraphicsDeviceType typeGraphics,
-          GraphicsRenderingQuality renderingQuality,
-          SoundDeviceType typeSound);
+            SkiaSharp.SKSurface skSurface,
+            GraphicsDeviceType typeGraphics,
+            GraphicsRenderingQuality renderingQuality,
+            SoundDeviceType typeSound);
 
         IRenderSession Session { get; }
 

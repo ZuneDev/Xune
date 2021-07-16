@@ -10,5 +10,6 @@ namespace Microsoft.Iris
     {
         None,
         DirectSound,
+        XAudio
     }
 }

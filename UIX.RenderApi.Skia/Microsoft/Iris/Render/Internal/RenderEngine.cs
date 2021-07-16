@@ -4,6 +4,7 @@
 // MVID: D47658B8-A8EA-43D6-8837-ECE823BFFFC1
 // Assembly location: C:\Program Files\Zune\UIX.RenderApi.dll
 
+using Microsoft.Iris.Library;
 using Microsoft.Iris.Render.Common;
 using Microsoft.Iris.Render.Protocol;
 using Microsoft.Iris.Render.Sound;
@@ -92,9 +93,10 @@ namespace Microsoft.Iris.Render.Internal
         }
 
         void IRenderEngine.Initialize(
-          GraphicsDeviceType typeGraphics,
-          GraphicsRenderingQuality renderingQuality,
-          SoundDeviceType typeSound)
+            SkiaSharp.SKSurface skSurface,
+            GraphicsDeviceType typeGraphics,
+            GraphicsRenderingQuality renderingQuality,
+            SoundDeviceType typeSound)
         {
             Debug2.Validate(this.m_messagingSession.IsConnected, typeof(InvalidOperationException), "Must be connected before attempting to initialize");
             Debug2.Validate(this.m_renderSession != null, typeof(ArgumentNullException), "Session must exist before calling Initialize");
@@ -128,9 +130,9 @@ namespace Microsoft.Iris.Render.Internal
 
         internal SoundDevice SoundDevice => this.m_soundDevice;
 
-        internal Vector<Microsoft.Iris.Render.Internal.GraphicsCaps> GraphicsCaps => this.m_renderCaps.Graphics;
+        internal Vector<GraphicsCaps> GraphicsCaps => this.m_renderCaps.Graphics;
 
-        internal Vector<Microsoft.Iris.Render.Internal.SoundCaps> SoundCaps => this.m_renderCaps.Sound;
+        internal Vector<SoundCaps> SoundCaps => this.m_renderCaps.Sound;
 
         private void DoEvents(uint nTimeoutInMsecs)
         {
@@ -178,9 +180,9 @@ namespace Microsoft.Iris.Render.Internal
 
         private bool IsGraphicsDeviceAvailable(GraphicsDeviceType type, bool fFilterRecommended)
         {
-            foreach (Microsoft.Iris.Render.Internal.GraphicsCaps graphic in this.m_renderCaps.Graphics)
+            foreach (GraphicsCaps graphic in this.m_renderCaps.Graphics)
             {
-                if ((GraphicsDeviceType)graphic.DeviceType == type)
+                if (graphic.DeviceType.FulfillsRequirement(type))
                     return !fFilterRecommended || graphic.DriverWarning == 0;
             }
             return false;

@@ -120,7 +120,9 @@ namespace Microsoft.Iris
             }
         }
 
-        private static bool IsInitialized => s_initializationState != InitializationState.NotInitialized;
+        public static bool IsInitialized => s_initializationState != InitializationState.NotInitialized;
+
+        public static bool IsInitializing { get; private set; }
 
         public static bool StaticDllResourcesOnly
         {
@@ -135,33 +137,26 @@ namespace Microsoft.Iris
 
         public static bool IsDebug { get; set; }
 
-        public static void Initialize()
+        public static void Initialize(SkiaSharp.SKSurface skSurface)
         {
             if (IsInitialized)
                 throw new InvalidOperationException("Application already initialized");
+            IsInitializing = true;
+            Debug.Assert.IsNotNull(skSurface, nameof(skSurface));
             VerifyTrustedEnvironment();
-            s_session = new UISession();
+
+            s_session = new UISession(skSurface);
             s_session.IsRtl = s_IsRTL;
             s_session.InputManager.KeyCoalescePolicy = new KeyCoalesceFilter(QueryKeyCoalesce);
             GraphicsDeviceType graphicsType = ChooseRenderingGraphicsDevice(s_renderType);
-            switch (graphicsType)
-            {
-                case GraphicsDeviceType.Gdi:
-                    s_renderType = RenderingType.GDI;
-                    break;
-                case GraphicsDeviceType.Direct3D9:
-                    s_renderType = RenderingType.DX9;
-                    break;
-                case GraphicsDeviceType.Ganesh:
-                case GraphicsDeviceType.Metal:
-                case GraphicsDeviceType.OpenGL:
-                case GraphicsDeviceType.Vulkan:
-                case GraphicsDeviceType.Dawn:
-                    s_renderType = RenderingType.Skia;
-                    break;
-                default:
-                    throw new ArgumentException(InvariantString.Format("Unknown graphics type {0}", graphicsType));
-            }
+            if (graphicsType == GraphicsDeviceType.Gdi)
+                s_renderType = RenderingType.GDI;
+            else if (graphicsType == GraphicsDeviceType.Direct3D9)
+                s_renderType = RenderingType.DX9;
+            else if (graphicsType.FulfillsRequirement(GraphicsDeviceType.Skia))
+                s_renderType = RenderingType.Skia;
+            else
+                throw new ArgumentException(InvariantString.Format("Unknown graphics type {0}", graphicsType));
             if (graphicsType == GraphicsDeviceType.Gdi)
                 s_EnableAnimations = false;
             SoundDeviceType soundType = ChooseRendererSoundDevice(s_soundType);
@@ -173,16 +168,21 @@ namespace Microsoft.Iris
                 case SoundDeviceType.DirectSound8:
                     s_soundType = SoundType.DirectSound;
                     break;
+                case SoundDeviceType.XAudio:
+                case SoundDeviceType.XAudio2:
+                    s_soundType = SoundType.XAudio;
+                    break;
                 default:
                     throw new ArgumentException(InvariantString.Format("Unknown sound type {0}", soundType));
             }
-            s_session.InitializeRenderingDevices(graphicsType, (GraphicsRenderingQuality)s_renderingQuality, soundType);
+            s_session.InitializeRenderingDevices(skSurface, graphicsType, (GraphicsRenderingQuality)s_renderingQuality, soundType);
             s_renderingQuality = (RenderingQuality)s_session.RenderSession.GraphicsDevice.RenderingQuality;
             InitializeCommon(true);
             if (!s_EnableAnimations)
                 AnimationSystem.OverrideAnimationState(true);
             UIForm uiForm = new UIForm(s_session);
             s_initializationState = InitializationState.FullyInitialized;
+            IsInitializing = false;
         }
 
         private static void InitializeCommon(bool fullInitialization)
@@ -469,8 +469,11 @@ namespace Microsoft.Iris
                     graphicsType = GraphicsDeviceType.Gdi;
                     break;
                 case RenderingType.DX9:
-                case RenderingType.Default:
                     graphicsType = GraphicsDeviceType.Direct3D9;
+                    break;
+                case RenderingType.Skia:
+                case RenderingType.Default:
+                    graphicsType = GraphicsDeviceType.Skia;
                     break;
                 default:
                     graphicsType = GraphicsDeviceType.Unknown;

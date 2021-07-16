@@ -14,6 +14,7 @@ using Microsoft.Iris.Queues;
 using Microsoft.Iris.Render;
 using Microsoft.Iris.RenderAPI.Audio;
 using Microsoft.Iris.UI;
+using SkiaSharp;
 using System;
 
 namespace Microsoft.Iris.Session
@@ -45,14 +46,15 @@ namespace Microsoft.Iris.Session
         private static readonly DeferredHandler s_deferredPlaySound = new DeferredHandler(DeferredPlaySound);
         private static readonly DeferredHandler s_deferredPlaySystemSound = new DeferredHandler(DeferredPlaySystemSound);
 
-        public UISession()
-          : this(null, null, 0U)
+        public UISession(SKSurface skSurface)
+          : this(skSurface, null, null, 0U)
         {
         }
 
         public UISession(
-          EventHandler rendererConnectedCallback,
-          TimeoutHandler handlerTimeout,
+            SKSurface skSurface,
+            EventHandler rendererConnectedCallback,
+            TimeoutHandler handlerTimeout,
           uint timeoutSecValue)
         {
             _syncWindowHandler = new SimpleCallback(SyncWindowHandler);
@@ -67,18 +69,19 @@ namespace Microsoft.Iris.Session
             int pdwDefaultLayout;
             Win32Api.IFWIN32(Win32Api.GetProcessDefaultLayout(out pdwDefaultLayout));
             _rtl = pdwDefaultLayout == 1;
-            _engine = RenderApi.CreateEngine(IrisEngineInfo.CreateLocal(), Dispatcher);
+            _engine = RenderApi.CreateEngine(IrisEngineInfo.CreateLocal(skSurface), Dispatcher);
             _session = _engine.Session;
             TextImageCache.Initialize(this);
             ScavengeImageCache.Initialize(this);
         }
 
         internal void InitializeRenderingDevices(
-          GraphicsDeviceType graphicsType,
-          GraphicsRenderingQuality renderingQuality,
-          SoundDeviceType soundType)
+            SKSurface skSurface,
+            GraphicsDeviceType graphicsType,
+            GraphicsRenderingQuality renderingQuality,
+            SoundDeviceType soundType)
         {
-            _engine.Initialize(graphicsType, renderingQuality, soundType);
+            _engine.Initialize(skSurface, graphicsType, renderingQuality, soundType);
             _effectManager = new EffectManager(_session);
             _soundManager = new SoundManager(this, _session);
             _animationManager = new AnimationManager(_session);

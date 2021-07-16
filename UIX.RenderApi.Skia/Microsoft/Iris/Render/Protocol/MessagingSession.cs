@@ -240,8 +240,6 @@ namespace Microsoft.Iris.Render.Protocol
             }
             if (this.m_isBatchingMessages)
                 this.FlushBatch();
-            return;
-            // TODO: What does this do?
             while (this.m_pingRequestCount > 0)
                 DoEvents(uint.MaxValue);
         }

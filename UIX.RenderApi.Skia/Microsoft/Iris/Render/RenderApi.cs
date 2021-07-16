@@ -27,7 +27,7 @@ namespace Microsoft.Iris.Render
             Debug2.Validate(renderHost != null, typeof(ArgumentNullException), nameof(renderHost));
             IRenderEngine renderEngine = null;
             if (engineInfo.Type == EngineType.Iris)
-                renderEngine = new RenderEngine(engineInfo as IrisEngineInfo, renderHost);
+                renderEngine = new SkiaRenderEngine(engineInfo as IrisEngineInfo, renderHost);
             return renderEngine;
         }
 

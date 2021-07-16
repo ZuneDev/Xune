@@ -27,35 +27,20 @@ namespace Xune.Uno
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        readonly Random rand = new Random();
-        DispatcherTimer timer = new DispatcherTimer();
-
         public MainPage()
         {
             this.InitializeComponent();
-            Microsoft.Iris.Application.Initialize();
 
             Canvas.PaintSurface += Canvas_PaintSurface;
-            timer.Interval = new TimeSpan(17000);
-            timer.Tick += Timer_Tick;
-            timer.Start();
         }
 
-        private void Timer_Tick(object sender, object e)
-        {
-            Canvas.Invalidate();
-        }
-
-        ulong t = 0;
         private void Canvas_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            if (t == ulong.MaxValue)
-                t = 0;
-            byte r = (byte)rand.Next(0, byte.MaxValue);
-            byte g = (byte)rand.Next(0, byte.MaxValue);
-            byte b = (byte)rand.Next(0, byte.MaxValue);
-            e.Surface.Canvas.DrawColor(new SKColor(100, 50, (byte)(t % byte.MaxValue)));
-            t++;
+            // Initialize UI framework
+            if (Microsoft.Iris.Application.IsInitialized || Microsoft.Iris.Application.IsInitializing)
+                return;
+
+            Microsoft.Iris.Application.Initialize(e.Surface);
         }
 
         //private unsafe void nothing()

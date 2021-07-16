@@ -12,5 +12,6 @@ namespace Microsoft.Iris.Render
         DirectSound8,
         WaveAudio,
         XAudio,
+        XAudio2,
     }
 }

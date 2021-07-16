@@ -8,25 +8,17 @@ namespace Microsoft.Iris.Render
 {
     public enum GraphicsDeviceType
     {
-        Unknown = -1,
+        Unknown         = -1,
 
-        None,
-        Gdi,
-        Direct3D9,
-        XeDirectX9,
+        None            = 0b0000_0000_0000_0000,
+        Gdi             = 0b0000_0000_0000_0001,
+        Direct3D9       = 0b0000_0000_0000_0010,
+        XeDirectX9      = 0b0000_0000_0000_0011,
 
-        Metal,
-        OpenGL,
-        Vulkan,
-        Dawn,
-
-        /// <summary>
-        /// Skia's GPU backend
-        /// </summary>
-        Ganesh,
-        /// <summary>
-        /// Skia's GPU backend
-        /// </summary>
-        SKGanesh = Ganesh,
+        Skia            = 0b0000_0000_0001_0000,
+        Metal           = 0b0000_0000_0001_0001,
+        OpenGL          = 0b0000_0000_0001_0010,
+        Vulkan          = 0b0000_0000_0001_0011,
+        Dawn            = 0b0000_0000_0001_0100,
     }
 }
