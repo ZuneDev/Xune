@@ -152,6 +152,13 @@ namespace Microsoft.Iris
                 case GraphicsDeviceType.Direct3D9:
                     s_renderType = RenderingType.DX9;
                     break;
+                case GraphicsDeviceType.Ganesh:
+                case GraphicsDeviceType.Metal:
+                case GraphicsDeviceType.OpenGL:
+                case GraphicsDeviceType.Vulkan:
+                case GraphicsDeviceType.Dawn:
+                    s_renderType = RenderingType.Skia;
+                    break;
                 default:
                     throw new ArgumentException(InvariantString.Format("Unknown graphics type {0}", graphicsType));
             }
@@ -453,8 +460,7 @@ namespace Microsoft.Iris
             ErrorReport(errors);
         }
 
-        private static GraphicsDeviceType ChooseRenderingGraphicsDevice(
-          RenderingType type)
+        private static GraphicsDeviceType ChooseRenderingGraphicsDevice(RenderingType type)
         {
             GraphicsDeviceType graphicsType;
             switch (type)
