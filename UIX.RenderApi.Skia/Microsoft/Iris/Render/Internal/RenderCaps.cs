@@ -7,27 +7,28 @@
 using Microsoft.Iris.Render.Common;
 using Microsoft.Iris.Render.Protocol;
 using Microsoft.Iris.Render.Protocols.Splash.Rendering;
+using SkiaSharp;
 using System;
 
 namespace Microsoft.Iris.Render.Internal
 {
-    internal class RenderCaps : RenderObject, IRenderHandleOwner, IRenderCapsCallback
+    internal class RenderCaps : RenderObject, IRenderCapsCallback
     {
-        private RemoteRenderCaps m_remoteObject;
+        private SKSurface m_remoteObject;
         private Vector<GraphicsCaps> m_graphicsCapsList;
         private Vector<SoundCaps> m_soundCapsList;
         private bool m_hasValidCaps;
         private bool m_capsPending;
         private uint m_currentRequestId;
 
-        internal RenderCaps(RenderSession ownerSession)
+        internal RenderCaps(SKSurface skSurface)
         {
             this.m_hasValidCaps = false;
             this.m_capsPending = false;
             this.m_currentRequestId = 0U;
             this.m_graphicsCapsList = new Vector<GraphicsCaps>();
             this.m_soundCapsList = new Vector<SoundCaps>();
-            this.m_remoteObject = ownerSession.RenderingProtocol.BuildRemoteRenderCaps(this, ownerSession.RenderingProtocol.LocalRenderCapsCallbackHandle);
+            this.m_remoteObject = skSurface;
         }
 
         internal bool HasValidCaps => this.m_hasValidCaps;
@@ -41,10 +42,14 @@ namespace Microsoft.Iris.Render.Internal
             if (this.m_capsPending)
                 return;
             ++this.m_currentRequestId;
-            this.m_remoteObject.SendCheckCaps(this.m_currentRequestId);
             this.m_capsPending = true;
 
-            // TODO
+            // TODO: Is there any way to get the graphics capabilities from an SKSurface?
+            Graphics.Add(new GraphicsCaps
+            {
+                DeviceType = GraphicsDeviceType.Skia
+            });
+
             ((IRenderCapsCallback)this).OnEndCapsCheck(default, 0);
         }
 
@@ -56,10 +61,6 @@ namespace Microsoft.Iris.Render.Internal
                 return;
             this.CapsAvailable(this, EventArgs.Empty);
         }
-
-        RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteObject.RenderHandle;
-
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = null;
 
         void IRenderCapsCallback.OnBeginCapsCheck(RENDERHANDLE target, uint cookie)
         {

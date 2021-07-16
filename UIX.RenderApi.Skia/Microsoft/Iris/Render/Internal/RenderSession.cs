@@ -1,9 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Microsoft.Iris.Render.Internal.RenderSession
-// Assembly: UIX.RenderApi, Version=4.8.0.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217
-// MVID: D47658B8-A8EA-43D6-8837-ECE823BFFFC1
-// Assembly location: C:\Program Files\Zune\UIX.RenderApi.dll
-
+﻿using Microsoft.Iris.Library;
 using Microsoft.Iris.Render.Animation;
 using Microsoft.Iris.Render.Common;
 using Microsoft.Iris.Render.Graphics;
@@ -30,8 +25,8 @@ namespace Microsoft.Iris.Render.Internal
         private ProtocolSplashRendering m_protocolRenderingLocal;
         private AnimationSystem m_animationSystem;
         private ObjectCacheManager m_cacheManager;
-        private Microsoft.Iris.Render.Common.ObjectCache m_cacheSprite;
-        private Microsoft.Iris.Render.Common.ObjectCache m_cacheContainer;
+        private Common.ObjectCache m_cacheSprite;
+        private Common.ObjectCache m_cacheContainer;
 
         internal RenderSession(RenderEngine renderEngine)
         {
@@ -189,7 +184,7 @@ namespace Microsoft.Iris.Render.Internal
         {
             foreach (GraphicsCaps graphicsCap in this.m_renderEngine.GraphicsCaps)
             {
-                if ((GraphicsDeviceType)graphicsCap.DeviceType == type)
+                if (graphicsCap.DeviceType.FulfillsRequirement(type))
                     return graphicsCap;
             }
             return new GraphicsCaps();
