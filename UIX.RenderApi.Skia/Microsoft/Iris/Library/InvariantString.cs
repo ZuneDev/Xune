@@ -14,7 +14,7 @@ namespace Microsoft.Iris.Library
     {
         public static string Format(string format, object param) => string.Format(CultureInfo.InvariantCulture, format, param);
 
-        public static string Format(string format, object[] param) => throw new Exception("Should never format with object array. Use one of the dedicated format methods");
+        //public static string Format(string format, object[] param) => throw new Exception("Should never format with object array. Use one of the dedicated format methods");
 
         public static string Format(string format, object param1, object param2) => string.Format(CultureInfo.InvariantCulture, format, param1, param2);
 
@@ -22,110 +22,9 @@ namespace Microsoft.Iris.Library
 
         public static string Format(
           string format,
-          object param1,
-          object param2,
-          object param3,
-          object param4)
+          params object[] @params)
         {
-            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4);
-        }
-
-        public static string Format(
-          string format,
-          object param1,
-          object param2,
-          object param3,
-          object param4,
-          object param5)
-        {
-            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5);
-        }
-
-        public static string Format(
-          string format,
-          object param1,
-          object param2,
-          object param3,
-          object param4,
-          object param5,
-          object param6)
-        {
-            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6);
-        }
-
-        public static string Format(
-          string format,
-          object param1,
-          object param2,
-          object param3,
-          object param4,
-          object param5,
-          object param6,
-          object param7)
-        {
-            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7);
-        }
-
-        public static string Format(
-          string format,
-          object param1,
-          object param2,
-          object param3,
-          object param4,
-          object param5,
-          object param6,
-          object param7,
-          object param8)
-        {
-            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8);
-        }
-
-        public static string Format(
-          string format,
-          object param1,
-          object param2,
-          object param3,
-          object param4,
-          object param5,
-          object param6,
-          object param7,
-          object param8,
-          object param9)
-        {
-            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9);
-        }
-
-        public static string Format(
-          string format,
-          object param1,
-          object param2,
-          object param3,
-          object param4,
-          object param5,
-          object param6,
-          object param7,
-          object param8,
-          object param9,
-          object param10)
-        {
-            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
-        }
-
-        public static string Format(
-          string format,
-          object param1,
-          object param2,
-          object param3,
-          object param4,
-          object param5,
-          object param6,
-          object param7,
-          object param8,
-          object param9,
-          object param10,
-          object param11)
-        {
-            return string.Format(CultureInfo.InvariantCulture, format, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
+            return string.Format(CultureInfo.InvariantCulture, format, @params);
         }
 
         public static bool Equals(string leftName, string rightName) => string.Compare(leftName, rightName, StringComparison.Ordinal) == 0;
