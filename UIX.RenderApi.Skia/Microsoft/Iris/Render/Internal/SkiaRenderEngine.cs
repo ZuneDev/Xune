@@ -15,6 +15,7 @@ namespace Microsoft.Iris.Render.Internal
         private IrisEngineInfo m_engineInfo;
         private RenderToken m_primaryToken;
         private MessagingSession m_messagingSession;
+        private RenderSession m_renderSession;
         private SkiaRenderCaps m_renderCaps;
         private GraphicsDeviceType m_typeGraphics;
         private SoundDeviceType m_typeSound;
@@ -34,6 +35,7 @@ namespace Microsoft.Iris.Render.Internal
             m_localContextId = AllocateContextId();
             m_primaryToken = new RenderToken(engineInfo, m_localContextId, m_engineContextId, RENDERGROUP.NULL);
             m_messagingSession = new MessagingSession(renderHost, this.m_primaryToken);
+            this.m_renderSession = new RenderSession(this);
             this.m_renderCaps = new SkiaRenderCaps(engineInfo.Surface);
             this.m_renderCaps.RequestCaps();
         }
