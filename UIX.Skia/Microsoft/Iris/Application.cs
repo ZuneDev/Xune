@@ -467,6 +467,7 @@ namespace Microsoft.Iris
                     graphicsType = GraphicsDeviceType.Direct3D9;
                     break;
                 default:
+                    graphicsType = GraphicsDeviceType.Unknown;
                     throw new ArgumentException(InvariantString.Format("Unknown rendering type {0}", type));
             }
             if (type == RenderingType.Default && !s_session.IsGraphicsDeviceRecommended(graphicsType) || !s_session.IsGraphicsDeviceAvailable(graphicsType))

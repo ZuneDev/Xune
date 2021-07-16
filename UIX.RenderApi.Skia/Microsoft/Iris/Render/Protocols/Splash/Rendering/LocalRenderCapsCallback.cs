@@ -45,21 +45,21 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
           IRenderHandleOwner owner,
           CallbackMessage* message)
         {
-            if (!(owner is IRenderCapsCallback _priv_target))
+            if (owner is not IRenderCapsCallback _priv_target)
                 return;
             switch (message->nMsg)
             {
                 case 0:
-                    Dispatch_OnSoundCaps(port, _priv_target, (LocalRenderCapsCallback.Msg0_OnSoundCaps*)message);
+                    Dispatch_OnSoundCaps(port, _priv_target, (Msg0_OnSoundCaps*)message);
                     break;
                 case 1:
-                    Dispatch_OnGraphicsCaps(port, _priv_target, (LocalRenderCapsCallback.Msg1_OnGraphicsCaps*)message);
+                    Dispatch_OnGraphicsCaps(port, _priv_target, (Msg1_OnGraphicsCaps*)message);
                     break;
                 case 2:
-                    Dispatch_OnEndCapsCheck(port, _priv_target, (LocalRenderCapsCallback.Msg2_OnEndCapsCheck*)message);
+                    Dispatch_OnEndCapsCheck(port, _priv_target, (Msg2_OnEndCapsCheck*)message);
                     break;
                 case 3:
-                    Dispatch_OnBeginCapsCheck(port, _priv_target, (LocalRenderCapsCallback.Msg3_OnBeginCapsCheck*)message);
+                    Dispatch_OnBeginCapsCheck(port, _priv_target, (Msg3_OnBeginCapsCheck*)message);
                     break;
             }
         }
@@ -67,23 +67,23 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
         private static unsafe void Dispatch_OnSoundCaps(
           RenderPort _priv_port,
           IRenderCapsCallback _priv_target,
-          LocalRenderCapsCallback.Msg0_OnSoundCaps* _priv_pmsg)
+          Msg0_OnSoundCaps* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg0_OnSoundCaps, typeof(LocalRenderCapsCallback.Msg0_OnSoundCaps), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg0_OnSoundCaps, typeof(Msg0_OnSoundCaps), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             uint nCookie = _priv_pmsg->nCookie;
-            Microsoft.Iris.Render.Internal.SoundCaps capsInfo = _priv_pmsg->capsInfo;
+            Internal.SoundCaps capsInfo = _priv_pmsg->capsInfo;
             _priv_target.OnSoundCaps(target, nCookie, capsInfo);
         }
 
         private static unsafe void Dispatch_OnGraphicsCaps(
           RenderPort _priv_port,
           IRenderCapsCallback _priv_target,
-          LocalRenderCapsCallback.Msg1_OnGraphicsCaps* _priv_pmsg)
+          Msg1_OnGraphicsCaps* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg1_OnGraphicsCaps, typeof(LocalRenderCapsCallback.Msg1_OnGraphicsCaps), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg1_OnGraphicsCaps, typeof(Msg1_OnGraphicsCaps), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             uint nCookie = _priv_pmsg->nCookie;
             GraphicsCaps capsInfo = _priv_pmsg->capsInfo;
@@ -93,10 +93,10 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
         private static unsafe void Dispatch_OnEndCapsCheck(
           RenderPort _priv_port,
           IRenderCapsCallback _priv_target,
-          LocalRenderCapsCallback.Msg2_OnEndCapsCheck* _priv_pmsg)
+          Msg2_OnEndCapsCheck* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg2_OnEndCapsCheck, typeof(LocalRenderCapsCallback.Msg2_OnEndCapsCheck), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg2_OnEndCapsCheck, typeof(Msg2_OnEndCapsCheck), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             uint nCookie = _priv_pmsg->nCookie;
             _priv_target.OnEndCapsCheck(target, nCookie);
@@ -105,10 +105,10 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
         private static unsafe void Dispatch_OnBeginCapsCheck(
           RenderPort _priv_port,
           IRenderCapsCallback _priv_target,
-          LocalRenderCapsCallback.Msg3_OnBeginCapsCheck* _priv_pmsg)
+          Msg3_OnBeginCapsCheck* _priv_pmsg)
         {
             if (_priv_port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg3_OnBeginCapsCheck, typeof(LocalRenderCapsCallback.Msg3_OnBeginCapsCheck), sizeof(CallbackMessage), 0);
+                MarshalHelper.SwapByteOrder((byte*)_priv_pmsg, ref s_priv_ByteOrder_Msg3_OnBeginCapsCheck, typeof(Msg3_OnBeginCapsCheck), sizeof(CallbackMessage), 0);
             RENDERHANDLE target = _priv_pmsg->target;
             uint nCookie = _priv_pmsg->nCookie;
             _priv_target.OnBeginCapsCheck(target, nCookie);
@@ -127,7 +127,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             public RENDERHANDLE _priv_idObjectSubject;
             public RENDERHANDLE target;
             public uint nCookie;
-            public Microsoft.Iris.Render.Internal.SoundCaps capsInfo;
+            public Internal.SoundCaps capsInfo;
         }
 
         [ComVisible(false)]

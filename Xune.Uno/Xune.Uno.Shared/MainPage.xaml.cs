@@ -33,7 +33,7 @@ namespace Xune.Uno
         public MainPage()
         {
             this.InitializeComponent();
-            Task.Run(Microsoft.Iris.Application.Initialize);
+            Microsoft.Iris.Application.Initialize();
 
             Canvas.PaintSurface += Canvas_PaintSurface;
             timer.Interval = new TimeSpan(17000);

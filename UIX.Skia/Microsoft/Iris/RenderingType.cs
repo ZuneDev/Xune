@@ -10,6 +10,8 @@ namespace Microsoft.Iris
     {
         GDI,
         DX9,
-        Default,
+        Skia,
+
+        Default = -1,
     }
 }

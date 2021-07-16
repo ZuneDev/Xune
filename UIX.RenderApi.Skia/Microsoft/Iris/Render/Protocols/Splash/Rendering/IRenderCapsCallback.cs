@@ -11,7 +11,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 {
     internal interface IRenderCapsCallback
     {
-        void OnSoundCaps(RENDERHANDLE target, uint nCookie, Microsoft.Iris.Render.Internal.SoundCaps capsInfo);
+        void OnSoundCaps(RENDERHANDLE target, uint nCookie, Internal.SoundCaps capsInfo);
 
         void OnGraphicsCaps(RENDERHANDLE target, uint nCookie, GraphicsCaps capsInfo);
 

@@ -13,7 +13,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-		<TextBlock Text="Hello, world!" Margin="20" FontSize="30" />
+		<!--<TextBlock Text="Hello, world!" Margin="20" FontSize="30" />-->
         <sk:SKXamlCanvas x:Name="Canvas" Grid.Row="1"/>
+        
+        <ProgressRing/>
     </Grid>
 </Page>

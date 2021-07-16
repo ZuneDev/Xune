@@ -43,6 +43,9 @@ namespace Microsoft.Iris.Render.Internal
             ++this.m_currentRequestId;
             this.m_remoteObject.SendCheckCaps(this.m_currentRequestId);
             this.m_capsPending = true;
+
+            // TODO
+            ((IRenderCapsCallback)this).OnEndCapsCheck(default, 0);
         }
 
         internal event EventHandler CapsAvailable;
