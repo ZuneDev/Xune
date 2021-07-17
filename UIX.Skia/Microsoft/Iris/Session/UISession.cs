@@ -76,12 +76,11 @@ namespace Microsoft.Iris.Session
         }
 
         internal void InitializeRenderingDevices(
-            SKSurface skSurface,
             GraphicsDeviceType graphicsType,
             GraphicsRenderingQuality renderingQuality,
             SoundDeviceType soundType)
         {
-            _engine.Initialize(skSurface, graphicsType, renderingQuality, soundType);
+            _engine.Initialize(graphicsType, renderingQuality, soundType);
             _effectManager = new EffectManager(_session);
             _soundManager = new SoundManager(this, _session);
             _animationManager = new AnimationManager(_session);

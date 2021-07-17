@@ -81,7 +81,6 @@ namespace Microsoft.Iris.Render.Internal
         }
 
         void IRenderEngine.Initialize(
-            SkiaSharp.SKSurface skSurface,
             GraphicsDeviceType typeGraphics,
             GraphicsRenderingQuality renderingQuality,
             SoundDeviceType typeSound)
@@ -90,13 +89,14 @@ namespace Microsoft.Iris.Render.Internal
             Debug2.Validate(IsSoundDeviceAvailable(typeSound), typeof(InvalidOperationException), "Sound device type not available");
             m_typeGraphics = typeGraphics;
             m_typeSound = typeSound;
+            m_renderSession.Initialize();
             // TODO: Set up input system
             //m_inputSystem = new InputSystem(this.m_renderSession, this.m_renderWindow);
         }
 
-        IRenderSession IRenderEngine.Session => null;//throw new NotSupportedException("Skia does not use render sessions"); m_renderSession;
+        IRenderSession IRenderEngine.Session => m_renderSession;//throw new NotSupportedException("Skia does not use render sessions"); m_renderSession;
 
-        internal RenderSession Session => null;
+        internal RenderSession Session => m_renderSession;
 
         IRenderWindow IRenderEngine.Window => null;
 

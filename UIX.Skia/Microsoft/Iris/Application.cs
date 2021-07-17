@@ -175,7 +175,7 @@ namespace Microsoft.Iris
                 default:
                     throw new ArgumentException(InvariantString.Format("Unknown sound type {0}", soundType));
             }
-            s_session.InitializeRenderingDevices(skSurface, graphicsType, (GraphicsRenderingQuality)s_renderingQuality, soundType);
+            s_session.InitializeRenderingDevices(graphicsType, (GraphicsRenderingQuality)s_renderingQuality, soundType);
             s_renderingQuality = (RenderingQuality)s_session.RenderSession.GraphicsDevice.RenderingQuality;
             InitializeCommon(true);
             if (!s_EnableAnimations)
