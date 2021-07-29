@@ -25,7 +25,7 @@ namespace Microsoft.Iris.Render.Graphics
         internal VisualContainer(
           bool isRoot,
           RenderSession session,
-          RenderWindow window,
+          RenderWindowBase window,
           object objOwnerData,
           out RemoteVisual remoteVisual)
           : base(session, window, objOwnerData)

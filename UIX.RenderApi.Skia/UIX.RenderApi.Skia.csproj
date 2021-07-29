@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="MSBuild.Sdk.Extras/3.0.23">
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;uap10.0.19041;net5.0-windows</TargetFrameworks>
         <ProjectGuid>{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AssemblyName>UIX.RenderApi.Skia</AssemblyName>
@@ -11,7 +11,42 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="SkiaSharp" Version="2.80.3" />
+
+        <Compile Include="*.UWP.cs" Condition="$(TargetFramework.StartsWith('uap'))" />
+        <Compile Remove="*.UWP.cs" Condition="!$(TargetFramework.StartsWith('uap'))" />
+
+        <Compile Include="*.WPF.cs" Condition="$(TargetFramework.StartsWith('net5.0-windows'))" />
+        <Compile Remove="*.WPF.cs" Condition="!$(TargetFramework.StartsWith('net5.0-windows'))" />
     </ItemGroup>
+
+    <!-- UWP -->
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('uap'))">
+        <DefineConstants>$(DefineConstants);UWP</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup Condition="$(TargetFramework.StartsWith('uap'))">
+        <PackageReference Include="Microsoft.UI.Xaml" Version="2.5.0" />
+        <PackageReference Include="SkiaSharp.Views.Uno" Version="2.80.3" />
+        <PackageReference Include="Uno.Core" Version="2.4.0" />
+        <PackageReference Include="Uno.UI" Version="3.8.11" />
+        <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+            <!--
+			    If, in the same solution, you are referencing a project that uses https://github.com/onovotny/MSBuildSdkExtras,
+			    you need to make sure that the version provided here matches https://github.com/novotnyllc/MSBuildSdkExtras/blob/main/Source/MSBuild.Sdk.Extras/DefaultItems/ImplicitPackages.targets#L11.
+			    This is not an issue when libraries are referenced through nuget packages. See https://github.com/unoplatform/uno/issues/446 for more details.
+			-->
+            <Version>6.2.11</Version>
+        </PackageReference>
+    </ItemGroup>
+    
+    <!-- WPF -->
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('net5.0-windows'))">
+        <DefineConstants>$(DefineConstants);WPF</DefineConstants>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net5.0-windows'))">
+        <PackageReference Include="SkiaSharp.Views.Wpf" Version="2.80.3" />
+    </ItemGroup>
+
 </Project>
 
 

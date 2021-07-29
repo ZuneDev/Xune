@@ -156,7 +156,7 @@ namespace Microsoft.Iris.Render.Internal
                     Interlaced = this.m_modeCurrent.fInterlaced
                 }, this.m_modeCurrent.fTvMode);
                 flag = true;
-                this.m_engine.Window.NotifyDisplayReconfigured();
+                //this.m_engine.Window.NotifyDisplayReconfigured();
             }
             return flag;
         }

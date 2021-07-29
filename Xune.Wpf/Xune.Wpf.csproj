@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp.Views.Wpf" Version="2.80.3" />
+        <ProjectReference Include="..\UIX.Skia\UIX.Skia.csproj" />
+        <ProjectReference Include="..\UIX.RenderApi.Skia\UIX.RenderApi.Skia.csproj" />
+    </ItemGroup>
+
+</Project>

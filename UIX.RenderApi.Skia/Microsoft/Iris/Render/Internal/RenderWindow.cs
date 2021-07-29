@@ -19,11 +19,7 @@ using System.Security;
 namespace Microsoft.Iris.Render.Internal
 {
     [SuppressUnmanagedCodeSecurity]
-    internal sealed class RenderWindow :
-      IRenderWindow,
-      ITreeOwner,
-      IFormWindowCallback,
-      IRenderHandleOwner
+    internal sealed class RenderWindow : RenderWindowBase, IFormWindowCallback, IRenderHandleOwner
     {
         private const uint ACT_INACTIVE = 0;
         private const uint ACT_ACTIVE = 1;
@@ -78,7 +74,7 @@ namespace Microsoft.Iris.Render.Internal
         private Stack m_stkWaitCursors;
         private HWND m_hwnd;
         private RemoteFormWindow m_remoteWindow;
-        private RenderWindow.RenderFlags m_renderFlags;
+        private RenderFlags m_renderFlags;
         private bool m_fPreProcessedInput;
         private int m_nMouseLockCount;
         private ArrayList m_partialDropData;
@@ -87,7 +83,7 @@ namespace Microsoft.Iris.Render.Internal
         private uint m_nDragOverResult;
         private bool m_fIsDragInProgress;
         private FormPlacement m_finalPlacement;
-        private SmartMap<RenderWindow.ShutdownHookInfo> m_mapShutdownHooks;
+        private SmartMap<ShutdownHookInfo> m_mapShutdownHooks;
         private ushort m_nextShutdownHookId;
 
         internal RenderWindow(
@@ -99,29 +95,29 @@ namespace Microsoft.Iris.Render.Internal
             Debug2.Validate(session != null, typeof(ArgumentNullException), "must pass a valid session");
             session.AssertOwningThread();
             Debug2.Validate(displayManager != null, typeof(ArgumentNullException), "must pass a valid DisplayManager");
-            this.m_session = session;
-            this.m_displayManager = displayManager;
-            this.CreateGraphicsDevice(session, graphicsDeviceType, renderingQuality);
-            this.m_device.RegisterWindow(this);
-            this.m_clrBackground = new ColorF(0.0f, 0.0f, 0.0f);
-            this.m_remoteWindow = this.m_session.BuildRemoteFormWindow(this, this.m_displayManager);
-            this.m_fPreProcessedInput = false;
-            this.m_cursor = Cursor.Default;
-            this.m_cursorIdle = Cursor.Default;
-            this.m_nWindowState = WindowState.Normal;
-            this.m_fRightToLeft = false;
-            this.m_fSessionHasDisplay = true;
-            this.m_fSessionLocked = false;
-            this.m_szDefault = new Size(640, 480);
-            this.m_clrOutlineAllColor = new ColorF(byte.MaxValue, 0, byte.MaxValue, 0);
-            this.m_clrOutlineMarkedColor = new ColorF(byte.MaxValue, byte.MaxValue, 0, 0);
-            this.m_mapShutdownHooks = new SmartMap<RenderWindow.ShutdownHookInfo>();
-            this.m_nextShutdownHookId = 1;
-            this.m_nMouseLockCount = 0;
-            this.SetFullScreenExclusive(false);
+            m_session = session;
+            m_displayManager = displayManager;
+            CreateGraphicsDevice(session, graphicsDeviceType, renderingQuality);
+            m_device.RegisterWindow(this);
+            m_clrBackground = new ColorF(0.0f, 0.0f, 0.0f);
+            m_remoteWindow = m_session.BuildRemoteFormWindow(this, m_displayManager);
+            m_fPreProcessedInput = false;
+            m_cursor = Cursor.Default;
+            m_cursorIdle = Cursor.Default;
+            m_nWindowState = WindowState.Normal;
+            m_fRightToLeft = false;
+            m_fSessionHasDisplay = true;
+            m_fSessionLocked = false;
+            m_szDefault = new Size(640, 480);
+            m_clrOutlineAllColor = new ColorF(byte.MaxValue, 0, byte.MaxValue, 0);
+            m_clrOutlineMarkedColor = new ColorF(byte.MaxValue, byte.MaxValue, 0, 0);
+            m_mapShutdownHooks = new SmartMap<RenderWindow.ShutdownHookInfo>();
+            m_nextShutdownHookId = 1;
+            m_nMouseLockCount = 0;
+            SetFullScreenExclusive(false);
         }
 
-        public void Initialize() => this.BuildRootContainer();
+        public override void Initialize() => BuildRootContainer();
 
         private GraphicsDevice CreateGraphicsDevice(
           RenderSession session,
@@ -130,14 +126,14 @@ namespace Microsoft.Iris.Render.Internal
         {
             GraphicsDevice graphicsDevice = null;
             EngineApi.IFC(FormApi.SpGdiplusInit());
-            this.m_graphicsDeviceType = graphicsDeviceType;
-            switch (this.m_graphicsDeviceType)
+            m_graphicsDeviceType = graphicsDeviceType;
+            switch (m_graphicsDeviceType)
             {
                 case GraphicsDeviceType.Gdi:
-                    this.m_device = new GdiGraphicsDevice(session);
+                    m_device = new GdiGraphicsDevice(session);
                     break;
                 case GraphicsDeviceType.Direct3D9:
-                    this.m_device = new NtGraphicsDevice(session, renderingQuality);
+                    m_device = new NtGraphicsDevice(session, renderingQuality);
                     break;
             }
             return graphicsDevice;
@@ -145,456 +141,358 @@ namespace Microsoft.Iris.Render.Internal
 
         internal void Dispose()
         {
-            this.Visible = false;
-            this.m_remoteWindow.SendSetRoot(null);
-            this.m_rootVisual.UnregisterUsage(this);
-            this.StopRendering();
+            Visible = false;
+            m_remoteWindow.SendSetRoot(null);
+            m_rootVisual.UnregisterUsage(this);
+            StopRendering();
         }
 
         internal void StopRendering()
         {
-            if (this.m_device != null)
+            if (m_device != null)
             {
-                this.m_device.Dispose();
-                this.m_device = null;
+                m_device.Dispose();
+                m_device = null;
             }
-            if (this.m_remoteWindow != null)
+            if (m_remoteWindow != null)
             {
-                this.m_remoteWindow.Dispose();
-                this.m_remoteWindow = null;
+                m_remoteWindow.Dispose();
+                m_remoteWindow = null;
             }
             EngineApi.IFC(FormApi.SpGdiplusUninit());
         }
 
-        RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteWindow.RenderHandle;
+        RENDERHANDLE IRenderHandleOwner.RenderHandle => m_remoteWindow.RenderHandle;
 
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteWindow = null;
+        void IRenderHandleOwner.OnDisconnect() => m_remoteWindow = null;
 
-        internal RemoteFormWindow RemoteStub => this.m_remoteWindow;
+        internal RemoteFormWindow RemoteStub => m_remoteWindow;
 
-        public int Left => this.m_nX;
+        public override int Left => m_nX;
 
-        public int Top => this.m_nY;
+        public override int Top => m_nY;
 
-        public int Right => this.m_nX + this.m_nWidth;
+        public override int Right => m_nX + m_nWidth;
 
-        public int Bottom => this.m_nY + this.m_nHeight;
+        public override int Bottom => m_nY + m_nHeight;
 
-        public int Width => this.m_nWidth;
+        public override int Width => m_nWidth;
 
-        public int Height => this.m_nHeight;
+        public override int Height => m_nHeight;
 
-        public HWND WindowHandle => this.m_hwnd;
+        public override HWND WindowHandle => m_hwnd;
 
-        public Size ClientSize
+        public override Size ClientSize
         {
-            get => new Size(this.m_nWidth, this.m_nHeight);
+            get => new Size(m_nWidth, m_nHeight);
             set
             {
-                if (this.m_nWidth == value.Width && this.m_nHeight == value.Height || !this.m_session.IsValid)
+                if (m_nWidth == value.Width && m_nHeight == value.Height || !m_session.IsValid)
                     return;
-                this.m_remoteWindow.SendSetSize(value);
+                m_remoteWindow.SendSetSize(value);
             }
         }
 
-        public Size InitialClientSize
+        public override Size InitialClientSize
         {
-            get => this.m_szDefault;
-            set => this.m_szDefault = value;
+            get => m_szDefault;
+            set => m_szDefault = value;
         }
 
-        public FormPlacement InitialPlacement
+        public override FormPlacement InitialPlacement
         {
             set
             {
-                if (!this.m_session.IsValid || this.m_remoteWindow == null || !(this.m_hwnd == HWND.NULL))
+                if (!m_session.IsValid || m_remoteWindow == null || !(m_hwnd == HWND.NULL))
                     return;
-                this.m_remoteWindow.SendSetInitialPlacement(value.ShowState, value.NormalPosition, value.MaximizedLocation);
+                m_remoteWindow.SendSetInitialPlacement(value.ShowState, value.NormalPosition, value.MaximizedLocation);
             }
         }
 
-        public FormPlacement FinalPlacement => this.m_finalPlacement;
+        public override FormPlacement FinalPlacement => m_finalPlacement;
 
-        public int MinResizeWidth
+        public override int MinResizeWidth
         {
-            get => this.m_nMinResizeWidth;
+            get => m_nMinResizeWidth;
             set
             {
-                if (this.m_nMinResizeWidth == value)
+                if (m_nMinResizeWidth == value)
                     return;
-                this.m_nMinResizeWidth = value;
-                if (!this.m_session.IsValid)
+                m_nMinResizeWidth = value;
+                if (!m_session.IsValid)
                     return;
-                this.m_remoteWindow.SendSetMinResizeWidth(this.m_nMinResizeWidth);
+                m_remoteWindow.SendSetMinResizeWidth(m_nMinResizeWidth);
             }
         }
 
-        public int MaxResizeWidth
+        public override int MaxResizeWidth
         {
-            get => this.m_nMaxResizeWidth;
+            get => m_nMaxResizeWidth;
             set
             {
-                if (this.m_nMaxResizeWidth == value)
+                if (m_nMaxResizeWidth == value)
                     return;
-                this.m_nMaxResizeWidth = value;
-                if (!this.m_session.IsValid)
+                m_nMaxResizeWidth = value;
+                if (!m_session.IsValid)
                     return;
-                this.m_remoteWindow.SendSetMaxResizeWidth(this.m_nMaxResizeWidth);
+                m_remoteWindow.SendSetMaxResizeWidth(m_nMaxResizeWidth);
             }
         }
 
-        public Point Position
+        public override Point Position
         {
-            get => new Point(this.m_nX, this.m_nY);
+            get => new Point(m_nX, m_nY);
             set
             {
-                if (this.m_nX == value.X && this.m_nY == value.Y || !this.m_session.IsValid)
+                if (m_nX == value.X && m_nY == value.Y || !m_session.IsValid)
                     return;
-                this.m_remoteWindow.SendSetPosition(value);
+                m_remoteWindow.SendSetPosition(value);
             }
         }
 
-        public string Text
+        public override string Text
         {
-            get => this.m_stText == null ? "" : this.m_stText;
+            get => m_stText == null ? "" : m_stText;
             set
             {
-                this.m_stText = value;
-                this.UpdateText(true);
+                m_stText = value;
+                UpdateText(true);
             }
         }
 
-        public Cursor Cursor
+        public override Cursor Cursor
         {
-            get => this.m_cursor;
+            get => m_cursor;
             set
             {
-                if (this.m_cursor == value)
+                if (m_cursor == value)
                     return;
-                this.m_cursor = value;
-                this.UpdateCursors();
+                m_cursor = value;
+                UpdateCursors();
             }
         }
 
-        public Cursor IdleCursor
+        public override Cursor IdleCursor
         {
-            get => this.m_cursorIdle;
+            get => m_cursorIdle;
             set
             {
-                if (this.m_cursorIdle == value)
+                if (m_cursorIdle == value)
                     return;
-                this.m_cursorIdle = value;
-                this.UpdateCursors();
+                m_cursorIdle = value;
+                UpdateCursors();
             }
         }
 
-        public bool Visible
+        public override bool Visible
         {
-            get => this.m_fVisible;
+            get => m_fVisible;
             set
             {
-                if (this.m_fVisible == value)
+                if (m_fVisible == value)
                     return;
-                this.m_fVisible = value;
-                if (!this.m_session.IsValid)
+                m_fVisible = value;
+                if (!m_session.IsValid)
                     return;
-                this.m_remoteWindow.SendSetVisible(this.m_fVisible);
+                m_remoteWindow.SendSetVisible(m_fVisible);
             }
         }
 
-        public bool IsLoaded => this.m_fLoadEventFired;
+        public override bool IsLoaded => m_fLoadEventFired;
 
-        public ColorF BackgroundColor
+        public override ColorF BackgroundColor
         {
-            get => this.m_clrBackground;
-            set => this.SetBackgroundColor(value);
+            get => m_clrBackground;
+            set => SetBackgroundColor(value);
         }
 
-        IDisplay IRenderWindow.CurrentDisplay
+        public override IDisplay CurrentDisplay
         {
-            get => this.m_currentDisplay == null ? this.m_displayManager.PrimaryDisplay : m_currentDisplay;
-            set => this.SetCurrentDisplay(value);
+            get => m_currentDisplay == null ? m_displayManager.PrimaryDisplay : m_currentDisplay;
+            set => SetCurrentDisplay(value);
         }
 
-        private void SetCurrentDisplay(IDisplay inputIDisplay)
+        public override void SetCurrentDisplay(IDisplay inputIDisplay)
         {
             Debug2.Validate(inputIDisplay is Display, null, "CurrentDisplay.set param MUST be a valid Display object");
-            Display display = this.m_displayManager.DisplayFromUniqueId((inputIDisplay as Display).UniqueId);
+            Display display = m_displayManager.DisplayFromUniqueId((inputIDisplay as Display).UniqueId);
             if (display == null)
                 return;
-            this.m_currentDisplay = display;
+            m_currentDisplay = display;
         }
 
-        public bool FullScreenExclusive
+        public override bool FullScreenExclusive
         {
-            get => this.m_fExclusive;
-            set => this.SetFullScreenExclusive(value);
+            get => m_fExclusive;
+            set => SetFullScreenExclusive(value);
         }
 
-        private void SetFullScreenExclusive(bool fNewValue)
+        public override void SetFullScreenExclusive(bool fNewValue)
         {
-            switch (this.m_graphicsDeviceType)
+            switch (m_graphicsDeviceType)
             {
                 case GraphicsDeviceType.Direct3D9:
-                    this.m_fExclusive = fNewValue;
+                    m_fExclusive = fNewValue;
                     break;
                 case GraphicsDeviceType.XeDirectX9:
-                    this.m_fExclusive = true;
+                    m_fExclusive = true;
                     break;
                 default:
-                    this.m_fExclusive = false;
+                    m_fExclusive = false;
                     break;
             }
         }
 
-        public bool ActivationState => this.m_fActivation;
+        public override bool ActivationState => m_fActivation;
 
-        public WindowState WindowState
+        public override WindowState WindowState
         {
-            get => this.m_nWindowState;
+            get => m_nWindowState;
             set
             {
-                if (this.m_nWindowState == value)
+                if (m_nWindowState == value)
                     return;
-                this.m_nWindowState = value;
-                if (!this.m_session.IsValid)
+                m_nWindowState = value;
+                if (!m_session.IsValid)
                     return;
-                this.m_remoteWindow.SendSetMode((uint)this.m_nWindowState);
+                m_remoteWindow.SendSetMode((uint)m_nWindowState);
             }
         }
 
-        public FormStyleInfo Styles
+        public override FormStyleInfo Styles
         {
-            get => this.m_windowStyles;
+            get => m_windowStyles;
             set
             {
-                this.m_windowStyles = value;
-                if (!this.m_session.IsValid)
+                m_windowStyles = value;
+                if (!m_session.IsValid)
                     return;
-                this.m_remoteWindow.SendSetStyles(value.uStyleRestored, value.uExStyleRestored, value.uStyleMinimized, value.uExStyleMinimized, value.uStyleMaximized, value.uExStyleMaximized, value.uStyleFullscreen, value.uExStyleFullscreen);
+                m_remoteWindow.SendSetStyles(value.uStyleRestored, value.uExStyleRestored, value.uStyleMinimized, value.uExStyleMinimized, value.uStyleMaximized, value.uExStyleMaximized, value.uStyleFullscreen, value.uExStyleFullscreen);
             }
         }
 
-        HWND IRenderWindow.AppNotifyWindow
+        public override HWND AppNotifyWindow
         {
-            set => this.m_remoteWindow.INPROC_SendSetAppNotifyWindow(value);
+            set => m_remoteWindow.INPROC_SendSetAppNotifyWindow(value);
         }
 
-        IVisualContainer IRenderWindow.VisualRoot => m_rootVisual;
+        public override IVisualContainer VisualRoot => m_rootVisual;
 
-        TreeNode ITreeOwner.Root => m_rootVisual;
+        internal TreeNode Root => m_rootVisual;
 
-        internal bool IsClosing => this.m_fClosing;
+        internal override bool IsClosing => m_fClosing;
 
-        internal bool IsSessionActive => this.m_fSessionHasDisplay && !this.m_fSessionLocked;
+        internal override bool IsSessionActive => m_fSessionHasDisplay && !m_fSessionLocked;
 
-        internal bool IsSessionRemote => false;
+        internal override bool IsSessionRemote => false;
 
-        internal bool IsSpanningMonitors => this.m_fSpanningMonitors;
+        internal override bool IsSpanningMonitors => m_fSpanningMonitors;
 
-        internal bool IsOnSecondaryMonitor => this.m_fOnSecondaryMonitor;
+        internal override bool IsOnSecondaryMonitor => m_fOnSecondaryMonitor;
 
-        internal ColorF OutlineAllColor
+        internal override ColorF OutlineAllColor
         {
-            get => this.m_clrOutlineAllColor;
+            get => m_clrOutlineAllColor;
             set
             {
-                if (!(this.m_clrOutlineAllColor != value))
+                if (!(m_clrOutlineAllColor != value))
                     return;
-                this.m_clrOutlineAllColor = value;
-                this.m_remoteWindow.SendSetOutlineAllColor(value);
+                m_clrOutlineAllColor = value;
+                m_remoteWindow.SendSetOutlineAllColor(value);
             }
         }
 
-        internal ColorF OutlineMarkedColor
+        internal override ColorF OutlineMarkedColor
         {
-            get => this.m_clrOutlineMarkedColor;
+            get => m_clrOutlineMarkedColor;
             set
             {
-                if (!(this.m_clrOutlineMarkedColor != value))
+                if (!(m_clrOutlineMarkedColor != value))
                     return;
-                this.m_clrOutlineMarkedColor = value;
-                this.m_remoteWindow.SendSetOutlineMarkedColor(value);
+                m_clrOutlineMarkedColor = value;
+                m_remoteWindow.SendSetOutlineMarkedColor(value);
             }
         }
 
-        internal GraphicsDevice GraphicsDevice => this.m_device;
+        internal override GraphicsDevice GraphicsDevice => m_device;
 
-        internal RenderSession Session => this.m_session;
+        internal override RenderSession Session => m_session;
 
-        internal GraphicsDeviceType GraphicsDeviceType => this.m_graphicsDeviceType;
+        internal override GraphicsDeviceType GraphicsDeviceType => m_graphicsDeviceType;
 
-        internal bool IsRightToLeft => this.m_fRightToLeft;
+        internal override bool IsRightToLeft => m_fRightToLeft;
 
-        public event LocationChangedHandler LocationChangedEvent;
-
-        public event SizeChangedHandler SizeChangedEvent;
-
-        public event MonitorChangedHandler MonitorChangedEvent;
-
-        public event WindowStateChangedHandler WindowStateChangedEvent;
-
-        public event CloseHandler CloseEvent;
-
-        public event CloseRequestHandler CloseRequestEvent;
-
-        public event SysCommandHandler SysCommandEvent;
-
-        public event MouseIdleHandler MouseIdleEvent;
-
-        public event ShowHandler ShowEvent;
-
-        public event ActivationChangeHandler ActivationChangeEvent;
-
-        public event SessionActivateHandler SessionActivateEvent;
-
-        public event SessionConnectHandler SessionConnectEvent;
-
-        public event SetFocusHandler SetFocusEvent;
-
-        public event LoadHandler LoadEvent;
-
-        public event ForwardMessageHandler ForwardMessageEvent;
-
-        public event RenderWindow.RendererSuspendedHandler RendererSuspendedEvent;
+        public event RendererSuspendedHandler RendererSuspendedEvent;
 
         internal event EventHandler WindowCreatedEvent;
 
         private void OnCreated()
         {
-            if (this.WindowCreatedEvent == null)
+            if (WindowCreatedEvent == null)
                 return;
-            this.WindowCreatedEvent(this, EventArgs.Empty);
+            WindowCreatedEvent(this, EventArgs.Empty);
         }
 
-        private void OnForwardWndMsg(uint msg, IntPtr wParam, IntPtr lParam)
+        private new void FireLoadEvent()
         {
-            if (this.ForwardMessageEvent == null)
+            if (m_fLoadEventFired || !m_fLoadComplete || m_nWidth == 0 && m_nHeight == 0)
                 return;
-            this.ForwardMessageEvent(msg, wParam, lParam);
+            base.FireLoadEvent();
+            m_fLoadEventFired = true;
         }
 
-        private void FireLoadEvent()
-        {
-            if (this.m_fLoadEventFired || !this.m_fLoadComplete || this.m_nWidth == 0 && this.m_nHeight == 0)
-                return;
-            if (this.LoadEvent != null)
-                this.LoadEvent();
-            this.m_fLoadEventFired = true;
-        }
+        internal void NotifyDisplayReconfigured() => OnSizeChanged();
 
-        private void OnLocationChanged()
+        private new void OnSizeChanged()
         {
-            if (this.LocationChangedEvent == null)
-                return;
-            this.LocationChangedEvent(this.Position);
-        }
-
-        internal void NotifyDisplayReconfigured() => this.OnSizeChanged();
-
-        private void OnSizeChanged()
-        {
-            this.FireLoadEvent();
-            if (this.SizeChangedEvent == null)
-                return;
-            this.SizeChangedEvent();
-        }
-
-        private void OnMonitorChanged()
-        {
-            if (this.MonitorChangedEvent == null)
-                return;
-            this.MonitorChangedEvent();
-        }
-
-        private void OnWindowStateChanged(bool fUnplanned)
-        {
-            if (this.WindowStateChangedEvent == null)
-                return;
-            this.WindowStateChangedEvent(fUnplanned);
+            FireLoadEvent();
+            base.OnSizeChanged();
         }
 
         private void OnDestroyed()
         {
         }
 
-        private void OnSysCommand(IntPtr uParam1, IntPtr uParam2)
-        {
-            if (this.SysCommandEvent == null)
-                return;
-            this.SysCommandEvent(uParam1, uParam2);
-        }
-
-        private void OnMouseIdle(bool fIdle)
-        {
-            if (this.MouseIdleEvent == null)
-                return;
-            this.MouseIdleEvent(fIdle);
-        }
-
-        private void OnShow(bool fShow, bool fFirstShow)
-        {
-            if (this.ShowEvent == null)
-                return;
-            this.ShowEvent(fShow, fFirstShow);
-        }
-
-        private void OnActivationChange()
-        {
-            if (this.ActivationChangeEvent == null)
-                return;
-            this.ActivationChangeEvent();
-        }
-
         private void OnTermSessionChange(uint uParam)
         {
             bool flag = false;
-            bool isSessionActive = this.IsSessionActive;
+            bool isSessionActive = IsSessionActive;
             switch (uParam)
             {
                 case 1:
                 case 3:
-                    this.m_fSessionHasDisplay = true;
+                    m_fSessionHasDisplay = true;
                     break;
                 case 2:
                 case 4:
-                    this.m_fSessionHasDisplay = false;
+                    m_fSessionHasDisplay = false;
                     break;
                 case 7:
-                    this.m_fSessionLocked = true;
-                    this.m_fExplicitlyLocked = true;
+                    m_fSessionLocked = true;
+                    m_fExplicitlyLocked = true;
                     break;
                 case 8:
-                    this.m_fSessionLocked = false;
-                    flag = flag || !this.m_fExplicitlyLocked;
+                    m_fSessionLocked = false;
+                    flag = flag || !m_fExplicitlyLocked;
                     break;
             }
-            if (this.IsSessionActive != isSessionActive || flag)
-                this.FireSessionActivate(this.IsSessionActive);
+            if (IsSessionActive != isSessionActive || flag)
+                FireSessionActivate(IsSessionActive);
             if (uParam != 2U && uParam != 1U && (uParam != 4U && uParam != 3U))
                 return;
-            this.FireSessionConnect(uParam == 1U || uParam == 3U);
+            FireSessionConnect(uParam == 1U || uParam == 3U);
         }
 
-        public void FireSessionActivate(bool fIsActive) => this.OnSessionActivate(fIsActive);
+        public void FireSessionActivate(bool fIsActive) => OnSessionActivate(fIsActive);
 
-        private void OnSessionActivate(bool fIsActive)
+        private new void OnSessionActivate(bool fIsActive)
         {
-            if (fIsActive && this.Visible && this.m_fExclusive)
+            if (fIsActive && Visible && m_fExclusive)
             {
-                this.Focus();
-                this.m_remoteWindow.SendSetForeground(false);
+                Focus();
+                m_remoteWindow.SendSetForeground(false);
             }
-            if (this.SessionActivateEvent == null)
-                return;
-            this.SessionActivateEvent(fIsActive);
-        }
-
-        private void FireSessionConnect(bool fIsConnected)
-        {
-            if (this.SessionConnectEvent == null)
-                return;
-            this.SessionConnectEvent(fIsConnected);
+            base.OnSessionActivate(fIsActive);
         }
 
         private void OnNativeScreensave(bool fStart)
@@ -605,52 +503,44 @@ namespace Microsoft.Iris.Render.Internal
         {
         }
 
-        public void EnableShellShutdownHook(string hookName, EventHandler handler) => this.GetShutdownHookInfo(hookName, true).Handler += handler;
+        public void EnableShellShutdownHook(string hookName, EventHandler handler) => GetShutdownHookInfo(hookName, true).Handler += handler;
 
-        private RenderWindow.ShutdownHookInfo GetShutdownHookInfo(
-          string hookName,
-          bool fCanAdd)
+        private ShutdownHookInfo GetShutdownHookInfo(string hookName, bool fCanAdd)
         {
             RenderWindow.ShutdownHookInfo desired = new RenderWindow.ShutdownHookInfo(hookName);
-            if (this.m_mapShutdownHooks.Lookup(desired, out uint _))
+            if (m_mapShutdownHooks.Lookup(desired, out uint _))
                 return desired;
             if (fCanAdd)
             {
-                ushort uIdMsg = this.m_nextShutdownHookId++;
-                this.m_mapShutdownHooks.SetValue(uIdMsg, desired);
-                this.m_remoteWindow.SendEnableShellShutdownHook(hookName, uIdMsg);
+                ushort uIdMsg = m_nextShutdownHookId++;
+                m_mapShutdownHooks.SetValue(uIdMsg, desired);
+                m_remoteWindow.SendEnableShellShutdownHook(hookName, uIdMsg);
             }
             else
                 desired = null;
             return desired;
         }
 
-        void IFormWindowCallback.OnTerminalSessionChange(
-          RENDERHANDLE target,
-          IntPtr wParam,
-          IntPtr lParam)
+        void IFormWindowCallback.OnTerminalSessionChange(RENDERHANDLE target, IntPtr wParam, IntPtr lParam)
         {
-            this.OnTermSessionChange((uint)wParam.ToInt32());
+            OnTermSessionChange((uint)wParam.ToInt32());
         }
 
-        void IFormWindowCallback.OnPrivateSysCommand(
-          RENDERHANDLE target,
-          IntPtr wParam,
-          IntPtr lParam)
+        void IFormWindowCallback.OnPrivateSysCommand(RENDERHANDLE target, IntPtr wParam, IntPtr lParam)
         {
-            this.OnSysCommand(wParam, lParam);
+            OnSysCommand(wParam, lParam);
         }
 
-        void IFormWindowCallback.OnMouseIdle(RENDERHANDLE target, bool fNewIdle) => this.OnMouseIdle(fNewIdle);
+        void IFormWindowCallback.OnMouseIdle(RENDERHANDLE target, bool fNewIdle) => OnMouseIdle(fNewIdle);
 
-        void IFormWindowCallback.OnCloseRequested(RENDERHANDLE target) => this.EngineCloseRequest();
+        void IFormWindowCallback.OnCloseRequested(RENDERHANDLE target) => EngineCloseRequest();
 
         void IFormWindowCallback.OnLoad(RENDERHANDLE target)
         {
-            this.m_fLoadComplete = true;
-            if (this.m_fClosing)
+            m_fLoadComplete = true;
+            if (m_fClosing)
                 return;
-            this.FireLoadEvent();
+            FireLoadEvent();
         }
 
         void IFormWindowCallback.OnWindowDestroyed(
@@ -659,321 +549,303 @@ namespace Microsoft.Iris.Render.Internal
           Rectangle rcFinalPosition,
           Point ptFinalMaximizedLocation)
         {
-            this.m_finalPlacement.NormalPosition = rcFinalPosition;
-            this.m_finalPlacement.MaximizedLocation = ptFinalMaximizedLocation;
-            this.m_finalPlacement.ShowState = nFinalShowState;
-            this.m_hwnd = HWND.NULL;
-            this.m_fClosing = true;
-            if (this.CloseEvent == null)
-                return;
-            this.CloseEvent();
+            m_finalPlacement.NormalPosition = rcFinalPosition;
+            m_finalPlacement.MaximizedLocation = ptFinalMaximizedLocation;
+            m_finalPlacement.ShowState = nFinalShowState;
+            m_hwnd = HWND.NULL;
+            m_fClosing = true;
+            base.OnClose();
         }
 
         void IFormWindowCallback.OnWindowCreated(RENDERHANDLE target, HWND hWnd)
         {
-            this.m_hwnd = hWnd;
-            this.m_device.PostCreate();
-            this.UpdateText(false);
-            this.OnCreated();
+            m_hwnd = hWnd;
+            m_device.PostCreate();
+            UpdateText(false);
+            OnCreated();
         }
 
-        unsafe void IFormWindowCallback.OnStateChange(
-          RENDERHANDLE target,
-          Message* pmsgRaw)
+        unsafe void IFormWindowCallback.OnStateChange(RENDERHANDLE target, Message* pmsgRaw)
         {
             RenderWindow.FormStateCallbackMsg* stateCallbackMsgPtr = (RenderWindow.FormStateCallbackMsg*)pmsgRaw;
-            if (this.m_session.IsForeignByteOrderOnWindowing)
+            if (m_session.IsForeignByteOrderOnWindowing)
                 MarshalHelper.SwapByteOrder((byte*)stateCallbackMsgPtr, ref s_ByteOrder_FormStateCallbackMsg, typeof(RenderWindow.FormStateCallbackMsg), 0, 0);
             uint num = 0;
-            if (this.m_currentDisplay != null)
-                num = this.m_currentDisplay.UniqueId;
+            if (m_currentDisplay != null)
+                num = m_currentDisplay.UniqueId;
             bool flag1 = stateCallbackMsgPtr->fOnSecondaryMonitor != 0;
             bool flag2 = stateCallbackMsgPtr->cSpanningMonitors > 1U;
             bool flag3 = false;
             if (stateCallbackMsgPtr->idDisplay != uint.MaxValue)
-                flag3 = (int)num != (int)stateCallbackMsgPtr->idDisplay || this.m_fOnSecondaryMonitor != flag1 || this.m_fSpanningMonitors != flag2;
-            bool flag4 = this.m_nX != stateCallbackMsgPtr->rcWindowGlobal_left || this.m_nY != stateCallbackMsgPtr->rcWindowGlobal_top;
-            bool flag5 = this.m_nWidth != stateCallbackMsgPtr->szClientDims_cx || this.m_nHeight != stateCallbackMsgPtr->szClientDims_cy;
-            this.m_nX = stateCallbackMsgPtr->rcWindowGlobal_left;
-            this.m_nY = stateCallbackMsgPtr->rcWindowGlobal_top;
-            this.m_nWidth = stateCallbackMsgPtr->szClientDims_cx;
-            this.m_nHeight = stateCallbackMsgPtr->szClientDims_cy;
-            this.m_nWindowState = (WindowState)stateCallbackMsgPtr->uCurrentMode;
-            this.m_fVisible = stateCallbackMsgPtr->fVisible != 0;
-            this.m_fSpanningMonitors = flag2;
-            this.m_fOnSecondaryMonitor = flag1;
-            this.SetFullScreenExclusive(stateCallbackMsgPtr->fExclusive != 0);
-            bool fActivation = this.m_fActivation;
-            this.m_fActivation = stateCallbackMsgPtr->uActivation == 1U;
+                flag3 = (int)num != (int)stateCallbackMsgPtr->idDisplay || m_fOnSecondaryMonitor != flag1 || m_fSpanningMonitors != flag2;
+            bool flag4 = m_nX != stateCallbackMsgPtr->rcWindowGlobal_left || m_nY != stateCallbackMsgPtr->rcWindowGlobal_top;
+            bool flag5 = m_nWidth != stateCallbackMsgPtr->szClientDims_cx || m_nHeight != stateCallbackMsgPtr->szClientDims_cy;
+            m_nX = stateCallbackMsgPtr->rcWindowGlobal_left;
+            m_nY = stateCallbackMsgPtr->rcWindowGlobal_top;
+            m_nWidth = stateCallbackMsgPtr->szClientDims_cx;
+            m_nHeight = stateCallbackMsgPtr->szClientDims_cy;
+            m_nWindowState = (WindowState)stateCallbackMsgPtr->uCurrentMode;
+            m_fVisible = stateCallbackMsgPtr->fVisible != 0;
+            m_fSpanningMonitors = flag2;
+            m_fOnSecondaryMonitor = flag1;
+            SetFullScreenExclusive(stateCallbackMsgPtr->fExclusive != 0);
+            bool fActivation = m_fActivation;
+            m_fActivation = stateCallbackMsgPtr->uActivation == 1U;
             if (flag3)
-                this.m_currentDisplay = this.m_displayManager.DisplayFromUniqueId(stateCallbackMsgPtr->idDisplay);
+                m_currentDisplay = m_displayManager.DisplayFromUniqueId(stateCallbackMsgPtr->idDisplay);
             if (flag3)
-                this.OnMonitorChanged();
+                OnMonitorChanged();
             if (flag4)
-                this.OnLocationChanged();
+                OnLocationChanged();
             if (flag5)
             {
-                this.m_rootVisual.Size = new Vector2(m_nWidth, m_nHeight);
-                this.OnSizeChanged();
+                m_rootVisual.Size = new Vector2(m_nWidth, m_nHeight);
+                OnSizeChanged();
             }
             if (((int)stateCallbackMsgPtr->uRecentlyChanged & 1) != 0)
-                this.OnWindowStateChanged(((int)stateCallbackMsgPtr->uRecentlyChanged & 256) != 0);
+                OnWindowStateChanged(((int)stateCallbackMsgPtr->uRecentlyChanged & 256) != 0);
             if (((int)stateCallbackMsgPtr->uRecentlyChanged & 4) != 0)
             {
-                bool fFirstShow = this.m_fVisible && !this.m_fShownBefore;
-                if (this.m_fVisible)
-                    this.m_fShownBefore = true;
-                this.OnShow(this.m_fVisible, fFirstShow);
+                bool fFirstShow = m_fVisible && !m_fShownBefore;
+                if (m_fVisible)
+                    m_fShownBefore = true;
+                OnShow(m_fVisible, fFirstShow);
             }
-            if (((int)stateCallbackMsgPtr->uRecentlyChanged & 2) == 0 || this.m_fActivation == fActivation)
+            if (((int)stateCallbackMsgPtr->uRecentlyChanged & 2) == 0 || m_fActivation == fActivation)
                 return;
-            this.OnActivationChange();
+            OnActivationChange();
         }
 
         void IFormWindowCallback.OnPartialDrop(RENDERHANDLE target, string file)
         {
-            if (this.m_partialDropData == null)
-                this.m_partialDropData = new ArrayList();
-            this.m_partialDropData.Add(file);
+            if (m_partialDropData == null)
+                m_partialDropData = new ArrayList();
+            m_partialDropData.Add(file);
         }
 
         void IFormWindowCallback.OnDropComplete(RENDERHANDLE target)
         {
-            if (this.m_partialDropData == null || this.m_partialDropData.Count <= 0)
+            if (m_partialDropData == null || m_partialDropData.Count <= 0)
                 return;
             IEnumerable partialDropData = m_partialDropData;
-            this.m_partialDropData = null;
-            this.OnDroppedFiles(partialDropData);
+            m_partialDropData = null;
+            OnDroppedFiles(partialDropData);
         }
 
-        void IFormWindowCallback.OnSetFocus(
-          RENDERHANDLE target,
-          bool focused,
-          HWND hwndFocusChange)
+        void IFormWindowCallback.OnSetFocus(RENDERHANDLE target, bool focused, HWND hwndFocusChange)
         {
-            this.m_fFocused = focused;
-            int num = focused ? 1 : 0;
-            if (this.SetFocusEvent == null)
-                return;
-            this.SetFocusEvent(focused);
+            m_fFocused = focused;
+            base.OnSetFocus(focused);
         }
 
-        void IFormWindowCallback.OnShellShutdownHook(
-          RENDERHANDLE target,
-          ushort hookId)
+        void IFormWindowCallback.OnShellShutdownHook(RENDERHANDLE target, ushort hookId)
         {
             RenderWindow.ShutdownHookInfo shutdownHookInfo;
-            if (!this.m_mapShutdownHooks.TryGetValue(hookId, out shutdownHookInfo))
+            if (!m_mapShutdownHooks.TryGetValue(hookId, out shutdownHookInfo))
                 return;
             shutdownHookInfo.OnHook(this, EventArgs.Empty);
         }
 
-        void IFormWindowCallback.OnNativeScreensave(
-          RENDERHANDLE target,
-          bool fStartScreensave)
+        void IFormWindowCallback.OnNativeScreensave(RENDERHANDLE target, bool fStartScreensave)
         {
-            this.m_session.DeferredInvoke(new DeferredHandler(this.DoNativeScreensave), fStartScreensave, DeferredInvokePriority.Idle);
+            m_session.DeferredInvoke(new DeferredHandler(DoNativeScreensave), fStartScreensave, DeferredInvokePriority.Idle);
         }
 
-        private void DoNativeScreensave(object objParam) => this.OnNativeScreensave((bool)objParam);
+        private void DoNativeScreensave(object objParam) => OnNativeScreensave((bool)objParam);
 
         private void DoPopAnimations(object objParam)
         {
         }
 
-        void IFormWindowCallback.OnRendererSuspended(
-          RENDERHANDLE target,
-          bool fSuspended)
+        void IFormWindowCallback.OnRendererSuspended(RENDERHANDLE target, bool fSuspended)
         {
-            this.FireRendererSuspended(fSuspended);
+            FireRendererSuspended(fSuspended);
         }
 
         private void FireRendererSuspended(bool fSuspended)
         {
-            if (this.RendererSuspendedEvent == null)
+            if (RendererSuspendedEvent == null)
                 return;
-            this.RendererSuspendedEvent(m_device, new RenderWindow.RendererSuspendedArgs(fSuspended));
+            RendererSuspendedEvent(m_device, new RenderWindow.RendererSuspendedArgs(fSuspended));
         }
 
-        internal RenderWindow.RenderFlags GlobalRenderFlags
+        internal RenderFlags GlobalRenderFlags
         {
-            get => this.m_renderFlags;
-            set => this.SetGlobalRenderFlags(value, RenderFlags.All);
+            get => m_renderFlags;
+            set => SetGlobalRenderFlags(value, RenderFlags.All);
         }
 
-        internal bool SetGlobalRenderFlags(
-          RenderWindow.RenderFlags flags,
-          RenderWindow.RenderFlags mask)
+        internal bool SetGlobalRenderFlags(RenderFlags flags, RenderFlags mask)
         {
             bool flag = false;
-            RenderWindow.RenderFlags renderFlags = this.m_renderFlags & ~mask | flags & mask;
-            if (this.m_renderFlags != renderFlags)
+            RenderWindow.RenderFlags renderFlags = m_renderFlags & ~mask | flags & mask;
+            if (m_renderFlags != renderFlags)
             {
-                this.m_renderFlags = renderFlags;
+                m_renderFlags = renderFlags;
                 flag = true;
-                this.m_remoteWindow.SendChangeDataBits((uint)flags, (uint)mask);
+                m_remoteWindow.SendChangeDataBits((uint)flags, (uint)mask);
             }
             return flag;
         }
 
-        public void SetWindowOptions(WindowOptions optionMask, bool enable)
+        public override void SetWindowOptions(WindowOptions optionMask, bool enable)
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendSetOptions((uint)optionMask, enable ? (uint)optionMask : 0U);
+            m_remoteWindow.SendSetOptions((uint)optionMask, enable ? (uint)optionMask : 0U);
         }
 
-        public void SetMouseIdleOptions(Size mouseIdleTolerance, uint mouseIdleDelay)
+        public override void SetMouseIdleOptions(Size mouseIdleTolerance, uint mouseIdleDelay)
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendSetMouseIdleOptions(mouseIdleTolerance, mouseIdleDelay);
+            m_remoteWindow.SendSetMouseIdleOptions(mouseIdleTolerance, mouseIdleDelay);
         }
 
         public void ForwardWindowMessage(ref Win32Api.MSG msg)
         {
             if (msg.message < 256U || msg.message > 265U)
                 return;
-            this.OnForwardWndMsg(msg.message, msg.wParam, msg.lParam);
+            OnForwardWndMsg(msg.message, msg.wParam, msg.lParam);
         }
 
         private void BuildRootContainer()
         {
-            this.m_remoteWindow.SendSetSize(this.m_szDefault);
-            this.m_remoteWindow.SendCreateRootContainer();
-            this.m_remoteWindow.SendSetHitMasks(1U, 2U, 4U, 8U);
+            m_remoteWindow.SendSetSize(m_szDefault);
+            m_remoteWindow.SendCreateRootContainer();
+            m_remoteWindow.SendSetHitMasks(1U, 2U, 4U, 8U);
             RemoteVisual remoteVisual;
-            this.m_rootVisual = new VisualContainer(true, this.m_session, this, null, out remoteVisual);
-            this.m_rootVisual.RegisterUsage(this);
-            this.m_remoteWindow.SendSetRoot(remoteVisual);
-            this.m_rootVisual.Size = new Vector2(m_nWidth, m_nHeight);
+            m_rootVisual = new VisualContainer(true, m_session, this, null, out remoteVisual);
+            m_rootVisual.RegisterUsage(this);
+            m_remoteWindow.SendSetRoot(remoteVisual);
+            m_rootVisual.Size = new Vector2(m_nWidth, m_nHeight);
         }
 
-        void IRenderWindow.ClientToScreen(ref Point point)
+        public override void ClientToScreen(ref Point point)
         {
             Win32Api.POINT pt;
-            pt.x = !this.m_fRightToLeft ? point.X : this.ClientSize.Width - point.X;
+            pt.x = !m_fRightToLeft ? point.X : ClientSize.Width - point.X;
             pt.y = point.Y;
-            Win32Api.ClientToScreen(this.m_hwnd, ref pt);
+            Win32Api.ClientToScreen(m_hwnd, ref pt);
             point.X = pt.x;
             point.Y = pt.y;
         }
 
-        void IRenderWindow.ScreenToClient(ref Point point)
+        public override void ScreenToClient(ref Point point)
         {
             Win32Api.POINT pt;
             pt.x = point.X;
             pt.y = point.Y;
-            Win32Api.ScreenToClient(this.m_hwnd, ref pt);
-            point.X = !this.m_fRightToLeft ? pt.x : this.ClientSize.Width - pt.x;
+            Win32Api.ScreenToClient(m_hwnd, ref pt);
+            point.X = !m_fRightToLeft ? pt.x : ClientSize.Width - pt.x;
             point.Y = pt.y;
         }
 
-        void IRenderWindow.TakeFocus() => this.Focus();
+        public override void TakeFocus() => Focus();
 
         private void Focus()
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendTakeFocus();
+            m_remoteWindow.SendTakeFocus();
         }
 
-        void IRenderWindow.TakeForeground(bool fForce)
+        public override void TakeForeground(bool fForce)
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendSetForeground(fForce);
+            m_remoteWindow.SendSetForeground(fForce);
         }
 
-        void IRenderWindow.BringToTop()
+        public override void BringToTop()
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendBringToTop();
+            m_remoteWindow.SendBringToTop();
         }
 
-        void IRenderWindow.RefreshHitTarget()
+        public override void RefreshHitTarget()
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendRefreshHitTarget();
+            m_remoteWindow.SendRefreshHitTarget();
         }
 
         private void EngineCloseRequest()
         {
-            if (this.CloseRequestEvent != null)
-                this.CloseRequestEvent();
+            if (CatchCloseRequests)
+                base.OnCloseRequest();
             else
-                this.Close(FormCloseReason.RendererRequest);
+                Close(FormCloseReason.RendererRequest);
         }
 
-        public void Close(FormCloseReason nReason)
+        public override void Close(FormCloseReason nReason)
         {
-            if (this.m_fClosing)
+            if (m_fClosing)
                 return;
-            this.ForceCloseWorker(nReason);
+            ForceCloseWorker(nReason);
         }
 
-        private void ForceClose() => this.ForceCloseWorker(FormCloseReason.ForcedClose);
+        private void ForceClose() => ForceCloseWorker(FormCloseReason.ForcedClose);
 
         private void ForceCloseWorker(FormCloseReason nReason)
         {
-            if (this.m_fClosing)
+            if (m_fClosing)
                 return;
-            this.m_fClosing = true;
-            if (!this.m_session.IsValid)
+            m_fClosing = true;
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendDestroy();
+            m_remoteWindow.SendDestroy();
         }
 
         public void PushWaitCursor(Cursor cursor)
         {
-            if (this.m_stkWaitCursors == null)
-                this.m_stkWaitCursors = new Stack();
-            this.m_stkWaitCursors.Push(cursor);
-            this.UpdateCursors();
+            if (m_stkWaitCursors == null)
+                m_stkWaitCursors = new Stack();
+            m_stkWaitCursors.Push(cursor);
+            UpdateCursors();
         }
 
         public void PopWaitCursor()
         {
-            this.m_stkWaitCursors.Pop();
-            this.UpdateCursors();
+            m_stkWaitCursors.Pop();
+            UpdateCursors();
         }
 
-        public void ForceMouseIdle(bool fIdle)
+        public override void ForceMouseIdle(bool fIdle)
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendForceMouseIdle(fIdle);
+            m_remoteWindow.SendForceMouseIdle(fIdle);
         }
 
-        public void SetCapture(IRawInputSite captureSite, bool state)
+        public override void SetCapture(IRawInputSite captureSite, bool state)
         {
             if (captureSite == null)
                 return;
-            this.m_remoteWindow.SendSetCapture((captureSite as Visual).RemoteStub, state);
+            m_remoteWindow.SendSetCapture((captureSite as Visual).RemoteStub, state);
         }
 
         public void SetBackgroundColor(ColorF color)
         {
-            if (!(this.m_clrBackground != color))
+            if (!(m_clrBackground != color))
                 return;
-            this.m_clrBackground = color;
-            if (!this.m_session.IsValid)
+            m_clrBackground = color;
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendSetBackgroundColor(color);
+            m_remoteWindow.SendSetBackgroundColor(color);
         }
 
-        public void SetIcon(string sModuleName, uint nResourceID, IconFlags nOptions)
+        public override void SetIcon(string sModuleName, uint nResourceID, IconFlags nOptions)
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendSetIcon(sModuleName, nResourceID, (uint)nOptions);
+            m_remoteWindow.SendSetIcon(sModuleName, nResourceID, (uint)nOptions);
         }
 
-        public void SetEdgeImages(bool fActiveEdges, ShadowEdgePart[] edges)
+        public override void SetEdgeImages(bool fActiveEdges, ShadowEdgePart[] edges)
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
             Debug2.Validate(edges != null, null, "Must pass non-null edges set");
             Debug2.Validate(edges.Length == 4, null, "Must pass exactly 4 edges, LTRB");
@@ -988,104 +860,97 @@ namespace Microsoft.Iris.Render.Internal
             Debug2.Validate(edges[0].SplitPoints == edges[2].SplitPoints, null, "L+R splits differ - not supported");
             Debug2.Validate(edges[1].SplitPoints == edges[3].SplitPoints, null, "T+B splits differ - not supported");
             Inset insetSplits = new Inset(edges[1].SplitPoints.Left, edges[0].SplitPoints.Top, edges[1].SplitPoints.Right, edges[0].SplitPoints.Bottom);
-            this.m_remoteWindow.SendSetEdgeImageParts(fActiveEdges, edges[0].ModuleName, edges[0].ResourceName, edges[1].ResourceName, edges[2].ResourceName, edges[3].ResourceName, insetSplits);
+            m_remoteWindow.SendSetEdgeImageParts(fActiveEdges, edges[0].ModuleName, edges[0].ResourceName, edges[1].ResourceName, edges[2].ResourceName, edges[3].ResourceName, insetSplits);
         }
 
-        public bool EnableExternalDragDrop
+        public override bool EnableExternalDragDrop
         {
-            get => this.m_fEnableExternalDragDrop;
+            get => m_fEnableExternalDragDrop;
             set
             {
-                if (this.m_fEnableExternalDragDrop == value)
+                if (m_fEnableExternalDragDrop == value)
                     return;
-                this.m_fEnableExternalDragDrop = value;
-                if (!this.m_session.IsValid)
+                m_fEnableExternalDragDrop = value;
+                if (!m_session.IsValid)
                     return;
-                this.m_remoteWindow.SendEnableExternalDragDrop(value);
+                m_remoteWindow.SendEnableExternalDragDrop(value);
             }
         }
 
-        public void SetDragDropResult(uint nDragOverResult, uint nDragDropResult)
+        public override void SetDragDropResult(uint nDragOverResult, uint nDragDropResult)
         {
-            if ((int)this.m_nDragOverResult == (int)nDragOverResult && (int)this.m_nDragDropResult == (int)nDragDropResult)
+            if ((int)m_nDragOverResult == (int)nDragOverResult && (int)m_nDragDropResult == (int)nDragDropResult)
                 return;
-            this.m_nDragDropResult = nDragDropResult;
-            this.m_nDragOverResult = nDragOverResult;
-            if (!this.m_session.IsValid)
+            m_nDragDropResult = nDragDropResult;
+            m_nDragOverResult = nDragOverResult;
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendSetDragDropResult(nDragOverResult, nDragDropResult);
+            m_remoteWindow.SendSetDragDropResult(nDragOverResult, nDragDropResult);
         }
 
-        public bool IsDragInProgress
+        public override bool IsDragInProgress
         {
-            get => this.m_fIsDragInProgress;
+            get => m_fIsDragInProgress;
             set
             {
-                if (this.m_fIsDragInProgress == value)
+                if (m_fIsDragInProgress == value)
                     return;
-                this.m_fIsDragInProgress = value;
-                if (!this.m_session.IsValid)
+                m_fIsDragInProgress = value;
+                if (!m_session.IsValid)
                     return;
-                if (this.m_fIsDragInProgress)
-                    this.m_remoteWindow.SendEnterInternalDrag();
+                if (m_fIsDragInProgress)
+                    m_remoteWindow.SendEnterInternalDrag();
                 else
-                    this.m_remoteWindow.SendExitInternalDrag();
+                    m_remoteWindow.SendExitInternalDrag();
             }
         }
 
-        public void Restore()
+        public override void Restore()
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendRestore();
+            m_remoteWindow.SendRestore();
         }
 
-        public void TemporarilyExitExclusiveMode()
+        public override void TemporarilyExitExclusiveMode()
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendTemporarilyExitExclusiveMode();
+            m_remoteWindow.SendTemporarilyExitExclusiveMode();
         }
 
-        public IHwndHostWindow CreateHwndHostWindow() => new HwndHostWindow(this);
+        public override IHwndHostWindow CreateHwndHostWindow() => new HwndHostWindow(this);
 
         public void UnlockForegroundWindow()
         {
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendUpdateForegroundLockState();
+            m_remoteWindow.SendUpdateForegroundLockState();
         }
 
-        public void BringToTop()
-        {
-            if (!this.m_session.IsValid)
-                return;
-            this.m_remoteWindow.SendBringToTop();
-        }
-
-        public void LockMouseActive(bool fLock)
+        public override void LockMouseActive(bool fLock)
         {
             if (fLock)
             {
-                ++this.m_nMouseLockCount;
-                if (this.m_nMouseLockCount != 1)
+                ++m_nMouseLockCount;
+                if (m_nMouseLockCount != 1)
                     return;
-                this.SetWindowOptions(WindowOptions.LockMouseActive, true);
+                SetWindowOptions(WindowOptions.LockMouseActive, true);
             }
             else
             {
-                this.m_nMouseLockCount = Math.Max(this.m_nMouseLockCount - 1, 0);
-                if (this.m_nMouseLockCount != 0)
+                m_nMouseLockCount = Math.Max(m_nMouseLockCount - 1, 0);
+                if (m_nMouseLockCount != 0)
                     return;
-                this.SetWindowOptions(WindowOptions.LockMouseActive, false);
+                SetWindowOptions(WindowOptions.LockMouseActive, false);
             }
         }
 
         private void UpdateText(bool fChanged)
         {
-            if (!(this.m_hwnd != HWND.NULL) || this.m_stText == null && !fChanged || !this.m_session.IsValid)
+            if (!(m_hwnd != HWND.NULL) || m_stText == null && !fChanged || !m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendSetText(this.Text);
+            m_remoteWindow.SendSetText(Text);
         }
 
         private void UpdateCursors()
@@ -1093,8 +958,8 @@ namespace Microsoft.Iris.Render.Internal
             Cursor cursor1 = Cursor.NullCursor;
             Cursor nullCursor = Cursor.NullCursor;
             Cursor cursor2 = null;
-            if (this.m_stkWaitCursors != null && this.m_stkWaitCursors.Count > 0)
-                cursor2 = this.m_stkWaitCursors.Peek() as Cursor;
+            if (m_stkWaitCursors != null && m_stkWaitCursors.Count > 0)
+                cursor2 = m_stkWaitCursors.Peek() as Cursor;
             Cursor cursor3;
             if (cursor2 != null)
             {
@@ -1102,51 +967,49 @@ namespace Microsoft.Iris.Render.Internal
             }
             else
             {
-                if (this.m_cursor != null)
-                    cursor1 = this.m_cursor;
-                cursor3 = this.m_cursorIdle == null ? cursor1 : this.m_cursorIdle;
+                if (m_cursor != null)
+                    cursor1 = m_cursor;
+                cursor3 = m_cursorIdle == null ? cursor1 : m_cursorIdle;
             }
-            if (!this.m_session.IsValid)
+            if (!m_session.IsValid)
                 return;
-            this.m_remoteWindow.SendSetCursors(cursor1.ResourceId, cursor3.ResourceId);
+            m_remoteWindow.SendSetCursors(cursor1.ResourceId, cursor3.ResourceId);
         }
 
-        public bool IsPreProcessedInput => this.m_fPreProcessedInput;
+        public bool IsPreProcessedInput => m_fPreProcessedInput;
 
-        public delegate void RendererSuspendedHandler(
-          object sender,
-          RenderWindow.RendererSuspendedArgs args);
+        public delegate void RendererSuspendedHandler(object sender, RendererSuspendedArgs args);
 
         internal class ShutdownHookInfo
         {
             private string m_stHookId;
 
-            public ShutdownHookInfo(string stHookId) => this.m_stHookId = stHookId;
+            public ShutdownHookInfo(string stHookId) => m_stHookId = stHookId;
 
             public event EventHandler Handler;
 
             public void OnHook(object sender, EventArgs args)
             {
-                if (this.Handler == null)
+                if (Handler == null)
                     return;
-                this.Handler(sender, args);
+                Handler(sender, args);
             }
 
-            public override bool Equals(object obj) => obj is RenderWindow.ShutdownHookInfo shutdownHookInfo && this.m_stHookId == shutdownHookInfo.m_stHookId;
+            public override bool Equals(object obj) => obj is ShutdownHookInfo shutdownHookInfo && m_stHookId == shutdownHookInfo.m_stHookId;
 
-            public override int GetHashCode() => this.m_stHookId.GetHashCode();
+            public override int GetHashCode() => m_stHookId.GetHashCode();
         }
 
         internal class RendererSuspendedArgs : EventArgs
         {
             private bool m_fSuspended;
 
-            public RendererSuspendedArgs(bool fSuspended) => this.m_fSuspended = fSuspended;
+            public RendererSuspendedArgs(bool fSuspended) => m_fSuspended = fSuspended;
 
-            public bool Suspended => this.m_fSuspended;
+            public bool Suspended => m_fSuspended;
         }
 
-        [System.Flags]
+        [Flags]
         internal enum RenderFlags
         {
             None = 0,

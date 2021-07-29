@@ -28,15 +28,15 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             RenderPort port = _priv_protocolInstance.Port;
             RENDERHANDLE managerClassHandle = _priv_protocolInstance.AnimationManager_ClassHandle;
             RemoteAnimationManager animationManager = new RemoteAnimationManager(port, _priv_owner);
-            uint num = (uint)sizeof(RemoteAnimationManager.Msg3_Create);
+            uint num = (uint)sizeof(Msg3_Create);
             // ISSUE: untyped stack allocation
             byte* pMem = stackalloc byte[(int)num];
-            RemoteAnimationManager.Msg3_Create* msg3CreatePtr = (RemoteAnimationManager.Msg3_Create*)pMem;
+            Msg3_Create* msg3CreatePtr = (Msg3_Create*)pMem;
             msg3CreatePtr->_priv_size = num;
             msg3CreatePtr->_priv_msgid = 3U;
             msg3CreatePtr->_priv_idObjectSubject = animationManager.m_renderHandle;
             if (port.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg3_Create, typeof(RemoteAnimationManager.Msg3_Create), 0, 0);
+                MarshalHelper.SwapByteOrder(pMem, ref s_priv_ByteOrder_Msg3_Create, typeof(Msg3_Create), 0, 0);
             port.CreateRemoteObject(managerClassHandle, animationManager.m_renderHandle, (Message*)msg3CreatePtr);
             return animationManager;
         }

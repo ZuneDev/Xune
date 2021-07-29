@@ -19,6 +19,7 @@ namespace Microsoft.Iris.Render.Internal
         private RenderCaps m_renderCaps;
         private GraphicsDeviceType m_typeGraphics;
         private SoundDeviceType m_typeSound;
+        private RenderWindowBase m_renderWindow;
         private InputSystem m_inputSystem;
         private SoundDevice m_soundDevice;
         private ContextID m_localContextId;
@@ -98,7 +99,9 @@ namespace Microsoft.Iris.Render.Internal
 
         internal RenderSession Session => m_renderSession;
 
-        IRenderWindow IRenderEngine.Window => null;
+        IRenderWindow IRenderEngine.Window => m_renderWindow;
+
+        internal RenderWindowBase Window => m_renderWindow;
 
         IDisplayManager IRenderEngine.DisplayManager => null;
 

@@ -137,7 +137,7 @@ namespace Microsoft.Iris
 
         public static bool IsDebug { get; set; }
 
-        public static void Initialize(SkiaSharp.SKSurface skSurface)
+        public static void Initialize(SkiaSharp.SKSurface skSurface, RenderWindowBase renderWindow)
         {
             if (IsInitialized)
                 throw new InvalidOperationException("Application already initialized");
@@ -145,7 +145,7 @@ namespace Microsoft.Iris
             Debug.Assert.IsNotNull(skSurface, nameof(skSurface));
             VerifyTrustedEnvironment();
 
-            s_session = new UISession(skSurface);
+            s_session = new UISession(skSurface, renderWindow);
             s_session.IsRtl = s_IsRTL;
             s_session.InputManager.KeyCoalescePolicy = new KeyCoalesceFilter(QueryKeyCoalesce);
             GraphicsDeviceType graphicsType = ChooseRenderingGraphicsDevice(s_renderType);

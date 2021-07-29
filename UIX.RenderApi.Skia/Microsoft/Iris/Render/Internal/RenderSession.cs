@@ -307,7 +307,7 @@ namespace Microsoft.Iris.Render.Internal
 
         internal RemoteVisualContainer BuildRemoteVisualContainer(Visual visual) => this.RenderingProtocol.BuildRemoteVisualContainer(visual);
 
-        internal RemoteSprite BuildRemoteSprite(Sprite sprite, RenderWindow window)
+        internal RemoteSprite BuildRemoteSprite(Sprite sprite, RenderWindowBase window)
         {
             switch (window.GraphicsDeviceType)
             {

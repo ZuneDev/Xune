@@ -18,7 +18,7 @@ namespace Microsoft.Iris.Render.Graphics
         private RemoteSprite m_remoteSprite;
         private Effect m_effect;
 
-        public Sprite(RenderSession session, RenderWindow window, object objOwnerData)
+        public Sprite(RenderSession session, RenderWindowBase window, object objOwnerData)
           : base(session, window, objOwnerData)
         {
             this.m_remoteSprite = session.BuildRemoteSprite(this, window);

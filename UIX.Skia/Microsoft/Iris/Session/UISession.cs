@@ -46,13 +46,14 @@ namespace Microsoft.Iris.Session
         private static readonly DeferredHandler s_deferredPlaySound = new DeferredHandler(DeferredPlaySound);
         private static readonly DeferredHandler s_deferredPlaySystemSound = new DeferredHandler(DeferredPlaySystemSound);
 
-        public UISession(SKSurface skSurface)
-          : this(skSurface, null, null, 0U)
+        public UISession(SKSurface skSurface, RenderWindowBase renderWindow)
+          : this(skSurface, renderWindow, null, null, 0U)
         {
         }
 
         public UISession(
             SKSurface skSurface,
+            RenderWindowBase renderWindow,
             EventHandler rendererConnectedCallback,
             TimeoutHandler handlerTimeout,
           uint timeoutSecValue)
@@ -69,7 +70,7 @@ namespace Microsoft.Iris.Session
             int pdwDefaultLayout;
             Win32Api.IFWIN32(Win32Api.GetProcessDefaultLayout(out pdwDefaultLayout));
             _rtl = pdwDefaultLayout == 1;
-            _engine = RenderApi.CreateEngine(IrisEngineInfo.CreateLocal(skSurface), Dispatcher);
+            _engine = RenderApi.CreateEngine(IrisEngineInfo.CreateLocal(skSurface, renderWindow), Dispatcher);
             _session = _engine.Session;
             TextImageCache.Initialize(this);
             ScavengeImageCache.Initialize(this);

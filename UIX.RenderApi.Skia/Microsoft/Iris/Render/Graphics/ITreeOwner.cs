@@ -8,6 +8,6 @@ namespace Microsoft.Iris.Render.Graphics
 {
     internal interface ITreeOwner
     {
-        TreeNode Root { get; }
+        internal TreeNode Root { get; }
     }
 }

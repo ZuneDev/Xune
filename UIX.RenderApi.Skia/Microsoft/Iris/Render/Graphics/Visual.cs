@@ -33,7 +33,7 @@ namespace Microsoft.Iris.Render.Graphics
         public static readonly string RotationProperty = nameof(Rotation);
         public static readonly string ScaleProperty = nameof(Scale);
         public static readonly string SizeProperty = nameof(Size);
-        protected RenderWindow m_window;
+        protected RenderWindowBase m_window;
         protected RemoteVisual m_remoteVisual;
         private Vector3 m_vecPosition;
         private Vector2 m_vecSize;
@@ -83,7 +83,7 @@ namespace Microsoft.Iris.Render.Graphics
             s_sectionPropIDMap[9] = s_bvsNineGrid;
         }
 
-        internal Visual(RenderSession session, RenderWindow window, object objOwnerData)
+        internal Visual(RenderSession session, RenderWindowBase window, object objOwnerData)
           : base(window)
         {
             Debug2.Validate(session != null, typeof(ArgumentNullException), "Must have valid session");
