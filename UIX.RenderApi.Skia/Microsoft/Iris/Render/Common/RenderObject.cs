@@ -12,6 +12,7 @@ namespace Microsoft.Iris.Render.Common
     internal abstract class RenderObject : IRenderObject, IDisposable
     {
         private bool m_fObjectDisposed;
+        private IrisEngineInfo m_engineInfo;
 
         internal RenderObject() => this.m_fObjectDisposed = false;
 
@@ -39,6 +40,8 @@ namespace Microsoft.Iris.Render.Common
             {
             }
         }
+
+        internal IrisEngineInfo EngineInfo => m_engineInfo;
 
         [Conditional("DEBUG")]
         protected virtual void Invariant() => Debug2.Validate(!this.m_fObjectDisposed, typeof(ObjectDisposedException), this.GetType().ToString());

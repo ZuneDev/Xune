@@ -12,7 +12,6 @@ namespace Microsoft.Iris.Render.Internal
         private static BitArray s_contexts;
         private static uint s_contextIdSeed = 1;
         private static uint s_maxContextId = 254;
-        private IrisEngineInfo m_engineInfo;
         private RenderToken m_primaryToken;
         private MessagingSession m_messagingSession;
         private RenderSession m_renderSession;

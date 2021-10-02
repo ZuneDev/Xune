@@ -49,14 +49,14 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
             _priv_portUse = this.m_renderPort;
             _priv_portUse.ValidateHandle(this.m_renderHandle);
-            uint size = (uint)sizeof(RemoteAnimationManager.Msg0_SetAnimationRate);
-            RemoteAnimationManager.Msg0_SetAnimationRate* setAnimationRatePtr = (RemoteAnimationManager.Msg0_SetAnimationRate*)_priv_portUse.AllocMessageBuffer(size);
+            uint size = (uint)sizeof(Msg0_SetAnimationRate);
+            Msg0_SetAnimationRate* setAnimationRatePtr = (Msg0_SetAnimationRate*)_priv_portUse.AllocMessageBuffer(size);
             setAnimationRatePtr->_priv_size = size;
             setAnimationRatePtr->_priv_msgid = 0U;
             setAnimationRatePtr->nFramesPerSecond = nFramesPerSecond;
             setAnimationRatePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)setAnimationRatePtr, ref s_priv_ByteOrder_Msg0_SetAnimationRate, typeof(RemoteAnimationManager.Msg0_SetAnimationRate), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)setAnimationRatePtr, ref s_priv_ByteOrder_Msg0_SetAnimationRate, typeof(Msg0_SetAnimationRate), 0, 0);
             _priv_pmsgUse = (Message*)setAnimationRatePtr;
         }
 
@@ -76,14 +76,14 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
             _priv_portUse = this.m_renderPort;
             _priv_portUse.ValidateHandle(this.m_renderHandle);
-            uint size = (uint)sizeof(RemoteAnimationManager.Msg1_PulseTimeAdvance);
-            RemoteAnimationManager.Msg1_PulseTimeAdvance* pulseTimeAdvancePtr = (RemoteAnimationManager.Msg1_PulseTimeAdvance*)_priv_portUse.AllocMessageBuffer(size);
+            uint size = (uint)sizeof(Msg1_PulseTimeAdvance);
+            Msg1_PulseTimeAdvance* pulseTimeAdvancePtr = (Msg1_PulseTimeAdvance*)_priv_portUse.AllocMessageBuffer(size);
             pulseTimeAdvancePtr->_priv_size = size;
             pulseTimeAdvancePtr->_priv_msgid = 1U;
             pulseTimeAdvancePtr->nPulseMs = nPulseMs;
             pulseTimeAdvancePtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)pulseTimeAdvancePtr, ref s_priv_ByteOrder_Msg1_PulseTimeAdvance, typeof(RemoteAnimationManager.Msg1_PulseTimeAdvance), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)pulseTimeAdvancePtr, ref s_priv_ByteOrder_Msg1_PulseTimeAdvance, typeof(Msg1_PulseTimeAdvance), 0, 0);
             _priv_pmsgUse = (Message*)pulseTimeAdvancePtr;
         }
 
@@ -103,14 +103,14 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
             Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
             _priv_portUse = this.m_renderPort;
             _priv_portUse.ValidateHandle(this.m_renderHandle);
-            uint size = (uint)sizeof(RemoteAnimationManager.Msg2_SetGlobalSpeedAdjustment);
-            RemoteAnimationManager.Msg2_SetGlobalSpeedAdjustment* globalSpeedAdjustmentPtr = (RemoteAnimationManager.Msg2_SetGlobalSpeedAdjustment*)_priv_portUse.AllocMessageBuffer(size);
+            uint size = (uint)sizeof(Msg2_SetGlobalSpeedAdjustment);
+            Msg2_SetGlobalSpeedAdjustment* globalSpeedAdjustmentPtr = (Msg2_SetGlobalSpeedAdjustment*)_priv_portUse.AllocMessageBuffer(size);
             globalSpeedAdjustmentPtr->_priv_size = size;
             globalSpeedAdjustmentPtr->_priv_msgid = 2U;
             globalSpeedAdjustmentPtr->flFactor = flFactor;
             globalSpeedAdjustmentPtr->_priv_idObjectSubject = this.m_renderHandle;
             if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)globalSpeedAdjustmentPtr, ref s_priv_ByteOrder_Msg2_SetGlobalSpeedAdjustment, typeof(RemoteAnimationManager.Msg2_SetGlobalSpeedAdjustment), 0, 0);
+                MarshalHelper.SwapByteOrder((byte*)globalSpeedAdjustmentPtr, ref s_priv_ByteOrder_Msg2_SetGlobalSpeedAdjustment, typeof(Msg2_SetGlobalSpeedAdjustment), 0, 0);
             _priv_pmsgUse = (Message*)globalSpeedAdjustmentPtr;
         }
 

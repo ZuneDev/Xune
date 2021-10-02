@@ -302,14 +302,14 @@ namespace Microsoft.Iris.Session
 
         internal void FireOnUnhandledException(object sender, Exception e)
         {
-            UISession.UnhandledExceptionHandler unhandledException = OnUnhandledException;
+            UnhandledExceptionHandler unhandledException = OnUnhandledException;
             if (unhandledException == null)
                 return;
-            UISession.UnhandledExceptionArgs args = new UISession.UnhandledExceptionArgs(e);
+            UnhandledExceptionArgs args = new UnhandledExceptionArgs(e);
             unhandledException(sender, args);
         }
 
-        public event UISession.UnhandledExceptionHandler OnUnhandledException;
+        public event UnhandledExceptionHandler OnUnhandledException;
 
         public Form Form => _form;
 
@@ -319,7 +319,7 @@ namespace Microsoft.Iris.Session
 
         public void PlaySound(string stSoundSource)
         {
-            UISession.PlaySoundArgs playSoundArgs = new UISession.PlaySoundArgs(this, stSoundSource);
+            PlaySoundArgs playSoundArgs = new PlaySoundArgs(this, stSoundSource);
             if (!UIDispatcher.IsUIThread)
                 DeferredCall.Post(DispatchPriority.High, s_deferredPlaySound, playSoundArgs);
             else
@@ -328,7 +328,7 @@ namespace Microsoft.Iris.Session
 
         private static void DeferredPlaySound(object argsObject)
         {
-            UISession.PlaySoundArgs playSoundArgs = argsObject as UISession.PlaySoundArgs;
+            PlaySoundArgs playSoundArgs = argsObject as PlaySoundArgs;
             if (!playSoundArgs.uiSession.IsValid || playSoundArgs.stSoundSource == null)
                 return;
             new Sound() { Source = playSoundArgs.stSoundSource }.Play();
@@ -336,7 +336,7 @@ namespace Microsoft.Iris.Session
 
         public void PlaySystemSound(SystemSoundEvent systemSoundEvent)
         {
-            UISession.PlaySystemSoundArgs playSystemSoundArgs = new UISession.PlaySystemSoundArgs(this, systemSoundEvent);
+            PlaySystemSoundArgs playSystemSoundArgs = new PlaySystemSoundArgs(this, systemSoundEvent);
             if (!UIDispatcher.IsUIThread)
                 DeferredCall.Post(DispatchPriority.High, s_deferredPlaySystemSound, playSystemSoundArgs);
             else
@@ -345,7 +345,7 @@ namespace Microsoft.Iris.Session
 
         private static void DeferredPlaySystemSound(object argsObject)
         {
-            UISession.PlaySystemSoundArgs playSystemSoundArgs = argsObject as UISession.PlaySystemSoundArgs;
+            PlaySystemSoundArgs playSystemSoundArgs = argsObject as PlaySystemSoundArgs;
             if (!playSystemSoundArgs.uiSession.IsValid || playSystemSoundArgs.systemSoundEvent == SystemSoundEvent.None)
                 return;
             new Sound()
@@ -367,12 +367,12 @@ namespace Microsoft.Iris.Session
 
         public delegate void UnhandledExceptionHandler(
           object sender,
-          UISession.UnhandledExceptionArgs args);
+          UnhandledExceptionArgs args);
 
         private class TaskReentrancyDetection : IDisposable
         {
             private static string s_currentTask;
-            private static UISession.TaskReentrancyDetection s_currentTaskClearer = new UISession.TaskReentrancyDetection();
+            private static TaskReentrancyDetection s_currentTaskClearer = new TaskReentrancyDetection();
 
             public static IDisposable Enter(string task)
             {
