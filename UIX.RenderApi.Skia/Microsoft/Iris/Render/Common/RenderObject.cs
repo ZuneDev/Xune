@@ -15,6 +15,10 @@ namespace Microsoft.Iris.Render.Common
         private IrisEngineInfo m_engineInfo;
 
         internal RenderObject() => this.m_fObjectDisposed = false;
+        protected RenderObject(IrisEngineInfo engineInfo) : this()
+        {
+            m_engineInfo = engineInfo;
+        }
 
         ~RenderObject()
         {

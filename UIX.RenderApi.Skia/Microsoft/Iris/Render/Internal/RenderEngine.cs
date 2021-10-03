@@ -26,11 +26,10 @@ namespace Microsoft.Iris.Render.Internal
 
         static RenderEngine() => s_contexts = new BitArray((int)s_maxContextId + 1);
 
-        internal RenderEngine(IrisEngineInfo engineInfo, IRenderHost renderHost)
+        internal RenderEngine(IrisEngineInfo engineInfo, IRenderHost renderHost) : base(engineInfo)
         {
             Debug2.Validate(engineInfo != null, typeof(ArgumentNullException), nameof(engineInfo));
             Debug2.Validate(renderHost != null, typeof(ArgumentNullException), nameof(renderHost));
-            m_engineInfo = engineInfo;
             m_engineContextId = AllocateContextId();
             m_localContextId = AllocateContextId();
             m_primaryToken = new RenderToken(engineInfo, m_localContextId, m_engineContextId, RENDERGROUP.NULL);
