@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Render.Internal
         private Common.ObjectCache m_cacheSprite;
         private Common.ObjectCache m_cacheContainer;
 
-        internal RenderSession(RenderEngine renderEngine)
+        internal RenderSession(RenderEngine renderEngine) : base(renderEngine.EngineInfo)
         {
             Debug2.Validate(renderEngine != null, typeof(ArgumentNullException), nameof(renderEngine));
             this.RegisterOwningThread();

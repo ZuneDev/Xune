@@ -12,7 +12,7 @@ using System;
 
 namespace Microsoft.Iris.Render.Animation
 {
-    internal class AnimationSystem : SharedRenderObject, IAnimationSystem, IRenderHandleOwner
+    internal class AnimationSystem : SharedRenderObject, IAnimationSystem
     {
         private RenderSession m_ownerSession;
         private RemoteAnimationManager m_remoteObject;
@@ -110,10 +110,6 @@ namespace Microsoft.Iris.Render.Animation
         void IAnimationSystem.StepAnimations(int nAdvanceMs) => this.PulseTimeAdvance(nAdvanceMs);
 
         void IAnimationSystem.ResumeAnimations() => this.m_remoteObject.SendSetGlobalSpeedAdjustment(this.m_flSpeedAdjustment);
-
-        RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteObject.RenderHandle;
-
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteObject = null;
 
         protected override void Invariant()
         {

@@ -33,7 +33,10 @@ namespace Xune.Wpf
         {
             // Initialize UI framework
             if (Microsoft.Iris.Application.IsInitialized || Microsoft.Iris.Application.IsInitializing)
+            {
+                Canvas.PaintSurface -= Canvas_PaintSurface;
                 return;
+            }
 
             Microsoft.Iris.Application.Initialize(e.Surface, new WpfRenderWindow(this));
         }

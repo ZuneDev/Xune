@@ -193,7 +193,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
         }
 
         internal RemoteAnimationManager BuildRemoteAnimationManager(
-          IRenderHandleOwner _priv_owner)
+          object _priv_owner)
         {
             return RemoteAnimationManager.Create(this, _priv_owner);
         }
