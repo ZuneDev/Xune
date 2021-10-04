@@ -10,6 +10,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
+using WpfCursor = System.Windows.Input.Cursor;
+using WpfCursors = System.Windows.Input.Cursors;
 
 namespace Microsoft.Iris.Render
 {
@@ -18,6 +20,8 @@ namespace Microsoft.Iris.Render
         private bool isDragging;
         private bool isFullscreen;
         private GraphicsDevice graphicsDevice;
+        private HWND appNotifyWindow;
+
         private Window WpfWindow { get; set; }
         private WindowInteropHelper InteropHelper { get; set; }
 
@@ -61,9 +65,27 @@ namespace Microsoft.Iris.Render
 
         public override HWND WindowHandle => new HWND(InteropHelper.Handle);
 
-        public override Size ClientSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override Size InitialClientSize { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override FormPlacement InitialPlacement { set => throw new NotImplementedException(); }
+        public override Size ClientSize
+        {
+            get
+            {
+                return new Size((int)WpfWindow.ActualWidth, (int)WpfWindow.ActualHeight);
+            }
+            set => throw new NotImplementedException();
+        }
+        public override Size InitialClientSize { get => ClientSize; set => ClientSize = value; }
+        public override FormPlacement InitialPlacement
+        {
+            set
+            {
+                WpfWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+
+                WpfWindow.Left = value.NormalPosition.Left;
+                WpfWindow.Top = value.NormalPosition.Top;
+                WpfWindow.Width = value.NormalPosition.Width;
+                WpfWindow.Height = value.NormalPosition.Height;
+            }
+        }
 
         public override FormPlacement FinalPlacement => throw new NotImplementedException();
 
@@ -73,13 +95,79 @@ namespace Microsoft.Iris.Render
             set => WpfWindow.MinWidth = value;
         }
         public override int MaxResizeWidth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override Point Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override Point Position
+        {
+            get
+            {
+                return new Point(Left, Top);
+            }
+            set
+            {
+                WpfWindow.Left = value.X;
+                WpfWindow.Top = value.Y;
+            }
+        }
         public override string Text
         {
             get => WpfWindow.Title;
             set => WpfWindow.Title = value;
         }
-        public override Cursor Cursor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override Cursor Cursor
+        {
+            get
+            {
+                CursorID id = CursorID.NotSpecified;
+                if (WpfWindow.Cursor == WpfCursors.AppStarting)
+                    id = CursorID.AppStarting;
+                else if (WpfWindow.Cursor == WpfCursors.Arrow || WpfWindow.Cursor == WpfCursors.ArrowCD)
+                    id = CursorID.Arrow;
+                else if (WpfWindow.Cursor == WpfCursors.Cross)
+                    id = CursorID.Crosshair;
+                else if (WpfWindow.Cursor == WpfCursors.Hand)
+                    id = CursorID.Hand;
+                else if (WpfWindow.Cursor == WpfCursors.Help)
+                    id = CursorID.Help;
+                else if (WpfWindow.Cursor == WpfCursors.IBeam)
+                    id = CursorID.IBeam;
+                else if (WpfWindow.Cursor == WpfCursors.No)
+                    id = CursorID.No;
+                else if (WpfWindow.Cursor == WpfCursors.None)
+                    id = CursorID.None;
+                else if (WpfWindow.Cursor == WpfCursors.SizeAll)
+                    id = CursorID.Size;
+                else if (WpfWindow.Cursor == WpfCursors.SizeNESW)
+                    id = CursorID.SizeNESW;
+                else if (WpfWindow.Cursor == WpfCursors.SizeNS)
+                    id = CursorID.SizeNS;
+                else if (WpfWindow.Cursor == WpfCursors.SizeNWSE)
+                    id = CursorID.SizeNWSE;
+                else if (WpfWindow.Cursor == WpfCursors.SizeWE)
+                    id = CursorID.SizeWE;
+
+                return new(-1, id);
+            }
+            set
+            {
+                WpfWindow.Cursor = value.CursorID switch
+                {
+                    CursorID.AppStarting    => WpfCursors.AppStarting,
+                    CursorID.Arrow          => WpfCursors.Arrow,
+                    CursorID.Crosshair      => WpfCursors.Cross,
+                    CursorID.Hand           => WpfCursors.Hand,
+                    CursorID.Help           => WpfCursors.Help,
+                    CursorID.IBeam          => WpfCursors.IBeam,
+                    CursorID.No             => WpfCursors.No,
+                    CursorID.None           => WpfCursors.None,
+                    CursorID.Size           => WpfCursors.SizeAll,
+                    CursorID.SizeNESW       => WpfCursors.SizeNESW,
+                    CursorID.SizeNS         => WpfCursors.SizeNS,
+                    CursorID.SizeNWSE       => WpfCursors.SizeNWSE,
+                    CursorID.SizeWE         => WpfCursors.SizeWE,
+
+                    _ => WpfCursors.Arrow,
+                };
+            }
+        }
         public override Cursor IdleCursor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public override bool Visible
         {
@@ -181,8 +269,15 @@ namespace Microsoft.Iris.Render
                 }
             }
         }
-        public override FormStyleInfo Styles { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override HWND AppNotifyWindow { set => throw new NotImplementedException(); }
+        public override FormStyleInfo Styles
+        {
+            get => new();
+            set
+            {
+
+            }
+        }
+        public override HWND AppNotifyWindow { set => appNotifyWindow = value; }
 
         public override IVisualContainer VisualRoot => throw new NotImplementedException();
 
