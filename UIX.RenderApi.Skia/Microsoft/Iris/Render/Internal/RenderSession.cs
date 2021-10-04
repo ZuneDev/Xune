@@ -268,11 +268,11 @@ namespace Microsoft.Iris.Render.Internal
 
         internal RemoteInputRouter BuildRemoteInputRouter(
           InputSystem inputSystem,
-          RenderWindow window)
+          RenderWindowBase window)
         {
             Debug2.Validate(this.IsOwningThread(), typeof(InvalidOperationException), "Must be called on the session's owning client thread");
             RemoteInputRouter remoteInputRouter = this.DesktopProtocol.BuildRemoteInputRouter(inputSystem, this.DesktopProtocol.LocalInputCallbackHandle);
-            remoteInputRouter?.SendRegisterWithInputSource(this.WindowingPort.DefaultGroupID, ((IRenderHandleOwner)window).RenderHandle);
+            remoteInputRouter?.SendRegisterWithInputSource(this.WindowingPort.DefaultGroupID, RENDERHANDLE.NULL);
             return remoteInputRouter;
         }
 

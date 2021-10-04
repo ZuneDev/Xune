@@ -30,13 +30,13 @@ namespace Microsoft.Iris.Render.Internal
         private IRawInputCallbacks m_inputHandlers;
         private InputHandlerFlags m_maskInputHandlers;
 
-        internal InputSystem(RenderSession session, RenderWindow window)
+        internal InputSystem(RenderSession session, RenderWindowBase window)
         {
             this.m_session = session;
             this.Initialize(window);
         }
 
-        internal void Initialize(RenderWindow window) => this.m_remoteInputRouter = this.m_session.BuildRemoteInputRouter(this, window);
+        internal void Initialize(RenderWindowBase window) => this.m_remoteInputRouter = this.m_session.BuildRemoteInputRouter(this, window);
 
         protected override void Dispose(bool fInDispose)
         {

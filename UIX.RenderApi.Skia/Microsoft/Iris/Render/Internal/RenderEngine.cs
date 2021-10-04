@@ -91,7 +91,7 @@ namespace Microsoft.Iris.Render.Internal
             m_typeSound = typeSound;
             m_renderSession.Initialize();
             // TODO: Set up input system
-            //m_inputSystem = new InputSystem(this.m_renderSession, this.m_renderWindow);
+            m_inputSystem = new InputSystem(this.m_renderSession, this.m_renderWindow);
 
             m_renderWindow.CreateGraphicsDevice(m_renderSession, m_typeGraphics, renderingQuality);
         }
@@ -106,7 +106,7 @@ namespace Microsoft.Iris.Render.Internal
 
         IDisplayManager IRenderEngine.DisplayManager => null;
 
-        public InputSystem InputSystem => throw new NotImplementedException("Skia does not support input yet");// m_inputSystem;
+        public InputSystem InputSystem => m_inputSystem;
 
         internal SoundDevice SoundDevice => m_soundDevice;
 
