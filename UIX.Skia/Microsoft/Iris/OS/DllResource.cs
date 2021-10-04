@@ -13,8 +13,7 @@ namespace Microsoft.Iris.OS
     {
         private string _dll;
         private string _identifier;
-        private IntPtr _buffer;
-        private uint _length;
+        private byte[] _buffer;
 
         internal DllResource(string uri, string dll, string identifier)
           : base(uri, true)
@@ -28,9 +27,9 @@ namespace Microsoft.Iris.OS
         protected override void StartAcquisition(bool forceSynchronous)
         {
             string errorDetails = null;
-            if (_buffer == IntPtr.Zero && !NativeApi.SpLoadBinaryResource(_dll, _identifier, !DllResources.StaticDllResourcesOnly, out _buffer, out _length))
+            if (_buffer == null && !NativeApi.SpLoadBinaryResource(_dll, _identifier, !DllResources.StaticDllResourcesOnly, out _buffer))
                 errorDetails = string.Format("Resource not found: res://{0}!{1}", _dll, _identifier);
-            NotifyAcquisitionComplete(_buffer, _length, false, errorDetails);
+            NotifyAcquisitionComplete(_buffer, false, errorDetails);
         }
 
         protected override void CancelAcquisition()

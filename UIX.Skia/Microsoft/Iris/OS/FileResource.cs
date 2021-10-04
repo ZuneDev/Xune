@@ -6,6 +6,7 @@
 
 using Microsoft.Iris.Data;
 using System;
+using System.IO;
 
 namespace Microsoft.Iris.OS
 {
@@ -35,47 +36,38 @@ namespace Microsoft.Iris.OS
             int num = (int)NativeApi.SpFileDownload(_filePath, _pendingCallback, IntPtr.Zero, out _handle);
         }
 
-        private void OnFileDownloadComplete(IntPtr handle, int error, uint length, IntPtr context)
+        private unsafe void OnFileDownloadComplete(IntPtr handle, int error, uint length, IntPtr context)
         {
-            IntPtr buffer = IntPtr.Zero;
+            byte[] buffer = null;
             string errorDetails = null;
             if (error == 0)
-                buffer = NativeApi.DownloadGetBuffer(_handle);
+                buffer = new Span<byte>(NativeApi.DownloadGetBuffer(_handle).ToPointer(), (int)length).ToArray();
             else
                 errorDetails = string.Format("Failed to complete download from '{0}'", _filePath);
             int num = (int)NativeApi.SpDownloadClose(_handle);
             _handle = IntPtr.Zero;
             _pendingCallback = null;
-            NotifyAcquisitionComplete(buffer, length, true, errorDetails);
+            NotifyAcquisitionComplete(buffer, true, errorDetails);
         }
 
         private void SynchronousDownload()
         {
-            IntPtr num1 = IntPtr.Zero;
-            uint num2 = 0;
+            MemoryStream outStream = new MemoryStream();
+            long fileSize = 0;
             string errorDetails = null;
-            IntPtr file = Win32Api.CreateFile(_filePath, 2147483648U, 1U, IntPtr.Zero, 3U, 0U, IntPtr.Zero);
-            if (file == Win32Api.INVALID_HANDLE_VALUE)
+            FileInfo file = new(_filePath);
+
+            if (!file.Exists)
             {
                 errorDetails = string.Format("File not found: '{0}'", _filePath);
             }
             else
             {
-                num2 = Win32Api.GetFileSize(file, IntPtr.Zero);
-                if (num2 != uint.MaxValue)
-                {
-                    num1 = AllocNativeBuffer(num2);
-                    uint lpNumberOfBytesRead;
-                    if (!(num1 == IntPtr.Zero) && (!Win32Api.ReadFile(file, num1, num2, out lpNumberOfBytesRead, IntPtr.Zero) || (int)lpNumberOfBytesRead != (int)num2))
-                    {
-                        FreeNativeBuffer(num1);
-                        num1 = IntPtr.Zero;
-                    }
-                }
+                using FileStream fstream = file.OpenRead();
+                fstream.CopyTo(outStream);
             }
-            if (file != IntPtr.Zero)
-                Win32Api.CloseHandle(file);
-            NotifyAcquisitionComplete(num1, num2, true, errorDetails);
+            byte[] bytes = outStream.ToArray();
+            NotifyAcquisitionComplete(bytes, true, errorDetails);
         }
 
         protected override void CancelAcquisition()

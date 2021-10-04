@@ -13,27 +13,23 @@ namespace Microsoft.Iris.Render.Extensions
 {
     public static class ImageLoader
     {
-        public static bool LoadHeader(IntPtr rgData, int length, out ImageHeader header)
+        public static bool LoadHeader(byte[] rgData, out ImageHeader header)
         {
             ImageRequirements req = new ImageRequirements();
-            return LoadHeader(rgData, length, req, out header);
+            return LoadHeader(rgData, req, out header);
         }
 
-        public static bool LoadHeader(
-          IntPtr rgData,
-          int length,
-          ImageRequirements req,
-          out ImageHeader header)
+        public static bool LoadHeader(byte[] rgData, ImageRequirements req, out ImageHeader header)
         {
-            Debug2.Validate(rgData != IntPtr.Zero, typeof(ArgumentNullException), "Must provide valid data to load");
-            Debug2.Validate(length > 0, typeof(ArgumentOutOfRangeException), "Must provide non-zero length data to load");
+            Debug2.Validate(rgData != null, typeof(ArgumentNullException), "Must provide valid data to load");
+            Debug2.Validate(rgData.Length > 0, typeof(ArgumentOutOfRangeException), "Must provide non-zero length data to load");
             Debug2.Validate(req != null, typeof(ArgumentNullException), "Must provide valid ImageRequirements");
             ExtensionsApi.BitmapOptions nOptions = ExtensionsApi.BitmapOptions.None;
             BitmapInformation bitmapInformation = new BitmapInformation();
             HRESULT hresult = new HRESULT(-1);
             try
             {
-                hresult = ExtensionsApi.SpBitmapLoadBuffer(rgData, (uint)length, req, nOptions, out bitmapInformation.hBitmap, out bitmapInformation.imageInfo);
+                hresult = ExtensionsApi.SpBitmapLoadBuffer(rgData, (uint)rgData.Length, req, nOptions, out bitmapInformation.hBitmap, out bitmapInformation.imageInfo);
                 if (!hresult.IsSuccess())
                     header = new ImageHeader();
                 else
@@ -133,8 +129,7 @@ namespace Microsoft.Iris.Render.Extensions
 
         public static bool FromBuffer(
           IImage image,
-          IntPtr buffer,
-          int length,
+          byte[] buffer,
           Size maxSize,
           bool flipRTL,
           bool antialiasEdges,
@@ -143,7 +138,7 @@ namespace Microsoft.Iris.Render.Extensions
           out BitmapInformation bitmapInfo)
         {
             Debug2.Validate(image != null, typeof(ArgumentNullException), "Image must be valid");
-            Debug2.Validate(length > 0, typeof(ArgumentException), "Do not call for zero-length buffer");
+            Debug2.Validate(buffer.Length > 0, typeof(ArgumentException), "Do not call for zero-length buffer");
             ImageRequirements req = new ImageRequirements();
             req.BorderWidth = borderWidth;
             req.BorderColor = borderColor;
@@ -154,7 +149,7 @@ namespace Microsoft.Iris.Render.Extensions
             if (flipRTL)
                 nOptions |= ExtensionsApi.BitmapOptions.Flip;
             BitmapInformation bitmapInformation = new BitmapInformation();
-            if (!ExtensionsApi.SpBitmapLoadBuffer(buffer, (uint)length, req, nOptions, out bitmapInformation.hBitmap, out bitmapInformation.imageInfo).IsSuccess())
+            if (!ExtensionsApi.SpBitmapLoadBuffer(buffer, (uint)buffer.Length, req, nOptions, out bitmapInformation.hBitmap, out bitmapInformation.imageInfo).IsSuccess())
             {
                 bitmapInfo = null;
                 return false;
@@ -174,8 +169,7 @@ namespace Microsoft.Iris.Render.Extensions
 
         public static bool FromRaw(
           IImage image,
-          IntPtr buffer,
-          int length,
+          byte[] buffer,
           Size imageSize,
           int stride,
           SurfaceFormat format,
@@ -187,7 +181,7 @@ namespace Microsoft.Iris.Render.Extensions
           out BitmapInformation bitmapInfo)
         {
             Debug2.Validate(image != null, typeof(ArgumentNullException), "Image must be valid");
-            Debug2.Validate(length > 0, typeof(ArgumentException), "Do not call for zero-length buffer");
+            Debug2.Validate(buffer.Length > 0, typeof(ArgumentException), "Do not call for zero-length buffer");
             ImageRequirements req = new ImageRequirements();
             req.BorderWidth = borderWidth;
             req.BorderColor = borderColor;

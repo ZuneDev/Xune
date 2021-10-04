@@ -66,7 +66,7 @@ namespace Microsoft.Iris
           int imageHeight,
           int stride,
           RawImageFormat format,
-          IntPtr data)
+          byte[] data)
           : this(uniqueID, imageWidth, imageHeight, stride, format, data, 0, 0, false)
         {
         }
@@ -77,7 +77,7 @@ namespace Microsoft.Iris
           int imageHeight,
           int stride,
           RawImageFormat format,
-          IntPtr data,
+          byte[] data,
           int maximumWidth,
           int maximumHeight,
           bool flippable)
@@ -91,7 +91,7 @@ namespace Microsoft.Iris
           int imageHeight,
           int stride,
           RawImageFormat format,
-          IntPtr data,
+          byte[] data,
           int maximumWidth,
           int maximumHeight,
           bool flippable,

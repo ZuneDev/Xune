@@ -19,7 +19,7 @@ namespace Microsoft.Iris.Drawing
         private Size _imageSize;
         private int _stride;
         private SurfaceFormat _format;
-        private IntPtr _data;
+        private byte[] _data;
         private uint _length;
         private RawImageItemKey _cacheItemKey;
 
@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Drawing
           Size imageSize,
           int stride,
           SurfaceFormat format,
-          IntPtr data,
+          byte[] data,
           bool takeOwnership,
           Inset nineGrid,
           Size maximumSize,
@@ -46,8 +46,8 @@ namespace Microsoft.Iris.Drawing
             _length = (uint)cbCopy;
             if (!takeOwnership)
             {
-                _data = NativeApi.MemAlloc(_length, false);
-                Memory.Copy(_data, data, cbCopy);
+                _data = new byte[_length];
+                Array.Copy(_data, data, cbCopy);
             }
             else
                 _data = data;
@@ -55,15 +55,7 @@ namespace Microsoft.Iris.Drawing
 
         ~RawImage()
         {
-            FreeBuffer(_data);
-            _data = IntPtr.Zero;
-        }
-
-        internal static void FreeBuffer(IntPtr data)
-        {
-            if (!(data != IntPtr.Zero))
-                return;
-            NativeApi.MemFree(data);
+            _data = null;
         }
 
         protected override ImageCacheItem GetCacheItem(out bool needAsyncLoad)
@@ -78,7 +70,7 @@ namespace Microsoft.Iris.Drawing
             if (imageCacheItem == null)
             {
                 Size maxSize = ClampSize(_maximumSize);
-                imageCacheItem = new RawImageItem(UISession.Default.RenderSession, this, str, _data, _length, _imageSize, _stride, _format, maxSize, IsFlipped, _antialiasEdges);
+                imageCacheItem = new RawImageItem(UISession.Default.RenderSession, this, str, _data, _imageSize, _stride, _format, maxSize, IsFlipped, _antialiasEdges);
                 instance.Add(_cacheItemKey, imageCacheItem);
             }
             needAsyncLoad = false;

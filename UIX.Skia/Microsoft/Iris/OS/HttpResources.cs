@@ -7,25 +7,27 @@
 using Microsoft.Iris.Data;
 using Microsoft.Iris.Session;
 using System;
+using System.Net.Http;
 
 namespace Microsoft.Iris.OS
 {
-    internal class HttpResources : IResourceProvider
+    internal class HttpResources : IResourceProvider, IDisposable
     {
         private static HttpResources s_instance = new HttpResources();
         private static EventHandler s_activationChangeHandler;
+        private static HttpClient s_client;
 
         public static void Startup()
         {
             ResourceManager.Instance.RegisterSource("http", s_instance);
-            NativeApi.SpHttpStartup();
+            s_client = new HttpClient();
         }
 
         public static void Shutdown()
         {
             if (s_activationChangeHandler != null)
                 UISession.Default.Form.ActivationChange -= s_activationChangeHandler;
-            NativeApi.SpHttpShutdown();
+            s_client.Dispose();
         }
 
         private static void OnActivationChanged(object sender, EventArgs args) => NativeApi.SpHttpFlushProxyCache();
@@ -39,5 +41,9 @@ namespace Microsoft.Iris.OS
             }
             return new HttpResource(url, forceSynchronous);
         }
+
+        public void Dispose() => Shutdown();
+
+        public static HttpClient Client => s_client;
     }
 }

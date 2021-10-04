@@ -13,8 +13,7 @@ namespace Microsoft.Iris.Data
     {
         protected string _uri;
         private bool _forceSynchronous;
-        private IntPtr _buffer;
-        private uint _length;
+        private byte[] _buffer;
         private bool _requiresMemoryFree;
         private ResourceStatus _status;
         private string _errorDetails;
@@ -57,7 +56,7 @@ namespace Microsoft.Iris.Data
 
         public void Free() => Free(null);
 
-        public void Free(ResourceAcquisitionCompleteHandler completeHandler)
+        public unsafe void Free(ResourceAcquisitionCompleteHandler completeHandler)
         {
             --_acquisitions;
             if (completeHandler != null)
@@ -66,11 +65,11 @@ namespace Microsoft.Iris.Data
                 return;
             if (_status == ResourceStatus.Acquiring)
                 CancelAcquisition();
-            else if (_buffer != IntPtr.Zero)
+            else if (_buffer != null)
             {
                 if (_requiresMemoryFree)
-                    FreeNativeBuffer(_buffer);
-                _buffer = IntPtr.Zero;
+                    FreeNativeBuffer(new IntPtr(_buffer.AsMemory().Pin().Pointer));
+                _buffer = null;
             }
             _status = ResourceStatus.NeedsAcquire;
         }
@@ -83,9 +82,9 @@ namespace Microsoft.Iris.Data
 
         public string ErrorDetails => _errorDetails;
 
-        public IntPtr Buffer => _buffer;
+        public byte[] Buffer => _buffer;
 
-        public uint Length => _length;
+        public int Length => _buffer.Length;
 
         public bool ForceSynchronous => _forceSynchronous;
 
@@ -94,15 +93,13 @@ namespace Microsoft.Iris.Data
         protected abstract void CancelAcquisition();
 
         protected void NotifyAcquisitionComplete(
-          IntPtr buffer,
-          uint length,
+          byte[] buffer,
           bool requiresMemoryFree,
           string errorDetails)
         {
             _buffer = buffer;
-            _length = length;
             _requiresMemoryFree = requiresMemoryFree;
-            if (buffer != IntPtr.Zero)
+            if (buffer != null)
             {
                 _status = ResourceStatus.Available;
             }

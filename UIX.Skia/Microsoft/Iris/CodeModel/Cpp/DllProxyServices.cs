@@ -184,7 +184,8 @@ namespace Microsoft.Iris.CodeModel.Cpp
             bool antialiasEdges;
             CrackDecodeParams(decodeParams, out maximumSize, out flippable, out antialiasEdges);
             Size imageSize = new Size(imageInfo->width, imageInfo->height);
-            return GetImageHandle(new RawImage(ID, imageSize, imageInfo->stride, surfaceFormat, imageInfo->bits, true, Inset.Zero, maximumSize, flippable, antialiasEdges), ID);
+            var bytes = new Span<byte>(imageInfo->bits.ToPointer(), imageInfo->height * imageInfo->stride);
+            return GetImageHandle(new RawImage(ID, imageSize, imageInfo->stride, surfaceFormat, bytes.ToArray(), true, Inset.Zero, maximumSize, flippable, antialiasEdges), ID);
         }
 
         unsafe void IRawUIXServices.RemoveCachedImage(

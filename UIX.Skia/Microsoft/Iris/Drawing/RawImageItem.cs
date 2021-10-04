@@ -20,8 +20,7 @@ namespace Microsoft.Iris.Drawing
           IRenderSession renderSession,
           RawImage rawImage,
           string source,
-          IntPtr data,
-          uint length,
+          byte[] data,
           Size imageSize,
           int stride,
           SurfaceFormat format,
@@ -32,7 +31,7 @@ namespace Microsoft.Iris.Drawing
         {
             _oKeepAlive = rawImage;
             SetSize(imageSize);
-            SetBuffer(data, length);
+            SetBuffer(data);
             _stride = stride;
             _format = format;
         }
@@ -40,10 +39,10 @@ namespace Microsoft.Iris.Drawing
         protected override void OnDispose()
         {
             _oKeepAlive = null;
-            m_buffer = IntPtr.Zero;
+            m_buffer = null;
             base.OnDispose();
         }
 
-        protected override bool DoImageLoad() => ImageLoader.FromRaw(RenderImage, m_buffer, (int)m_length, m_size, _stride, _format, m_req.MaximumSize, m_req.Flippable, m_req.AntialiasEdges, m_req.BorderWidth, m_req.BorderColor, out m_info);
+        protected override bool DoImageLoad() => ImageLoader.FromRaw(RenderImage, m_buffer, m_size, _stride, _format, m_req.MaximumSize, m_req.Flippable, m_req.AntialiasEdges, m_req.BorderWidth, m_req.BorderColor, out m_info);
     }
 }

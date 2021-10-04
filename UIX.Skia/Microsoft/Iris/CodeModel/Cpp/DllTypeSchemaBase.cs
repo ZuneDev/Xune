@@ -176,7 +176,7 @@ namespace Microsoft.Iris.CodeModel.Cpp
         {
         }
 
-        public override object DecodeBinary(ByteCodeReader reader) => (object)null;
+        public override object DecodeBinary(ManagedByteCodeReader reader) => (object)null;
 
         public override bool SupportsBinaryEncoding => false;
 

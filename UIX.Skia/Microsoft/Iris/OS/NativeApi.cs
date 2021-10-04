@@ -10,6 +10,7 @@ using Microsoft.Iris.Render;
 using Microsoft.Iris.RenderAPI;
 using Microsoft.Iris.RenderAPI.Drawing;
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -69,13 +70,22 @@ namespace Microsoft.Iris.OS
             return !(buffer == IntPtr.Zero) ? buffer : throw new OutOfMemoryException();
         }
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Unicode)]
-        public static extern bool SpLoadBinaryResource(
-          string moduleBaseName,
-          string resourceName,
-          bool allowLoadAsCode,
-          out IntPtr pBits,
-          out uint size);
+        public static bool SpLoadBinaryResource(string moduleBaseName, string resourceName, bool allowLoadAsCode, out byte[] pBits)
+        {
+            pBits = null;
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            System.IO.MemoryStream stream = new System.IO.MemoryStream();
+
+            var ress = assembly.GetManifestResourceNames();
+            using (var input = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (input == null) return false;
+                input.CopyTo(stream);
+            }
+
+            pBits = stream.GetBuffer();
+            return true;
+        }
 
         [DllImport("UIXRender.dll", CharSet = CharSet.Unicode)]
         public static extern bool SpLoadFontResource(string moduleBaseName, string resourceName);
@@ -480,8 +490,12 @@ namespace Microsoft.Iris.OS
           uint entryCount,
           [MarshalAs(UnmanagedType.LPArray)] NativeApi.NativeDataMappingEntry[] entries);
 
-        [DllImport("UIXRender.dll", CharSet = CharSet.Unicode)]
-        public static extern uint SpRegisterNativeServicesCallbacks([MarshalAs(UnmanagedType.Interface)] IRawUIXServices rawServices);
+        public static uint SpRegisterNativeServicesCallbacks(IRawUIXServices rawServices)
+        {
+            Debug.Trace.WriteLine(Debug.TraceCategory.NativeCodeModel, "Attempted to call {0} with {1}='{2}'",
+                nameof(SpRegisterNativeServicesCallbacks), nameof(rawServices), rawServices);
+            return 0;
+        }
 
         [DllImport("UIXRender.dll", CharSet = CharSet.Unicode)]
         public static extern void SpUnregisterNativeServicesCallbacks();
@@ -518,10 +532,83 @@ namespace Microsoft.Iris.OS
           string source,
           out IntPtr nativeImage);
 
-        [DllImport("UIXRender.dll")]
-        public static extern HRESULT SpCreateNotifyWindow(
-          out IntPtr handle,
-          NativeApi.NotifyWindowCallback callback);
+        public static HRESULT SpCreateNotifyWindow(out IntPtr handle, NativeApi.NotifyWindowCallback callback)
+        {
+            ulong hresult = 0;
+            int intHresult = 0;
+            Vanara.PInvoke.Win32Error lastError;
+            string winTitle = "UIX Host Window";
+            Vanara.PInvoke.User32.SafeHWND uixHostWindow = null;
+            Vanara.PInvoke.HINSTANCE module;
+
+            Vanara.PInvoke.User32.WindowProc wndProc = (Vanara.PInvoke.HWND hwnd, uint uMsg, IntPtr wParam, IntPtr lParam) =>
+            {
+                if (uMsg == 0x3D && callback != null)
+                {
+                    callback(NotificationType.GetObject, (int)(((uint)wParam.ToInt32()) & 0xffffffff), (int)(((uint)lParam.ToInt32()) & 0xffffffff));
+                }
+                else
+                {
+                    Vanara.PInvoke.User32.DefWindowProc(hwnd, uMsg, wParam, lParam);
+                }
+                return IntPtr.Zero;
+            };
+
+            var winClass = Vanara.PInvoke.User32.RegisterClassEx(new Vanara.PInvoke.User32.WNDCLASSEX
+            {
+                lpfnWndProc = wndProc,
+                cbSize = 0x50,
+                hInstance = Vanara.PInvoke.Kernel32.GetModuleHandle(),
+                lpszClassName = "UIX Host Window"
+            });
+            if (winClass == 0)
+            {
+                lastError = Vanara.PInvoke.Kernel32.GetLastError();
+                hresult = hresult & 0xffffffff;
+            }
+            else
+            {
+                hresult = 0;
+            }
+
+            handle = IntPtr.Zero;
+
+            if (-1 < (int)hresult)
+            {
+                module = Vanara.PInvoke.Kernel32.GetModuleHandle();
+                uixHostWindow =
+                     Vanara.PInvoke.User32.CreateWindowEx(Vanara.PInvoke.User32.WindowStylesEx.WS_EX_CONTROLPARENT | Vanara.PInvoke.User32.WindowStylesEx.WS_EX_APPWINDOW,
+                        "UIX Host Window", "", 0, -0x80000000, -0x80000000, -0x80000000,
+                        -0x80000000, Vanara.PInvoke.HWND.NULL, IntPtr.Zero, module, IntPtr.Zero);
+                if (uixHostWindow.IsNull)
+                {
+                    var err = Marshal.GetLastWin32Error();
+                    lastError = Vanara.PInvoke.Kernel32.GetLastError();
+                    //hresult = FUN_3109b944(lastError);
+                    hresult = hresult & 0xffffffff;
+                }
+                else
+                {
+                    hresult = 0;
+                }
+                intHresult = (int)hresult;
+                if (intHresult < 0) goto LAB_310bf9ed;
+                hresult = 0;
+                handle = uixHostWindow.DangerousGetHandle();
+            }
+        LAB_310bf9ed:
+            if (intHresult != 0)
+            {
+                if (uixHostWindow != null && !uixHostWindow.IsNull)
+                {
+                    Vanara.PInvoke.User32.DestroyWindow(uixHostWindow);
+                    uixHostWindow = null;
+                }
+                module = Vanara.PInvoke.Kernel32.GetModuleHandle();
+                Vanara.PInvoke.User32.UnregisterClass(winTitle, module);
+            }
+            return new HRESULT((int)hresult);
+        }
 
         [DllImport("UIXRender.dll")]
         public static extern void SpDestroyNotifyWindow();
@@ -823,6 +910,21 @@ namespace Microsoft.Iris.OS
         public static extern void SpGetMouseCursorInfo(out int height, out int hotY);
 
         public static string PtrToStringUni(IntPtr psz, int length) => length == 0 ? "" : Marshal.PtrToStringUni(psz, length);
+
+        [DllImport("user32.dll", SetLastError = true, EntryPoint = "CreateWindowExA")]
+        public static extern IntPtr CreateWindowExA(
+          ushort dwExStyle,
+          string lpClassName,
+          string lpWindowName,
+          ushort dwStyle,
+          int X,
+          int Y,
+          int nWidth,
+          int nHeight,
+          HWND hWndParent,
+          IntPtr hMenu,
+          IntPtr hInstance,
+          IntPtr lpParam);
 
         public delegate void DownloadCompleteHandler(
           IntPtr handle,

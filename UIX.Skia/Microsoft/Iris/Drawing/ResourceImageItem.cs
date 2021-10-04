@@ -112,7 +112,7 @@ namespace Microsoft.Iris.Drawing
             }
             else
             {
-                SetBuffer(_resource.Buffer, _resource.Length);
+                SetBuffer(_resource.Buffer);
                 if (_resource.Length <= 0U)
                     return;
                 if (!ProcessBuffer())

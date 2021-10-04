@@ -30,7 +30,7 @@ namespace Microsoft.Iris.Render.Extensions
           Size sizeActualPxl,
           int nStride,
           SurfaceFormat nFormat,
-          IntPtr pvData,
+          byte[] pvData,
           [MarshalAs(UnmanagedType.LPStruct), In] ImageRequirements req,
           BitmapOptions nOptions,
           out HSpBitmap hBmp,
@@ -52,7 +52,7 @@ namespace Microsoft.Iris.Render.Extensions
         }
 
         internal static HRESULT SpBitmapLoadBuffer(
-          IntPtr pvSrc,
+          byte[] pvSrc,
           uint cbSize,
           [MarshalAs(UnmanagedType.LPStruct), In] ImageRequirements req,
           BitmapOptions nOptions,
@@ -68,7 +68,7 @@ namespace Microsoft.Iris.Render.Extensions
         }
 
         internal static HRESULT SpSoundLoadBuffer(
-          IntPtr pBuffer,
+          byte[] pBuffer,
           int dwSize,
           SoundOptions options,
           out HSpSound hSound,

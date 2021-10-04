@@ -21,19 +21,19 @@ namespace Microsoft.Iris.Render.Extensions
         {
             Win32Api.HINSTANCE hInstance = ModuleManager.Instance.LoadModule(moduleName);
             Debug2.Validate(hInstance != Win32Api.HINSTANCE.NULL, typeof(ArgumentException), nameof(moduleName));
-            IntPtr resourceData;
+            byte[] resourceData;
             int resourceSize;
             ModuleManager.Instance.LoadResource(hInstance, resourceId, out resourceData, out resourceSize);
             FromMemory(resourceData, resourceSize, out soundDataHandle, out soundDataInfo);
         }
 
         public static void FromMemory(
-          IntPtr rawSoundData,
+          byte[] rawSoundData,
           int rawSoundDataSize,
           out ExtensionsApi.HSpSound soundDataHandle,
           out ExtensionsApi.SoundInformation soundDataInfo)
         {
-            Debug2.Validate(rawSoundData != IntPtr.Zero, typeof(ArgumentNullException), nameof(rawSoundData));
+            Debug2.Validate(rawSoundData != null, typeof(ArgumentNullException), nameof(rawSoundData));
             Debug2.Validate(rawSoundDataSize > 0, typeof(ArgumentException), "Invalid sound data size");
             ExtensionsApi.SoundOptions options = ExtensionsApi.SoundOptions.Decode;
             ExtensionsApi.SoundInformation info = new ExtensionsApi.SoundInformation();

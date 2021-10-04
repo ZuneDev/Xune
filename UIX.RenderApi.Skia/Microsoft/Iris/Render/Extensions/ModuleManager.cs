@@ -53,10 +53,10 @@ namespace Microsoft.Iris.Render.Extensions
             return hinstance;
         }
 
-        public void LoadResource(
+        public unsafe void LoadResource(
           Win32Api.HINSTANCE hInstance,
           string resourceId,
-          out IntPtr resourceData,
+          out byte[] resourceData,
           out int resourceSize)
         {
             IntPtr resource = Win32Api.FindResource(hInstance.h, resourceId, new IntPtr(10));
@@ -66,7 +66,7 @@ namespace Microsoft.Iris.Render.Extensions
             IntPtr num1 = Win32Api.LockResource(i);
             Debug2.Validate(num1 != IntPtr.Zero, typeof(InvalidOperationException), "Failed to aquire pointer to resource data");
             int num2 = Win32Api.SizeofResource(hInstance.h, resource);
-            resourceData = num1;
+            resourceData = new Span<byte>(num1.ToPointer(), num2).ToArray();
             resourceSize = num2;
         }
     }

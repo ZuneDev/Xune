@@ -7,6 +7,7 @@
 using Microsoft.Iris.Data;
 using Microsoft.Iris.Markup;
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.OS
@@ -21,12 +22,14 @@ namespace Microsoft.Iris.OS
         private int _linePosition;
         private bool _beforeFirstAttribute;
 
-        public NativeXmlReader(Resource resource)
-          : this(false)
-          => Init(resource.Buffer, (int)resource.Length, false);
+        public unsafe NativeXmlReader(Resource resource) : this(false)
+        {
+            var span = new Span<byte>(resource.Buffer);
+            void* ptr = Unsafe.AsPointer(ref span.GetPinnableReference());
+            Init(new IntPtr(ptr), (int)resource.Length, false);
+        }
 
-        public NativeXmlReader(string content, bool isFragment)
-          : this(false)
+        public NativeXmlReader(string content, bool isFragment) : this(false)
         {
             _gcHandle = GCHandle.Alloc(content, GCHandleType.Pinned);
             Init(_gcHandle.AddrOfPinnedObject(), content.Length * 2, isFragment);

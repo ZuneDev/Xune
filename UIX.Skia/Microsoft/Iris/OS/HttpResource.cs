@@ -6,6 +6,8 @@
 
 using Microsoft.Iris.Data;
 using System;
+using System.Net.Http;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.Iris.OS
 {
@@ -21,20 +23,22 @@ namespace Microsoft.Iris.OS
 
         public override string Identifier => _uri;
 
-        protected override void StartAcquisition(bool forceSynchronous)
+        protected override async void StartAcquisition(bool forceSynchronous)
         {
-            _pendingCallback = new NativeApi.DownloadCompleteHandler(OnHttpDownloadComplete);
-            int num = (int)NativeApi.SpHttpDownload(_uri, _pendingCallback, IntPtr.Zero, out _handle);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            HttpResources.Client.GetAsync(_uri).ContinueWith(resp => OnHttpDownloadComplete(resp.Result));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        private void OnHttpDownloadComplete(IntPtr handle, int error, uint length, IntPtr context)
+        private unsafe void OnHttpDownloadComplete(HttpResponseMessage resp)
         {
-            IntPtr buffer = IntPtr.Zero;
+            byte[] buffer = null;
             string errorDetails = null;
+            int error = resp.IsSuccessStatusCode ? 0 : 3;
             switch (error)
             {
                 case 0:
-                    buffer = NativeApi.DownloadGetBuffer(_handle);
+                    buffer = resp.Content.ReadAsByteArrayAsync().Result;
                     break;
                 case 1:
                     errorDetails = string.Format("Invalid URI: '{0}'", _uri);
@@ -46,10 +50,9 @@ namespace Microsoft.Iris.OS
                     errorDetails = string.Format("Failed to complete download from '{0}'", _uri);
                     break;
             }
-            int num = (int)NativeApi.SpDownloadClose(_handle);
             _handle = IntPtr.Zero;
             _pendingCallback = null;
-            NotifyAcquisitionComplete(buffer, length, true, errorDetails);
+            NotifyAcquisitionComplete(buffer, true, errorDetails);
         }
 
         protected override void CancelAcquisition()

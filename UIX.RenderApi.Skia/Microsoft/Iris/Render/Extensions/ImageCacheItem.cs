@@ -18,8 +18,7 @@ namespace Microsoft.Iris.Render.Extensions
         protected ImageRequirements m_req;
         protected Size m_size;
         protected BitmapInformation m_info;
-        protected IntPtr m_buffer;
-        protected uint m_length;
+        protected byte[] m_buffer;
         private int m_countUsers;
         private int m_countLoadsInProgress;
         private bool m_fFullLoadRequested;
@@ -30,15 +29,13 @@ namespace Microsoft.Iris.Render.Extensions
         public ImageCacheItem(
           IRenderSession renderSession,
           string identifier,
-          IntPtr buffer,
-          uint length,
+          byte[] buffer,
           Size maxSize,
           bool flippable,
           bool antialiasEdges)
           : this(renderSession, identifier, maxSize, flippable, antialiasEdges)
         {
             this.m_buffer = buffer;
-            this.m_length = length;
         }
 
         public ImageCacheItem(
@@ -156,10 +153,9 @@ namespace Microsoft.Iris.Render.Extensions
 
         public virtual void StartLoad() => this.LoadBuffer();
 
-        protected void SetBuffer(IntPtr buffer, uint length)
+        protected void SetBuffer(byte[] buffer)
         {
             this.m_buffer = buffer;
-            this.m_length = length;
         }
 
         protected void SetSize(Size size) => this.m_size = size;
@@ -229,7 +225,7 @@ namespace Microsoft.Iris.Render.Extensions
         protected virtual bool DoHeaderLoad()
         {
             ImageHeader header;
-            if (!(this.m_buffer != IntPtr.Zero) || this.m_length <= 0U || !ImageLoader.LoadHeader(this.m_buffer, (int)this.m_length, this.m_req, out header))
+            if (!(this.m_buffer != null) || this.m_buffer.Length <= 0U || !ImageLoader.LoadHeader(this.m_buffer, this.m_req, out header))
                 return false;
             this.SetSize(header.sizeActualPxl);
             return true;
@@ -240,7 +236,7 @@ namespace Microsoft.Iris.Render.Extensions
             BitmapInformation bitmapInfo = null;
             bool flag = false;
             if (this.m_image != null)
-                flag = !(this.m_buffer == IntPtr.Zero) ? ImageLoader.FromBuffer(this.m_image, this.m_buffer, (int)this.m_length, this.m_req.MaximumSize, this.m_req.Flippable, this.m_req.AntialiasEdges, this.m_req.BorderWidth, this.m_req.BorderColor, out bitmapInfo) : ImageLoader.FromFile(this.m_image, this.m_image.Identifier, this.m_req.MaximumSize, this.m_req.Flippable, this.m_req.AntialiasEdges, this.m_req.BorderWidth, this.m_req.BorderColor, out bitmapInfo);
+                flag = !(this.m_buffer == null) ? ImageLoader.FromBuffer(this.m_image, this.m_buffer, this.m_req.MaximumSize, this.m_req.Flippable, this.m_req.AntialiasEdges, this.m_req.BorderWidth, this.m_req.BorderColor, out bitmapInfo) : ImageLoader.FromFile(this.m_image, this.m_image.Identifier, this.m_req.MaximumSize, this.m_req.Flippable, this.m_req.AntialiasEdges, this.m_req.BorderWidth, this.m_req.BorderColor, out bitmapInfo);
             if (flag)
             {
                 this.m_info = bitmapInfo;
