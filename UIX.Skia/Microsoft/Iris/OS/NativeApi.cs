@@ -76,8 +76,7 @@ namespace Microsoft.Iris.OS
             Assembly assembly = Assembly.GetExecutingAssembly();
             System.IO.MemoryStream stream = new System.IO.MemoryStream();
 
-            var ress = assembly.GetManifestResourceNames();
-            using (var input = assembly.GetManifestResourceStream(resourceName))
+            using (var input = assembly.GetManifestResourceStream(resourceName.ToUpperInvariant()))
             {
                 if (input == null) return false;
                 input.CopyTo(stream);

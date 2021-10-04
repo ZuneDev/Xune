@@ -11,6 +11,10 @@
         <UseWpf>true</UseWpf>
     </PropertyGroup>
     <ItemGroup>
+      <EmbeddedResource LogicalName="ACQUIRINGIMAGE.PNG" Include="Resources\ACQUIRINGIMAGE.PNG" />
+      <EmbeddedResource LogicalName="ERRORIMAGE.PNG" Include="Resources\ERRORIMAGE.PNG" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="SkiaSharp" Version="2.80.3" />
         <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
         <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
