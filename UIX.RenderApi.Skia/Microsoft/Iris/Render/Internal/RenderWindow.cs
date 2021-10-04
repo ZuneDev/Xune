@@ -119,7 +119,7 @@ namespace Microsoft.Iris.Render.Internal
 
         public override void Initialize() => BuildRootContainer();
 
-        private GraphicsDevice CreateGraphicsDevice(
+        internal override GraphicsDevice CreateGraphicsDevice(
           RenderSession session,
           GraphicsDeviceType graphicsDeviceType,
           GraphicsRenderingQuality renderingQuality)

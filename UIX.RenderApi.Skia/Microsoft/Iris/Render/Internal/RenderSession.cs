@@ -61,7 +61,7 @@ namespace Microsoft.Iris.Render.Internal
             }
         }
 
-        IGraphicsDevice IRenderSession.GraphicsDevice => null;// m_renderEngine.Window.GraphicsDevice;
+        IGraphicsDevice IRenderSession.GraphicsDevice => m_renderEngine.Window.GraphicsDevice;
 
         ISoundDevice IRenderSession.SoundDevice => m_renderEngine.SoundDevice;
 

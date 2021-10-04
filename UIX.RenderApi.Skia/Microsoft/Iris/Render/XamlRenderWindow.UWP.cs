@@ -1,6 +1,7 @@
 ﻿#if UWP
 
 using Microsoft.Iris.Input;
+using Microsoft.Iris.Library;
 using Microsoft.Iris.Render.Graphics;
 using Microsoft.Iris.Render.Internal;
 using System;
@@ -17,6 +18,7 @@ namespace Microsoft.Iris.Render
     public sealed class XamlRenderWindow : RenderWindowBase
     {
         private bool isDragging = false;
+        private GraphicsDevice graphicsDevice;
         private Window XamlWindow { get; set; }
         private ApplicationView CurrentView => ApplicationView.GetForCurrentView();
         private Rect VisibleBounds => CurrentView.VisibleBounds;
@@ -36,6 +38,16 @@ namespace Microsoft.Iris.Render
             {
                 elem.Loaded += XamlWindowContent_Loaded;
             }
+        }
+
+        internal override GraphicsDevice CreateGraphicsDevice(
+          RenderSession session,
+          GraphicsDeviceType graphicsDeviceType,
+          GraphicsRenderingQuality renderingQuality)
+        {
+            if (graphicsDeviceType.FulfillsRequirement(GraphicsDeviceType.Skia))
+                graphicsDevice = new SkiaGraphicsDevice(session);
+            return GraphicsDevice;
         }
 
         public override int Left => (int)VisibleBounds.Left;
@@ -177,7 +189,7 @@ namespace Microsoft.Iris.Render
         internal override ColorF OutlineAllColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         internal override ColorF OutlineMarkedColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        internal override GraphicsDevice GraphicsDevice => throw new NotImplementedException();
+        internal override GraphicsDevice GraphicsDevice => graphicsDevice;
 
         internal override RenderSession Session => throw new NotImplementedException();
 

@@ -7,6 +7,11 @@ namespace Microsoft.Iris.Render
 {
     public abstract class RenderWindowBase : IRenderWindow, ITreeOwner
     {
+        internal abstract GraphicsDevice CreateGraphicsDevice(
+          RenderSession session,
+          GraphicsDeviceType graphicsDeviceType,
+          GraphicsRenderingQuality renderingQuality);
+
         public abstract int Left { get; }
         public abstract int Top { get; }
         public abstract int Right { get; }

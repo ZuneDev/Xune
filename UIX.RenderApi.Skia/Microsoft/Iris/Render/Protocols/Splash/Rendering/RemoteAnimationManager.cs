@@ -33,19 +33,16 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 
         public unsafe void SendSetAnimationRate(int nFramesPerSecond)
         {
-            Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
             m_framesPerSecond = nFramesPerSecond;
         }
 
         public unsafe void SendPulseTimeAdvance(int nPulseMs)
         {
-            Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
             m_pulseMs = nPulseMs;
         }
 
         public unsafe void SendSetGlobalSpeedAdjustment(float flFactor)
         {
-            Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
             m_flFactor = flFactor;
         }
 

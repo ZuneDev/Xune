@@ -34,6 +34,7 @@ namespace Microsoft.Iris.Render.Internal
             m_localContextId = AllocateContextId();
             m_primaryToken = new RenderToken(engineInfo, m_localContextId, m_engineContextId, RENDERGROUP.NULL);
             m_messagingSession = new MessagingSession(renderHost, this.m_primaryToken);
+            m_renderWindow = engineInfo.Window;
             this.m_renderSession = new RenderSession(this);
             this.m_renderCaps = new RenderCaps(engineInfo.Surface);
             this.m_renderCaps.RequestCaps();
@@ -91,6 +92,8 @@ namespace Microsoft.Iris.Render.Internal
             m_renderSession.Initialize();
             // TODO: Set up input system
             //m_inputSystem = new InputSystem(this.m_renderSession, this.m_renderWindow);
+
+            m_renderWindow.CreateGraphicsDevice(m_renderSession, m_typeGraphics, renderingQuality);
         }
 
         IRenderSession IRenderEngine.Session => m_renderSession;//throw new NotSupportedException("Skia does not use render sessions"); m_renderSession;
