@@ -22,7 +22,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteDouble(num);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => reader.ReadDouble();
+        private static object DecodeBinary(ManagedByteCodeReader reader) => reader.ReadDouble();
 
         private static Result ConvertFromString(object valueObj, out object instanceObj)
         {

@@ -74,7 +74,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteInt32(inset.Bottom);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => new Inset(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+        private static object DecodeBinary(ManagedByteCodeReader reader) => new Inset(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
 
         private static Result ConvertFromString(object valueObj, out object instanceObj)
         {

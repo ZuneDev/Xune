@@ -65,7 +65,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteSingle(interpolation.EasePercent);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => new Interpolation()
+        private static object DecodeBinary(ManagedByteCodeReader reader) => new Interpolation()
         {
             Type = (InterpolationType)reader.ReadInt32(),
             Weight = reader.ReadSingle(),

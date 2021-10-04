@@ -20,7 +20,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteBool(flag);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => BooleanBoxes.Box(reader.ReadBool());
+        private static object DecodeBinary(ManagedByteCodeReader reader) => BooleanBoxes.Box(reader.ReadBool());
 
         private static Result ConvertFromString(object valueObj, out object instanceObj)
         {

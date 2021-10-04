@@ -14,7 +14,7 @@ namespace Microsoft.Iris.Markup
         private MarkupImportTables _importTables;
         private LoadResult[] _sharedDependenciesTable;
         private SourceMarkupImportTables _sourceMarkupImportTables;
-        private ByteCodeReader _stringTableReader;
+        private ManagedByteCodeReader _stringTableReader;
 
         public MarkupBinaryDataTable(string uri, int stringCount)
         {
@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Markup
         {
         }
 
-        public void SetStringTableReader(ByteCodeReader stringTableReader) => _stringTableReader = stringTableReader;
+        public void SetStringTableReader(ManagedByteCodeReader stringTableReader) => _stringTableReader = stringTableReader;
 
         public string Uri => _uri;
 

@@ -107,7 +107,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteInt32(rectangle.Bottom);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => Rectangle.FromLTRB(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+        private static object DecodeBinary(ManagedByteCodeReader reader) => Rectangle.FromLTRB(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
 
         private static object CallContainsPoint(object instanceObj, object[] parameters) => BooleanBoxes.Box(((Rectangle)instanceObj).Contains((Point)parameters[0]));
 

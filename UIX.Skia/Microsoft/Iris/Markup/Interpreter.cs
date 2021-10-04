@@ -15,7 +15,7 @@ namespace Microsoft.Iris.Markup
         public static object Run(InterpreterContext context)
         {
             object result = null;
-            ByteCodeReader byteCodeReader = null;
+            ManagedByteCodeReader byteCodeReader = null;
             long num = -1L;
             bool flag = true;
             ErrorManager.EnterContext(context);
@@ -46,7 +46,7 @@ namespace Microsoft.Iris.Markup
         }
 
         // Token: 0x06000F22 RID: 3874 RVA: 0x00029EF8 File Offset: 0x00028EF8
-        private static object Run(InterpreterContext context, ByteCodeReader reader)
+        private static object Run(InterpreterContext context, ManagedByteCodeReader reader)
         {
             MarkupLoadResult loadResult = context.LoadResult;
             IMarkupTypeBase instance = context.Instance;
@@ -841,7 +841,7 @@ namespace Microsoft.Iris.Markup
         /// <summary>
         /// Attempts to generate source UIX from a compiled result
         /// </summary>
-        private static object RunDecompile(InterpreterContext context, ByteCodeReader reader)
+        private static object RunDecompile(InterpreterContext context, ManagedByteCodeReader reader)
         {
             Stack xmlStack = new Stack();
 

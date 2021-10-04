@@ -23,7 +23,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteString(str);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => reader.ReadString();
+        private static object DecodeBinary(ManagedByteCodeReader reader) => reader.ReadString();
 
         private static Result ConvertFromObject(object valueObj, out object instanceObj)
         {

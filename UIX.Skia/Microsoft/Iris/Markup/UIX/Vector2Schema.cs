@@ -70,7 +70,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteSingle(vector2.Y);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => new Vector2(reader.ReadSingle(), reader.ReadSingle());
+        private static object DecodeBinary(ManagedByteCodeReader reader) => new Vector2(reader.ReadSingle(), reader.ReadSingle());
 
         private static Result ConvertFromSize(object valueObj, out object instanceObj)
         {

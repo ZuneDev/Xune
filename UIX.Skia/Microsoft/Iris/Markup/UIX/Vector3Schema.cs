@@ -84,7 +84,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteSingle(vector3.Z);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+        private static object DecodeBinary(ManagedByteCodeReader reader) => new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
         private static bool IsConversionSupported(TypeSchema fromType) => StringSchema.Type.IsAssignableFrom(fromType);
 

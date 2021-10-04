@@ -274,7 +274,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteUInt32(color.Value);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => new Color(reader.ReadUInt32());
+        private static object DecodeBinary(ManagedByteCodeReader reader) => new Color(reader.ReadUInt32());
 
         private static Result ConvertFromString(object valueObj, out object instanceObj)
         {

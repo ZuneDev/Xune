@@ -50,7 +50,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteByte((byte)itemAlignment.Vertical);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => new ItemAlignment((Alignment)reader.ReadByte(), (Alignment)reader.ReadByte());
+        private static object DecodeBinary(ManagedByteCodeReader reader) => new ItemAlignment((Alignment)reader.ReadByte(), (Alignment)reader.ReadByte());
 
         private static Result ConvertFromString(object valueObj, out object instanceObj)
         {

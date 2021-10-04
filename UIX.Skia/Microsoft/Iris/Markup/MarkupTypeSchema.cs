@@ -297,7 +297,7 @@ namespace Microsoft.Iris.Markup
         {
         }
 
-        public override object DecodeBinary(ByteCodeReader reader) => (object)null;
+        public override object DecodeBinary(ManagedByteCodeReader reader) => (object)null;
 
         public override object PerformOperation(object left, object right, OperationType op) => (object)null;
 

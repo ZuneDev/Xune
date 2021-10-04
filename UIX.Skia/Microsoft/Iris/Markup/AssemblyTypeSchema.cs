@@ -292,7 +292,7 @@ namespace Microsoft.Iris.Markup
             }
         }
 
-        public override object DecodeBinary(ByteCodeReader reader)
+        public override object DecodeBinary(ManagedByteCodeReader reader)
         {
             object obj;
             if (_type.IsEnum)

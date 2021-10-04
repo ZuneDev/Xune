@@ -230,7 +230,7 @@ namespace Microsoft.Iris.Markup
 
         public override void EncodeBinary(ByteCodeWriter writer, object instance) => _encodeBinary(writer, instance);
 
-        public override object DecodeBinary(ByteCodeReader reader) => _decodeBinary(reader);
+        public override object DecodeBinary(ManagedByteCodeReader reader) => _decodeBinary(reader);
 
         public override bool SupportsBinaryEncoding => _encodeBinary != null;
 

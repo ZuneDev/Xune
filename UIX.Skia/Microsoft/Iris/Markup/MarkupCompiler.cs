@@ -84,17 +84,17 @@ namespace Microsoft.Iris.Markup
         {
             ErrorWatermark watermark = ErrorManager.Watermark;
             IntPtr invalidHandleValue = Win32Api.INVALID_HANDLE_VALUE;
-            ByteCodeReader reader = writer.CreateReader();
+            ManagedByteCodeReader reader = writer.CreateReader();
             reader.DeclareOwner(typeof(MarkupSystem));
             IntPtr file = Win32Api.CreateFile(outputFile, 1073741824U, 0U, IntPtr.Zero, 2U, 0U, IntPtr.Zero);
             if (file == Win32Api.INVALID_HANDLE_VALUE)
                 ErrorManager.ReportError("Unable to open output file '{0}'.  Error code {1}", outputFile, Marshal.GetLastWin32Error());
             if (!watermark.ErrorsDetected)
             {
-                uint size = 0;
+                long size = 0;
                 IntPtr intPtr = reader.ToIntPtr(out size);
                 uint lpNumberOfBytesWritten = 0;
-                if (!Win32Api.WriteFile(file, intPtr, size, out lpNumberOfBytesWritten, IntPtr.Zero))
+                if (!Win32Api.WriteFile(file, intPtr, (uint)size, out lpNumberOfBytesWritten, IntPtr.Zero))
                     ErrorManager.ReportError("An error occurred while saving data to output file '{0}'.  Error code {1}", outputFile, Marshal.GetLastWin32Error());
             }
             if (file != Win32Api.INVALID_HANDLE_VALUE)
@@ -487,7 +487,7 @@ namespace Microsoft.Iris.Markup
         {
             _writer.Overwrite(_objectSectionStartFixup, _writer.DataSize);
             _writer.Write(_loadResult.ObjectSection);
-            _loadResult.ObjectSection.ToIntPtr(out uint _);
+            _loadResult.ObjectSection.ToIntPtr(out long _);
             _writer.Overwrite(_objectSectionEndFixup, _writer.DataSize);
         }
 

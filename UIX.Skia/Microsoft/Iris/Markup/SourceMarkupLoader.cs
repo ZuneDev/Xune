@@ -155,7 +155,7 @@ namespace Microsoft.Iris.Markup
                 MarkupConstantsTable constantsTable = _loadResultTarget.BinaryDataTable == null ? new MarkupConstantsTable() : _loadResultTarget.BinaryDataTable.ConstantsTable;
                 _loadResultTarget.SetDataMappingsTable(PrepareDataMappingTable());
                 _loadResultTarget.ValidationComplete();
-                ByteCodeReader reader = null;
+                ManagedByteCodeReader reader = null;
                 if (!HasErrors)
                     reader = new MarkupEncoder(importTables, constantsTable, lineNumberTable).EncodeOBJECTSection(_parseResult, _loadResultTarget.Uri, null);
                 if (!_usingSharedBinaryDataTable)

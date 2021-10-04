@@ -67,7 +67,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteInt32(point.Y);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader) => new Point(reader.ReadInt32(), reader.ReadInt32());
+        private static object DecodeBinary(ManagedByteCodeReader reader) => new Point(reader.ReadInt32(), reader.ReadInt32());
 
         private static bool IsConversionSupported(TypeSchema fromType) => StringSchema.Type.IsAssignableFrom(fromType);
 

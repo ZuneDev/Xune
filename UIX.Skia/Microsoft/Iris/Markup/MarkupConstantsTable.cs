@@ -14,7 +14,7 @@ namespace Microsoft.Iris.Markup
         private object[] _runtimeList;
         private MarkupConstantPersist[] _persistList;
         private Dictionary<MarkupConstantsTable.MarkupConstant, int> _lookupTable;
-        private ByteCodeReader _constantsTableReader;
+        private ManagedByteCodeReader _constantsTableReader;
         private MarkupLoadResult _loadResultOwner;
 
         public MarkupConstantsTable() => _lookupTable = new Dictionary<MarkupConstantsTable.MarkupConstant, int>(new MarkupConstantsTable.MarkupConstantEqualityComparer());
@@ -22,7 +22,7 @@ namespace Microsoft.Iris.Markup
         public MarkupConstantsTable(object[] runtimeList) => _runtimeList = runtimeList;
 
         public void SetConstantsTableReader(
-          ByteCodeReader constantsTableReader,
+          ManagedByteCodeReader constantsTableReader,
           MarkupLoadResult loadResultOwner)
         {
             _constantsTableReader = constantsTableReader;

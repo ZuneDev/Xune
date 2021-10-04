@@ -29,7 +29,7 @@ namespace Microsoft.Iris.Markup
 
         public override void EncodeBinary(ByteCodeWriter writer, object instance) => _frameworkSchema.EncodeBinary(writer, instance);
 
-        public override object DecodeBinary(ByteCodeReader reader) => _frameworkSchema.DecodeBinary(reader);
+        public override object DecodeBinary(ManagedByteCodeReader reader) => _frameworkSchema.DecodeBinary(reader);
 
         public override bool SupportsBinaryEncoding => _frameworkSchema.SupportsBinaryEncoding;
 

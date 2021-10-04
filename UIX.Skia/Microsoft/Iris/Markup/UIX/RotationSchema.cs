@@ -91,7 +91,7 @@ namespace Microsoft.Iris.Markup.UIX
             writer.WriteSingle(rotation.AngleRadians);
         }
 
-        private static object DecodeBinary(ByteCodeReader reader)
+        private static object DecodeBinary(ManagedByteCodeReader reader)
         {
             Vector3 axis = (Vector3)Vector3Schema.Type.DecodeBinary(reader);
             return new Rotation(reader.ReadSingle(), axis);

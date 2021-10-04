@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Markup
 {
-    internal delegate object DecodeBinaryHandler(ByteCodeReader reader);
+    internal delegate object DecodeBinaryHandler(ManagedByteCodeReader reader);
 }

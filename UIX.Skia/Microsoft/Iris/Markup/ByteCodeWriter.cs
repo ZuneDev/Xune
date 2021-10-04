@@ -149,11 +149,11 @@ namespace Microsoft.Iris.Markup
             }
         }
 
-        public void Write(ByteCodeReader value) => Write(value, 0U);
+        public void Write(ManagedByteCodeReader value) => Write(value, 0U);
 
-        public unsafe void Write(ByteCodeReader value, uint offset)
+        public unsafe void Write(ManagedByteCodeReader value, uint offset)
         {
-            IntPtr intPtr = value.ToIntPtr(out uint size);
+            IntPtr intPtr = value.ToIntPtr(out long size);
             if (offset > size)
                 throw new ArgumentOutOfRangeException(nameof(offset));
             Write(new IntPtr(intPtr.ToInt64() + offset), (uint)(size - offset));
@@ -219,10 +219,10 @@ namespace Microsoft.Iris.Markup
             return pointer;
         }
 
-        public unsafe ByteCodeReader CreateReader()
+        public unsafe ManagedByteCodeReader CreateReader()
         {
             uint totalSize;
-            return new ByteCodeReader(new IntPtr(ComposeFinalBuffer(out totalSize)), totalSize, true);
+            return new ManagedByteCodeReader(new IntPtr(ComposeFinalBuffer(out totalSize)), totalSize, true);
         }
     }
 }

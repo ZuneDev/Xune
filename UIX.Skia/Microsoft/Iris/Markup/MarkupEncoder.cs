@@ -28,7 +28,7 @@ namespace Microsoft.Iris.Markup
             _lineNumberTable = lineNumberTable;
         }
 
-        public ByteCodeReader EncodeOBJECTSection(
+        public ManagedByteCodeReader EncodeOBJECTSection(
           ParseResult parseResult,
           string uri,
           string sourceFilePathBestGuess)
@@ -40,7 +40,7 @@ namespace Microsoft.Iris.Markup
                 for (int index = 0; index < parseResult.ClassList.Count; ++index)
                     EncodeClass(parseResult.ClassList[index]);
             }
-            ByteCodeReader reader = _writer.CreateReader();
+            ManagedByteCodeReader reader = _writer.CreateReader();
             _writer = null;
             return reader;
         }

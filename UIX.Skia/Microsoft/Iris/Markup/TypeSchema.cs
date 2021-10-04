@@ -88,7 +88,7 @@ namespace Microsoft.Iris.Markup
 
         public abstract void EncodeBinary(ByteCodeWriter writer, object instance);
 
-        public abstract object DecodeBinary(ByteCodeReader reader);
+        public abstract object DecodeBinary(ManagedByteCodeReader reader);
 
         public abstract bool SupportsBinaryEncoding { get; }
 

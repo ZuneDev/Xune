@@ -13,7 +13,7 @@ namespace Microsoft.Iris.Markup
     internal abstract class MarkupLoadResult : LoadResult
     {
         private LoadResult[] _dependenciesTable = EmptyList;
-        private ByteCodeReader _reader;
+        private ManagedByteCodeReader _reader;
         protected MarkupBinaryDataTable _binaryDataTable;
         protected MarkupLineNumberTable _lineNumberTable;
         private TypeSchema[] _exportTable = TypeSchema.EmptyList;
@@ -117,7 +117,7 @@ namespace Microsoft.Iris.Markup
 
         public abstract MarkupImportTables ImportTables { get; }
 
-        public ByteCodeReader ObjectSection => _reader;
+        public ManagedByteCodeReader ObjectSection => _reader;
 
         public override TypeSchema[] ExportTable => _exportTable;
 
@@ -141,7 +141,7 @@ namespace Microsoft.Iris.Markup
 
         public void SetDependenciesTable(LoadResult[] dependenciesTable) => SetDependenciesTable(dependenciesTable, true);
 
-        public void SetObjectSection(ByteCodeReader reader)
+        public void SetObjectSection(ManagedByteCodeReader reader)
         {
             reader.DeclareOwner(this);
             _reader = reader;

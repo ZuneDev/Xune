@@ -16,7 +16,7 @@ namespace Microsoft.Iris.Markup
     {
         private const uint c_LineNumberRecordSize = 12;
         private CompiledMarkupLoadResult _loadResultTarget;
-        private ByteCodeReader _reader;
+        private ManagedByteCodeReader _reader;
         private bool _hasErrors;
         private LoadPass _currentDepersistPass;
         private MarkupLoadResult _binaryDataTableLoadResult;
@@ -36,7 +36,7 @@ namespace Microsoft.Iris.Markup
         private CompiledMarkupLoader(CompiledMarkupLoadResult loadResultTarget, Resource resource)
         {
             _loadResultTarget = loadResultTarget;
-            _reader = new ByteCodeReader(resource.Buffer, resource.Length, false);
+            _reader = new ManagedByteCodeReader(resource.Buffer, false);
             if (resource is DllResource)
                 _reader.MarkAsInFixedMemory();
             uint num1 = _reader.ReadUInt32();
@@ -499,12 +499,12 @@ namespace Microsoft.Iris.Markup
             _loadResultTarget.SetDataMappingsTable(dataMappingsTable);
         }
 
-        public static void DecodeInheritableSymbolTable(MarkupTypeSchema typeExport, ByteCodeReader reader, IntPtr startAddress)
+        public static void DecodeInheritableSymbolTable(MarkupTypeSchema typeExport, ManagedByteCodeReader reader, IntPtr startAddress)
         {
             if (reader == null)
             {
-                uint size = ByteCodeReader.ReadUInt32(startAddress);
-                reader = new ByteCodeReader(new IntPtr(startAddress.ToInt64() + 4L), size, false);
+                uint size = ManagedByteCodeReader.ReadUInt32(startAddress);
+                reader = new ManagedByteCodeReader(new IntPtr(startAddress.ToInt64() + 4L), size, false);
             }
             else
             {
@@ -562,13 +562,13 @@ namespace Microsoft.Iris.Markup
             }
             else
             {
-                ByteCodeReader constantsTableReader = new ByteCodeReader(_reader.CurrentAddress, ByteCodeReader.ReadUInt32(_reader.GetAddress(_reader.CurrentOffset + num * 4U)), false);
+                ManagedByteCodeReader constantsTableReader = new ManagedByteCodeReader(_reader.CurrentAddress, ManagedByteCodeReader.ReadUInt32(_reader.GetAddress(_reader.CurrentOffset + num * 4U)), false);
                 constantsTable.SetConstantsTableReader(constantsTableReader, _loadResultTarget);
             }
             _loadResultTarget.BinaryDataTable.SetConstantsTable(constantsTable);
         }
 
-        public static object DepersistConstant(ByteCodeReader reader, MarkupLoadResult loadResult)
+        public static object DepersistConstant(ManagedByteCodeReader reader, MarkupLoadResult loadResult)
         {
             ushort num = reader.ReadUInt16();
             TypeSchema typeImport = loadResult.ImportTables.TypeImports[num];
@@ -591,7 +591,7 @@ namespace Microsoft.Iris.Markup
             return instance;
         }
 
-        private static MarkupLineNumberTable DecodeLineNumberTable(ByteCodeReader reader)
+        private static MarkupLineNumberTable DecodeLineNumberTable(ManagedByteCodeReader reader)
         {
             ushort num = reader.ReadUInt16();
             ulong[] runtimeList = new ulong[num];
@@ -602,8 +602,8 @@ namespace Microsoft.Iris.Markup
 
         public static MarkupLineNumberTable DecodeLineNumberTable(IntPtr address)
         {
-            uint size = (uint)(ByteCodeReader.ReadUInt16(address) * 12 + 2);
-            return DecodeLineNumberTable(new ByteCodeReader(address, size, false));
+            uint size = (uint)(ManagedByteCodeReader.ReadUInt16(address) * 12 + 2);
+            return DecodeLineNumberTable(new ManagedByteCodeReader(address, size, false));
         }
 
         private void DepersistLineNumberTable()
@@ -624,10 +624,10 @@ namespace Microsoft.Iris.Markup
         private void DepersistObjectSection()
         {
             uint num = _objectSectionEnd - _objectSectionStart;
-            ByteCodeReader reader;
+            ManagedByteCodeReader reader;
             if (_reader.IsInFixedMemory)
             {
-                reader = new ByteCodeReader(_reader.GetAddress(_objectSectionStart), num, false);
+                reader = new ManagedByteCodeReader(_reader.GetAddress(_objectSectionStart), num, false);
             }
             else
             {
@@ -655,7 +655,7 @@ namespace Microsoft.Iris.Markup
                 }
             }
             else
-                _binaryDataTable.SetStringTableReader(new ByteCodeReader(_reader.CurrentAddress, ByteCodeReader.ReadUInt32(_reader.GetAddress(_reader.CurrentOffset + (uint)(stringCount * 4))), false));
+                _binaryDataTable.SetStringTableReader(new ManagedByteCodeReader(_reader.CurrentAddress, ManagedByteCodeReader.ReadUInt32(_reader.GetAddress(_reader.CurrentOffset + (uint)(stringCount * 4))), false));
             _loadResultTarget.SetBinaryDataTable(_binaryDataTable);
             _reader.CurrentOffset = currentOffset;
         }
@@ -682,7 +682,7 @@ namespace Microsoft.Iris.Markup
 
         private string ReadDataTableString() => _binaryDataTable.GetStringByIndex(_reader.ReadInt32());
 
-        private static string ReadDataTableString(ByteCodeReader reader, MarkupBinaryDataTable binaryDataTable)
+        private static string ReadDataTableString(ManagedByteCodeReader reader, MarkupBinaryDataTable binaryDataTable)
         {
             int index = reader.ReadInt32();
             return binaryDataTable.GetStringByIndex(index);
@@ -799,7 +799,7 @@ namespace Microsoft.Iris.Markup
         public static bool IsUIB(Resource resource)
         {
             bool flag = false;
-            if (resource.Length > 4U && ByteCodeReader.ReadUInt32(resource.Buffer) == 440551765U)
+            if (resource.Length > 4U && ManagedByteCodeReader.ReadUInt32(resource.Buffer) == 440551765U)
                 flag = true;
             return flag;
         }
