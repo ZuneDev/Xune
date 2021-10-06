@@ -6,6 +6,7 @@
 
 using Microsoft.Iris.Render.Common;
 using Microsoft.Iris.Render.Protocol;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
@@ -33,106 +34,18 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
         {
         }
 
-        public unsafe void BuildClearGradients(out RenderPort _priv_portUse, out Message* _priv_pmsgUse)
-        {
-            Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
-            _priv_portUse = this.m_renderPort;
-            _priv_portUse.ValidateHandle(this.m_renderHandle);
-            uint size = (uint)sizeof(RemoteVisual.Msg0_ClearGradients);
-            RemoteVisual.Msg0_ClearGradients* msg0ClearGradientsPtr = (RemoteVisual.Msg0_ClearGradients*)_priv_portUse.AllocMessageBuffer(size);
-            msg0ClearGradientsPtr->_priv_size = size;
-            msg0ClearGradientsPtr->_priv_msgid = 0U;
-            msg0ClearGradientsPtr->_priv_idObjectSubject = this.m_renderHandle;
-            if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg0ClearGradientsPtr, ref s_priv_ByteOrder_Msg0_ClearGradients, typeof(RemoteVisual.Msg0_ClearGradients), 0, 0);
-            _priv_pmsgUse = (Message*)msg0ClearGradientsPtr;
-        }
+        public unsafe void SendClearGradients() => m_gradients.Clear();
 
-        public unsafe void SendClearGradients()
-        {
-            RenderPort _priv_portUse;
-            Message* _priv_pmsgUse;
-            this.BuildClearGradients(out _priv_portUse, out _priv_pmsgUse);
-            _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
-        }
-
-        public unsafe void BuildAddGradient(
-          out RenderPort _priv_portUse,
-          out Message* _priv_pmsgUse,
-          RemoteGradient grad)
-        {
-            Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
-            _priv_portUse = this.m_renderPort;
-            _priv_portUse.ValidateHandle(this.m_renderHandle);
-            if (grad != null)
-                _priv_portUse.ValidateHandleOrNull(grad.RenderHandle);
-            uint size = (uint)sizeof(RemoteVisual.Msg1_AddGradient);
-            RemoteVisual.Msg1_AddGradient* msg1AddGradientPtr = (RemoteVisual.Msg1_AddGradient*)_priv_portUse.AllocMessageBuffer(size);
-            msg1AddGradientPtr->_priv_size = size;
-            msg1AddGradientPtr->_priv_msgid = 1U;
-            msg1AddGradientPtr->grad = grad != null ? grad.RenderHandle : RENDERHANDLE.NULL;
-            msg1AddGradientPtr->_priv_idObjectSubject = this.m_renderHandle;
-            if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg1AddGradientPtr, ref s_priv_ByteOrder_Msg1_AddGradient, typeof(RemoteVisual.Msg1_AddGradient), 0, 0);
-            _priv_pmsgUse = (Message*)msg1AddGradientPtr;
-        }
-
-        public unsafe void SendAddGradient(RemoteGradient grad)
-        {
-            RenderPort _priv_portUse;
-            Message* _priv_pmsgUse;
-            this.BuildAddGradient(out _priv_portUse, out _priv_pmsgUse, grad);
-            _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
-        }
-
-        public unsafe void BuildSetRelativeSize(
-          out RenderPort _priv_portUse,
-          out Message* _priv_pmsgUse,
-          bool fRelative)
-        {
-            Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
-            _priv_portUse = this.m_renderPort;
-            _priv_portUse.ValidateHandle(this.m_renderHandle);
-            uint size = (uint)sizeof(RemoteVisual.Msg2_SetRelativeSize);
-            RemoteVisual.Msg2_SetRelativeSize* msg2SetRelativeSizePtr = (RemoteVisual.Msg2_SetRelativeSize*)_priv_portUse.AllocMessageBuffer(size);
-            msg2SetRelativeSizePtr->_priv_size = size;
-            msg2SetRelativeSizePtr->_priv_msgid = 2U;
-            msg2SetRelativeSizePtr->fRelative = fRelative ? uint.MaxValue : 0U;
-            msg2SetRelativeSizePtr->_priv_idObjectSubject = this.m_renderHandle;
-            if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg2SetRelativeSizePtr, ref s_priv_ByteOrder_Msg2_SetRelativeSize, typeof(RemoteVisual.Msg2_SetRelativeSize), 0, 0);
-            _priv_pmsgUse = (Message*)msg2SetRelativeSizePtr;
-        }
+        public unsafe void SendAddGradient(RemoteGradient grad) => m_gradients.Add(grad);
 
         public unsafe void SendSetRelativeSize(bool fRelative)
         {
-            RenderPort _priv_portUse;
-            Message* _priv_pmsgUse;
-            this.BuildSetRelativeSize(out _priv_portUse, out _priv_pmsgUse, fRelative);
-            _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
-        }
-
-        public unsafe void BuildReset(out RenderPort _priv_portUse, out Message* _priv_pmsgUse)
-        {
-            Debug2.Throw(this.IsValid, "Non-static method call requires an instance");
-            _priv_portUse = this.m_renderPort;
-            _priv_portUse.ValidateHandle(this.m_renderHandle);
-            uint size = (uint)sizeof(RemoteVisual.Msg3_Reset);
-            RemoteVisual.Msg3_Reset* msg3ResetPtr = (RemoteVisual.Msg3_Reset*)_priv_portUse.AllocMessageBuffer(size);
-            msg3ResetPtr->_priv_size = size;
-            msg3ResetPtr->_priv_msgid = 3U;
-            msg3ResetPtr->_priv_idObjectSubject = this.m_renderHandle;
-            if (_priv_portUse.ForeignByteOrder)
-                MarshalHelper.SwapByteOrder((byte*)msg3ResetPtr, ref s_priv_ByteOrder_Msg3_Reset, typeof(RemoteVisual.Msg3_Reset), 0, 0);
-            _priv_pmsgUse = (Message*)msg3ResetPtr;
+            m_fRelativeSize = fRelative ? uint.MaxValue : 0;
         }
 
         public unsafe void SendReset()
         {
-            RenderPort _priv_portUse;
-            Message* _priv_pmsgUse;
-            this.BuildReset(out _priv_portUse, out _priv_pmsgUse);
-            _priv_portUse.SendRemoteMessage(_priv_pmsgUse);
+            // TODO: Reset
         }
 
         public unsafe void BuildChangeDataBits(
@@ -158,6 +71,7 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 
         public unsafe void SendChangeDataBits(uint nValue, uint nMask)
         {
+            // TODO
             RenderPort _priv_portUse;
             Message* _priv_pmsgUse;
             this.BuildChangeDataBits(out _priv_portUse, out _priv_pmsgUse, nValue, nMask);
@@ -500,39 +414,8 @@ namespace Microsoft.Iris.Render.Protocols.Splash.Rendering
 
         public override int GetHashCode() => base.GetHashCode();
 
-        [ComVisible(false)]
-        private struct Msg0_ClearGradients
-        {
-            public uint _priv_size;
-            public uint _priv_msgid;
-            public RENDERHANDLE _priv_idObjectSubject;
-        }
-
-        [ComVisible(false)]
-        private struct Msg1_AddGradient
-        {
-            public uint _priv_size;
-            public uint _priv_msgid;
-            public RENDERHANDLE _priv_idObjectSubject;
-            public RENDERHANDLE grad;
-        }
-
-        [ComVisible(false)]
-        private struct Msg2_SetRelativeSize
-        {
-            public uint _priv_size;
-            public uint _priv_msgid;
-            public RENDERHANDLE _priv_idObjectSubject;
-            public uint fRelative;
-        }
-
-        [ComVisible(false)]
-        private struct Msg3_Reset
-        {
-            public uint _priv_size;
-            public uint _priv_msgid;
-            public RENDERHANDLE _priv_idObjectSubject;
-        }
+        List<RemoteGradient> m_gradients;
+        uint m_fRelativeSize;
 
         [ComVisible(false)]
         private struct Msg4_ChangeDataBits

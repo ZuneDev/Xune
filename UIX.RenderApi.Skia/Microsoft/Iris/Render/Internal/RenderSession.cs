@@ -305,17 +305,17 @@ namespace Microsoft.Iris.Render.Internal
 
         internal RemoteCamera BuildRemoteCamera(Camera camera) => this.RenderingProtocol.BuildRemoteCamera(camera);
 
-        internal RemoteVisualContainer BuildRemoteVisualContainer(Visual visual) => this.RenderingProtocol.BuildRemoteVisualContainer(visual);
+        internal RemoteVisualContainer BuildRemoteVisualContainer(Visual visual) => RemoteVisualContainer.Create();
 
         internal RemoteSprite BuildRemoteSprite(Sprite sprite, RenderWindowBase window)
         {
             switch (window.GraphicsDeviceType)
             {
                 case GraphicsDeviceType.Gdi:
-                    return this.NtRenderingProtocol.BuildRemoteGdiSprite(sprite);
+                    // TODO: return this.NtRenderingProtocol.BuildRemoteGdiSprite(sprite);
                 case GraphicsDeviceType.Direct3D9:
                 case GraphicsDeviceType.XeDirectX9:
-                    return this.RenderingProtocol.BuildRemoteDx9Sprite(sprite);
+                    // TODO: return this.RenderingProtocol.BuildRemoteDx9Sprite(sprite);
                 default:
                     Debug2.Throw(false, "Unrecognized device type: {0}", window.GraphicsDeviceType);
                     return null;

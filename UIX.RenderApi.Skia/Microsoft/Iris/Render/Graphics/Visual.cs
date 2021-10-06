@@ -11,6 +11,7 @@ using Microsoft.Iris.Render.Internal;
 using Microsoft.Iris.Render.Protocol;
 using Microsoft.Iris.Render.Protocols.Splash.Rendering;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace Microsoft.Iris.Render.Graphics
@@ -21,7 +22,6 @@ namespace Microsoft.Iris.Render.Graphics
       IAnimatableObject,
       IAnimatable,
       ISharedRenderObject,
-      IRenderHandleOwner,
       IRawInputSite
     {
         private const uint k_DebugBitShift = 5;
@@ -34,10 +34,11 @@ namespace Microsoft.Iris.Render.Graphics
         public static readonly string ScaleProperty = nameof(Scale);
         public static readonly string SizeProperty = nameof(Size);
         protected RenderWindowBase m_window;
-        protected RemoteVisual m_remoteVisual;
         private Vector3 m_vecPosition;
         private Vector2 m_vecSize;
         private BitVector32 m_bvDataBits;
+        private List<Gradient> m_gradients;
+        private Visual m_parent;
         private static BitVector32.Section s_bvsMouse = BitVector32.CreateSection(15);
         private static BitVector32.Section s_bvsDebug = BitVector32.CreateSection(3, s_bvsMouse);
         private static BitVector32.Section s_bvsValid = BitVector32.CreateSection(1, s_bvsDebug);
@@ -111,10 +112,7 @@ namespace Microsoft.Iris.Render.Graphics
                     this.PropertyManager.RemoveLayerProp(this);
                     this.PropertyManager.RemoveRotationProp(this);
                     this.PropertyManager.RemoveScaleProp(this);
-                    if (this.m_remoteVisual != null)
-                        this.m_remoteVisual.Dispose();
                 }
-                this.m_remoteVisual = null;
                 this.m_objOwnerData = null;
             }
             finally
@@ -174,7 +172,7 @@ namespace Microsoft.Iris.Render.Graphics
             }
             gradient.RegisterUsage(this);
             result.Add(gradient);
-            this.m_remoteVisual.SendAddGradient(gradient.RemoteGradient);
+            this.m_gradients.Add(gradient);
         }
 
         protected void RemoveAllGradients()
@@ -187,15 +185,13 @@ namespace Microsoft.Iris.Render.Graphics
             foreach (SharedRenderObject sharedRenderObject in result)
                 sharedRenderObject.UnregisterUsage(this);
             result.Clear();
-            this.m_remoteVisual.SendClearGradients();
+            m_gradients.Clear();
         }
 
         internal void ChangeParent(Visual visualParent, Visual visualSibling, VisualOrder nOrder)
         {
-            RemoteVisual remoteVisual1 = visualParent?.m_remoteVisual;
-            RemoteVisual remoteVisual2 = this.m_remoteVisual;
-            RemoteVisual remoteVisual3 = visualSibling?.m_remoteVisual;
-            remoteVisual2.SendChangeParent(remoteVisual1, remoteVisual3, nOrder);
+            // TODO: nOrder?
+            visualSibling.ChangeParent(visualParent);
             this.ChangeParent(visualParent);
         }
 
@@ -212,11 +208,7 @@ namespace Microsoft.Iris.Render.Graphics
             this.ChangeParent(null, null, VisualOrder.First);
         }
 
-        RENDERHANDLE IRenderHandleOwner.RenderHandle => this.m_remoteVisual.RenderHandle;
-
-        void IRenderHandleOwner.OnDisconnect() => this.m_remoteVisual = null;
-
-        internal RemoteVisual RemoteStub => this.m_remoteVisual;
+        internal RemoteVisual RemoteStub => throw new NotImplementedException();
 
         public object OwnerData
         {
@@ -237,7 +229,6 @@ namespace Microsoft.Iris.Render.Graphics
             this.m_vecPosition = value;
             if (!this.FlushValues)
                 return;
-            this.m_remoteVisual.SendSetPosition(this.m_vecPosition);
         }
 
         internal Vector2 Size
@@ -254,7 +245,6 @@ namespace Microsoft.Iris.Render.Graphics
             this.m_vecSize = value;
             if (!this.FlushValues)
                 return;
-            this.m_remoteVisual.SendSetSize(this.m_vecSize);
         }
 
         protected float Alpha
@@ -280,7 +270,6 @@ namespace Microsoft.Iris.Render.Graphics
             this.PropertyManager.SetAlphaProp(this, value);
             if (!this.FlushValues)
                 return;
-            this.m_remoteVisual.SendSetAlpha(value);
         }
 
         protected Vector3 Scale
@@ -305,7 +294,6 @@ namespace Microsoft.Iris.Render.Graphics
             this.PropertyManager.SetScaleProp(this, value);
             if (!this.FlushValues)
                 return;
-            this.m_remoteVisual.SendSetScale(value);
         }
 
         protected AxisAngle Rotation
@@ -333,7 +321,6 @@ namespace Microsoft.Iris.Render.Graphics
                 aaRotation.Angle = -aaRotation.Angle;
             if (!this.FlushValues)
                 return;
-            this.m_remoteVisual.SendSetRotation(aaRotation);
         }
 
         protected Vector3 CenterPointScale
@@ -357,7 +344,6 @@ namespace Microsoft.Iris.Render.Graphics
                 this.PropertyManager.SetCenterPointScaleProp(this, value);
                 if (!this.FlushValues)
                     return;
-                this.m_remoteVisual.SendSetCenterPointScale(value);
             }
         }
 
@@ -380,7 +366,6 @@ namespace Microsoft.Iris.Render.Graphics
                 this.PropertyManager.SetLayerProp(this, value);
                 if (!this.FlushValues)
                     return;
-                this.m_remoteVisual.SendSetLayer(value);
             }
         }
 
@@ -394,7 +379,6 @@ namespace Microsoft.Iris.Render.Graphics
                 this.SetVisible(value);
                 if (!this.FlushValues)
                     return;
-                this.m_remoteVisual.SendSetVisible(value);
             }
         }
 
@@ -407,7 +391,6 @@ namespace Microsoft.Iris.Render.Graphics
                 if (this.m_bvDataBits[s_bvsRelativeSize] == num)
                     return;
                 this.m_bvDataBits[s_bvsRelativeSize] = num;
-                this.m_remoteVisual.SendSetRelativeSize(value);
             }
         }
 
@@ -420,8 +403,6 @@ namespace Microsoft.Iris.Render.Graphics
             {
                 Debug2.Validate((value & ~MouseOptions.ValidMask) == MouseOptions.None, typeof(ArgumentException), "Expected valid mouse bits");
                 uint nMask = (uint)this.m_bvDataBits[s_bvsMouse] ^ (uint)(short)value;
-                if (nMask != 0U && this.FlushValues)
-                    this.m_remoteVisual.SendChangeDataBits((uint)value, nMask);
                 this.m_bvDataBits[s_bvsMouse] = (short)value;
             }
         }
@@ -437,8 +418,6 @@ namespace Microsoft.Iris.Render.Graphics
                 if (nMask != 0U)
                 {
                     uint nValue = (uint)value << 5;
-                    if (this.m_remoteVisual.IsValid)
-                        this.m_remoteVisual.SendChangeDataBits(nValue, nMask);
                 }
                 this.m_bvDataBits[s_bvsDebug] = (int)value;
             }
@@ -503,7 +482,6 @@ namespace Microsoft.Iris.Render.Graphics
             this.OwnerData = null;
             this.MouseOptions = MouseOptions.None;
             this.FlushValues = flushValues;
-            this.m_remoteVisual.SendReset();
         }
 
         private bool FlushValues
@@ -549,11 +527,11 @@ namespace Microsoft.Iris.Render.Graphics
             return AnimationInputType.Float;
         }
 
-        public override int GetHashCode() => this.m_remoteVisual.GetHashCode();
+        public override int GetHashCode() => base.GetHashCode();
 
         public override bool Equals(object oRHS) => base.Equals(oRHS);
 
-        [System.Flags]
+        [Flags]
         internal enum DebugBits
         {
             MarkForOutline = 1,

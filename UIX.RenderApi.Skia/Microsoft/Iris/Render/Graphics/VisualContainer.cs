@@ -12,31 +12,18 @@ using System;
 
 namespace Microsoft.Iris.Render.Graphics
 {
-    internal class VisualContainer :
-      Visual,
-      IVisualContainer,
-      IVisual,
-      IRawInputSite,
-      IAnimatable,
-      ISharedRenderObject
+    internal class VisualContainer : Visual, IVisualContainer, IVisual, IRawInputSite, IAnimatable, ISharedRenderObject
     {
         private bool m_fIsRoot;
 
-        internal VisualContainer(
-          bool isRoot,
-          RenderSession session,
-          RenderWindowBase window,
-          object objOwnerData,
-          out RemoteVisual remoteVisual)
+        internal VisualContainer(bool isRoot, RenderSession session, RenderWindowBase window, object objOwnerData, out RemoteVisual remoteVisual)
           : base(session, window, objOwnerData)
         {
             Debug2.Validate(session != null, typeof(ArgumentNullException), "Must have valid RenderSession");
             session.AssertOwningThread();
             Debug2.Validate(this.m_window != null, typeof(InvalidOperationException), "Parent visual should have saved our render window");
             this.m_fIsRoot = isRoot;
-            this.m_remoteVisual = session.BuildRemoteVisualContainer(this);
-            this.m_remoteVisual.SendSetVisible(true);
-            remoteVisual = this.m_remoteVisual;
+            remoteVisual = null;
         }
 
         protected override void Dispose(bool fInDispose)
@@ -59,11 +46,6 @@ namespace Microsoft.Iris.Render.Graphics
         private void SetCamera(ICamera camera)
         {
             this.PropertyManager.SetCameraProp(this, (Camera)camera);
-            RemoteVisualContainer remoteVisual = (RemoteVisualContainer)this.m_remoteVisual;
-            if (camera != null)
-                remoteVisual.SendSetCamera(((Camera)camera).RemoteStub);
-            else
-                remoteVisual.SendSetCamera(null);
         }
 
         bool IVisualContainer.IsRoot => this.m_fIsRoot;
@@ -144,10 +126,7 @@ namespace Microsoft.Iris.Render.Graphics
 
         void IVisualContainer.RemoveAllGradients() => this.RemoveAllGradients();
 
-        void IVisualContainer.AddChild(
-          IVisual vChild,
-          IVisual vSibling,
-          VisualOrder nOrder)
+        void IVisualContainer.AddChild(IVisual vChild, IVisual vSibling, VisualOrder nOrder)
         {
             Visual visual = (Visual)vChild;
             Visual visualSibling = null;

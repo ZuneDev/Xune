@@ -15,15 +15,13 @@ namespace Microsoft.Iris.Render.Graphics
 {
     internal class Sprite : Visual, ISprite, IVisual, IRawInputSite, IAnimatable, ISharedRenderObject
     {
-        private RemoteSprite m_remoteSprite;
         private Effect m_effect;
+        private CoordMap m_coordMap;
 
         public Sprite(RenderSession session, RenderWindowBase window, object objOwnerData)
           : base(session, window, objOwnerData)
         {
-            this.m_remoteSprite = session.BuildRemoteSprite(this, window);
-            this.m_remoteSprite.SendSetVisible(true);
-            this.m_remoteVisual = m_remoteSprite;
+            base.Visible = true;
         }
 
         protected override void Dispose(bool fInDispose)
@@ -36,7 +34,6 @@ namespace Microsoft.Iris.Render.Graphics
                     this.m_effect = null;
                 }
                 this.PropertyManager.RemoveCoordmapProp(this);
-                this.m_remoteSprite = null;
                 this.m_effect = null;
             }
             finally
@@ -112,7 +109,6 @@ namespace Microsoft.Iris.Render.Graphics
                 this.m_effect = effect;
                 if (this.m_effect != null)
                     this.m_effect.RegisterUsage(this);
-                this.m_remoteSprite.SendSetEffect(this.m_effect == null ? null : this.m_effect.RemoteStub);
             }
         }
 
@@ -130,7 +126,8 @@ namespace Microsoft.Iris.Render.Graphics
         {
             Debug2.Validate(left >= 0 && right >= 0 && top >= 0 && bottom >= 0, typeof(ArgumentNullException), "invalid nine grid params");
             this.PropertyManager.RemoveCoordmapProp(this);
-            this.m_remoteSprite.SendSetNineGrid(left, top, right, bottom);
+            // TODO: Set nine grid
+            //this.m_remoteSprite.SendSetNineGrid(left, top, right, bottom);
             this.SetPropFlag(PropId.MaxDynamicProp, true);
         }
 
@@ -140,12 +137,12 @@ namespace Microsoft.Iris.Render.Graphics
             Debug2.Validate(idxLayer < 4, typeof(ArgumentOutOfRangeException), "quick-check, currently we only support 4 layers/stages");
             if (this.IsPropFlagSet(PropId.MaxDynamicProp))
             {
-                this.m_remoteSprite.SendClearCoordMaps();
+                this.m_coordMap.Clear();
                 this.SetPropFlag(PropId.MaxDynamicProp, false);
             }
             if (!this.UpdateCoordMap(idxLayer, coordMap))
                 return;
-            this.m_remoteSprite.SendClearCoordMaps();
+            this.m_coordMap.Clear();
             if (!this.IsDynamicValueSet(PropId.CoordMap))
                 return;
             ArrayList result;
@@ -153,7 +150,7 @@ namespace Microsoft.Iris.Render.Graphics
             foreach (Sprite.CoordMapEntry coordMapEntry in result)
             {
                 foreach (CoordMap.CoordMapSample rampSample in coordMapEntry.coordMap.RampSamples)
-                    this.m_remoteSprite.SendAddCoordMapEntry(coordMapEntry.idxLayer, rampSample.Orientation, rampSample.flPosition, rampSample.flValue);
+                    this.m_coordMap.InsertValue(coordMapEntry.idxLayer, rampSample.flPosition, rampSample.flValue, rampSample.Orientation);
             }
         }
 
@@ -198,7 +195,7 @@ namespace Microsoft.Iris.Render.Graphics
         {
             if (this.IsPropFlagSet(PropId.MaxDynamicProp) || this.IsDynamicValueSet(PropId.CoordMap))
             {
-                this.m_remoteSprite.SendClearCoordMaps();
+                this.m_coordMap.Clear();
                 this.SetPropFlag(PropId.MaxDynamicProp, false);
             }
             this.PropertyManager.RemoveCoordmapProp(this);

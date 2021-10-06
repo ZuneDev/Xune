@@ -21,6 +21,7 @@ namespace Microsoft.Iris.Render
         private bool isFullscreen;
         private GraphicsDevice graphicsDevice;
         private HWND appNotifyWindow;
+        private IVisualContainer visualRoot;
 
         private Window WpfWindow { get; set; }
         private WindowInteropHelper InteropHelper { get; set; }
@@ -48,6 +49,9 @@ namespace Microsoft.Iris.Render
         {
             if (graphicsDeviceType.FulfillsRequirement(GraphicsDeviceType.Skia))
                 graphicsDevice = new SkiaGraphicsDevice(session);
+
+            visualRoot = new VisualContainer(true, session, this, new Object(), out var visual);
+
             return GraphicsDevice;
         }
 
@@ -279,7 +283,7 @@ namespace Microsoft.Iris.Render
         }
         public override HWND AppNotifyWindow { set => appNotifyWindow = value; }
 
-        public override IVisualContainer VisualRoot => throw new NotImplementedException();
+        public override IVisualContainer VisualRoot => visualRoot;
 
         TreeNode Root => throw new NotImplementedException();
 

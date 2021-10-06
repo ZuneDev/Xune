@@ -30,6 +30,20 @@ namespace Microsoft.Iris.Render
             this.m_alMaps.Add(new CoordMap.CoordMapSample(flPosition, flValue, or));
         }
 
+        public void InsertValue(int idx, float flPosition, float flValue, Orientation or)
+        {
+            Debug2.Validate(flPosition >= 0.0, typeof(ArgumentOutOfRangeException), "flPosition cannot be less than 0.0f");
+            Debug2.Validate(flValue >= 0.0, typeof(ArgumentOutOfRangeException), "flValue cannot be less than 0.0f");
+            Debug2.Validate(flPosition <= 1.0, typeof(ArgumentOutOfRangeException), "flPosition cannot exceed 1.0f");
+            Debug2.Validate(flValue <= 1.0, typeof(ArgumentOutOfRangeException), "flValue cannot exceed 1.0f");
+            foreach (CoordMap.CoordMapSample alMap in this.m_alMaps)
+            {
+                if (or == alMap.Orientation)
+                    Debug2.Validate(flPosition != (double)alMap.flPosition, typeof(ArgumentException), "CoordMap cannot have two entries with the same flPosition and the same Orientation");
+            }
+            this.m_alMaps.Insert(idx, new CoordMap.CoordMapSample(flPosition, flValue, or));
+        }
+
         public void Clear() => this.m_alMaps.Clear();
 
         internal ArrayList RampSamples => this.m_alMaps;

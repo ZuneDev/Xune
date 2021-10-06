@@ -5,6 +5,7 @@
 // Assembly location: C:\Program Files\Zune\UIX.RenderApi.dll
 
 using Microsoft.Iris.Render.Internal;
+using SkiaSharp;
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -59,7 +60,48 @@ namespace Microsoft.Iris.Render.Extensions
           out HSpBitmap hBmp,
           out ImageInformation info)
         {
-            throw new NotImplementedException();
+            hBmp = default;
+            using var bitmap = SKBitmap.Decode(pvSrc);
+            var final = new SKBitmap(bitmap.Height, bitmap.Width);
+
+            using (var surface = new SKCanvas(final))
+            {
+                if (nOptions.HasFlag(BitmapOptions.Flip))
+                    surface.Scale(-1, 1);
+                surface.DrawBitmap(bitmap, 0, 0);
+            }
+
+            info = new ImageInformation
+            {
+                Data = new ImageData
+                {
+                    rgData = pvSrc
+                },
+                Header = new ImageHeader
+                {
+                    nFormat = final.Info.ColorType.ToSurfaceFormat(),
+                    nStride = final.Info.RowBytes
+                }
+            };
+
+            return new HRESULT(0);
+        }
+
+        internal static SurfaceFormat ToSurfaceFormat(this SKColorType sk)
+        {
+            switch (sk)
+            {
+                case SKColorType.Alpha8:
+                    return SurfaceFormat.A8;
+                case SKColorType.Argb4444:
+                    return SurfaceFormat.ARGB16_1555;
+                case SKColorType.RgbaF16:
+                    return SurfaceFormat.RGB16_555;
+
+                case SKColorType.Unknown:
+                default:
+                    return SurfaceFormat.External;
+            }
         }
 
         internal static HRESULT SpBitmapDelete(HSpBitmap hBmp)
