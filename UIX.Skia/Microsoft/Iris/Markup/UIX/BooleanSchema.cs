@@ -14,7 +14,7 @@ namespace Microsoft.Iris.Markup.UIX
 
         private static object Construct() => BooleanBoxes.FalseBox;
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             bool flag = (bool)instanceObj;
             writer.WriteBool(flag);

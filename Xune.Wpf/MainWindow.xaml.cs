@@ -39,6 +39,7 @@ namespace Xune.Wpf
             }
 
             Microsoft.Iris.Application.Initialize(e.Surface, new WpfRenderWindow(this));
+            Microsoft.Iris.Application.LoadMarkup(@"file://D:\Repos\yoshiask\ZuneUIXTools\test\testA.uix");
         }
     }
 }

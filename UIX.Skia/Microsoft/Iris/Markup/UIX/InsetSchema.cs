@@ -65,7 +65,7 @@ namespace Microsoft.Iris.Markup.UIX
             return new Inset(parameter, parameter, parameter, parameter);
         }
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             Inset inset = (Inset)instanceObj;
             writer.WriteInt32(inset.Left);

@@ -6,5 +6,5 @@
 
 namespace Microsoft.Iris.Markup
 {
-    internal delegate void EncodeBinaryHandler(ByteCodeWriter writer, object instance);
+    internal delegate void EncodeBinaryHandler(ManagedByteCodeWriter writer, object instance);
 }

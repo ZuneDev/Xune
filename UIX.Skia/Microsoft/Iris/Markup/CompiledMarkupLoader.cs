@@ -631,7 +631,7 @@ namespace Microsoft.Iris.Markup
             }
             else
             {
-                ByteCodeWriter byteCodeWriter = new ByteCodeWriter();
+                ManagedByteCodeWriter byteCodeWriter = new ManagedByteCodeWriter();
                 byteCodeWriter.Write(_reader.GetAddress(_objectSectionStart), num);
                 reader = byteCodeWriter.CreateReader();
             }

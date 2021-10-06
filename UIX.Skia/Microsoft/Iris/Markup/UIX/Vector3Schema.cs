@@ -76,7 +76,7 @@ namespace Microsoft.Iris.Markup.UIX
             return result3;
         }
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             Vector3 vector3 = (Vector3)instanceObj;
             writer.WriteSingle(vector3.X);

@@ -98,7 +98,7 @@ namespace Microsoft.Iris.Markup.UIX
             return Result.Success;
         }
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             Rectangle rectangle = (Rectangle)instanceObj;
             writer.WriteInt32(rectangle.Left);

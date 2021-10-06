@@ -20,7 +20,7 @@ namespace Microsoft.Iris.Markup.UIX
 
         private static object Construct() => Int64Boxes.ZeroBox;
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             long num = (long)instanceObj;
             writer.WriteInt64(num);

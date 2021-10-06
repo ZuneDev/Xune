@@ -14,7 +14,7 @@ namespace Microsoft.Iris.Markup
 {
     internal class MarkupEncoder
     {
-        private ByteCodeWriter _writer;
+        private ManagedByteCodeWriter _writer;
         private MarkupConstantsTable _constantsTable;
         private MarkupLineNumberTable _lineNumberTable;
         private string _sourceFilePathBestGuess;
@@ -34,7 +34,7 @@ namespace Microsoft.Iris.Markup
           string sourceFilePathBestGuess)
         {
             _sourceFilePathBestGuess = sourceFilePathBestGuess;
-            _writer = new ByteCodeWriter();
+            _writer = new ManagedByteCodeWriter();
             if (parseResult.ClassList.Count > 0)
             {
                 for (int index = 0; index < parseResult.ClassList.Count; ++index)

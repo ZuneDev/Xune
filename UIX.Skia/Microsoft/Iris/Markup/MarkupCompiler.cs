@@ -14,7 +14,7 @@ namespace Microsoft.Iris.Markup
 {
     internal class MarkupCompiler
     {
-        private ByteCodeWriter _writer;
+        private ManagedByteCodeWriter _writer;
         private MarkupLoadResult _loadResult;
         private MarkupBinaryDataTable _binaryDataTable;
         private bool _usingSharedBinaryDataTable;
@@ -70,7 +70,7 @@ namespace Microsoft.Iris.Markup
                 for (int index = 0; index < compilands.Length; ++index)
                 {
                     ErrorWatermark watermark2 = ErrorManager.Watermark;
-                    ByteCodeWriter writer = Run((MarkupLoadResult)vector[index], markupBinaryDataTable);
+                    ManagedByteCodeWriter writer = Run((MarkupLoadResult)vector[index], markupBinaryDataTable);
                     if (!watermark2.ErrorsDetected)
                         SaveCompiledOutput(writer, compilands[index].OutputFileName);
                 }
@@ -80,7 +80,7 @@ namespace Microsoft.Iris.Markup
             return !watermark1.ErrorsDetected;
         }
 
-        private static void SaveCompiledOutput(ByteCodeWriter writer, string outputFile)
+        private static void SaveCompiledOutput(ManagedByteCodeWriter writer, string outputFile)
         {
             ErrorWatermark watermark = ErrorManager.Watermark;
             IntPtr invalidHandleValue = Win32Api.INVALID_HANDLE_VALUE;
@@ -102,18 +102,14 @@ namespace Microsoft.Iris.Markup
             reader?.Dispose(typeof(MarkupSystem));
         }
 
-        public static ByteCodeWriter Run(
-          MarkupLoadResult loadResult,
-          MarkupBinaryDataTable sharedBinaryDataTable)
+        public static ManagedByteCodeWriter Run(MarkupLoadResult loadResult, MarkupBinaryDataTable sharedBinaryDataTable)
         {
             return new MarkupCompiler().InternalRun(loadResult, sharedBinaryDataTable);
         }
 
-        private ByteCodeWriter InternalRun(
-          MarkupLoadResult loadResult,
-          MarkupBinaryDataTable sharedBinaryDataTable)
+        private ManagedByteCodeWriter InternalRun(MarkupLoadResult loadResult, MarkupBinaryDataTable sharedBinaryDataTable)
         {
-            _writer = new ByteCodeWriter();
+            _writer = new ManagedByteCodeWriter();
             _loadResult = loadResult;
             PersistHeader();
             PersistTableOfContents(sharedBinaryDataTable);
@@ -577,8 +573,7 @@ namespace Microsoft.Iris.Markup
             }
         }
 
-        public static ByteCodeWriter CompileBinaryDataTable(
-          MarkupBinaryDataTable binaryDataTable)
+        public static ManagedByteCodeWriter CompileBinaryDataTable(MarkupBinaryDataTable binaryDataTable)
         {
             SourceMarkupLoadResult markupLoadResult = new SourceMarkupLoadResult(binaryDataTable.Uri);
             markupLoadResult.RegisterUsage(markupLoadResult);
@@ -594,8 +589,8 @@ namespace Microsoft.Iris.Markup
             markupLoadResult.SetImportTables(importTables);
             markupLoadResult.SetLineNumberTable(new MarkupLineNumberTable());
             markupLoadResult.LineNumberTable.PrepareForRuntimeUse();
-            markupLoadResult.SetObjectSection(new ByteCodeWriter().CreateReader());
-            ByteCodeWriter byteCodeWriter = Run(markupLoadResult, null);
+            markupLoadResult.SetObjectSection(new ManagedByteCodeWriter().CreateReader());
+            ManagedByteCodeWriter byteCodeWriter = Run(markupLoadResult, null);
             markupLoadResult.UnregisterUsage(markupLoadResult);
             return byteCodeWriter;
         }

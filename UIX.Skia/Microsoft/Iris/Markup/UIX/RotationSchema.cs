@@ -84,7 +84,7 @@ namespace Microsoft.Iris.Markup.UIX
             return instanceObj;
         }
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             Rotation rotation = (Rotation)instanceObj;
             Vector3Schema.Type.EncodeBinary(writer, rotation.Axis);

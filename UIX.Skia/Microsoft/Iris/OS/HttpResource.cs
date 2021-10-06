@@ -52,7 +52,7 @@ namespace Microsoft.Iris.OS
             }
             _handle = IntPtr.Zero;
             _pendingCallback = null;
-            NotifyAcquisitionComplete(buffer, true, errorDetails);
+            NotifyAcquisitionComplete(buffer, false, errorDetails);
         }
 
         protected override void CancelAcquisition()

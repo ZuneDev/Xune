@@ -168,7 +168,7 @@ namespace Microsoft.Iris.Markup
 
         public override bool SupportsTypeConversion(TypeSchema fromType) => StringSchema.Type.IsAssignableFrom(fromType) || Int32Schema.Type.IsAssignableFrom(fromType);
 
-        public override void EncodeBinary(ByteCodeWriter writer, object instance) => writer.WriteInt32(ValueFromObject(instance));
+        public override void EncodeBinary(ManagedByteCodeWriter writer, object instance) => writer.WriteInt32(ValueFromObject(instance));
 
         public override object DecodeBinary(ManagedByteCodeReader reader) => EnumValueToObject(reader.ReadInt32());
 

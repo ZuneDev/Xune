@@ -172,7 +172,7 @@ namespace Microsoft.Iris.CodeModel.Cpp
 
         public override bool SupportsTypeConversion(TypeSchema fromType) => false;
 
-        public override void EncodeBinary(ByteCodeWriter writer, object instance)
+        public override void EncodeBinary(ManagedByteCodeWriter writer, object instance)
         {
         }
 

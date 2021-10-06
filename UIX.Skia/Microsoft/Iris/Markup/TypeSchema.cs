@@ -79,14 +79,11 @@ namespace Microsoft.Iris.Markup
 
         public virtual EventSchema[] Events => (EventSchema[])null;
 
-        public abstract Result TypeConverter(
-          object from,
-          TypeSchema fromType,
-          out object instance);
+        public abstract Result TypeConverter(object from, TypeSchema fromType, out object instance);
 
         public abstract bool SupportsTypeConversion(TypeSchema fromType);
 
-        public abstract void EncodeBinary(ByteCodeWriter writer, object instance);
+        public abstract void EncodeBinary(ManagedByteCodeWriter writer, object instance);
 
         public abstract object DecodeBinary(ManagedByteCodeReader reader);
 

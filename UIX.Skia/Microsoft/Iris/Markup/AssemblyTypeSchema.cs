@@ -278,7 +278,7 @@ namespace Microsoft.Iris.Markup
 
         public override bool SupportsTypeConversion(TypeSchema fromType) => _isFrameworkEnum && Int32Schema.Type.IsAssignableFrom(fromType);
 
-        public override void EncodeBinary(ByteCodeWriter writer, object instance)
+        public override void EncodeBinary(ManagedByteCodeWriter writer, object instance)
         {
             if (_type.IsEnum)
             {

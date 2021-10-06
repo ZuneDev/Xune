@@ -14,7 +14,7 @@ namespace Microsoft.Iris.Markup.UIX
 
         private static object Construct() => char.MinValue;
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             char ch = (char)instanceObj;
             writer.WriteChar(ch);

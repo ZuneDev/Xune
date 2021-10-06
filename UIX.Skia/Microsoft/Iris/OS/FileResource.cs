@@ -67,7 +67,7 @@ namespace Microsoft.Iris.OS
                 fstream.CopyTo(outStream);
             }
             byte[] bytes = outStream.ToArray();
-            NotifyAcquisitionComplete(bytes, true, errorDetails);
+            NotifyAcquisitionComplete(bytes, false, errorDetails);
         }
 
         protected override void CancelAcquisition()

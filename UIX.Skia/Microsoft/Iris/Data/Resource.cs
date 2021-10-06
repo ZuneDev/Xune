@@ -68,7 +68,7 @@ namespace Microsoft.Iris.Data
             else if (_buffer != null)
             {
                 if (_requiresMemoryFree)
-                    FreeNativeBuffer(new IntPtr(_buffer.AsMemory().Pin().Pointer));
+                    _buffer.AsMemory().Pin().Dispose();
                 _buffer = null;
             }
             _status = ResourceStatus.NeedsAcquire;

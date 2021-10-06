@@ -293,7 +293,7 @@ namespace Microsoft.Iris.Markup
 
         public override bool SupportsBinaryEncoding => false;
 
-        public override void EncodeBinary(ByteCodeWriter writer, object instance)
+        public override void EncodeBinary(ManagedByteCodeWriter writer, object instance)
         {
         }
 

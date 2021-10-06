@@ -62,7 +62,7 @@ namespace Microsoft.Iris.Markup.UIX
             return result2;
         }
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             MajorMinor majorMinor = (MajorMinor)instanceObj;
             writer.WriteInt32(majorMinor.Major);

@@ -27,7 +27,7 @@ namespace Microsoft.Iris.Markup
 
         public override bool SupportsTypeConversion(TypeSchema fromType) => _frameworkSchema.SupportsTypeConversion(fromType);
 
-        public override void EncodeBinary(ByteCodeWriter writer, object instance) => _frameworkSchema.EncodeBinary(writer, instance);
+        public override void EncodeBinary(ManagedByteCodeWriter writer, object instance) => _frameworkSchema.EncodeBinary(writer, instance);
 
         public override object DecodeBinary(ManagedByteCodeReader reader) => _frameworkSchema.DecodeBinary(reader);
 

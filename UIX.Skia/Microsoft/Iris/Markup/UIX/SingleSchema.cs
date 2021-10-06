@@ -19,7 +19,7 @@ namespace Microsoft.Iris.Markup.UIX
 
         private static object Construct() => 0.0f;
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             float num = (float)instanceObj;
             writer.WriteSingle(num);

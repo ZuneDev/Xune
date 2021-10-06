@@ -17,7 +17,7 @@ namespace Microsoft.Iris.Markup.UIX
 
         private static object Construct() => string.Empty;
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             string str = (string)instanceObj;
             writer.WriteString(str);

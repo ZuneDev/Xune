@@ -55,7 +55,7 @@ namespace Microsoft.Iris.Markup.UIX
 
         private static object Construct() => new Interpolation();
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             Interpolation interpolation = (Interpolation)instanceObj;
             writer.WriteInt32((int)interpolation.Type);

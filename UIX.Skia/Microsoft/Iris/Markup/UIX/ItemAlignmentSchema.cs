@@ -43,7 +43,7 @@ namespace Microsoft.Iris.Markup.UIX
 
         private static object ConstructAlignmentAlignment(object[] parameters) => new ItemAlignment((Alignment)parameters[0], (Alignment)parameters[1]);
 
-        private static void EncodeBinary(ByteCodeWriter writer, object instanceObj)
+        private static void EncodeBinary(ManagedByteCodeWriter writer, object instanceObj)
         {
             ItemAlignment itemAlignment = (ItemAlignment)instanceObj;
             writer.WriteByte((byte)itemAlignment.Horizontal);
