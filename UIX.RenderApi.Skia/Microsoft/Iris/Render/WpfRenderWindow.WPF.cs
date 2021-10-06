@@ -199,20 +199,31 @@ namespace Microsoft.Iris.Render
             }
             set
             {
-                if (WpfWindow.Content is Control ctl)
+                WpfWindow.Dispatcher.Invoke(() =>
                 {
-                    ctl.Background = new SolidColorBrush(Color.FromArgb(
-                        (byte)(value.A * 255),
-                        (byte)(value.R * 255),
-                        (byte)(value.G * 255),
-                        (byte)(value.B * 255)
-                    ));
-                }
+                    if (WpfWindow.Content is Control ctl)
+                    {
+                        ctl.Background = new SolidColorBrush(Color.FromArgb(
+                            (byte)(value.A * 255),
+                            (byte)(value.R * 255),
+                            (byte)(value.G * 255),
+                            (byte)(value.B * 255)
+                        ));
+                    }
+                });
             }
         }
         public override bool EnableExternalDragDrop
         {
-            get => WpfWindow.AllowDrop;
+            get
+            {
+                bool drop = false;
+                WpfWindow.Dispatcher.Invoke(() =>
+                {
+                    drop = WpfWindow.AllowDrop;
+                });
+                return drop;
+            }
             set => WpfWindow.AllowDrop = true;
         }
         public override bool IsDragInProgress { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -222,17 +233,21 @@ namespace Microsoft.Iris.Render
             get => isFullscreen;
             set
             {
-                isFullscreen = value;
-                if (isFullscreen)
+
+                WpfWindow.Dispatcher.Invoke(() =>
                 {
-                    WpfWindow.WindowStyle = WindowStyle.None;
-                    WpfWindow.WindowState = System.Windows.WindowState.Maximized;
-                }
-                else
-                {
-                    WpfWindow.WindowStyle = WindowStyle.SingleBorderWindow;
-                    WpfWindow.WindowState = System.Windows.WindowState.Normal;
-                }
+                    isFullscreen = value;
+                    if (isFullscreen)
+                    {
+                        WpfWindow.WindowStyle = WindowStyle.None;
+                        WpfWindow.WindowState = System.Windows.WindowState.Maximized;
+                    }
+                    else
+                    {
+                        WpfWindow.WindowStyle = WindowStyle.SingleBorderWindow;
+                        WpfWindow.WindowState = System.Windows.WindowState.Normal;
+                    }
+                });
             }
         }
 
@@ -327,11 +342,22 @@ namespace Microsoft.Iris.Render
 
         public override void ClientToScreen(ref Point point)
         {
-            var p = WpfWindow.PointToScreen(new System.Windows.Point(point.X, point.Y));
-            point = new Point((int)p.X, (int)p.Y);
+            var locPoint = point;
+            WpfWindow.Dispatcher.Invoke(() =>
+            {
+                var p = WpfWindow.PointToScreen(new System.Windows.Point(locPoint.X, locPoint.Y));
+                locPoint = new Point((int)p.X, (int)p.Y);
+            });
+            point = locPoint;
         }
 
-        public override void Close(FormCloseReason fcrCloseReason) => WpfWindow.Close();
+        public override void Close(FormCloseReason fcrCloseReason)
+        {
+            WpfWindow.Dispatcher.Invoke(() =>
+            {
+                WpfWindow.Close();
+            });
+        }
 
         public override IHwndHostWindow CreateHwndHostWindow()
         {
@@ -360,21 +386,32 @@ namespace Microsoft.Iris.Render
 
         public override void Restore()
         {
-            WpfWindow.WindowState = System.Windows.WindowState.Normal;
+            WpfWindow.Dispatcher.Invoke(() =>
+            {
+                WpfWindow.WindowState = System.Windows.WindowState.Normal;
+            });
         }
 
         public override void ScreenToClient(ref Point point)
         {
-            var p = WpfWindow.PointFromScreen(new System.Windows.Point(point.X, point.Y));
-            point = new Point((int)p.X, (int)p.Y);
+            var locPoint = point;
+            WpfWindow.Dispatcher.Invoke(() =>
+            {
+                var p = WpfWindow.PointFromScreen(new System.Windows.Point(locPoint.X, locPoint.Y));
+                locPoint = new Point((int)p.X, (int)p.Y);
+            });
+            point = locPoint;
         }
 
         public override void SetCapture(IRawInputSite captureSite, bool state)
         {
-            if (state)
-                WpfWindow.CaptureMouse();
-            else
-                WpfWindow.ReleaseMouseCapture();
+            WpfWindow.Dispatcher.Invoke(() =>
+            {
+                if (state)
+                    WpfWindow.CaptureMouse();
+                else
+                    WpfWindow.ReleaseMouseCapture();
+            });
         }
 
         public override void SetDragDropResult(uint nDragOverResult, uint nDragDropResult)
@@ -389,7 +426,10 @@ namespace Microsoft.Iris.Render
 
         public override void SetIcon(string sModuleName, uint nResourceID, IconFlags nOptions)
         {
-            WpfWindow.Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri(sModuleName));
+            WpfWindow.Dispatcher.Invoke(() =>
+            {
+                WpfWindow.Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri(sModuleName));
+            });
         }
 
         public override void SetMouseIdleOptions(Size sizeMouseIdleTolerance, uint nMouseIdleDelay)
@@ -399,10 +439,13 @@ namespace Microsoft.Iris.Render
 
         public override void SetWindowOptions(WindowOptions options, bool enable)
         {
-            if (options.HasFlag(WindowOptions.FreeformResize))
-                WpfWindow.ResizeMode = enable ? ResizeMode.CanResize : ResizeMode.NoResize;
-            if (options.HasFlag(WindowOptions.EnableCursor))
-                WpfWindow.Cursor = enable ? System.Windows.Input.Cursors.Arrow : System.Windows.Input.Cursors.None;
+            WpfWindow.Dispatcher.Invoke(() =>
+            {
+                if (options.HasFlag(WindowOptions.FreeformResize))
+                    WpfWindow.ResizeMode = enable ? ResizeMode.CanResize : ResizeMode.NoResize;
+                if (options.HasFlag(WindowOptions.EnableCursor))
+                    WpfWindow.Cursor = enable ? WpfCursors.Arrow : WpfCursors.None;
+            });
         }
 
         public override void TakeFocus() => WpfWindow.Focus();

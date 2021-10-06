@@ -1,4 +1,5 @@
 ﻿using Microsoft.Iris.Render;
+using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System;
 using System.Collections.Generic;
@@ -22,10 +23,14 @@ namespace Xune.Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static MainWindow Current { get; private set; }
+        private static SKSurface Surface { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
 
+            Current = this;
             Canvas.PaintSurface += Canvas_PaintSurface;
         }
 
@@ -38,8 +43,16 @@ namespace Xune.Wpf
                 return;
             }
 
-            Microsoft.Iris.Application.Initialize(e.Surface, new WpfRenderWindow(this));
+            Surface = e.Surface;
+            var initTask = new Task(Init);
+            initTask.Start();
+        }
+
+        private void Init()
+        {
+            Microsoft.Iris.Application.Initialize(Surface, new WpfRenderWindow(this));
             Microsoft.Iris.Application.LoadMarkup(@"file://D:\Repos\yoshiask\ZuneUIXTools\test\testA.uix");
+            Microsoft.Iris.Application.Run();
         }
     }
 }

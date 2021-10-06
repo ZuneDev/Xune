@@ -72,7 +72,11 @@ namespace Microsoft.Iris.Queues
                     QueueItem nextItem = queue.GetNextItem();
                     if (nextItem != null)
                     {
-                        SendDebugMessage(nextItem.ToDebugPacketString());
+#if DEBUG
+                        string debugString = nextItem.ToDebugPacketString();
+                        SendDebugMessage(debugString);
+                        Debug.Trace.WriteLine(Debug.TraceCategory.Dispatcher, debugString);
+#endif
                         nextItem.Dispatch();
                     }
                     else

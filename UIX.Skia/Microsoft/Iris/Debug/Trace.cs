@@ -128,9 +128,13 @@ namespace Microsoft.Iris.Debug
 
         public static void EnableCategory(TraceCategory cat, bool enabled)
         {
-            byte level = 0;
-            if (enabled) level = 1;
-            TraceSettings.SetCategoryLevel(cat, level);
+            TraceSettings.SetCategoryLevel(cat, (byte)(enabled ? 1 : 0));
+        }
+
+        public static void EnableAllCategories(bool enabled)
+        {
+            foreach (Enum e in Enum.GetValues(typeof(TraceCategory)))
+                EnableCategory((TraceCategory)e, enabled);
         }
 
         [Conditional("DEBUG")]

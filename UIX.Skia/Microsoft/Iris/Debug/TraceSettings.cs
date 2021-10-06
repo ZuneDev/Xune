@@ -6,7 +6,7 @@
 
 using Microsoft.Iris.OS;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Security;
 
 namespace Microsoft.Iris.Debug
@@ -14,7 +14,7 @@ namespace Microsoft.Iris.Debug
     [SuppressUnmanagedCodeSecurity]
     internal static class TraceSettings
     {
-        private static Dictionary<TraceCategory, byte> CategoryLevels = new();
+        private static ConcurrentDictionary<TraceCategory, byte> CategoryLevels = new();
 
         private static string s_debugTraceFile;
 
@@ -38,31 +38,21 @@ namespace Microsoft.Iris.Debug
         public static byte GetCategoryLevel(TraceCategory cat)
         {
             if (CategoryLevels.TryGetValue(cat, out byte level))
-            {
                 return level;
-            }
             else
-            {
-                CategoryLevels.Add(cat, 0);
-                return GetCategoryLevel(cat);
-            }
+                return 0;
         }
 
         public static void SetCategoryLevel(TraceCategory cat, byte level)
         {
-            if (CategoryLevels.ContainsKey(cat))
-            {
-                CategoryLevels[cat] = level;
-            }
-            else
-            {
-                CategoryLevels.Add(cat, level);
-            }
+            CategoryLevels.AddOrUpdate(cat, level, UpdateValueFactory);
         }
 
         public static bool IsFlagsCategory(TraceCategory cat) => false;
 
         private static bool IsExternalCategory(TraceCategory cat) => (uint)cat < 25U;
+
+        private static byte UpdateValueFactory(TraceCategory cat, byte level) => level;
 
         public static bool SendOutputToDebugger { get; set; } = true;
 

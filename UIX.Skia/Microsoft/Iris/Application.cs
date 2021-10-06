@@ -145,6 +145,10 @@ namespace Microsoft.Iris
             Debug.Assert.IsNotNull(skSurface, nameof(skSurface));
             VerifyTrustedEnvironment();
 
+#if DEBUG
+            Debug.Trace.EnableAllCategories(true);
+#endif
+
             s_session = new UISession(skSurface, renderWindow);
             s_session.IsRtl = s_IsRTL;
             s_session.InputManager.KeyCoalescePolicy = new KeyCoalesceFilter(QueryKeyCoalesce);
