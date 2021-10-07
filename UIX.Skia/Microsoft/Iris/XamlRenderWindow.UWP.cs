@@ -12,6 +12,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using XamlWindow = Windows.UI.Xaml.Window;
 
 namespace Microsoft.Iris.Render
 {
@@ -19,11 +20,11 @@ namespace Microsoft.Iris.Render
     {
         private bool isDragging = false;
         private GraphicsDevice graphicsDevice;
-        private Window XamlWindow { get; set; }
+        private XamlWindow XamlWindow { get; set; }
         private ApplicationView CurrentView => ApplicationView.GetForCurrentView();
         private Rect VisibleBounds => CurrentView.VisibleBounds;
 
-        public XamlRenderWindow(Window window)
+        public XamlRenderWindow(XamlWindow window)
         {
             XamlWindow = window;
 
@@ -174,7 +175,7 @@ namespace Microsoft.Iris.Render
 
         public override IVisualContainer VisualRoot => throw new NotImplementedException();
 
-        TreeNode Root => throw new NotImplementedException();
+        Graphics.TreeNode Root => throw new NotImplementedException();
 
         internal override bool IsClosing => throw new NotImplementedException();
 

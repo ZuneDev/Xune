@@ -1,7 +1,6 @@
 ﻿using Microsoft.Iris.Render;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 

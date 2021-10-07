@@ -17,5 +17,4 @@ using System.Security.Permissions;
 [assembly: AssemblyVersion("4.8.0.0")]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
-// Allow platform-specific extensions to access internals
-[assembly: InternalsVisibleTo("UIX.RenderAPI.Skia.Uno")]
+[assembly: InternalsVisibleTo("UIX.Skia")]

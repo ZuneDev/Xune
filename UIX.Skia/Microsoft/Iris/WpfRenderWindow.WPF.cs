@@ -24,10 +24,10 @@ namespace Microsoft.Iris.Render
         private IVisualContainer visualRoot;
         private RenderSession session;
 
-        private Window WpfWindow { get; set; }
+        private System.Windows.Window WpfWindow { get; set; }
         private WindowInteropHelper InteropHelper { get; set; }
 
-        public WpfRenderWindow(Window window)
+        public WpfRenderWindow(System.Windows.Window window)
         {
             WpfWindow = window;
             InteropHelper = new WindowInteropHelper(window);
@@ -283,7 +283,7 @@ namespace Microsoft.Iris.Render
         }
         public override HWND AppNotifyWindow { set => appNotifyWindow = value; }
 
-        TreeNode Root => throw new NotImplementedException();
+        Graphics.TreeNode Root => throw new NotImplementedException();
 
         private bool _IsClosing = false;
         internal override bool IsClosing => _IsClosing;
