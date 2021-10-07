@@ -1,20 +1,9 @@
 ﻿using Microsoft.Iris.Render;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Xune.Wpf
 {
@@ -24,35 +13,44 @@ namespace Xune.Wpf
     public partial class MainWindow : Window
     {
         public static MainWindow Current { get; private set; }
-        private static SKSurface Surface { get; set; }
+
+        private WpfRenderWindow IrisWindow { get; set; }
+        private SKSurface Surface { get; set; }
+
+        Task irisInitTask;
 
         public MainWindow()
         {
             InitializeComponent();
 
             Current = this;
-            Canvas.PaintSurface += Canvas_PaintSurface;
+            IrisWindow = new WpfRenderWindow(this);
+            Canvas.PaintSurface += Canvas_InitPaintSurface;
         }
 
-        private void Canvas_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        private void Canvas_InitPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             // Initialize UI framework
-            if (Microsoft.Iris.Application.IsInitialized || Microsoft.Iris.Application.IsInitializing)
+            if (irisInitTask != null || Microsoft.Iris.Application.IsInitialized || Microsoft.Iris.Application.IsInitializing)
             {
-                Canvas.PaintSurface -= Canvas_PaintSurface;
+                Canvas.PaintSurface -= Canvas_InitPaintSurface;
                 return;
             }
 
             Surface = e.Surface;
-            var initTask = new Task(Init);
-            initTask.Start();
+            irisInitTask = new Task(Init);
+            irisInitTask.Start();
         }
 
         private void Init()
         {
-            Microsoft.Iris.Application.Initialize(Surface, new WpfRenderWindow(this));
-            Microsoft.Iris.Application.LoadMarkup(@"file://D:\Repos\yoshiask\ZuneUIXTools\test\testA.uix");
-            Microsoft.Iris.Application.Run();
+            Microsoft.Iris.Application.Initialize(Surface, IrisWindow);
+
+            string pageUixPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory,
+                "Pages", "Home.uix");
+            Microsoft.Iris.Application.LoadMarkup("file://" + pageUixPath);
+
+            Microsoft.Iris.Application.Run(new Microsoft.Iris.DeferredInvokeHandler((obj) => System.Diagnostics.Debug.WriteLine("Init done: {0}", obj)));
         }
     }
 }
