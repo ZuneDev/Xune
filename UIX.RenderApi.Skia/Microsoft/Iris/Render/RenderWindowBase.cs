@@ -1,4 +1,6 @@
 ﻿using Microsoft.Iris.Input;
+using Microsoft.Iris.Library;
+using Microsoft.Iris.Render.Common;
 using Microsoft.Iris.Render.Graphics;
 using Microsoft.Iris.Render.Internal;
 using System;
@@ -7,10 +9,24 @@ namespace Microsoft.Iris.Render
 {
     public abstract class RenderWindowBase : IRenderWindow, ITreeOwner
     {
-        internal abstract GraphicsDevice CreateGraphicsDevice(
+        private RenderSession m_session;
+        private GraphicsDevice m_graphicsDevice;
+        private IVisualContainer m_visualRoot;
+
+        internal virtual GraphicsDevice CreateGraphicsDevice(
           RenderSession session,
           GraphicsDeviceType graphicsDeviceType,
-          GraphicsRenderingQuality renderingQuality);
+          GraphicsRenderingQuality renderingQuality)
+        {
+            m_session = session;
+            if (graphicsDeviceType.FulfillsRequirement(GraphicsDeviceType.Skia))
+                m_graphicsDevice = new SkiaGraphicsDevice(session);
+
+            m_visualRoot = new VisualContainer(true, session, this, new Object(), out var visual);
+            InvokePaint();
+
+            return GraphicsDevice;
+        }
 
         public abstract int Left { get; }
         public abstract int Top { get; }
@@ -40,7 +56,7 @@ namespace Microsoft.Iris.Render
         public abstract WindowState WindowState { get; set; }
         public abstract FormStyleInfo Styles { get; set; }
         public abstract HWND AppNotifyWindow { set; }
-        public abstract IVisualContainer VisualRoot { get; }
+        public virtual IVisualContainer VisualRoot => m_visualRoot;
         TreeNode ITreeOwner.Root { get; }
         public bool CatchCloseRequests => CloseRequestEvent != null;
 
@@ -58,9 +74,9 @@ namespace Microsoft.Iris.Render
 
         internal abstract ColorF OutlineMarkedColor { get; set; }
 
-        internal abstract GraphicsDevice GraphicsDevice { get; }
+        internal virtual GraphicsDevice GraphicsDevice => m_graphicsDevice;
 
-        internal abstract RenderSession Session { get; }
+        internal virtual RenderSession Session => m_session;
 
         internal abstract GraphicsDeviceType GraphicsDeviceType { get; }
 
@@ -119,5 +135,17 @@ namespace Microsoft.Iris.Render
         protected virtual void OnClose() => CloseEvent?.Invoke();
         protected virtual void OnCloseRequest() => CloseRequestEvent?.Invoke();
         protected virtual void OnSetFocus(bool focused) => SetFocusEvent?.Invoke(focused);
+        
+        public virtual void InvokePaint()
+        {
+            Session?.DeferredInvoke(new DeferredHandler((obj) =>
+            {
+                Debug2.WriteLine(DebugCategory.FormWindow, 0, (string)obj);
+            }), "Howdy from dispatcher!", DeferredInvokePriority.VisualUpdate);
+            return;
+
+            var surface = Session.EngineInfo.Surface;
+            surface.Canvas.DrawText("Howdy from UIX in WPF!", 0, 0, new SkiaSharp.SKPaint(new SkiaSharp.SKFont(SkiaSharp.SKTypeface.Default)));
+        }
     }
 }

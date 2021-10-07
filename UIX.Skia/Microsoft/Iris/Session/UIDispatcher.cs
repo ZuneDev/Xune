@@ -206,6 +206,9 @@ namespace Microsoft.Iris.Session
 
         private PriorityQueue.HookProc GetQueueDrainHook(DispatchPriority priority) => _masterQueue.GetDrainHook((int)priority);
 
+        /// <summary>
+        /// Creates a <see cref="MessageLoop"/> and starts handling items in <paramref name="queue"/>.
+        /// </summary>
         private void MainLoop(Queue queue, LoopCondition condition)
         {
             using (new UIDispatcher.MessageLoop(this, condition))

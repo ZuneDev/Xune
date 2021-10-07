@@ -51,12 +51,7 @@ namespace Microsoft.Iris.Session
         {
         }
 
-        public UISession(
-            SKSurface skSurface,
-            RenderWindowBase renderWindow,
-            EventHandler rendererConnectedCallback,
-            TimeoutHandler handlerTimeout,
-          uint timeoutSecValue)
+        public UISession(SKSurface skSurface, RenderWindowBase renderWindow, EventHandler rendererConnectedCallback, TimeoutHandler handlerTimeout, uint timeoutSecValue)
         {
             _syncWindowHandler = new SimpleCallback(SyncWindowHandler);
             _queueSyncLayoutComplete = new SimpleQueue();

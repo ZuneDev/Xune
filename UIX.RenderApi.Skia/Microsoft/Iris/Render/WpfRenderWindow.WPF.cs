@@ -22,6 +22,7 @@ namespace Microsoft.Iris.Render
         private GraphicsDevice graphicsDevice;
         private HWND appNotifyWindow;
         private IVisualContainer visualRoot;
+        private RenderSession session;
 
         private Window WpfWindow { get; set; }
         private WindowInteropHelper InteropHelper { get; set; }
@@ -40,19 +41,6 @@ namespace Microsoft.Iris.Render
             WpfWindow.DragEnter += WpfWindow_DragStarting;
             //WpfWindow.DropCompleted += XamlWindowContent_DropCompleted;
             WpfWindow.Loaded += WpfWindow_Loaded;
-        }
-
-        internal override GraphicsDevice CreateGraphicsDevice(
-          RenderSession session,
-          GraphicsDeviceType graphicsDeviceType,
-          GraphicsRenderingQuality renderingQuality)
-        {
-            if (graphicsDeviceType.FulfillsRequirement(GraphicsDeviceType.Skia))
-                graphicsDevice = new SkiaGraphicsDevice(session);
-
-            visualRoot = new VisualContainer(true, session, this, new Object(), out var visual);
-
-            return GraphicsDevice;
         }
 
         public override int Left => (int)WpfWindow.Left;
@@ -201,15 +189,12 @@ namespace Microsoft.Iris.Render
             {
                 WpfWindow.Dispatcher.Invoke(() =>
                 {
-                    if (WpfWindow.Content is Control ctl)
-                    {
-                        ctl.Background = new SolidColorBrush(Color.FromArgb(
-                            (byte)(value.A * 255),
-                            (byte)(value.R * 255),
-                            (byte)(value.G * 255),
-                            (byte)(value.B * 255)
-                        ));
-                    }
+                    WpfWindow.Background = new SolidColorBrush(Color.FromArgb(
+                        (byte)(value.A * 255),
+                        (byte)(value.R * 255),
+                        (byte)(value.G * 255),
+                        (byte)(value.B * 255)
+                    ));
                 });
             }
         }
@@ -298,8 +283,6 @@ namespace Microsoft.Iris.Render
         }
         public override HWND AppNotifyWindow { set => appNotifyWindow = value; }
 
-        public override IVisualContainer VisualRoot => visualRoot;
-
         TreeNode Root => throw new NotImplementedException();
 
         private bool _IsClosing = false;
@@ -315,10 +298,6 @@ namespace Microsoft.Iris.Render
 
         internal override ColorF OutlineAllColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         internal override ColorF OutlineMarkedColor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        internal override GraphicsDevice GraphicsDevice => graphicsDevice;
-
-        internal override RenderSession Session => throw new NotImplementedException();
 
         internal override GraphicsDeviceType GraphicsDeviceType => GraphicsDeviceType.Skia;
 
@@ -371,7 +350,7 @@ namespace Microsoft.Iris.Render
 
         public override void Initialize()
         {
-
+            
         }
 
         public override void LockMouseActive(bool fActive)
