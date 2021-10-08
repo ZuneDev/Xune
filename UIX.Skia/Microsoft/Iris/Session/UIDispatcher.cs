@@ -51,8 +51,8 @@ namespace Microsoft.Iris.Session
             SetQueueDrainHook(DispatchPriority.Sleep, new PriorityQueue.HookProc(WaitForWork));
             _rpcYieldQueue = _masterQueue.BuildSubsetQueue(new int[2]
             {
-        5,
-        16
+                5,
+                16
             }, true);
             _cleanupQueue = _masterQueue.BuildSubsetQueue(new int[1], true);
             _doBatchFlush = new PriorityQueue.HookProc(DoBatchFlush);
