@@ -91,6 +91,10 @@ namespace Microsoft.Iris.Drawing
 
         internal static Color FromArgb(int red, int green, int blue) => FromArgb(byte.MaxValue, red, green, blue);
 
+        internal static Color FromSKColor(SkiaSharp.SKColor skColor) => new(skColor.Alpha, skColor.Red, skColor.Blue, skColor.Green);
+
+        internal SkiaSharp.SKColor ToSKColor() => new(R, G, B, A);
+
         internal float GetValue()
         {
             float num1 = R / (float)byte.MaxValue;
@@ -220,7 +224,7 @@ namespace Microsoft.Iris.Drawing
 
         internal static Color Transparent => new Color(0U);
 
-        internal static Color Black => new Color(4278190080U);
+        internal static Color Black => new Color(0, 0, 0);
 
         internal static Color White => new Color(uint.MaxValue);
     }
