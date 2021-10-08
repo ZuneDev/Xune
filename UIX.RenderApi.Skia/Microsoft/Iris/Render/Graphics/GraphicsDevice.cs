@@ -35,7 +35,7 @@ namespace Microsoft.Iris.Render.Graphics
         private bool m_fBeginCaptureBackBuffer;
         private bool m_fEndCaptureBackBuffer;
 
-        internal GraphicsDevice(RenderSession session, string stDisplayName)
+        internal GraphicsDevice(RenderSession session, string stDisplayName) : base(session.EngineInfo)
         {
             this.m_session = session;
             this.m_stDisplayName = stDisplayName;
@@ -138,7 +138,9 @@ namespace Microsoft.Iris.Render.Graphics
 
         internal virtual void CreateVideoPoolWorker(object oSurfacePool, object oHandle) => Debug2.Validate(false, null, "GraphicsDevice type does not support Video Pool");
 
+        [Obsolete]
         internal void RegisterWindow(RenderWindow win) => this.m_trackerWindows.AddObject(win);
+        internal void RegisterWindow(RenderWindowBase win) => this.m_trackerWindows.AddObject(win);
 
         public virtual bool CanPlayAnimationType(AnimationInputType type) => false;
 
@@ -215,6 +217,11 @@ namespace Microsoft.Iris.Render.Graphics
 
         public virtual void RenderNowIfPossible()
         {
+            RenderWindowBase window = (RenderWindowBase)m_trackerWindows.LiveObjects[0];
+            window.RunOnUI(() =>
+            {
+                System.Diagnostics.Debug.WriteLine(EngineInfo.Surface);
+            });
         }
 
         public void BeginCaptureBackBuffer(string stFileName)

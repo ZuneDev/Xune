@@ -3,14 +3,12 @@
 using Microsoft.Iris.Input;
 using Microsoft.Iris.Render.Graphics;
 using Microsoft.Iris.Render.Internal;
-using Microsoft.Iris.Library;
 using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
-using WpfCursor = System.Windows.Input.Cursor;
 using WpfCursors = System.Windows.Input.Cursors;
 
 namespace Microsoft.Iris.Render
@@ -187,7 +185,7 @@ namespace Microsoft.Iris.Render
             }
             set
             {
-                WpfWindow.Dispatcher.Invoke(() =>
+                RunOnUI(() =>
                 {
                     WpfWindow.Background = new SolidColorBrush(Color.FromArgb(
                         (byte)(value.A * 255),
@@ -203,10 +201,7 @@ namespace Microsoft.Iris.Render
             get
             {
                 bool drop = false;
-                WpfWindow.Dispatcher.Invoke(() =>
-                {
-                    drop = WpfWindow.AllowDrop;
-                });
+                RunOnUI(() => drop = WpfWindow.AllowDrop);
                 return drop;
             }
             set => WpfWindow.AllowDrop = true;
@@ -219,7 +214,7 @@ namespace Microsoft.Iris.Render
             set
             {
 
-                WpfWindow.Dispatcher.Invoke(() =>
+                RunOnUI(() =>
                 {
                     isFullscreen = value;
                     if (isFullscreen)
@@ -322,7 +317,7 @@ namespace Microsoft.Iris.Render
         public override void ClientToScreen(ref Point point)
         {
             var locPoint = point;
-            WpfWindow.Dispatcher.Invoke(() =>
+            RunOnUI(() =>
             {
                 var p = WpfWindow.PointToScreen(new System.Windows.Point(locPoint.X, locPoint.Y));
                 locPoint = new Point((int)p.X, (int)p.Y);
@@ -332,10 +327,7 @@ namespace Microsoft.Iris.Render
 
         public override void Close(FormCloseReason fcrCloseReason)
         {
-            WpfWindow.Dispatcher.Invoke(() =>
-            {
-                WpfWindow.Close();
-            });
+            RunOnUI(() => WpfWindow.Close());
         }
 
         public override IHwndHostWindow CreateHwndHostWindow()
@@ -350,7 +342,14 @@ namespace Microsoft.Iris.Render
 
         public override void Initialize()
         {
-            
+            base.Initialize();
+
+            var timer = new System.Timers.Timer(10);
+            timer.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
+            {
+                //Iris.Session.UIDispatcher.Post(Iris.Session.DispatchPriority.Render, new Queues.QueueItem());
+            };
+            timer.Start();
         }
 
         public override void LockMouseActive(bool fActive)
@@ -360,12 +359,12 @@ namespace Microsoft.Iris.Render
 
         public override void RefreshHitTarget()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void Restore()
         {
-            WpfWindow.Dispatcher.Invoke(() =>
+            RunOnUI(() =>
             {
                 WpfWindow.WindowState = System.Windows.WindowState.Normal;
             });
@@ -374,7 +373,7 @@ namespace Microsoft.Iris.Render
         public override void ScreenToClient(ref Point point)
         {
             var locPoint = point;
-            WpfWindow.Dispatcher.Invoke(() =>
+            RunOnUI(() =>
             {
                 var p = WpfWindow.PointFromScreen(new System.Windows.Point(locPoint.X, locPoint.Y));
                 locPoint = new Point((int)p.X, (int)p.Y);
@@ -384,7 +383,7 @@ namespace Microsoft.Iris.Render
 
         public override void SetCapture(IRawInputSite captureSite, bool state)
         {
-            WpfWindow.Dispatcher.Invoke(() =>
+            RunOnUI(() =>
             {
                 if (state)
                     WpfWindow.CaptureMouse();
@@ -405,7 +404,7 @@ namespace Microsoft.Iris.Render
 
         public override void SetIcon(string sModuleName, uint nResourceID, IconFlags nOptions)
         {
-            WpfWindow.Dispatcher.Invoke(() =>
+            RunOnUI(() =>
             {
                 WpfWindow.Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri(sModuleName));
             });
@@ -418,7 +417,7 @@ namespace Microsoft.Iris.Render
 
         public override void SetWindowOptions(WindowOptions options, bool enable)
         {
-            WpfWindow.Dispatcher.Invoke(() =>
+            RunOnUI(() =>
             {
                 if (options.HasFlag(WindowOptions.FreeformResize))
                     WpfWindow.ResizeMode = enable ? ResizeMode.CanResize : ResizeMode.NoResize;
@@ -427,12 +426,12 @@ namespace Microsoft.Iris.Render
             });
         }
 
-        public override void TakeFocus() => WpfWindow.Focus();
+        public override void TakeFocus() => RunOnUI(() => WpfWindow.Focus());
 
         public override void TakeForeground(bool fForce)
         {
             if (fForce)
-                WpfWindow.Activate();
+                RunOnUI(() => WpfWindow.Activate());
         }
 
         public override void TemporarilyExitExclusiveMode()
@@ -443,6 +442,11 @@ namespace Microsoft.Iris.Render
         public override void SetCurrentDisplay(IDisplay inputIDisplay) => CurrentDisplay = inputIDisplay;
 
         public override void SetFullScreenExclusive(bool fNewValue) => FullScreenExclusive = fNewValue;
+
+        public override void RunOnUI(Action action)
+        {
+            WpfWindow.Dispatcher.Invoke(action);
+        }
     }
 }
 

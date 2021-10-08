@@ -304,6 +304,11 @@ namespace Microsoft.Iris.Render
         public override void SetCurrentDisplay(IDisplay inputIDisplay) => CurrentDisplay = inputIDisplay;
 
         public override void SetFullScreenExclusive(bool fNewValue) => FullScreenExclusive = fNewValue;
+
+        public override async void RunOnUI(Action action)
+        {
+            await XamlWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, new DispatchedHandler(action));
+        }
     }
 }
 

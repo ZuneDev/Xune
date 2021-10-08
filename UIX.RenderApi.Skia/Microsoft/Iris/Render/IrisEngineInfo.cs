@@ -16,7 +16,12 @@ namespace Microsoft.Iris.Render
         private SKSurface m_skSurface;
         private ConnectionInfo m_connectionInfo;
 
-        public static EngineInfo CreateLocal(SKSurface skSurface, RenderWindowBase renderWindow) => new IrisEngineInfo(skSurface, renderWindow, true);
+        public static EngineInfo CreateLocal(SKSurface skSurface, RenderWindowBase renderWindow)
+        {
+            var info = new IrisEngineInfo(skSurface, renderWindow, true);
+            Current = info;
+            return info;
+        }
 
         public static EngineInfo CreateRemote(SKSurface skSurface, RenderWindowBase renderWindow) => new IrisEngineInfo(skSurface, renderWindow, true, TransportProtocol.TCP, "127.0.0.1", false);
 
@@ -48,5 +53,9 @@ namespace Microsoft.Iris.Render
         internal ConnectionInfo ConnectionInfo => this.m_connectionInfo;
         internal RenderWindowBase Window => this.m_renderWindow;
         internal SKSurface Surface => this.m_skSurface;
+
+        public static IrisEngineInfo Current { get; private set; }
+
+        public static void UpdateSurface(SKSurface surface) => Current.m_skSurface = surface;
     }
 }

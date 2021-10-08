@@ -976,6 +976,11 @@ namespace Microsoft.Iris.Render.Internal
             m_remoteWindow.SendSetCursors(cursor1.ResourceId, cursor3.ResourceId);
         }
 
+        public override void RunOnUI(Action action)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsPreProcessedInput => m_fPreProcessedInput;
 
         public delegate void RendererSuspendedHandler(object sender, RendererSuspendedArgs args);

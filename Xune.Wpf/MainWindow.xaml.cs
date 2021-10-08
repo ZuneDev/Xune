@@ -33,6 +33,8 @@ namespace Xune.Wpf
             if (irisInitTask != null || Microsoft.Iris.Application.IsInitialized || Microsoft.Iris.Application.IsInitializing)
             {
                 Canvas.PaintSurface -= Canvas_InitPaintSurface;
+                Canvas.PaintSurface += Canvas_PaintSurface;
+                Canvas.InvalidateMeasure();
                 return;
             }
 
@@ -41,13 +43,22 @@ namespace Xune.Wpf
             irisInitTask.Start();
         }
 
+        private void Canvas_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        {
+            //System.Diagnostics.Debug.WriteLine("Canvas invalidated");
+            IrisEngineInfo.UpdateSurface(e.Surface);
+            Canvas.InvalidateMeasure();
+        }
+
         private void Init()
         {
             Microsoft.Iris.Application.Initialize(Surface, IrisWindow);
 
             string pageUixPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory,
                 "Pages", "Home.uix");
-            Microsoft.Iris.Application.LoadMarkup("file://" + pageUixPath);
+            string uiName = "Default";
+            //Microsoft.Iris.Application.LoadMarkup("file://" + pageUixPath);
+            Microsoft.Iris.Application.Window.RequestLoad("file://" + pageUixPath);
 
             Microsoft.Iris.Application.Run(new Microsoft.Iris.DeferredInvokeHandler((obj) => System.Diagnostics.Debug.WriteLine("Init done: {0}", obj)));
         }

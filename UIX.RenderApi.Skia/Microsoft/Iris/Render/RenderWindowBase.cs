@@ -21,6 +21,7 @@ namespace Microsoft.Iris.Render
             m_session = session;
             if (graphicsDeviceType.FulfillsRequirement(GraphicsDeviceType.Skia))
                 m_graphicsDevice = new SkiaGraphicsDevice(session);
+            m_graphicsDevice.RegisterWindow(this);
 
             m_visualRoot = new VisualContainer(true, session, this, new Object(), out var visual);
             InvokePaint();
@@ -103,7 +104,6 @@ namespace Microsoft.Iris.Render
         public abstract void Close(FormCloseReason fcrCloseReason);
         public abstract IHwndHostWindow CreateHwndHostWindow();
         public abstract void ForceMouseIdle(bool fIdle);
-        public abstract void Initialize();
         public abstract void LockMouseActive(bool fActive);
         public abstract void RefreshHitTarget();
         public abstract void Restore();
@@ -119,6 +119,7 @@ namespace Microsoft.Iris.Render
         public abstract void TakeFocus();
         public abstract void TakeForeground(bool fForce);
         public abstract void TemporarilyExitExclusiveMode();
+        public abstract void RunOnUI(Action action);
 
         protected virtual void OnForwardWndMsg(uint msg, IntPtr wParam, IntPtr lParam) => ForwardMessageEvent?.Invoke(msg, wParam, lParam);
         protected virtual void FireLoadEvent() => LoadEvent?.Invoke();
@@ -135,12 +136,17 @@ namespace Microsoft.Iris.Render
         protected virtual void OnClose() => CloseEvent?.Invoke();
         protected virtual void OnCloseRequest() => CloseRequestEvent?.Invoke();
         protected virtual void OnSetFocus(bool focused) => SetFocusEvent?.Invoke(focused);
-        
+
+        public virtual void Initialize()
+        {
+
+        }
+
         public virtual void InvokePaint()
         {
             Session?.DeferredInvoke(new DeferredHandler((obj) =>
             {
-                Debug2.WriteLine(DebugCategory.FormWindow, 0, (string)obj);
+                System.Diagnostics.Debug.WriteLine((string)obj);
             }), "Howdy from dispatcher!", DeferredInvokePriority.VisualUpdate);
             return;
 
