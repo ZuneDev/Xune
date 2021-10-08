@@ -344,7 +344,6 @@ namespace Microsoft.Iris.UI
             Zone.Dispose(this);
             Session.InputManager.InvalidKeyFocus -= new InvalidKeyFocusHandler(OnInvalidKeyFocus);
             Session.Dispatcher.StopCurrentMessageLoop();
-            NativeApi.SpDestroyNotifyWindow();
         }
 
         private void OnInvalidKeyFocus(ICookedInputSite lastKnownFocused)
