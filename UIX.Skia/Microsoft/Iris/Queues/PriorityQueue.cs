@@ -143,9 +143,7 @@ namespace Microsoft.Iris.Queues
                     PriorityQueue.HookProc drainHook = _drainHooks[lowestBit];
                     if (drainHook != null)
                     {
-                        bool didWork;
-                        bool abort;
-                        drainHook(out didWork, out abort);
+                        drainHook(out bool didWork, out bool abort);
                         if (!abort)
                         {
                             if (didWork)

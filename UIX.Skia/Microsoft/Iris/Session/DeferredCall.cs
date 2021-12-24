@@ -160,7 +160,7 @@ namespace Microsoft.Iris.Session
 
         public override string ToDebugPacketString()
         {
-            string packetString = string.Empty; ;
+            string packetString = string.Empty;
             switch (_callType)
             {
                 case CallType.Simple:
