@@ -20,52 +20,41 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using Topten.RichTextKit;
 
 namespace Microsoft.Iris.ViewItems
 {
     internal class Text : ViewItem, ILayout
     {
+        private uint _bits;
+        public const float MaxWidthConstraint = 4095f;
+        public const float MaxHeightConstraint = 8191f;
         private const float c_scaleEpsilon = 0.01f;
         private const float c_lineSpacingDefault = 0.0f;
         private const float c_characterSpacingDefault = 0.0f;
-        private const bool c_enableKerningDefault = false;
-        private uint _bits;
-        private TextFlow _flow;
-        private float _lastLineExtentLeft;
-        private float _lastLineExtentRight;
-        private Size _textSize;
         private Size _slotSize;
-        private int _lineAlignmentOffset;
+        private Size _textSize;
         private string _content;
+        private RichString _string;
         private Font _font;
-        private Color _textColor;
-        private Color _textHighlightColor;
-        private Color _backHighlightColor;
         private char _passwordChar;
         private float _scale;
-        private LineAlignment _lineAlignment;
         private float _fadeSize;
-        private int _maxLines;
         private int _lastVisibleRun;
+        private Color _backHighlightColor;
+        private Color _textHighlightColor;
         private TextBounds _boundsType;
+        private LineAlignment _lineAlignment;
         private bool _disableIme;
+        private bool _enableKerning;
         private TextStyle _textStyle;
         private IDictionary _namedStyles;
         private RichText _richTextRasterizer;
         private TextEditingHandler _externalEditingHandler;
         private string _parsedContent;
-        private ArrayList _parsedContentMarkedRanges;
-        private ArrayList _fragments;
-        private TextFlowRenderingHelper _renderingHelper;
+        private List<MarkedRange> _parsedContentMarkedRanges;
+        private TextRange _selection;
         private static Font s_defaultFont = new Font("Arial", 24f);
-        private static RichText s_sharedOversampledRasterizer;
-        private static RichText s_sharedNonOversampledRasterizer;
-        private static SimpleText s_sharedSimpleTextRasterizer;
-        private static bool s_simpleTextMeasureAvailable;
-        private Vector<float> _recentScaleChanges;
-        private float _lineSpacing;
-        private float _characterSpacing;
-        private bool _enableKerning;
         private static char[] s_whitespaceChars = new char[3]
         {
             ' ',
@@ -76,46 +65,34 @@ namespace Microsoft.Iris.ViewItems
         public Text()
         {
             Layout = this;
+            _richTextRasterizer = new RichText(true);
+            _textStyle = new TextStyle();
             _font = s_defaultFont;
-            _textColor = Color.Black;
+            Color = Color.Black;
             _textHighlightColor = Color.White;
             _backHighlightColor = Color.Black;
             _scale = 1f;
             _fadeSize = 32f;
-            _maxLines = int.MaxValue;
             _passwordChar = '•';
             _lineAlignment = LineAlignment.Near;
-            _richTextRasterizer = SharedNonOversampledRasterizer;
-            _renderingHelper = new TextFlowRenderingHelper();
             ContributesToWidth = true;
             TextFitsWidth = true;
             TextFitsHeight = true;
             SetClipped(false);
             MarkScaleDirty();
-            if (s_simpleTextMeasureAvailable)
-                return;
             ClearBit(Bits.FastMeasurePossible);
             SetBit(Bits.FastMeasureValid);
         }
 
-        public Text(UIClass ownerUI)
-          : this()
+        public Text(UIClass ownerUI): this()
         {
+            
         }
 
         protected override void OnDispose()
         {
-            DisposeFlow();
             UnregisterFragmentUsage();
             base.OnDispose();
-        }
-
-        private void DisposeFlow()
-        {
-            if (_flow == null)
-                return;
-            _flow.Dispose(this);
-            _flow = null;
         }
 
         public static void Initialize()
@@ -124,57 +101,7 @@ namespace Microsoft.Iris.ViewItems
 
         public static void Uninitialize()
         {
-            if (s_sharedOversampledRasterizer != null)
-            {
-                s_sharedOversampledRasterizer.Dispose();
-                s_sharedOversampledRasterizer = null;
-            }
-            if (s_sharedNonOversampledRasterizer != null)
-            {
-                s_sharedNonOversampledRasterizer.Dispose();
-                s_sharedNonOversampledRasterizer = null;
-            }
-            if (s_sharedSimpleTextRasterizer == null)
-                return;
-            s_sharedSimpleTextRasterizer.Dispose();
-            s_sharedSimpleTextRasterizer = null;
-        }
 
-        private static SimpleText SharedSimpleTextRasterizer
-        {
-            get
-            {
-                if (s_sharedSimpleTextRasterizer == null)
-                    s_sharedSimpleTextRasterizer = new SimpleText();
-                return s_sharedSimpleTextRasterizer;
-            }
-        }
-
-        private static RichText SharedOversampledRasterizer
-        {
-            get
-            {
-                if (s_sharedOversampledRasterizer == null)
-                {
-                    s_sharedOversampledRasterizer = new RichText(true);
-                    s_sharedOversampledRasterizer.Oversample = true;
-                    s_simpleTextMeasureAvailable = NativeApi.SpSimpleTextIsAvailable();
-                }
-                return s_sharedOversampledRasterizer;
-            }
-        }
-
-        private static RichText SharedNonOversampledRasterizer
-        {
-            get
-            {
-                if (s_sharedNonOversampledRasterizer == null)
-                {
-                    s_sharedNonOversampledRasterizer = new RichText(true);
-                    s_simpleTextMeasureAvailable = NativeApi.SpSimpleTextIsAvailable();
-                }
-                return s_sharedNonOversampledRasterizer;
-            }
         }
 
         public string Content
@@ -195,7 +122,6 @@ namespace Microsoft.Iris.ViewItems
                 else
                     _content = value;
                 _parsedContent = null;
-                _parsedContentMarkedRanges = null;
                 OnDisplayedContentChange();
                 FireNotification(NotificationID.Content);
             }
@@ -235,12 +161,11 @@ namespace Microsoft.Iris.ViewItems
 
         public Color Color
         {
-            get => _textColor;
+            get => _textStyle.Color;
             set
             {
-                if (!(_textColor != value))
-                    return;
-                _textColor = value;
+                if (_textStyle.Color != value)
+                    _textStyle.Color = value;
                 if (KeepFlowAlive)
                 {
                     MarkPaintInvalid();
@@ -298,12 +223,7 @@ namespace Microsoft.Iris.ViewItems
                         flag = true;
                         break;
                 }
-                if (_richTextRasterizer == s_sharedNonOversampledRasterizer && flag)
-                    _richTextRasterizer = SharedOversampledRasterizer;
-                else if (_richTextRasterizer == s_sharedOversampledRasterizer && !flag)
-                    _richTextRasterizer = SharedNonOversampledRasterizer;
-                else
-                    _richTextRasterizer.Oversample = flag;
+                _richTextRasterizer.Oversample = flag;
                 MarkTextLayoutInvalid();
                 ForceContentChange();
                 FireNotification(NotificationID.TextSharpness);
@@ -322,7 +242,6 @@ namespace Microsoft.Iris.ViewItems
                     KeepFlowAlive = true;
                 MarkPaintInvalid();
                 MarkTextLayoutInvalid();
-                UpdateWordWrapForExternalRasterizer();
                 FireNotification(NotificationID.WordWrap);
             }
         }
@@ -360,12 +279,12 @@ namespace Microsoft.Iris.ViewItems
 
         public int MaximumLines
         {
-            get => _maxLines;
+            get => (int)_string.MaxLines;
             set
             {
-                if (_maxLines == value)
+                if (_string.MaxLines == value)
                     return;
-                _maxLines = value;
+                _string.MaxLines = value;
                 MarkPaintInvalid();
                 MarkTextLayoutInvalid();
                 FireNotification(NotificationID.MaximumLines);
@@ -388,12 +307,12 @@ namespace Microsoft.Iris.ViewItems
 
         public float LineSpacing
         {
-            get => !GetBit(Bits.LineSpacingSet) ? 0.0f : _lineSpacing;
+            get => !GetBit(Bits.LineSpacingSet) ? 0.0f : _textStyle.LineSpacing;
             set
             {
                 if (LineSpacing == (double)value)
                     return;
-                _lineSpacing = value;
+                _textStyle.LineSpacing = value;
                 SetBit(Bits.LineSpacingSet);
                 MarkPaintInvalid();
                 MarkTextLayoutInvalid();
@@ -403,12 +322,12 @@ namespace Microsoft.Iris.ViewItems
 
         public float CharacterSpacing
         {
-            get => !GetBit(Bits.CharacterSpacingSet) ? 0.0f : _characterSpacing;
+            get => !GetBit(Bits.CharacterSpacingSet) ? 0.0f : _textStyle.CharacterSpacing;
             set
             {
                 if (CharacterSpacing == (double)value)
                     return;
-                _characterSpacing = value;
+                _textStyle.CharacterSpacing = value;
                 SetBit(Bits.CharacterSpacingSet);
                 MarkPaintInvalid();
                 MarkTextLayoutInvalid();
@@ -474,7 +393,7 @@ namespace Microsoft.Iris.ViewItems
             }
         }
 
-        public IList Fragments => _fragments;
+        public IList<TextFragment> Fragments { get; private set; }
 
         public bool DisableIme
         {
@@ -488,27 +407,9 @@ namespace Microsoft.Iris.ViewItems
             }
         }
 
-        public Rectangle LastLineBounds => _flow != null ? _flow.GetLastLineBounds(_lineAlignmentOffset) : new Rectangle(_textSize);
+        public Rectangle LastLineBounds => new(_textSize);
 
-        public int NumberOfLines
-        {
-            get
-            {
-                if (_flow == null)
-                    return 1;
-                return _flow.Count < 1 ? 0 : _flow[_flow.Count - 1].Line;
-            }
-        }
-
-        public int NumberOfVisibleLines
-        {
-            get
-            {
-                if (_flow == null)
-                    return 1;
-                return _flow.FirstFitRunOnFinalLine == null ? 0 : _flow.FirstFitRunOnFinalLine.Line;
-            }
-        }
+        public int NumberOfVisibleLines => 1;
 
         public bool ContributesToWidth
         {
@@ -559,8 +460,6 @@ namespace Microsoft.Iris.ViewItems
                     _richTextRasterizer.Oversample = oversample;
                     MarkScaleDirty();
                 }
-                else
-                    _richTextRasterizer = !oversample ? SharedNonOversampledRasterizer : SharedOversampledRasterizer;
                 MarkTextLayoutInvalid();
             }
         }
@@ -572,15 +471,7 @@ namespace Microsoft.Iris.ViewItems
                 if (_externalEditingHandler == value)
                     return;
                 _externalEditingHandler = value;
-                UpdateWordWrapForExternalRasterizer();
             }
-        }
-
-        private void UpdateWordWrapForExternalRasterizer()
-        {
-            if (_externalEditingHandler == null)
-                return;
-            _externalEditingHandler.WordWrap = WordWrap;
         }
 
         public ItemAlignment DefaultChildAlignment => ItemAlignment.Default;
@@ -591,200 +482,11 @@ namespace Microsoft.Iris.ViewItems
 
         Size ILayout.Measure(ILayoutNode layoutNode, Size constraint)
         {
+            // TODO: Text measure
             Size zero = Size.Zero;
             InMeasure = true;
             LineAlignment alignment = RichText.ReverseAlignment(_lineAlignment, UISession.IsRtl);
-            if (!TextLayoutInvalid && _flow != null && (!WordWrap && alignment == LineAlignment.Near) && (TextFitsWidth && constraint.Width >= _textSize.Width && (TextFitsHeight && constraint.Height >= _textSize.Height)))
-            {
-                Size size = Size.Min(_textSize, constraint);
-                InMeasure = false;
-                return size;
-            }
-            int boundingWidth = constraint.Width;
-            if (!ContributesToWidth)
-            {
-                boundingWidth = 16777215;
-                layoutNode.LayoutContributesToWidth = false;
-            }
-            MeasureText(boundingWidth, constraint.Height, alignment);
-            if (alignment != LineAlignment.Near && _flow.Bounds.Width < boundingWidth && _flow.Bounds.Height >= 0)
-                MeasureText(_flow.Bounds.Width, _flow.Bounds.Height, alignment);
-            bool flag1 = false;
-            bool flag2 = false;
-            if (_flow.Count > 0)
-            {
-                Size naturalSize = GetNaturalSize();
-                flag1 = naturalSize.Width > boundingWidth;
-                flag2 = naturalSize.Height > constraint.Height;
-            }
-            int x = 0;
-            int y = 0;
-            if (_flow.Bounds.Left < 0)
-                x = -_flow.Bounds.Left;
-            if (_flow.Bounds.Top < 0)
-                y = -_flow.Bounds.Top;
-            Point point1 = new Point(x, y);
-            ClipToHeight = false;
-            int num1 = -1;
-            int num2 = 0;
-            int val1_1 = 0;
-            int val1_2 = 0;
-            int num3 = MaximumLines;
-            if (num3 == 0)
-                num3 = int.MaxValue;
-            int index;
-            for (index = 0; index < _flow.Count; ++index)
-            {
-                TextRun run = _flow[index];
-                if (run.Line > num3)
-                {
-                    flag2 = true;
-                    break;
-                }
-                if (BoundsType != TextBounds.Full)
-                {
-                    if (run.Line != num1)
-                    {
-                        num2 += val1_1 + val1_2;
-                        val1_1 = 0;
-                        val1_2 = 0;
-                        num1 = run.Line;
-                    }
-                    Point offsetPoint = point1;
-                    offsetPoint.Y -= num2;
-                    if ((BoundsType & TextBounds.AlignToAscender) != TextBounds.Full)
-                    {
-                        val1_1 = Math.Max(val1_1, run.AscenderInset);
-                        offsetPoint.Y -= run.AscenderInset;
-                    }
-                    if ((BoundsType & TextBounds.AlignToBaseline) != TextBounds.Full)
-                        val1_2 = Math.Max(val1_2, run.BaselineInset);
-                    run.ApplyOffset(offsetPoint);
-                }
-                int num4 = (BoundsType & TextBounds.AlignToBaseline) != TextBounds.Full ? run.BaselineInset : 0;
-                if (run.LayoutBounds.Bottom - num4 > constraint.Height)
-                {
-                    if (run.Line == 1)
-                        ClipToHeight = true;
-                    else
-                        break;
-                }
-                _flow.AddFit(run);
-            }
-            _lastVisibleRun = index - 1;
-            TextFitsWidth = WordWrap || !flag1;
-            TextFitsHeight = !flag2;
-            if (!TextFitsHeight && _flow.HasVisibleRuns)
-            {
-                _lastLineExtentLeft = _flow.FirstFitRunOnFinalLine.LayoutBounds.Left;
-                _lastLineExtentRight = _flow.LastFitRun.LayoutBounds.Right;
-            }
-            else
-                _lastLineExtentLeft = _lastLineExtentRight = 0.0f;
-            InvalidateGradients();
-            if (UpdateFragmentsAfterLayout)
-                ((ViewItem)layoutNode).MarkLayoutOutputDirty(true);
-            Point point2 = new Point(_flow.Bounds.Location.X + point1.X, _flow.Bounds.Location.Y + point1.Y);
-            _textSize = new Size(_flow.Bounds.Width + point2.X, _flow.FitBounds.Height + point2.Y - (val1_1 + val1_2));
-            Size constraint1 = Size.Min(_textSize, constraint);
-            DefaultLayout.Measure(layoutNode, constraint1);
-            FireNotification(NotificationID.LastLineBounds);
-            InMeasure = false;
-            return constraint1;
-        }
 
-        void ILayout.Arrange(ILayoutNode layoutNode, LayoutSlot slot)
-        {
-            _slotSize = slot.Bounds;
-            if (!ContributesToWidth)
-                TextFitsWidth = _textSize.Width <= slot.Bounds.Width;
-            _lineAlignmentOffset = 0;
-            if (TextFitsWidth)
-            {
-                if (LineAlignment == LineAlignment.Center)
-                    _lineAlignmentOffset = (_slotSize.Width - _textSize.Width) / 2;
-                else if (LineAlignment == LineAlignment.Far)
-                    _lineAlignmentOffset = _slotSize.Width - _textSize.Width;
-            }
-            bool flag1 = false;
-            if (_flow != null)
-            {
-                Rectangle view = slot.View;
-                Size size = view.Size;
-                bool flag2 = _textSize.Width > size.Width || _textSize.Height > size.Height;
-                flag1 = ((flag1 ? 1 : 0) | (!KeepFlowAlive ? 0 : (flag2 ? 1 : 0))) != 0;
-                _flow.ResetVisibleTracking();
-                if (flag1)
-                {
-                    bool flag3 = false;
-                    for (int index = 0; index <= _lastVisibleRun; ++index)
-                    {
-                        TextRun textRun = _flow[index];
-                        bool flag4 = !textRun.LayoutBounds.IsEmpty && textRun.LayoutBounds.IntersectsWith(view);
-                        if (!flag3 && textRun.Visible != flag4)
-                        {
-                            MarkPaintInvalid();
-                            UpdateFragmentsAfterLayout = true;
-                            flag3 = true;
-                        }
-                        if (flag4)
-                            _flow.AddVisible(index);
-                        else
-                            textRun.Visible = false;
-                    }
-                }
-                else
-                {
-                    for (int index = 0; index <= _lastVisibleRun; ++index)
-                    {
-                        TextRun textRun = _flow[index];
-                        if (!textRun.LayoutBounds.IsEmpty)
-                        {
-                            if (!textRun.Visible)
-                                MarkPaintInvalid();
-                            _flow.AddVisible(index);
-                        }
-                    }
-                }
-            }
-            KeepFlowAlive |= flag1;
-            SetBit(Bits.ViewDependent, flag1);
-            DefaultLayout.Arrange(layoutNode, slot);
-        }
-
-        private Size GetNaturalSize()
-        {
-            if (!FastMeasurePossible)
-                return _richTextRasterizer.GetNaturalBounds();
-            return _flow.Count == 1 ? _flow[0].NaturalExtent : Size.Zero;
-        }
-
-        private void MeasureText(int boundingWidth, int boundingHeight, LineAlignment alignment)
-        {
-            if (FastMeasurePossible)
-                DoFastMeasure(boundingWidth, boundingHeight, alignment);
-            else
-                DoRichEditMeasure(boundingWidth, boundingHeight, alignment);
-        }
-
-        private void DoFastMeasure(int boundingWidth, int boundingHeight, LineAlignment alignment)
-        {
-            TextStyle effectiveTextStyle = GetEffectiveTextStyle();
-            Size constraint = new Size(boundingWidth, boundingHeight);
-            DisposeFlow();
-            _flow = SharedSimpleTextRasterizer.Measure(_content, alignment, effectiveTextStyle, constraint);
-            _flow.DeclareOwner(this);
-        }
-
-        private void DoRichEditMeasure(int boundingWidth, int boundingHeight, LineAlignment alignment)
-        {
-            TextMeasureParams measureParams = new TextMeasureParams();
-            measureParams.Initialize();
-            float width = Math.Min(boundingWidth, 4095f);
-            float height = Math.Min(boundingHeight, 8191f);
-            measureParams.SetConstraint(new SizeF(width, height));
-            TextStyle effectiveTextStyle = GetEffectiveTextStyle();
-            string empty = string.Empty;
             string content;
             if (!UsedForEditing)
             {
@@ -793,49 +495,34 @@ namespace Microsoft.Iris.ViewItems
                 {
                     if (_parsedContent == null && content != null)
                     {
-                        _parsedContentMarkedRanges = new ArrayList();
+                        _parsedContentMarkedRanges = new();
                         _parsedContent = ParseMarkedUpText(content, _parsedContentMarkedRanges);
                     }
                     content = _parsedContent;
                 }
-                measureParams.SetWordWrap(WordWrap);
             }
             else
                 content = _richTextRasterizer.SimpleContent;
-            measureParams.SetEditMode(UsedForEditing);
-            if (UsePasswordMask)
-                measureParams.SetPasswordChar(_passwordChar);
-            measureParams.SetFormat(alignment, effectiveTextStyle);
-            if ((_boundsType & TextBounds.TrimLeftSideBearing) != TextBounds.Full && _lineAlignment == LineAlignment.Near)
-                measureParams.TrimLeftSideBearing();
-            if (!UsedForEditing || GetBit(Bits.ScaleDirty))
-            {
-                ClearBit(Bits.ScaleDirty);
-                measureParams.SetScale(_scale);
-            }
-            if (_parsedContent != null)
-                ApplyContentFormatting(ref measureParams);
-            DisposeFlow();
-            _flow = _richTextRasterizer.Measure(content, ref measureParams);
-            measureParams.Dispose();
-            _flow.DeclareOwner(this);
-            UpdateFragmentsAfterLayout = true;
+
+            _textSize = new((int)_string.MeasuredWidth, (int)_string.MeasuredHeight);
+
+            Size finalSize = Size.Min(_textSize, constraint);
+            DefaultLayout.Measure(layoutNode, finalSize);
+            FireNotification(NotificationID.LastLineBounds);
+            InMeasure = false;
+            return finalSize;
         }
 
-        private bool FastMeasurePossible
+        void ILayout.Arrange(ILayoutNode layoutNode, LayoutSlot slot)
         {
-            get
-            {
-                if (!GetBit(Bits.FastMeasureValid))
-                {
-                    bool flag = UsingSharedRasterizer && !WordWrap && (_namedStyles == null && _scale == 1.0) && (TextSharpness == TextSharpness.Sharp && !UsePasswordMask) && !Zone.Session.IsRtl;
-                    if (flag)
-                        flag = SharedSimpleTextRasterizer.CanMeasure(Content, GetEffectiveTextStyle());
-                    SetBit(Bits.FastMeasurePossible, flag);
-                    SetBit(Bits.FastMeasureValid);
-                }
-                return GetBit(Bits.FastMeasurePossible);
-            }
+            // TODO: Text arrange
+            _slotSize = slot.Bounds;
+            if (!ContributesToWidth)
+                TextFitsWidth = _textSize.Width <= slot.Bounds.Width;
+            bool flag1 = false;
+            KeepFlowAlive |= flag1;
+            SetBit(Bits.ViewDependent, flag1);
+            DefaultLayout.Arrange(layoutNode, slot);
         }
 
         internal TextStyle GetEffectiveTextStyle()
@@ -852,7 +539,7 @@ namespace Microsoft.Iris.ViewItems
                 textStyle.Italic = true;
             if ((font.FontStyle & FontStyles.Underline) != FontStyles.None)
                 textStyle.Underline = true;
-            textStyle.Color = _textColor;
+            textStyle.Color = _textStyle.Color;
             if (GetBit(Bits.LineSpacingSet))
                 textStyle.LineSpacing = LineSpacing;
             if (GetBit(Bits.CharacterSpacingSet))
@@ -866,25 +553,25 @@ namespace Microsoft.Iris.ViewItems
 
         protected override void OnLayoutComplete(ViewItem sender)
         {
-            ArrayList arrayList = null;
+            List<TextFragment> arrayList = null;
             if (UpdateFragmentsAfterLayout)
             {
                 if (_namedStyles != null)
                     arrayList = AnnotateFragments();
                 bool flag = false;
-                if (_fragments != null || arrayList != null)
-                    flag = TextLayoutInvalid || !AreFragmentListsEquivalent(_fragments, arrayList);
+                if (Fragments != null || arrayList != null)
+                    flag = TextLayoutInvalid || !AreFragmentListsEquivalent(Fragments, arrayList);
                 if (flag)
                 {
                     UnregisterFragmentUsage();
-                    _fragments = arrayList;
+                    Fragments = arrayList;
                     RegisterFragmentUsage();
                     FireNotification(NotificationID.Fragments);
                 }
-                else if (_fragments != null)
+                else if (Fragments != null)
                 {
-                    for (int index = 0; index < _fragments.Count; ++index)
-                        ((TextFragment)_fragments[index]).NotifyPaintInvalid();
+                    for (int index = 0; index < Fragments.Count; ++index)
+                        Fragments[index].NotifyPaintInvalid();
                 }
                 ResetMarkedRanges();
                 UpdateFragmentsAfterLayout = false;
@@ -894,7 +581,7 @@ namespace Microsoft.Iris.ViewItems
             base.OnLayoutComplete(sender);
         }
 
-        private static bool AreFragmentListsEquivalent(IList lhsFragments, IList rhsFragments)
+        private static bool AreFragmentListsEquivalent(IList<TextFragment> lhsFragments, IList<TextFragment> rhsFragments)
         {
             int num1 = lhsFragments != null ? lhsFragments.Count : 0;
             int num2 = rhsFragments != null ? rhsFragments.Count : 0;
@@ -902,57 +589,16 @@ namespace Microsoft.Iris.ViewItems
                 return false;
             for (int index = 0; index < num1; ++index)
             {
-                if (!((TextFragment)lhsFragments[index]).IsLayoutEquivalentTo((TextFragment)rhsFragments[index]))
+                if (!lhsFragments[index].IsLayoutEquivalentTo(rhsFragments[index]))
                     return false;
             }
             return true;
         }
 
-        private void ApplyContentFormatting(ref TextMeasureParams measureParams)
+        private List<TextFragment> AnnotateFragments()
         {
-            if (_parsedContentMarkedRanges == null || _namedStyles == null)
-                return;
-            if (!UsingSharedRasterizer)
-            {
-                ErrorManager.ReportError("Text: Complex formatting unsupported on text that is editable");
-            }
-            else
-            {
-                measureParams.AllocateFormattedRanges(_parsedContentMarkedRanges.Count, _namedStyles.Count);
-                TextStyle[] array = new TextStyle[_namedStyles.Count];
-                int index1 = 0;
-                foreach (TextStyle style in _namedStyles.Values)
-                {
-                    measureParams.SetFormattedRangeStyle(index1, style);
-                    array[index1] = style;
-                    ++index1;
-                }
-                TextMeasureParams.FormattedRange[] formattedRanges = measureParams.FormattedRanges;
-                for (int index2 = 0; index2 < _parsedContentMarkedRanges.Count; ++index2)
-                {
-                    Microsoft.Iris.ViewItems.Text.MarkedRange contentMarkedRange = (Microsoft.Iris.ViewItems.Text.MarkedRange)_parsedContentMarkedRanges[index2];
-                    if (_namedStyles.Contains(contentMarkedRange.tagName))
-                    {
-                        TextStyle namedStyle = _namedStyles[contentMarkedRange.tagName] as TextStyle;
-                        contentMarkedRange.cachedStyle = namedStyle;
-                        if (namedStyle != null)
-                        {
-                            formattedRanges[index2].FirstCharacter = contentMarkedRange.firstCharacter;
-                            formattedRanges[index2].LastCharacter = contentMarkedRange.lastCharacter;
-                            formattedRanges[index2].Color = contentMarkedRange.RangeIDAsColor;
-                            formattedRanges[index2].StyleIndex = Array.IndexOf<TextStyle>(array, namedStyle);
-                        }
-                    }
-                    else
-                        contentMarkedRange.cachedStyle = null;
-                }
-            }
-        }
-
-        private ArrayList AnnotateFragments()
-        {
-            ArrayList arrayList = null;
-            if (_parsedContentMarkedRanges != null && _flow != null)
+            List<TextFragment> frags = null;
+            /*if (_parsedContentMarkedRanges != null)
             {
                 for (int firstVisibleIndex = _flow.FirstVisibleIndex; firstVisibleIndex <= _flow.LastVisibleIndex; ++firstVisibleIndex)
                 {
@@ -960,10 +606,10 @@ namespace Microsoft.Iris.ViewItems
                     textRun.IsFragment = false;
                     if (textRun.RunColor.A != byte.MaxValue)
                     {
-                        Microsoft.Iris.ViewItems.Text.MarkedRange markedRange = null;
+                        MarkedRange markedRange = null;
                         for (int index = 0; index < _parsedContentMarkedRanges.Count; ++index)
                         {
-                            Microsoft.Iris.ViewItems.Text.MarkedRange contentMarkedRange = (Microsoft.Iris.ViewItems.Text.MarkedRange)_parsedContentMarkedRanges[index];
+                            MarkedRange contentMarkedRange = (MarkedRange)_parsedContentMarkedRanges[index];
                             if (contentMarkedRange.RangeIDAsColor == textRun.RunColor)
                             {
                                 textRun.OverrideColor = contentMarkedRange.GetEffectiveColor(Color.Transparent);
@@ -977,23 +623,23 @@ namespace Microsoft.Iris.ViewItems
                             if (markedRange.fragment == null)
                             {
                                 markedRange.fragment = new TextFragment(markedRange.tagName, markedRange.attributes, this);
-                                if (arrayList == null)
-                                    arrayList = new ArrayList();
-                                arrayList.Add(markedRange.fragment);
+                                if (frags == null)
+                                    frags = new();
+                                frags.Add(markedRange.fragment);
                             }
-                            markedRange.fragment.InternalRuns.Add(new TextRunData(textRun, IsOnLastLine(textRun), this, _lineAlignmentOffset));
+                            markedRange.fragment.InternalRuns.Add(new TextRunData(textRun, IsOnLastLine(textRun), this, 0));
                         }
                     }
                 }
-            }
-            return arrayList;
+            }*/
+            return frags;
         }
 
         private void RegisterFragmentUsage()
         {
-            if (_fragments == null)
+            if (Fragments == null)
                 return;
-            foreach (TextFragment fragment in _fragments)
+            foreach (TextFragment fragment in Fragments)
             {
                 if (fragment.Runs != null)
                 {
@@ -1005,9 +651,9 @@ namespace Microsoft.Iris.ViewItems
 
         private void UnregisterFragmentUsage()
         {
-            if (_fragments == null)
+            if (Fragments == null)
                 return;
-            foreach (TextFragment fragment in _fragments)
+            foreach (TextFragment fragment in Fragments)
             {
                 if (fragment.Runs != null)
                 {
@@ -1015,7 +661,7 @@ namespace Microsoft.Iris.ViewItems
                         run.Run.UnregisterUsage(this);
                 }
             }
-            _fragments = null;
+            Fragments = null;
         }
 
         private void ResetMarkedRanges()
@@ -1023,42 +669,46 @@ namespace Microsoft.Iris.ViewItems
             if (_parsedContentMarkedRanges == null)
                 return;
             for (int index = 0; index < _parsedContentMarkedRanges.Count; ++index)
-                ((Microsoft.Iris.ViewItems.Text.MarkedRange)_parsedContentMarkedRanges[index]).fragment = null;
+                _parsedContentMarkedRanges[index].fragment = null;
         }
 
-        private static string ParseMarkedUpText(string content, ArrayList markedRanges)
+        private string ParseMarkedUpText(string content, IList<MarkedRange> markedRanges)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            ArrayList arrayList = new ArrayList();
+            StringBuilder stringBuilder = new();
+            List<MarkedRange> ranges = new();
             uint num = 0;
             try
             {
-                using (ManagedXmlReader nativeXmlReader = new ManagedXmlReader(content, true))
+                using (ManagedXmlReader xmlReader = new("<root>" + content + "</root>", true))
                 {
+                    // Read out root element
+                    xmlReader.Read(out var rootType);
+                    //Debug.Assert.IsTrue(rootType == XmlNodeType.Document);
+                    Debug.Trace.WriteLine(Debug.TraceCategory.Text, xmlReader.Value);
+
                     MarkedRange markedRange1 = null;
-                    XmlNodeType nodeType;
-                    while (nativeXmlReader.Read(out nodeType))
+                    while (xmlReader.Read(out XmlNodeType nodeType))
                     {
                         switch (nodeType)
                         {
                             case XmlNodeType.Element:
-                                if (!nativeXmlReader.IsEmptyElement)
+                                if (!xmlReader.IsEmptyElement)
                                 {
-                                    string name = nativeXmlReader.Name;
+                                    string name = xmlReader.Name;
                                     MarkedRange markedRange2 = new MarkedRange();
                                     markedRange2.tagName = name;
                                     markedRange2.firstCharacter = stringBuilder.Length;
                                     markedRange2.lastCharacter = int.MaxValue;
                                     markedRange2.rangeID = ++num;
-                                    arrayList.Add(markedRange2);
+                                    ranges.Add(markedRange2);
                                     markedRanges.Add(markedRange2);
                                     markedRange2.parentRange = markedRange1;
                                     markedRange1 = markedRange2;
-                                    while (nativeXmlReader.ReadAttribute())
+                                    while (xmlReader.ReadAttribute())
                                     {
                                         if (markedRange1.attributes == null)
                                             markedRange1.attributes = new Dictionary<object, object>();
-                                        markedRange1.attributes[nativeXmlReader.Name] = nativeXmlReader.Value;
+                                        markedRange1.attributes[xmlReader.Name] = xmlReader.Value;
                                     }
                                     continue;
                                 }
@@ -1066,18 +716,18 @@ namespace Microsoft.Iris.ViewItems
                             case XmlNodeType.Text:
                             case XmlNodeType.CDATA:
                             case XmlNodeType.Whitespace:
-                                string str = nativeXmlReader.Value;
+                                string str = xmlReader.Value;
                                 if (str.IndexOf("\r\n", StringComparison.Ordinal) >= 0)
                                     str = str.Replace("\r\n", "\r");
                                 stringBuilder.Append(str);
                                 continue;
                             case XmlNodeType.EndElement:
-                                string name1 = nativeXmlReader.Name;
-                                for (int index = arrayList.Count - 1; index >= 0; --index)
+                                string name1 = xmlReader.Name;
+                                for (int index = ranges.Count - 1; index >= 0; --index)
                                 {
-                                    MarkedRange markedRange2 = (MarkedRange)arrayList[index];
+                                    MarkedRange markedRange2 = ranges[index];
                                     markedRange2.lastCharacter = stringBuilder.Length;
-                                    arrayList.RemoveAt(index);
+                                    ranges.RemoveAt(index);
                                     if (markedRange2.tagName == name1)
                                         break;
                                 }
@@ -1095,6 +745,7 @@ namespace Microsoft.Iris.ViewItems
             }
             catch (XmlException ex)
             {
+                Debug.Trace.WriteLine(Debug.TraceCategory.Text, ex);
                 markedRanges.Clear();
                 stringBuilder = null;
             }
@@ -1103,9 +754,7 @@ namespace Microsoft.Iris.ViewItems
             return stringBuilder.ToString();
         }
 
-        public void CreateFadeGradientsHelper(
-          ref IGradient gradientClipLeftRight,
-          ref IGradient gradientMultiLine)
+        public void CreateFadeGradientsHelper(ref IGradient gradientClipLeftRight, ref IGradient gradientMultiLine)
         {
             bool flag1 = true;
             if (TextFitsWidth && TextFitsHeight)
@@ -1156,11 +805,7 @@ namespace Microsoft.Iris.ViewItems
                 float flPosition2 = 0.0f;
                 if (!UISession.IsRtl)
                 {
-                    if (_flow.LastFitRun != null)
-                    {
-                        flPosition2 = _flow.LastFitRun.LayoutBounds.Width;
-                        flPosition1 = flPosition2 - fadeSize;
-                    }
+                    
                 }
                 else
                 {
@@ -1183,7 +828,6 @@ namespace Microsoft.Iris.ViewItems
         private void ResetCachedScaleState()
         {
             IgnoreEffectiveScaleChanges = false;
-            _recentScaleChanges = null;
         }
 
         private void CreateVisuals(IVisualContainer topVisual, IRenderSession renderSession)
@@ -1192,7 +836,7 @@ namespace Microsoft.Iris.ViewItems
             IGradient gradientClipLeftRight = null;
             IGradient gradientMultiLine = null;
             CreateFadeGradientsHelper(ref gradientClipLeftRight, ref gradientMultiLine);
-            TextRun textRun = UISession.IsRtl ? _flow.FirstFitRunOnFinalLine : _flow.LastFitRun;
+            /*TextRun textRun = UISession.IsRtl ? _flow.FirstFitRunOnFinalLine : _flow.LastFitRun;
             for (int firstVisibleIndex = _flow.FirstVisibleIndex; firstVisibleIndex <= _flow.LastVisibleIndex; ++firstVisibleIndex)
             {
                 TextRun run = _flow[firstVisibleIndex];
@@ -1227,7 +871,7 @@ namespace Microsoft.Iris.ViewItems
                         run.TextSprite = sprite1;
                     }
                 }
-            }
+            }*/
             topVisual.RemoveAllGradients();
             if (gradientClipLeftRight != null)
                 topVisual.AddGradient(gradientClipLeftRight);
@@ -1237,7 +881,7 @@ namespace Microsoft.Iris.ViewItems
 
         private Color GetEffectiveColor(TextRun run)
         {
-            Color color = _textColor;
+            Color color = _textStyle.Color;
             if (run.Highlighted)
                 color = _textHighlightColor;
             else if (run.OverrideColor != Color.Transparent)
@@ -1260,9 +904,6 @@ namespace Microsoft.Iris.ViewItems
             if (removeFromTree)
                 VisualContainer.RemoveAllChildren();
             Effect?.DoneWithRenderEffects(this);
-            if (_flow == null)
-                return;
-            _flow.ClearSprites();
         }
 
         protected override void OnPaint(bool visible)
@@ -1270,7 +911,7 @@ namespace Microsoft.Iris.ViewItems
             DisposeAllContent();
             base.OnPaint(visible);
             ResetCachedScaleState();
-            if (_flow == null)
+            if (true)//_flow == null)
             {
                 if (_content == null && UsingSharedRasterizer)
                     return;
@@ -1279,17 +920,15 @@ namespace Microsoft.Iris.ViewItems
             else
             {
                 CreateVisuals(VisualContainer, UISession.RenderSession);
-                if (!KeepFlowAlive)
-                    DisposeFlow();
                 HasEverPainted = true;
             }
         }
 
-        private bool IsOnLastLine(TextRun run) => _flow.IsOnLastLine(run);
+        private bool IsOnLastLine(TextRun run) => true;// _flow.IsOnLastLine(run);
 
         private void InvalidateGradients()
         {
-            _renderingHelper.InvalidateGradients();
+            //_renderingHelper.InvalidateGradients();
             MarkPaintInvalid();
         }
 
@@ -1298,7 +937,7 @@ namespace Microsoft.Iris.ViewItems
             float y = ComputeEffectiveScale().Y;
             if (!ScaleDifferenceIsGreaterThanThreshold(y, _scale))
                 return;
-            Vector<float> vector = _recentScaleChanges;
+            Vector<float> vector = new();
             if (!IgnoreEffectiveScaleChanges && vector != null)
             {
                 foreach (float newScale in vector)
@@ -1315,7 +954,6 @@ namespace Microsoft.Iris.ViewItems
             if (vector == null)
                 vector = new Vector<float>(4);
             vector.Add(y);
-            _recentScaleChanges = vector;
             MarkTextLayoutInvalid();
             _scale = y;
             MarkScaleDirty();
@@ -1326,9 +964,8 @@ namespace Microsoft.Iris.ViewItems
         private void MarkTextLayoutInvalid()
         {
             TextLayoutInvalid = true;
-            if (s_simpleTextMeasureAvailable)
-                ClearBit(Bits.FastMeasureValid);
-            DisposeFlow();
+            ClearBit(Bits.FastMeasureValid);
+            
             MarkLayoutInvalid();
         }
 
@@ -1466,7 +1103,7 @@ namespace Microsoft.Iris.ViewItems
             }
         }
 
-        private new enum Bits : uint
+        private enum Bits : uint
         {
             TextFitsWidth = 1,
             TextFitsHeight = 2,

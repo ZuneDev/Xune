@@ -18,6 +18,7 @@
         <PackageReference Include="SkiaSharp" Version="2.80.3" />
         <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
         <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
+        <PackageReference Include="Topten.RichTextKit" Version="0.4.146" />
         <PackageReference Include="Vanara.PInvoke.User32" Version="3.3.13" />
         <PackageReference Include="Vanara.PInvoke.Kernel32" Version="3.3.13" />
         <Reference Include="Accessibility">

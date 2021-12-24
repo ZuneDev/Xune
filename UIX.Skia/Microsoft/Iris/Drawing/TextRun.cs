@@ -166,12 +166,12 @@ namespace Microsoft.Iris.Drawing
             _offsetPoint = offsetPoint;
         }
 
-        internal Dib Rasterize(string samplingMode, Color textColor, bool outlineFlag)
+        internal SkiaSharp.SKBitmap Rasterize(string samplingMode, Color textColor, bool outlineFlag)
         {
             bool shadowMode = false;
             if (samplingMode == "sdw")
                 shadowMode = true;
-            return RichText.Rasterize(_hGlyphRunInfo, outlineFlag, textColor, shadowMode);
+            return RichText.Rasterize(new(_content), outlineFlag, textColor, shadowMode);
         }
 
         internal static unsafe TextRun FromRunPacket(

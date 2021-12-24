@@ -255,22 +255,12 @@ namespace Microsoft.Iris.Debug
             float num = 0.0f;
             if (name != null)
             {
-                TextMeasureParams measureParams = new TextMeasureParams();
-                measureParams.Initialize();
-                measureParams.SetConstraint(new SizeF(4095f, 8191f));
-                measureParams.SetFormat(LineAlignment.Near, new TextStyle()
-                {
-                    FontFace = _textFont.FontName,
-                    FontSize = _textFont.FontSize,
-                    Color = _textColor
-                });
-                TextFlow textFlow = _sharedRichText.Measure(name, ref measureParams);
-                measureParams.Dispose();
-                TextRun run = textFlow[0];
-                image = Text.GetImageForRun(UISession.Default, run, Color.FromArgb(byte.MaxValue, run.Color));
-                rectangle = RectangleF.FromRectangle(textFlow.Bounds);
-                rectangle.Offset(offsetPointF);
-                num = textFlow.Bounds.Width;
+                //var constraint = new SizeF(4095f, 8191f);
+                //TextRun run = textFlow[0];
+                //image = Text.GetImageForRun(UISession.Default, run, Color.FromArgb(byte.MaxValue, run.Color));
+                //rectangle = RectangleF.FromRectangle(textFlow.Bounds);
+                //rectangle.Offset(offsetPointF);
+                //num = textFlow.Bounds.Width;
             }
             if (iconsList != null)
             {

@@ -682,13 +682,6 @@ namespace Microsoft.Iris.OS
           Win32Api.HANDLE hRto,
           out int textLength);
 
-        [DllImport("UIXRender.dll")]
-        internal static extern HRESULT SpRichTextMeasure(
-          Win32Api.HANDLE hRto,
-          ref TextMeasureParams.MarshalledData measureParams,
-          NativeApi.ReportRunCallback rrcb,
-          IntPtr pvData);
-
         [DllImport("UIXRender.dll", CharSet = CharSet.Unicode)]
         internal static extern HRESULT SpRichTextRasterize(
           IntPtr hGlyphRunInfo,
@@ -772,23 +765,6 @@ namespace Microsoft.Iris.OS
 
         [DllImport("UIXRender.dll")]
         internal static extern void SpSimpleTextDestroyObject(Win32Api.HANDLE hSto);
-
-        [DllImport("UIXRender.dll", CharSet = CharSet.Unicode)]
-        internal static extern unsafe HRESULT SpSimpleTextMeasure(
-          Win32Api.HANDLE hSto,
-          string pszRef,
-          short wAlignment,
-          TextStyle.MarshalledData* textStyle,
-          Size sizeConstraint,
-          out IntPtr hGlyphRunInfo,
-          NativeApi.RasterizeRunPacket* pRun);
-
-        [DllImport("UIXRender.dll", CharSet = CharSet.Unicode)]
-        internal static extern unsafe HRESULT SpSimpleTextMeasurePossible(
-          Win32Api.HANDLE hSto,
-          string pszRef,
-          TextStyle.MarshalledData* textStyle,
-          out bool fPossible);
 
         [DllImport("UIXRender.dll")]
         internal static extern HRESULT SpRichTextScroll(

@@ -14,6 +14,8 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
+using Topten.RichTextKit;
+using Topten.RichTextKit.Editor;
 
 namespace Microsoft.Iris.Drawing
 {
@@ -21,7 +23,8 @@ namespace Microsoft.Iris.Drawing
     {
         public const float MaxWidthConstraint = 4095f;
         public const float MaxHeightConstraint = 8191f;
-        private Win32Api.HANDLE _rtoHandle;
+        private RichString _string;
+        private TextRange _selection;
         private NativeApi.ReportRunCallback _rrcb;
         private string _currentlyMeasuringText;
         private bool _oversampled;
@@ -36,7 +39,7 @@ namespace Microsoft.Iris.Drawing
         {
         }
 
-        public unsafe RichText(bool richTextMode, IRichTextCallbacks callbacks)
+        public RichText(bool richTextMode, IRichTextCallbacks callbacks)
         {
             Size sizeMaximumSurface = Size.Zero;
             if (UISession.Default != null)
@@ -47,10 +50,9 @@ namespace Microsoft.Iris.Drawing
                 _timers = new ArrayList(6);
                 _timerTickHandler = new EventHandler(OnTimerTick);
             }
-            RendererApi.IFC(NativeApi.SpRichTextBuildObject(richTextMode, sizeMaximumSurface, callbacks, out _rtoHandle));
+            _string = new();
             _oversampled = false;
             _lock = new object();
-            _rrcb = new NativeApi.ReportRunCallback(OnReportRun);
         }
 
         public void Dispose() => Dispose(true);
@@ -60,11 +62,6 @@ namespace Microsoft.Iris.Drawing
             if (!inDispose)
                 return;
             GC.SuppressFinalize(this);
-            lock (_lock)
-            {
-                NativeApi.SpRichTextDestroyObject(_rtoHandle);
-                _rtoHandle.h = IntPtr.Zero;
-            }
             if (_timers == null)
                 return;
             for (int index = 0; index < _timers.Count; ++index)
@@ -76,43 +73,19 @@ namespace Microsoft.Iris.Drawing
 
         public string Content
         {
-            set
-            {
-                lock (_lock)
-                    RendererApi.IFC(NativeApi.SpRichTextSetContent(_rtoHandle, value));
-            }
+            set => _string = new(value);
+            get => _string.ToString();
         }
 
         public string SimpleContent
         {
-            get
-            {
-                string str = null;
-                int textLength = 0;
-                lock (_lock)
-                {
-                    RendererApi.IFC(NativeApi.SpRichTextGetSimpleContentLength(_rtoHandle, out textLength));
-                    if (textLength != 0)
-                    {
-                        StringBuilder textBuffer = new StringBuilder(textLength);
-                        RendererApi.IFC(NativeApi.SpRichTextGetSimpleContent(_rtoHandle, textBuffer, textBuffer.Capacity));
-                        str = textBuffer.ToString();
-                    }
-                }
-                return str;
-            }
+            get => _string.Normal().ToString();
+            set => Content = value;
         }
 
         public bool Oversample
         {
-            set
-            {
-                if (_oversampled == value)
-                    return;
-                lock (_lock)
-                    RendererApi.IFC(NativeApi.SpRichTextSetOversampleMode(_rtoHandle, value));
-                _oversampled = value;
-            }
+            set => _oversampled = value;
             get => _oversampled;
         }
 
@@ -120,8 +93,7 @@ namespace Microsoft.Iris.Drawing
         {
             set
             {
-                lock (_lock)
-                    RendererApi.IFC(NativeApi.SpRichTextSetMaximumLength(_rtoHandle, value));
+                // TODO: Set max character length
             }
         }
 
@@ -129,8 +101,7 @@ namespace Microsoft.Iris.Drawing
         {
             set
             {
-                lock (_lock)
-                    RendererApi.IFC(NativeApi.SpRichTextSetDetectUrls(_rtoHandle, value));
+                // TODO: Detect URLs
             }
         }
 
@@ -140,157 +111,87 @@ namespace Microsoft.Iris.Drawing
         {
             set
             {
-                lock (_lock)
-                    RendererApi.IFC(NativeApi.SpRichTextSetReadOnly(_rtoHandle, value));
+                // TODO: Read only
             }
         }
 
         public void SetWordWrap(bool wordWrap)
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextSetWordWrap(_rtoHandle, wordWrap));
+            // TODO: Word wrap
         }
 
         public Size GetNaturalBounds()
         {
-            int cWidth;
-            int cHeight;
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextGetNaturalBounds(_rtoHandle, out cWidth, out cHeight));
+            int cWidth = (int)_string.MeasuredWidth;
+            int cHeight = (int)_string.MeasuredHeight;
             return new Size(cWidth, cHeight);
         }
 
         public void SetSelectionRange(int selectionStart, int selectionEnd)
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextSetSelectionRange(_rtoHandle, selectionStart, selectionEnd));
+            _selection = new TextRange(selectionStart, selectionEnd);
         }
 
-        public unsafe TextFlow Measure(string content, ref TextMeasureParams measureParams)
+        public RichString Measure(string content)
         {
-            TextFlow textFlow = new TextFlow();
-            GCHandle gcHandle = GCHandle.Alloc(textFlow);
-            _currentlyMeasuringText = content != null ? content : string.Empty;
-            fixed (char* content1 = _currentlyMeasuringText)
-            fixed (char* chPtr = measureParams._textStyle.FontFace)
-            {
-                var style = new TextStyle.MarshalledData(measureParams._textStyle)
-                {
-                    _fontFace = chPtr
-                };
-                measureParams.SetContent(content1);
-                measureParams._data._pTextStyle = &style;
-                fixed (TextMeasureParams.FormattedRange* formattedRangePtr = measureParams._formattedRanges)
-                {
-                    measureParams._data._pFormattedRanges = formattedRangePtr;
-                    fixed (TextStyle.MarshalledData* marshalledDataPtr = measureParams._formattedRangeStyles)
-                    {
-                        measureParams._data._pFormattedRangeStyles = marshalledDataPtr;
-                        lock (_lock)
-                            RendererApi.IFC(NativeApi.SpRichTextMeasure(_rtoHandle, ref measureParams._data, _rrcb, GCHandle.ToIntPtr(gcHandle)));
-                    }
-                }
-            }
-            gcHandle.Free();
-            _currentlyMeasuringText = null;
-            return textFlow;
+            return new RichString(content);
         }
 
         public void NotifyOfFocusChange(bool gainingFocus)
         {
-            lock (_lock)
-            {
-                RendererApi.IFC(NativeApi.SpRichTextSetFocus(_rtoHandle, gainingFocus));
-                if (gainingFocus)
-                    return;
-                _inImeCompositionMode = false;
-            }
+            if (gainingFocus)
+                return;
+            _inImeCompositionMode = false;
         }
 
         public void ScrollUp(ScrollbarType whichBar)
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextScroll(_rtoHandle, (int)whichBar, 0));
+            // TODO: Scroll up
         }
 
         public void ScrollDown(ScrollbarType whichBar)
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextScroll(_rtoHandle, (int)whichBar, 1));
+            // TODO: Scroll down
         }
 
         public void PageUp(ScrollbarType whichBar)
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextScroll(_rtoHandle, (int)whichBar, 2));
+            // TODO: Page up
         }
 
         public void PageDown(ScrollbarType whichBar)
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextScroll(_rtoHandle, (int)whichBar, 3));
+            // TODO: Page down
         }
 
         public void ScrollToPosition(ScrollbarType whichBar, int whereTo)
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextScrollToPosition(_rtoHandle, (int)whichBar, whereTo));
+            // TODO: Scroll
         }
 
         public void SetScrollbars(bool horizontalScrollbar, bool verticalScrollbar)
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextSetScrollbars(_rtoHandle, horizontalScrollbar, verticalScrollbar));
+            // Show/Hide scrollbars
         }
 
-        public bool ForwardKeyStateNotification(
-          uint message,
-          int virtualKey,
-          int scanCode,
-          int repeatCount,
-          uint modifierState,
-          ushort flags)
+        public bool ForwardKeyStateNotification(uint message, int virtualKey, int scanCode, int repeatCount, uint modifierState, ushort flags)
         {
             bool handled = true;
-            lock (_lock)
-            {
-                if (!_inImeCompositionMode)
-                    RendererApi.IFC(NativeApi.SpRichTextForwardKeyState(_rtoHandle, message, virtualKey, scanCode, repeatCount, modifierState, flags, out handled));
-            }
+            // TODO: Implement forward key state
             return handled;
         }
 
-        public bool ForwardKeyCharacterNotification(
-          uint message,
-          int character,
-          int scanCode,
-          int repeatCount,
-          uint modifierState,
-          ushort flags)
+        public bool ForwardKeyCharacterNotification(uint message, int character, int scanCode, int repeatCount, uint modifierState, ushort flags)
         {
             bool handled = true;
-            lock (_lock)
-            {
-                if (!_inImeCompositionMode)
-                    RendererApi.IFC(NativeApi.SpRichTextForwardKeyCharacter(_rtoHandle, message, character, scanCode, repeatCount, modifierState, flags, out handled));
-            }
+            // TODO: Implement forward key character
             return handled;
         }
 
-        public bool ForwardMouseInput(
-          uint message,
-          uint modifierState,
-          int mouseButton,
-          int x,
-          int y,
-          int mouseWheelDelta)
+        public bool ForwardMouseInput(uint message, uint modifierState, int mouseButton, int x, int y, int mouseWheelDelta)
         {
             bool handled = true;
-            lock (_lock)
-            {
-                if (!_inImeCompositionMode)
-                    RendererApi.IFC(NativeApi.SpRichTextForwardMouseInput(_rtoHandle, message, modifierState, mouseButton, x, y, mouseWheelDelta, out handled));
-            }
+            // TODO: Implement forward mouse input
             return handled;
         }
 
@@ -307,50 +208,65 @@ namespace Microsoft.Iris.Drawing
                         _inImeCompositionMode = false;
                         break;
                 }
-                RendererApi.IFC(NativeApi.SpRichTextForwardImeMessage(_rtoHandle, message, wParam, lParam));
+                //RendererApi.IFC(NativeApi.SpRichTextForwardImeMessage(_rtoHandle, message, wParam, lParam));
             }
             return new HRESULT(0);
         }
 
         public bool CanUndo
         {
-            get
-            {
-                bool canUndo;
-                lock (_lock)
-                    RendererApi.IFC(NativeApi.SpRichTextCanUndo(_rtoHandle, out canUndo));
-                return canUndo;
-            }
+            get => false;
         }
 
         public void Undo()
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextUndo(_rtoHandle));
+            throw new NotImplementedException();
         }
 
         public void Cut()
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextCut(_rtoHandle));
+            // TODO: Implement selection
+            string clipContent = SimpleContent.Substring(_selection.Start, _selection.Length);
+            Content = SimpleContent.Remove(_selection.Start, _selection.Length);
+
+            // TODO: Copy to clipboard
+            
         }
 
         public void Copy()
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextCopy(_rtoHandle));
+            // TODO: Implement selection
+            string clipContent = SimpleContent.Substring(_selection.Start, _selection.Length);
+            // TODO: Copy to clipboard
         }
 
         public void Paste()
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextPaste(_rtoHandle));
+            // TODO: Implement selection
+            // TODO: Get content from clipboard
+            string clipContent = "xune";
+            string text = SimpleContent;
+            if (_selection.IsRange)
+                text = text.Remove(_selection.Start, _selection.Length);
+            Content = text.Insert(_selection.Start, clipContent);
         }
 
         public void Delete()
         {
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextDelete(_rtoHandle));
+            // TODO: Implement selection
+            string content = SimpleContent;
+            if (_selection.IsRange)
+            {
+                Content = SimpleContent.Remove(_selection.Start, _selection.Length);
+            }
+            else if (_selection.Maximum == content.Length)
+            {
+                Content = content.Substring(0, content.Length - 1);
+            }
+            else
+            {
+                Content = content.Remove(_selection.Start, 1);
+            }
         }
 
         public static LineAlignment ReverseAlignment(
@@ -372,20 +288,27 @@ namespace Microsoft.Iris.Drawing
             return alignment;
         }
 
-        internal static Dib Rasterize(
-          IntPtr hGlyphRunInfo,
-          bool outlineMode,
-          Color textColor,
-          bool shadowMode)
+        internal SkiaSharp.SKBitmap Rasterize(bool outlineMode, Color textColor, bool shadowMode)
         {
-            throw new NotImplementedException();
+            return Rasterize(_string, outlineMode, textColor, shadowMode);
+        }
 
-            IntPtr phTextBitmap = IntPtr.Zero;
-            byte[] ppvBits = null;
-            Size psizeBitmap = default(Size);
+        internal static SkiaSharp.SKBitmap Rasterize(RichString str, bool outlineMode, Color textColor, bool shadowMode)
+        {
             // TODO: Re-implement using SkiaSharp and/or ImageSharp
-            //RendererApi.IFC(NativeApi.SpRichTextRasterize(hGlyphRunInfo, outlineMode ? 1 : 0, textColor, shadowMode ? 1 : 0, out phTextBitmap, out ppvBits, out psizeBitmap));
-            return new Dib(phTextBitmap, ppvBits, psizeBitmap);
+            str = str.TextColor(new SkiaSharp.SKColor(textColor.R, textColor.G, textColor.B, textColor.A));
+
+            // Render to bitmap
+            SkiaSharp.SKBitmap bitmap = new((int)str.MeasuredWidth, (int)str.MeasuredHeight);
+            using (SkiaSharp.SKCanvas canvas = new(bitmap))
+            {
+                str.Paint(canvas);/*, new TextPaintOptions
+                {
+                    Selection = _selection
+                });*/
+            }
+
+            return bitmap;
         }
 
         public void SetTimer(uint id, uint timeout)
@@ -431,36 +354,6 @@ namespace Microsoft.Iris.Drawing
         private void OnTimerTick(object sender, EventArgs ea)
         {
             DispatcherTimer dispatcherTimer = (DispatcherTimer)sender;
-            lock (_lock)
-                RendererApi.IFC(NativeApi.SpRichTextOnTimerTick(_rtoHandle, (uint)dispatcherTimer.UserData));
-        }
-
-        private unsafe HRESULT OnReportRun(
-          IntPtr hGlyphRunInfo,
-          NativeApi.RasterizeRunPacket* runPacketPtr,
-          IntPtr lpString,
-          uint nChars,
-          IntPtr dataPtr)
-        {
-            bool flag = false;
-            if (_currentlyMeasuringText != null && _currentlyMeasuringText.Length == nChars)
-            {
-                flag = true;
-                char* pointer = (char*)lpString.ToPointer();
-                for (int index = 0; index < nChars; ++index)
-                {
-                    if (_currentlyMeasuringText[index] != pointer[index])
-                    {
-                        flag = false;
-                        break;
-                    }
-                }
-            }
-            string content = flag ? _currentlyMeasuringText : Marshal.PtrToStringUni(lpString, (int)nChars);
-            TextRun run = TextRun.FromRunPacket(hGlyphRunInfo, runPacketPtr, content);
-            if (run != null)
-                ((TextFlow)GCHandle.FromIntPtr(dataPtr).Target).Add(run);
-            return new HRESULT(0);
         }
     }
 }

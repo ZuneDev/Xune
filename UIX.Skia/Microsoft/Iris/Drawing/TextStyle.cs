@@ -7,11 +7,13 @@
 using System;
 using System.Collections.Specialized;
 using System.Text;
+using Topten.RichTextKit;
 
 namespace Microsoft.Iris.Drawing
 {
     internal class TextStyle
     {
+        private Style _style;
         private BitVector32 _flags;
         private string _fontFace;
         private float _fontHeightPts;
@@ -19,180 +21,189 @@ namespace Microsoft.Iris.Drawing
         private float _lineSpacing;
         private float _characterSpacing;
         private Color _textColor;
-        private bool _fragment;
+
+        public TextStyle()
+        {
+            _flags = new();
+            _style = new();
+        }
 
         public bool IsInitialized() => _flags.Data != 0;
 
         public string FontFace
         {
-            get => _fontFace;
+            get => _style.FontFamily;
             set
             {
-                _flags[1] = !string.IsNullOrEmpty(value);
-                _fontFace = value;
+                SetFlag(SetFlags.FontFace, !string.IsNullOrEmpty(value));
+                _style.FontFamily = value;
             }
         }
 
         public float FontSize
         {
-            get => _fontHeightPts;
+            get => _style.FontSize;
             set
             {
-                _flags[2] = true;
-                _fontHeightPts = value;
+                SetFlag(SetFlags.FontSize, true);
+                _style.FontSize = value;
             }
         }
 
+        [Obsolete]
         public float AltFontSize
         {
             get => _altFontHeightPts == 0.0 ? _fontHeightPts : _altFontHeightPts;
             set
             {
-                _flags[512] = true;
+                SetFlag(SetFlags.AltFontHeight, true);
                 _altFontHeightPts = value;
             }
         }
 
         public bool Bold
         {
-            get => _flags[65536];
+            get => _style.FontWeight == 700;
             set
             {
-                _flags[4] = true;
-                _flags[65536] = value;
+                SetFlag(SetFlags.Bold, true);
+                _style.FontWeight = 700;
             }
         }
 
         public bool Italic
         {
-            get => _flags[131072];
+            get => _style.FontItalic;
             set
             {
-                _flags[8] = true;
-                _flags[131072] = value;
+                SetFlag(SetFlags.Italic, true);
+                _style.FontItalic = value;
             }
         }
 
         public bool Underline
         {
-            get => _flags[262144];
+            get => _style.Underline != UnderlineStyle.None;
             set
             {
-                _flags[16] = true;
-                _flags[262144] = value;
+                SetFlag(SetFlags.Underline, true);
+                _style.Underline = value ? UnderlineStyle.Gapped : UnderlineStyle.None;
             }
         }
 
         public Color Color
         {
-            get => _textColor;
-            set
+            get
             {
-                _flags[64] = true;
-                _textColor = value;
+                if (_textColor == null)
+                    Color.FromSKColor(_style.TextColor);
+                return _textColor;
             }
+            set => SetColor(value.ToSKColor());
         }
 
         public float LineSpacing
         {
-            get => _lineSpacing;
+            get => _style.LineHeight - 1;
             set
             {
-                _flags[32] = true;
-                _lineSpacing = value;
+                SetFlag(SetFlags.LineSpacing, true);
+                _style.LineHeight = 1 + value;
             }
         }
 
+        [Obsolete]
         public bool EnableKerning
         {
-            get => _flags[524288];
+            get => GetFlag(SetFlags.EnableKerningValue);
             set
             {
-                _flags[128] = true;
-                _flags[524288] = value;
+                SetFlag(SetFlags.EnableKerning, true);
+                SetFlag(SetFlags.EnableKerningValue, value);
             }
         }
 
         public float CharacterSpacing
         {
-            get => _characterSpacing;
+            get => _style.LetterSpacing;
             set
             {
-                _flags[256] = true;
-                _characterSpacing = value;
+                SetFlag(SetFlags.CharacterSpacing, true);
+                _style.LetterSpacing = value;
             }
         }
 
-        public bool Fragment
-        {
-            get => _fragment;
-            set => _fragment = value;
-        }
+        public bool Fragment { get; set; }
 
         public void Add(TextStyle additional)
         {
-            _fragment = additional._fragment;
-            if (additional._flags[1])
+            Fragment = additional.Fragment;
+            if (additional.GetFlag(SetFlags.FontFace))
                 FontFace = additional.FontFace;
-            if (additional._flags[2])
+            if (additional.GetFlag(SetFlags.FontSize))
                 FontSize = additional.FontSize;
-            if (additional._flags[512])
-                AltFontSize = additional._altFontHeightPts;
-            if (additional._flags[4])
+            if (additional.GetFlag(SetFlags.Bold))
                 Bold = additional.Bold;
-            if (additional._flags[8])
+            if (additional.GetFlag(SetFlags.Italic))
                 Italic = additional.Italic;
-            if (additional._flags[16])
+            if (additional.GetFlag(SetFlags.Underline))
                 Underline = additional.Underline;
-            if (additional._flags[32])
+            if (additional.GetFlag(SetFlags.LineSpacing))
                 LineSpacing = additional.LineSpacing;
-            if (additional._flags[128])
+            if (additional.GetFlag(SetFlags.TextColor))
+                Color = additional.Color;
+            if (additional.GetFlag(SetFlags.EnableKerning))
                 EnableKerning = additional.EnableKerning;
-            if (additional._flags[256])
+            if (additional.GetFlag(SetFlags.CharacterSpacing))
                 CharacterSpacing = additional.CharacterSpacing;
-            if (!additional._flags[64])
-                return;
-            Color = additional.Color;
+            if (additional.GetFlag(SetFlags.AltFontHeight))
+                AltFontSize = additional.AltFontSize;
         }
 
-        public bool HasColor => _flags[64];
+        public void SetColor(SkiaSharp.SKColor skColor)
+        {
+            SetFlag(SetFlags.TextColor, true);
+            _style.TextColor = skColor;
+        }
+
+        public bool HasColor => GetFlag(SetFlags.TextColor);
 
         public override string ToString()
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append("{TextStyle");
-            if (_flags[1])
+            StringBuilder stringBuilder = new();
+            stringBuilder.Append("{" + nameof(TextStyle));
+            if (GetFlag(SetFlags.FontFace))
             {
                 stringBuilder.Append(" Font = \"");
                 stringBuilder.Append(FontFace);
                 stringBuilder.Append("\"");
             }
-            if (_flags[2])
+            if (GetFlag(SetFlags.FontSize))
             {
                 stringBuilder.Append(" Pt = ");
                 stringBuilder.Append(FontSize);
             }
-            if (_flags[4])
+            if (GetFlag(SetFlags.Bold))
             {
                 stringBuilder.Append(" Bold = ");
                 stringBuilder.Append(Bold);
             }
-            if (_flags[8])
+            if (GetFlag(SetFlags.Italic))
             {
                 stringBuilder.Append(" Italic = ");
                 stringBuilder.Append(Italic);
             }
-            if (_flags[16])
+            if (GetFlag(SetFlags.Underline))
             {
                 stringBuilder.Append(" Underline = ");
                 stringBuilder.Append(Underline);
             }
-            if (_flags[32])
+            if (GetFlag(SetFlags.LineSpacing))
             {
                 stringBuilder.Append(" LineSpacing = ");
                 stringBuilder.Append(LineSpacing);
             }
-            if (_flags[64])
+            if (GetFlag(SetFlags.TextColor))
             {
                 stringBuilder.Append(" Color = ");
                 stringBuilder.Append(Color);
@@ -201,12 +212,15 @@ namespace Microsoft.Iris.Drawing
             return stringBuilder.ToString();
         }
 
+        public bool SetFlag(SetFlags flag, bool value) => _flags[(int)flag] = value;
+        public bool GetFlag(SetFlags flag) => _flags[(int)flag];
+
         [Flags]
         internal enum SetFlags
         {
             None = 0,
             FontFace = 1,
-            FontHeight = 2,
+            FontSize = 2,
             Bold = 4,
             Italic = 8,
             Underline = 16, // 0x00000010
@@ -219,28 +233,6 @@ namespace Microsoft.Iris.Drawing
             ItalicValue = 131072, // 0x00020000
             UnderlineValue = 262144, // 0x00040000
             EnableKerningValue = 524288, // 0x00080000
-        }
-
-        internal struct MarshalledData
-        {
-            public int _flags;
-            public unsafe char* _fontFace;
-            public float _fontHeightPts;
-            public float _altFontHeightPts;
-            public float _lineSpacing;
-            public float _characterSpacing;
-            public Color _textColor;
-
-            public unsafe MarshalledData(TextStyle from)
-            {
-                _flags = from._flags.Data;
-                _fontHeightPts = from._fontHeightPts;
-                _altFontHeightPts = from._altFontHeightPts;
-                _lineSpacing = from._lineSpacing;
-                _characterSpacing = from._characterSpacing;
-                _textColor = from._textColor;
-                _fontFace = null;
-            }
         }
     }
 }

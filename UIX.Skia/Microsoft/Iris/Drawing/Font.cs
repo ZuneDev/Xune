@@ -88,5 +88,10 @@ namespace Microsoft.Iris.Drawing
             stringBuilder.Append("}");
             return stringBuilder.ToString();
         }
+
+        public SkiaSharp.SKFont ToSKFont()
+        {
+            return new SkiaSharp.SKFont(SkiaSharp.SKTypeface.FromFamilyName(FontName), FontSize);
+        }
     }
 }

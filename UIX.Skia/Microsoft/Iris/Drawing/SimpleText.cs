@@ -32,19 +32,7 @@ namespace Microsoft.Iris.Drawing
             _stoHandle = Win32Api.HANDLE.NULL;
         }
 
-        public unsafe bool CanMeasure(string content, TextStyle textStyle)
-        {
-            bool fPossible;
-            fixed (char* chPtr = textStyle.FontFace)
-            {
-                var style = new TextStyle.MarshalledData(textStyle)
-                {
-                    _fontFace = chPtr
-                };
-                RendererApi.IFC(NativeApi.SpSimpleTextMeasurePossible(_stoHandle, content, &style, out fPossible));
-            }
-            return fPossible;
-        }
+        public bool CanMeasure(string content, TextStyle textStyle) => true;
 
         public unsafe TextFlow Measure(
           string content,
@@ -68,19 +56,19 @@ namespace Microsoft.Iris.Drawing
                     wAlignment = 2;
                     break;
             }
-            IntPtr hGlyphRunInfo;
-            NativeApi.RasterizeRunPacket rasterizeRunPacket;
-            fixed (char* chPtr = textStyle.FontFace)
-            {
-                var style = new TextStyle.MarshalledData(textStyle)
-                {
-                    _fontFace = chPtr
-                };
-                RendererApi.IFC(NativeApi.SpSimpleTextMeasure(_stoHandle, content, wAlignment,
-                    &style, constraint, out hGlyphRunInfo, &rasterizeRunPacket));
-            }
-            TextRun run = TextRun.FromRunPacket(hGlyphRunInfo, &rasterizeRunPacket, content);
-            textFlow.Add(run);
+            //IntPtr hGlyphRunInfo;
+            //NativeApi.RasterizeRunPacket rasterizeRunPacket;
+            //fixed (char* chPtr = textStyle.FontFace)
+            //{
+            //    var style = new TextStyle.MarshalledData(textStyle)
+            //    {
+            //        _fontFace = chPtr
+            //    };
+            //    RendererApi.IFC(NativeApi.SpSimpleTextMeasure(_stoHandle, content, wAlignment,
+            //        &style, constraint, out hGlyphRunInfo, &rasterizeRunPacket));
+            //}
+            //TextRun run = TextRun.FromRunPacket(hGlyphRunInfo, &rasterizeRunPacket, content);
+            //textFlow.Add(run);
             return textFlow;
         }
     }

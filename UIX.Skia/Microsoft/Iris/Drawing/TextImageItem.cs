@@ -13,7 +13,7 @@ namespace Microsoft.Iris.Drawing
     internal class TextImageItem : ImageCacheItem
     {
         private TextRun _run;
-        private Dib _dib;
+        private SkiaSharp.SKBitmap _dib;
         private string _samplingModeName;
         private Color _textColor;
         private bool _outlineFlag;
@@ -50,7 +50,24 @@ namespace Microsoft.Iris.Drawing
             return true;
         }
 
-        protected override bool DoImageLoad() => RenderImage.LoadContent(_dib.ImageFormat, _dib.ContentSize, _dib.Stride, _dib.Data);
+        protected override bool DoImageLoad() => RenderImage.LoadContent(FromSKColorType(_dib.ColorType),
+            new Size(_dib.Width, _dib.Height), _dib.RowBytes, _dib.Bytes);
+
+        private static ImageFormat FromSKColorType(SkiaSharp.SKColorType skColorType)
+        {
+            switch (skColorType)
+            {
+                case SkiaSharp.SKColorType.Rgba8888:
+                    return ImageFormat.A8R8G8B8;
+                case SkiaSharp.SKColorType.Rgb888x:
+                    return ImageFormat.X8R8G8B8;
+                case SkiaSharp.SKColorType.Alpha8:
+                    return ImageFormat.A8;
+                default:
+                case SkiaSharp.SKColorType.Unknown:
+                    return ImageFormat.None;
+            }
+        }
 
         protected override void OnImageLoadComplete()
         {

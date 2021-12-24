@@ -341,7 +341,7 @@ namespace Microsoft.Iris.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Zone.Dispose(this);
+            Zone?.Dispose(this);
             Session.InputManager.InvalidKeyFocus -= new InvalidKeyFocusHandler(OnInvalidKeyFocus);
             Session.Dispatcher.StopCurrentMessageLoop();
         }
