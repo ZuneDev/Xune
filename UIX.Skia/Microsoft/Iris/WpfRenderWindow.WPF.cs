@@ -164,10 +164,13 @@ namespace Microsoft.Iris.Render
             get => WpfWindow.IsVisible;
             set
             {
-                if (value)
-                    WpfWindow.Show();
-                else
-                    WpfWindow.Hide();
+                RunOnUI(() =>
+                {
+                    if (value)
+                        WpfWindow.Show();
+                    else
+                        WpfWindow.Hide();
+                });
             }
         }
 
