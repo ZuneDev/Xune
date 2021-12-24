@@ -191,7 +191,7 @@ namespace Microsoft.Iris.Render.Graphics
         internal void ChangeParent(Visual visualParent, Visual visualSibling, VisualOrder nOrder)
         {
             // TODO: nOrder?
-            visualSibling.ChangeParent(visualParent);
+            visualSibling?.ChangeParent(visualParent);
             this.ChangeParent(visualParent);
         }
 

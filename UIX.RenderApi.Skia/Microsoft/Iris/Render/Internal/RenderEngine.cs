@@ -218,7 +218,7 @@ namespace Microsoft.Iris.Render.Internal
             Debug2.Validate(m_engineContextId != ContextID.NULL, typeof(InvalidOperationException), "engine ContextId should not be NULL while running");
         }
 
-        bool IRenderEngine.ProcessNativeEvents() => true;
+        bool IRenderEngine.ProcessNativeEvents() => false;
 
         void IRenderEngine.InterThreadWake()
         {

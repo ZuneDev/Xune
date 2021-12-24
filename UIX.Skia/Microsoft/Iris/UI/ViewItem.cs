@@ -412,12 +412,12 @@ namespace Microsoft.Iris.UI
 
         private void PaintSelf(bool visible)
         {
-            if (!GetBit(Bits.PaintInvalid))
-                return;
-            SetBit(Bits.PaintInvalid, false);
-            if (!HasVisual)
-                return;
-            OnPaint(visible);
+            if (GetBit(Bits.PaintInvalid))
+            {
+                SetBit(Bits.PaintInvalid, false);
+                if (HasVisual)
+                    OnPaint(visible);
+            }
         }
 
         protected virtual void OnPaint(bool visible)

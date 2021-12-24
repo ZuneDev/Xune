@@ -1,16 +1,19 @@
-﻿using Microsoft.Iris.Render;
+﻿using Microsoft.Iris;
+using Microsoft.Iris.Render;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using IrisApp = Microsoft.Iris.Application;
 
 namespace Xune.Wpf
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         public static MainWindow Current { get; private set; }
 
@@ -31,7 +34,7 @@ namespace Xune.Wpf
         private void Canvas_InitPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             // Initialize UI framework
-            if (irisInitTask != null || Microsoft.Iris.Application.IsInitialized || Microsoft.Iris.Application.IsInitializing)
+            if (irisInitTask != null || IrisApp.IsInitialized || IrisApp.IsInitializing)
             {
                 Canvas.PaintSurface -= Canvas_InitPaintSurface;
                 Canvas.PaintSurface += Canvas_PaintSurface;
@@ -54,19 +57,35 @@ namespace Xune.Wpf
         private void Init()
         {
 #if DEBUG
-            Microsoft.Iris.Application.DebugSettings.TraceSettings.DebugTraceFile
+            IrisApp.DebugSettings.TraceSettings.DebugTraceFile
                 = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UIX.Skia.log");
 #endif
-
-            Microsoft.Iris.Application.Initialize(Surface, IrisWindow);
+            IrisApp.Initialize(Surface, IrisWindow);
 
             string pageUixPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                 "Pages", "Home.uix");
             string uiName = "Default";
             //Microsoft.Iris.Application.LoadMarkup("file://" + pageUixPath);
-            Microsoft.Iris.Application.Window.RequestLoad("file://" + pageUixPath);
+            IrisApp.Window.RequestLoad("file://" + pageUixPath);
 
-            Microsoft.Iris.Application.Run(new Microsoft.Iris.DeferredInvokeHandler((obj) => System.Diagnostics.Debug.WriteLine("Init done: {0}", obj)));
+            IrisApp.Run(new DeferredInvokeHandler(InitialLoadComplete));
+        }
+
+        private void InitialLoadComplete(object args) => ThreadPool.QueueUserWorkItem(new WaitCallback(InitialLoadCompleteWorker));
+
+        private void InitialLoadCompleteWorker(object state)
+        {
+            System.Diagnostics.Debug.WriteLine("Init done: {0}", state);
+
+            IrisApp.DeferredInvoke(new DeferredInvokeHandler(InitialLoadCompleteUIState), new object[]
+            {
+                state
+            });
+        }
+
+        private void InitialLoadCompleteUIState(object args)
+        {
+            System.Diagnostics.Debug.WriteLine("UI init done: {0}", args);
         }
     }
 }

@@ -504,6 +504,7 @@ namespace Microsoft.Iris.ViewItems
             else
                 content = _richTextRasterizer.SimpleContent;
 
+            _string = new(content);
             _textSize = new((int)_string.MeasuredWidth, (int)_string.MeasuredHeight);
 
             Size finalSize = Size.Min(_textSize, constraint);

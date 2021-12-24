@@ -170,7 +170,7 @@ namespace Microsoft.Iris.Render
                 }
             }
         }
-        public override FormStyleInfo Styles { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override FormStyleInfo Styles { get => default; set => throw new NotImplementedException(); }
         public override HWND AppNotifyWindow { set => throw new NotImplementedException(); }
 
         public override IVisualContainer VisualRoot => throw new NotImplementedException();
