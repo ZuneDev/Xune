@@ -1,6 +1,7 @@
 ﻿using Microsoft.Iris.Render;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -53,12 +54,13 @@ namespace Xune.Wpf
         private void Init()
         {
 #if DEBUG
-            Microsoft.Iris.Application.DebugSettings.TraceSettings.DebugTraceFile = @"C:\Users\jjask\Desktop\UIX.Skia.log";
+            Microsoft.Iris.Application.DebugSettings.TraceSettings.DebugTraceFile
+                = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UIX.Skia.log");
 #endif
 
             Microsoft.Iris.Application.Initialize(Surface, IrisWindow);
 
-            string pageUixPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory,
+            string pageUixPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                 "Pages", "Home.uix");
             string uiName = "Default";
             //Microsoft.Iris.Application.LoadMarkup("file://" + pageUixPath);

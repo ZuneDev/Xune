@@ -6,9 +6,26 @@
         xmlns:local="clr-namespace:Xune.Wpf"
         xmlns:sk="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
         mc:Ignorable="d"
-        Title="Xune" Height="450" Width="800"
-        Background="PaleVioletRed">
-    <Border>
+        Title="Xune" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Padding="4">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Color="#f10da1" Offset="0.0"/>
+                        <GradientStop Color="#e95214" Offset="1.0"/>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush> 
+            </Border.Background>
+
+            <TextBlock Text="Howdy! This text is from WPF." Foreground="White"/>
+        </Border>
+
         <sk:SKElement x:Name="Canvas" Grid.Row="1"/>
-    </Border>
+    </Grid>
 </Window>
