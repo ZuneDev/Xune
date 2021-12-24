@@ -6,36 +6,46 @@
 
 using Microsoft.Iris.OS;
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Security;
 
 namespace Microsoft.Iris.Debug
 {
     [SuppressUnmanagedCodeSecurity]
-    internal static class TraceSettings
+    public class TraceSettings
     {
-        private static ConcurrentDictionary<TraceCategory, byte> CategoryLevels = new();
+        private static TraceSettings s_instance;
+        private Dictionary<TraceCategory, byte> CategoryLevels = new Dictionary<TraceCategory, byte>();
 
-        private static string s_debugTraceFile;
+        public TraceSettings()
+        {
+            if (s_instance != null)
+                throw new InvalidOperationException("TraceSettings was already initialized. Use TraceSettings.Current.");
+            s_instance = this;
+            
+            if (DebugTraceToFile && System.IO.File.Exists(DebugTraceFile))
+                System.IO.File.Delete(DebugTraceFile);
+        }
 
-        public static void ListenForRegistryUpdates()
+        public static TraceSettings Current
+        {
+            get
+            {
+                if (s_instance == null)
+                    new TraceSettings();
+                return s_instance;
+            }
+        }
+
+        public void ListenForRegistryUpdates()
         {
         }
 
-        public static void StopListeningForRegistryUpdates()
+        public void StopListeningForRegistryUpdates()
         {
         }
 
-        public static void Refresh()
-        {
-            s_debugTraceFile = Environment.GetEnvironmentVariable("SPLASH_TRACE_FILE");
-            WriteLinePrefix = string.Empty;
-            SendOutputToDebugger = true;
-            ShowCategories = false;
-            TimedWriteLines = false;
-        }
-
-        public static byte GetCategoryLevel(TraceCategory cat)
+        public byte GetCategoryLevel(TraceCategory cat)
         {
             if (CategoryLevels.TryGetValue(cat, out byte level))
                 return level;
@@ -43,31 +53,32 @@ namespace Microsoft.Iris.Debug
                 return 0;
         }
 
-        public static void SetCategoryLevel(TraceCategory cat, byte level)
+        public void SetCategoryLevel(TraceCategory cat, byte level)
         {
-            CategoryLevels.AddOrUpdate(cat, level, UpdateValueFactory);
+            if (CategoryLevels.ContainsKey(cat))
+                CategoryLevels[cat] = level;
+            else
+                CategoryLevels.Add(cat, level);
         }
 
-        public static bool IsFlagsCategory(TraceCategory cat) => false;
+        public bool IsFlagsCategory(TraceCategory cat) => false;
 
-        private static bool IsExternalCategory(TraceCategory cat) => (uint)cat < 25U;
+        private bool IsExternalCategory(TraceCategory cat) => (uint)cat < 25U;
 
-        private static byte UpdateValueFactory(TraceCategory cat, byte level) => level;
+        public bool SendOutputToDebugger { get; set; } = true;
 
-        public static bool SendOutputToDebugger { get; set; } = true;
+        public bool TimedWriteLines { get; set; } = false;
 
-        public static bool TimedWriteLines { get; set; } = false;
+        public bool ShowCategories { get; set; } = false;
 
-        public static bool ShowCategories { get; set; } = false;
+        public bool AlwaysShowBraces { get; set; }
 
-        public static bool AlwaysShowBraces { get; set; } = false;
+        public string WriteLinePrefix { get; set; } = string.Empty;
 
-        public static string WriteLinePrefix { get; set; } = "";
+        public string RendererWriteLinePrefix { get; set; }
 
-        public static string RendererWriteLinePrefix { get; set; } = "";
+        public bool DebugTraceToFile => !string.IsNullOrEmpty(DebugTraceFile);
 
-        public static bool DebugTraceToFile => !string.IsNullOrEmpty(s_debugTraceFile);
-
-        public static string DebugTraceFile => s_debugTraceFile;
+        public string DebugTraceFile { get; set; }
     }
 }

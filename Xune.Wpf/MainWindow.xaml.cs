@@ -52,6 +52,10 @@ namespace Xune.Wpf
 
         private void Init()
         {
+#if DEBUG
+            Microsoft.Iris.Application.DebugSettings.TraceSettings.DebugTraceFile = @"C:\Users\jjask\Desktop\UIX.Skia.log";
+#endif
+
             Microsoft.Iris.Application.Initialize(Surface, IrisWindow);
 
             string pageUixPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory,
