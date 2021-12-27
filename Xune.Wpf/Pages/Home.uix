@@ -1,17 +1,23 @@
 <UIX xmlns="http://schemas.microsoft.com/2007/uix">
-    <UI Name="Default">
-        <Content>
-            <Text Color="Red">
-                <Content>Howdy from Microsoft.Iris!</Content>
-            </Text>
-        </Content>
-    </UI>
-    
-    <UI Name="Alt">
-    	<Content>
-    		<Text Color="Blue" Font="JetBrains Mono">
-                <Content>This is some blue text</Content>
-            </Text>
-    	</Content>
-    </UI>
+	<UI Name="Default">
+		<!--<Locals>
+			<Image Name="Icon"    Source="res://ZuneShellResources.dll!PAVO.ATOMIC.LARGE.DEFAULT.PNG"/>
+		</Locals>-->
+
+		<Content>
+			<Graphic Name="IconGraphic">
+				<Content>
+					<Image Source="res://ZuneShellResources.dll!PAVO.ATOMIC.LARGE.DEFAULT.PNG"/>
+				</Content>
+			</Graphic>
+		</Content>
+	</UI>
+
+	<UI Name="Alt">
+		<Content>
+			<Text Color="Blue" Font="JetBrains Mono">
+				<Content>This is some blue text</Content>
+			</Text>
+		</Content>
+	</UI>
 </UIX>
