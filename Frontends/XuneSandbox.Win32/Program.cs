@@ -18,7 +18,6 @@ public class Program
     {
         Console.WriteLine("Howdy!");
 
-        Glfw glfw = Glfw.GetApi();
         int initWidth = 800;
         int initHeight = 600;
 
