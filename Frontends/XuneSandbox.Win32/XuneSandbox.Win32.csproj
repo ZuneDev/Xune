@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\UIX.Skia\XUIX.csproj" />
+        <ProjectReference Include="..\..\XUIX\XUIX.csproj" />
     </ItemGroup>
 
 </Project>
