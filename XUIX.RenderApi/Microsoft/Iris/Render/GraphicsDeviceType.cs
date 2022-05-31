@@ -8,9 +8,18 @@ namespace Microsoft.Iris.Render
 {
     public enum GraphicsDeviceType
     {
-        None,
-        Gdi,
-        Direct3D9,
-        XeDirectX9,
+        Unknown     = -1,
+        None        = 0,
+
+        Gdi         = 1,
+        Direct3D9   = 2,
+        XeDirectX9  = 3,
+
+        XUIX        = 1 << 4,
+        Skia        = XUIX | 1,
+        Metal       = XUIX | 2,
+        OpenGL      = XUIX | 3,
+        Vulkan      = XUIX | 4,
+        Dawn        = XUIX | 5,
     }
 }
