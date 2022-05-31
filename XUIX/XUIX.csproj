@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <ProjectGuid>{5681A1BD-B3EC-450B-BF6E-38187204B6BE}</ProjectGuid>
         <OutputType>Library</OutputType>
-        <AssemblyName>UIX.Skia</AssemblyName>
+        <AssemblyName>XUIX</AssemblyName>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <LangVersion>9</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -18,6 +18,6 @@
             <HintPath>C:\Windows\Microsoft.NET\Framework\v2.0.50727\Accessibility.dll</HintPath>
         </Reference>
         
-        <ProjectReference Include="..\UIX.RenderApi.Skia\UIX.RenderApi.Skia.csproj" />
+        <ProjectReference Include="..\XUIX.RenderApi\XUIX.RenderApi.csproj" />
     </ItemGroup>
 </Project>

@@ -22,11 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uno", "Uno", "{10786613-309
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{3F9FAF85-78F0-4FD3-8E4A-D6D5E3098F56}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIX.RenderApi.Skia", "UIX.RenderApi.Skia\UIX.RenderApi.Skia.csproj", "{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUIX.RenderApi", "XUIX.RenderApi\XUIX.RenderApi.csproj", "{CB2B7609-C7B8-4E2A-82D8-DD631B70B621}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIX.Skia", "UIX.Skia\UIX.Skia.csproj", "{5681A1BD-B3EC-450B-BF6E-38187204B6BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUIX", "XUIX\XUIX.csproj", "{5681A1BD-B3EC-450B-BF6E-38187204B6BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XuneSandbox.Win32", "Frontends\XuneSandbox.Win32\XuneSandbox.Win32.csproj", "{59E70E31-D1F3-4D22-91E6-BCD85B285898}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XuneSandbox.Win32", "Frontends\XuneSandbox.Win32\XuneSandbox.Win32.csproj", "{59E70E31-D1F3-4D22-91E6-BCD85B285898}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
